@@ -1,2 +1,4 @@
 <project name="webservice">
+	<target name="start">
+	</target>
 </project>

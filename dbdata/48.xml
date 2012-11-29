@@ -1,0 +1,26 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>48</testId>
+  <testName>AlphaRooms_emptying</testName>
+  <filePath>dbdata/48.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>51</statementId>
+      <statementName>Emptying_rule</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>20</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Apply on http request</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.EmptyingFault>
+          <faultId>59</faultId>
+          <typeName>EmptyingFault</typeName>
+          <description>The body of the message is removed, just the header is forwarded.</description>
+        </cz.vutbr.fit.dip.fiws.business.EmptyingFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

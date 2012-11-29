@@ -1,0 +1,13 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>21</testId>
+  <testName>NumAddOne_i</testName>
+  <filePath>dbdata/21.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>21</statementId>
+      <statementName>WSDL_i</statementName>
+      <conditionSet/>
+      <faultList/>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

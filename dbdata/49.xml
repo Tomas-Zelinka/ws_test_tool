@@ -1,0 +1,28 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>49</testId>
+  <testName>AlphaRooms</testName>
+  <filePath>dbdata/49.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>52</statementId>
+      <statementName>statement</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>21</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Apply on http request</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
+          <faultId>62</faultId>
+          <xpath>//alp:RoomType</xpath>
+          <changedSubstring>null</changedSubstring>
+          <typeName>XPathCorruptionFault</typeName>
+          <description>Values of elements/attributes at &quot;//alp:RoomType&quot; replace by &quot;null&quot;.</description>
+        </cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

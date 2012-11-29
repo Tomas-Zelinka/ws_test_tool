@@ -1,0 +1,40 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>41</testId>
+  <testName>MultiplicationTest_Mult_Request</testName>
+  <filePath>dbdata/41.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>44</statementId>
+      <statementName>mult_rule</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>8</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Apply on http request</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+        <cz.vutbr.fit.dip.fiws.business.UriCondition>
+          <conditionId>9</conditionId>
+          <uriPart>MultDivWS</uriPart>
+          <typeName>UriCondition</typeName>
+          <description>Occurrance of &quot;MultDivWS&quot; in URI</description>
+        </cz.vutbr.fit.dip.fiws.business.UriCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+          <conditionId>10</conditionId>
+          <containString>S:Envelope</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;S:Envelope&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.MultiplicationFault>
+          <faultId>39</faultId>
+          <xpath>/S:Envelope/S:Body</xpath>
+          <count>3</count>
+          <typeName>MultiplicationFault</typeName>
+          <description>Parts of the message which correspond with &quot;/S:Envelope/S:Body&quot; multiplicate &quot;3&quot;x.</description>
+        </cz.vutbr.fit.dip.fiws.business.MultiplicationFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

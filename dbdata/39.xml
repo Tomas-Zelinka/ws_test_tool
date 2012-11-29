@@ -1,0 +1,13 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>39</testId>
+  <testName>DelayTest_Mult_Response</testName>
+  <filePath>dbdata/39.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>42</statementId>
+      <statementName>Delay_rule</statementName>
+      <conditionSet/>
+      <faultList/>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

@@ -1,0 +1,22 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>17</testId>
+  <testName>NumAbsoluteOne_response</testName>
+  <filePath>dbdata/17.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>17</statementId>
+      <statementName>WSDL_response</statementName>
+      <conditionSet/>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+          <faultId>18</faultId>
+          <wsdlUri>http://localhost:8080/CalculatorWS/CalculatorWS?wsdl</wsdlUri>
+          <operationName>add</operationName>
+          <operationContent>&lt;response&gt;1&lt;/response&gt;</operationContent>
+          <typeName>WsdlParamFault</typeName>
+          <description>The body of operation add will be changed.</description>
+        </cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

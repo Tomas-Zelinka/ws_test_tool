@@ -1,0 +1,30 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>4</testId>
+  <testName>garg</testName>
+  <filePath>dbdata/4.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>5</statementId>
+      <statementName>fsagese</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>4</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Apply on http request</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+          <faultId>6</faultId>
+          <wsdlUri>http://localhost:8080/CalculatorWS/CalculatorWS?wsdl</wsdlUri>
+          <operationName>mult</operationName>
+          <operationContent>&lt;i&gt;23&lt;/i&gt;
+&lt;j&gt;24&lt;/j&gt;</operationContent>
+          <typeName>WsdlParamFault</typeName>
+          <description>The body of operation mult will be changed.</description>
+        </cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

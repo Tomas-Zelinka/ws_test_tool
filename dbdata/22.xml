@@ -1,0 +1,13 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>22</testId>
+  <testName>NumAddOne_j</testName>
+  <filePath>dbdata/22.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>22</statementId>
+      <statementName>WSDL_j</statementName>
+      <conditionSet/>
+      <faultList/>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

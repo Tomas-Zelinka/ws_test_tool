@@ -1,0 +1,27 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>37</testId>
+  <testName>DelayTest_Add_Response</testName>
+  <filePath>dbdata/37.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>40</statementId>
+      <statementName>Delay_rule</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>4</conditionId>
+          <applyOnRequest>false</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Apply on http response</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.DelayFault>
+          <faultId>33</faultId>
+          <numOfMilis>5000</numOfMilis>
+          <typeName>DelayFault</typeName>
+          <description>The message is delayed for 5000 miliseconds.</description>
+        </cz.vutbr.fit.dip.fiws.business.DelayFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

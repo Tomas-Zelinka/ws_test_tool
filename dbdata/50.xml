@@ -1,0 +1,36 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>50</testId>
+  <testName>AnotherTest</testName>
+  <filePath>dbdata/50.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>53</statementId>
+      <statementName>AnotherStatement</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>22</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Apply on http request</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+        <cz.vutbr.fit.dip.fiws.business.UriCondition>
+          <conditionId>24</conditionId>
+          <uriPart>localhost:8080/CalculatorWS</uriPart>
+          <typeName>UriCondition</typeName>
+          <description>Occurrance of &quot;localhost:8080/CalculatorWS&quot; in URI</description>
+        </cz.vutbr.fit.dip.fiws.business.UriCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+          <faultId>62</faultId>
+          <wsdlUri>http://localhost:8080/CalculatorWS/CalculatorWS?wsdl</wsdlUri>
+          <operationName>mult</operationName>
+          <operationContent>&lt;i&gt;4&lt;/i&gt;
+&lt;j&gt;8&lt;/j&gt;</operationContent>
+          <typeName>WsdlParamFault</typeName>
+          <description>The body of operation mult will be changed.</description>
+        </cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

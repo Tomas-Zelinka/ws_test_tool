@@ -1,0 +1,26 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>1</testId>
+  <testName>GASS2</testName>
+  <filePath>dbdata/1.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>1</statementId>
+      <statementName>rule</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>1</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Aplikovat na http požadavek</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.EmptyingFault>
+          <faultId>2</faultId>
+          <typeName>EmptyingFault</typeName>
+          <description>Tělo zprávy je odstranněno, příjemce obdrží pouze http hlavičku.</description>
+        </cz.vutbr.fit.dip.fiws.business.EmptyingFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

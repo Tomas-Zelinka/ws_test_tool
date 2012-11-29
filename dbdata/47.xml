@@ -1,0 +1,28 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>47</testId>
+  <testName>REST_find2</testName>
+  <filePath>dbdata/47.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>50</statementId>
+      <statementName>REST_rule</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>19</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Apply on http request</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.HeaderCorruptionFault>
+          <faultId>59</faultId>
+          <originalSubstring>entities.customer/1</originalSubstring>
+          <changedSubstring>entities.customer/-1</changedSubstring>
+          <typeName>HeaderCorruptionFault</typeName>
+          <description>All the occurrances of the substring &quot;entities.customer/1&quot; replace by &quot;entities.customer/-1&quot;.</description>
+        </cz.vutbr.fit.dip.fiws.business.HeaderCorruptionFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

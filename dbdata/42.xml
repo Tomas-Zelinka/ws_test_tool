@@ -1,0 +1,28 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>42</testId>
+  <testName>StringTest_Request</testName>
+  <filePath>dbdata/42.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>45</statementId>
+      <statementName>String_rule</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>11</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Apply on http request</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.StringCorruptionFault>
+          <faultId>41</faultId>
+          <originalSubstring>&lt;S:Body&gt;</originalSubstring>
+          <changedSubstring>&lt;/S:Body&gt;</changedSubstring>
+          <typeName>StringCorruptionFault</typeName>
+          <description>All occurrances of substring &quot;&lt;S:Body&gt;&quot; replace by &quot;&lt;/S:Body&gt;&quot;.</description>
+        </cz.vutbr.fit.dip.fiws.business.StringCorruptionFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

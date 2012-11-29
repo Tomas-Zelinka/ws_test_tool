@@ -1,0 +1,23 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>27</testId>
+  <testName>NumMin_i</testName>
+  <filePath>dbdata/27.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>27</statementId>
+      <statementName>WSDL_i</statementName>
+      <conditionSet/>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+          <faultId>25</faultId>
+          <wsdlUri>http://localhost:8080/CalculatorWS/CalculatorWS?wsdl</wsdlUri>
+          <operationName>add</operationName>
+          <operationContent>&lt;i&gt;-2147483648&lt;/i&gt;
+&lt;j&gt;4&lt;/j&gt;</operationContent>
+          <typeName>WsdlParamFault</typeName>
+          <description>The body of operation add will be changed.</description>
+        </cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

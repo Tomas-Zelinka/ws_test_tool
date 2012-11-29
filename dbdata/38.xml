@@ -1,0 +1,33 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>38</testId>
+  <testName>DelayTest_Mult_Request</testName>
+  <filePath>dbdata/38.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>41</statementId>
+      <statementName>Delay_rule</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>5</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Apply on http request</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+        <cz.vutbr.fit.dip.fiws.business.UriCondition>
+          <conditionId>7</conditionId>
+          <uriPart>MultDivWS</uriPart>
+          <typeName>UriCondition</typeName>
+          <description>Occurrance of &quot;MultDivWS&quot; in URI</description>
+        </cz.vutbr.fit.dip.fiws.business.UriCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.DelayFault>
+          <faultId>39</faultId>
+          <numOfMilis>60000</numOfMilis>
+          <typeName>DelayFault</typeName>
+          <description>The message is delayed for 60000 miliseconds.</description>
+        </cz.vutbr.fit.dip.fiws.business.DelayFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

@@ -1,0 +1,35 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>0</testId>
+  <testName>GAS</testName>
+  <filePath>dbdata/0.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>0</statementId>
+      <statementName>rule1</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>0</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Aplikovat na http požadavek</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+      </conditionSet>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
+          <faultId>-1</faultId>
+          <xpath>//i</xpath>
+          <changedSubstring>128</changedSubstring>
+          <typeName>XPathCorruptionFault</typeName>
+          <description>Hodnoty elementů/atributů na pozici &quot;//i&quot; nahradit za &quot;128&quot;.</description>
+        </cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
+        <cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
+          <faultId>1</faultId>
+          <xpath>//j</xpath>
+          <changedSubstring>129</changedSubstring>
+          <typeName>XPathCorruptionFault</typeName>
+          <description>Hodnoty elementů/atributů na pozici &quot;//j&quot; nahradit za &quot;129&quot;.</description>
+        </cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

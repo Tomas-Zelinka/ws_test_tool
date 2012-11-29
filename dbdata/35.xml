@@ -1,0 +1,23 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>35</testId>
+  <testName>NumMinMinusOne_response</testName>
+  <filePath>dbdata/35.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>35</statementId>
+      <statementName>WSDL_response</statementName>
+      <conditionSet/>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+          <faultId>32</faultId>
+          <wsdlUri>http://localhost:8080/CalculatorWS/CalculatorWS?wsdl</wsdlUri>
+          <operationName>addResponse</operationName>
+          <operationContent>&lt;repsonse&gt;-2147483649&lt;/response&gt;
+</operationContent>
+          <typeName>WsdlParamFault</typeName>
+          <description>The body of operation addResponse will be changed.</description>
+        </cz.vutbr.fit.dip.fiws.business.WsdlOperationFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

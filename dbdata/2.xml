@@ -1,0 +1,40 @@
+<cz.vutbr.fit.dip.fiws.business.Test>
+  <testId>2</testId>
+  <testName>GASS3</testName>
+  <filePath>dbdata/2.xml</filePath>
+  <statementList>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>2</statementId>
+      <statementName>Path_j</statementName>
+      <conditionSet/>
+      <faultList>
+        <cz.vutbr.fit.dip.fiws.business.HeaderCorruptionFault>
+          <faultId>4</faultId>
+          <originalSubstring>Calculator</originalSubstring>
+          <changedSubstring>Calc</changedSubstring>
+          <typeName>HeaderCorruptionFault</typeName>
+          <description>Nahradi v hlavicce vsechny vyskyty retezce &quot;Calculator&quot; za retezec &quot;Calc&quot;.</description>
+        </cz.vutbr.fit.dip.fiws.business.HeaderCorruptionFault>
+      </faultList>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>3</statementId>
+      <statementName>Header_j</statementName>
+      <conditionSet>
+        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <conditionId>2</conditionId>
+          <applyOnRequest>true</applyOnRequest>
+          <typeName>DestinationCondition</typeName>
+          <description>Aplikovat na http požadavek</description>
+        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+      </conditionSet>
+      <faultList/>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+    <cz.vutbr.fit.dip.fiws.business.TestStatement>
+      <statementId>36</statementId>
+      <statementName>WSDL_i</statementName>
+      <conditionSet/>
+      <faultList/>
+    </cz.vutbr.fit.dip.fiws.business.TestStatement>
+  </statementList>
+</cz.vutbr.fit.dip.fiws.business.Test>

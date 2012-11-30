@@ -5,20 +5,25 @@
     <property name="src.dir" value="src" />
    	<property name="build.dir" value="build" />
 	<property name="lib.dir" value="lib" />
+	<property name="resources.dir" value="resources" />
 	
 	<property name="class.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jar" />
-	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	<property name="data.dir" value="${jar.dir}/dbdata" />
-	<property name="resources.dir" value="${jar.dir}/dbdata" />
+	<property name="jar_resources.dir" value="${class.dir}/resources" />
+	<property name="jar_lib.dir" value="${jar.dir}/lib" />
 	
-	<path id="classpath">
-	  <fileset dir="${lib.dir}">
-	    <include name="*.jar"/>
-	  </fileset>
-	  
-	</path>
+	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
+	
+	
+	<property name="dep_cp" value="${toString:dep.runtime}" />
 
+	<path id="dep.runtime">
+		    <fileset dir="./lib">
+		        <include name="**/*.jar" />
+		    </fileset>
+	</path>
+		
 	<target name="clean">
 		<delete dir="build" />
 	</target>
@@ -28,38 +33,47 @@
 		<mkdir dir="${class.dir}" />
 		<mkdir dir="${jar.dir}" />
 		<mkdir dir="${data.dir}" />
-		
+		<mkdir dir="${lib.dir}" />
+			
 		<copy todir="${data.dir}">
 			<fileset dir="dbdata"/>
-		</copy>  
+		</copy> 
+		
+		<copy todir="${jar_lib.dir}">
+			<fileset dir="${lib.dir}"/>
+		</copy>
+		<copy todir="${jar_resources.dir}">
+			<fileset dir="${resources.dir}"/>
+		</copy>
     </target>
 	
 	<target name="compile" depends="clean,init" description="compile the source"  >
 	    <echo>Compile from ${src.dir} to ${build.dir}</echo>
 	
 	    <javac destdir="${class.dir}" srcdir="${src.dir}" includeantruntime="false">
-	    	<classpath refid="classpath"/>
+	    	<classpath refid="dep.runtime"/>
 	    </javac>
     </target>
 	
 	<target name="jar" depends="compile">
+		<manifestclasspath property="manifest_cp" jarfile="myjar.jar">
+	        <classpath refid="dep.runtime" />
+	    </manifestclasspath>
 		<jar destfile="${jar.file}" basedir="${class.dir}">
 			<manifest>
 		    	<attribute name="Main-Class" value="cz.vutbr.fit.dip.fiws.presentation.MainWindow"/>
-		    </manifest>
+				<attribute name="Class-Path" value="${manifest_cp}" />
+			</manifest>
 		</jar>
 	</target>
 	
-	
-	<target name="run" >
+	<target name="run" depends="jar">
 		<echo> Running ${jar.file} </echo>
 		<java jar="${jar.file}" fork="true" />
 	</target>
-	
-	
-	
-	
-	<target name="default" depends="jar" />
+
+	<target name="default" depends="run" />
+	   
 	 
 	
 </project>

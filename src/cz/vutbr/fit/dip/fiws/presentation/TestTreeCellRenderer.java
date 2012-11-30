@@ -44,11 +44,11 @@ public class TestTreeCellRenderer extends DefaultTreeCellRenderer {
 		DefaultMutableTreeNode renderedNode= (DefaultMutableTreeNode) value;
 		Object renderedNodeObject= renderedNode.getUserObject();
 		if (renderedNodeObject instanceof Test) {
-			setIcon(new ImageIcon(getClass().getResource("/cz/vutbr/fit/dip/fiws/presentation/resources/test_small.png")));
+			setIcon(new ImageIcon(getClass().getResource("/resources/test_small.png")));
 		}
 		else
 			if (renderedNodeObject instanceof TestStatement)
-				setIcon(new ImageIcon(getClass().getResource("/cz/vutbr/fit/dip/fiws/presentation/resources/statement_small.png")));
+				setIcon(new ImageIcon(getClass().getResource("/resources/statement_small.png")));
 			else
 				setIcon(getDefaultClosedIcon());
 		

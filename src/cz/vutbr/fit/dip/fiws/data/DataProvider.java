@@ -91,8 +91,13 @@ public class DataProvider {
 			settings= (Settings) xstream.fromXML(new FileInputStream(new File("dbdata/settings.xml")));
 		}
 		catch (FileNotFoundException ex) {
+			System.err.println("File settings.xml not found");
 			System.err.println(ex.getMessage());
 			System.exit(-1);
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
 		}
 		
 		return settings;

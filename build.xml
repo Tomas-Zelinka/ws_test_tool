@@ -4,23 +4,34 @@
     <property name="src.dir" value="src" />
    	<property name="build.dir" value="build" />
 	<property name="lib.dir" value="lib" />
+	
+
 	<property name="resources.dir" value="resources" />
 	<property name="data.dir" value="data" />
 	<property name="class.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jar" />
+	<property name="war.dir" value="${build.dir}/war" />
+	<property name="webcontent.dir" value="WebContent"/>
+
+	<property name="web-inf.dir" value="${webcontent.dir}/WEB-INF"/>
+	<property name="meta-inf.dir" value="${webcontent.dir}/META-INF"/>
+	<property name="war_lib.dir" value="${web-inf.dir}/lib"/>
+
 	
 	<property name="jar_resources.dir" value="${class.dir}/resources" />
 	<property name="jar_lib.dir" value="${jar.dir}/lib" />
-	<property name="build_data.dir" value="${jar.dir}/data" />
+	<property name="jar_data.dir" value="${jar.dir}/data" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	
+	<property name="war_webcontent.dir" value="${war}/${webcontent.dir}/"/>	
+
 	
 	<property name="dep_cp" value="${toString:dep.runtime}" />
 
 	<path id="dep.runtime">
-		    <fileset dir="./lib">
-		        <include name="**/*.jar" />
-		    </fileset>
+	    <fileset dir="./lib">
+	        <include name="**/*.jar" />
+	    </fileset>
 	</path>
 		
 	<target name="clean">
@@ -31,9 +42,13 @@
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${class.dir}" />
 		<mkdir dir="${jar.dir}" />
+		<mkdir dir="${war.dir}"/>
+		<mkdir dir="${jar_data.dir}" />
+		
 		<mkdir dir="${jar_resources.dir}" />
 		<mkdir dir="${jar_lib.dir}" />
-		<mkdir dir="${build_data.dir}" />	
+		
+		<mkdir dir="${war_webcontent.dir}"/>
 		
 		
 		<copy todir="${jar_lib.dir}">
@@ -43,9 +58,14 @@
 			<fileset dir="${resources.dir}"/>
 		</copy>
 		
-		<copy todir="${build_data.dir}">
-					<fileset dir="${data.dir}"/>
+		<copy todir="${jar_data.dir}">
+			<fileset dir="${data.dir}"/>
 		</copy>
+		
+		<copy todir="${war_webcontent.dir}">
+			<filesest dir="${webcontent.dir}" />
+		</copy>
+		
     </target>
 	
 	<target name="compile" depends="clean,init" description="compile the source"  >
@@ -67,6 +87,19 @@
 			</manifest>
 		</jar>
 	</target>
+	
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: war                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="war" depends="compile">
+		<war destfile="${build.dir}/${war.dir}/${ant.project.name}.war" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="WebContent"/>
+			<lib dir="WebContent/WEB-INF/lib"/>
+			<classes dir="build/classes"/>
+		</war>
+	</target>
+
 	
 	<target name="run" depends="jar">
 		<echo> Running ${jar.file} </echo>

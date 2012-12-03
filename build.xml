@@ -23,7 +23,7 @@
 	<property name="jar_data.dir" value="${jar.dir}/data" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	
-	<property name="war_webcontent.dir" value="${war}/${webcontent.dir}/"/>	
+	<property name="war_webcontent.dir" value="${war.dir}/${webcontent.dir}/"/>	
 
 	
 	<property name="dep_cp" value="${toString:dep.runtime}" />
@@ -37,6 +37,8 @@
 	<target name="clean">
 		<delete dir="build" />
 	</target>
+	
+		
 	
 	<target name="init" depends="clean">
 		<mkdir dir="${build.dir}"/>
@@ -54,6 +56,7 @@
 		<copy todir="${jar_lib.dir}">
 			<fileset dir="${lib.dir}"/>
 		</copy>
+		
 		<copy todir="${jar_resources.dir}">
 			<fileset dir="${resources.dir}"/>
 		</copy>
@@ -63,7 +66,7 @@
 		</copy>
 		
 		<copy todir="${war_webcontent.dir}">
-			<filesest dir="${webcontent.dir}" />
+			<fileset dir="${webcontent.dir}" />
 		</copy>
 		
     </target>
@@ -77,7 +80,7 @@
     </target>
 	
 	<target name="jar" depends="compile">
-		<manifestclasspath property="manifest_cp" jarfile="myjar.jar">
+		<manifestclasspath property="manifest_cp" jarfile="${jar.file}">
 	        <classpath refid="dep.runtime" />
 	    </manifestclasspath>
 		<jar destfile="${jar.file}" basedir="${class.dir}">
@@ -93,10 +96,16 @@
           target: war                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="war" depends="compile">
-		<war destfile="${build.dir}/${war.dir}/${ant.project.name}.war" webxml="WebContent/WEB-INF/web.xml">
-			<fileset dir="WebContent"/>
-			<lib dir="WebContent/WEB-INF/lib"/>
-			<classes dir="build/classes"/>
+		<manifestclasspath property="manifest_cp" jarfile="${war.file}">
+        	<classpath refid="dep.runtime" />
+	    </manifestclasspath>
+		<war destfile="${war.dir}/${ant.project.name}.war" webxml="${web-inf.dir}/web.xml">
+			<fileset dir="${webcontent.dir}"/>
+			<lib dir="${web-inf.dir}/lib"/>
+			<classes dir="${class.dir}"/>
+			<manifest>
+		    	<attribute name="Class-Path" value="${manifest_cp}" />
+			</manifest>
 		</war>
 	</target>
 

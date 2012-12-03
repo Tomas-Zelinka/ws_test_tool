@@ -1,13 +1,15 @@
 package bookStore;
 
 //import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.jws.WebMethod;
-import javax.jws.WebService;
+//import java.util.ArrayList;
+//import java.util.List;
+
+//import javax.jws.WebMethod;
+//import javax.jws.WebResult;
 
 
-@WebService()
+
+@javax.jws.WebService
 public class BookStore {
 
 	
@@ -26,7 +28,6 @@ public class BookStore {
 		
 	}*/
 	
-	@WebMethod
 	public String addBook()
 	{
 		return "addBook()";
@@ -43,22 +44,22 @@ public class BookStore {
 		
 	}*/
 	
-	public List<String> getBookInfo(String book)
+	/*public List<String> getBookInfo(String book)
 	{
 		List<String> infos;
 		infos = new ArrayList<String>();
 				
 		return infos;
 		
-	}
+	}*/
 	
-	@WebMethod
+	
 	public String removeBook()
 	{
 		return "removeBook";
 	}
 	
-	@WebMethod
+	
 	public String showAllBooks()
 	{
 			

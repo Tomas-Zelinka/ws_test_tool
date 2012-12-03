@@ -4,27 +4,33 @@
     <property name="src.dir" value="src" />
    	<property name="build.dir" value="build" />
 	<property name="lib.dir" value="lib" />
-	
-
-	<property name="resources.dir" value="resources" />
 	<property name="data.dir" value="data" />
+	<property name="resources.dir" value="resources" />
+	<property name="webcontent.dir" value="EarContent"/>
+	
 	<property name="class.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jar" />
 	<property name="war.dir" value="${build.dir}/war" />
-	<property name="webcontent.dir" value="WebContent"/>
+	
 
 	<property name="web-inf.dir" value="${webcontent.dir}/WEB-INF"/>
 	<property name="meta-inf.dir" value="${webcontent.dir}/META-INF"/>
-	<property name="war_lib.dir" value="${web-inf.dir}/lib"/>
-
 	
-	<property name="jar_resources.dir" value="${class.dir}/resources" />
+	<property name="class_resources.dir" value="${class.dir}/resources" />
+	
 	<property name="jar_lib.dir" value="${jar.dir}/lib" />
 	<property name="jar_data.dir" value="${jar.dir}/data" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	
-	<property name="war_webcontent.dir" value="${war.dir}/${webcontent.dir}/"/>	
+	<property name="war_webcontent.dir" value="${war.dir}/${webcontent.dir}/"/>
+	<property name="war_resources.dir" value="${web-inf.dir}/resources" />
+	<property name="war_lib.dir" value="${web-inf.dir}/lib" />
+	<property name="war_data.dir" value="${web-inf.dir}/data"/>
+	<property name="war.file" value="${war.dir}/${ant.project.name}.war" />
+	<property name="wsdl.dir" value="${web-inf.dir}/wsdl"/>
 
+	
+	
 	
 	<property name="dep_cp" value="${toString:dep.runtime}" />
 
@@ -36,6 +42,7 @@
 		
 	<target name="clean">
 		<delete dir="build" />
+		<delete dir="${webcontent.dir}" />
 	</target>
 	
 		
@@ -45,19 +52,23 @@
 		<mkdir dir="${class.dir}" />
 		<mkdir dir="${jar.dir}" />
 		<mkdir dir="${war.dir}"/>
-		<mkdir dir="${jar_data.dir}" />
+		<mkdir dir="${web-inf.dir}" />
+		<mkdir dir="${meta-inf.dir}" />
 		
+		<mkdir dir="${war_lib.dir}" />
+		<!--<mkdir dir="${war_data.dir}" />
+		
+		 <mkdir dir="${wsdl.dir}" /> !-->
+		
+		<mkdir dir="${jar_data.dir}" />
 		<mkdir dir="${jar_resources.dir}" />
 		<mkdir dir="${jar_lib.dir}" />
-		
-		<mkdir dir="${war_webcontent.dir}"/>
-		
 		
 		<copy todir="${jar_lib.dir}">
 			<fileset dir="${lib.dir}"/>
 		</copy>
 		
-		<copy todir="${jar_resources.dir}">
+		<copy todir="${class_resources.dir}">
 			<fileset dir="${resources.dir}"/>
 		</copy>
 		
@@ -65,10 +76,12 @@
 			<fileset dir="${data.dir}"/>
 		</copy>
 		
-		<copy todir="${war_webcontent.dir}">
-			<fileset dir="${webcontent.dir}" />
+		<copy todir="${war_data.dir}">
+			<fileset dir="${data.dir}"/>
 		</copy>
 		
+		
+				
     </target>
 	
 	<target name="compile" depends="clean,init" description="compile the source"  >
@@ -99,7 +112,7 @@
 		<manifestclasspath property="manifest_cp" jarfile="${war.file}">
         	<classpath refid="dep.runtime" />
 	    </manifestclasspath>
-		<war destfile="${war.dir}/${ant.project.name}.war" webxml="${web-inf.dir}/web.xml">
+		<war destfile="${war.file}" webxml="web.xml">
 			<fileset dir="${webcontent.dir}"/>
 			<lib dir="${web-inf.dir}/lib"/>
 			<classes dir="${class.dir}"/>
@@ -110,12 +123,20 @@
 	</target>
 
 	
-	<target name="run" depends="jar">
+	<!-- <target name="run" depends="jar">
 		<echo> Running ${jar.file} </echo>
 		<java jar="${jar.file}" fork="true" />
-	</target>
+	</target> !-->
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target:deployy                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="deploy">
+            
+    </target>
 
-	<target name="default" depends="run" />
+
+	<target name="default" depends="war" />
 	   
 	 
 	

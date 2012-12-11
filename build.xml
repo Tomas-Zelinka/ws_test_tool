@@ -16,6 +16,9 @@
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	
 	
+
+	
+	
 	<property name="dep_cp" value="${toString:dep.runtime}" />
 
 	<path id="dep.runtime">
@@ -56,7 +59,7 @@
     </target>
 	
 	<target name="jar" depends="compile">
-		<manifestclasspath property="manifest_cp" jarfile="myjar.jar">
+		<manifestclasspath property="manifest_cp" jarfile="${jar.file}">
 	        <classpath refid="dep.runtime" />
 	    </manifestclasspath>
 		<jar destfile="${jar.file}" basedir="${class.dir}">

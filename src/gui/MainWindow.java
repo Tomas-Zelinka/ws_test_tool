@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 
 public class MainWindow extends JFrame{
@@ -18,8 +19,10 @@ public class MainWindow extends JFrame{
 	private final int HEIGTH = 600;
 	private final String APP_NAME = "Testing tool";
 	private Container contentPane; 
-	
+	private String defaultDataPath = "./data"; 
+	private File dataRoot;
 		
+	
 	/*
 	 * Popis
 	 * 
@@ -35,6 +38,7 @@ public class MainWindow extends JFrame{
 		addTree();
 		addConsole();
 		//this.pack();
+	
 	}
 	
 	
@@ -65,7 +69,8 @@ public class MainWindow extends JFrame{
 	
 	private void addTree(){
 		
-		 this.contentPane.add(new  ProjectNavigator(new File(".")),BorderLayout.LINE_START);
+		 initDataPath();
+		 this.contentPane.add(new  ProjectNavigator(this.dataRoot),BorderLayout.LINE_START);
 	}
 	
 	/*private void addJPanel(){
@@ -76,8 +81,16 @@ public class MainWindow extends JFrame{
 		this.contentPane.add(new Console(),BorderLayout.PAGE_END);
 	}
 	
-	
-	
+	private void initDataPath()
+	{
+		this.dataRoot = new File(this.defaultDataPath);
+		
+		if(!dataRoot.exists()){
+			boolean wasDirecotyMade = dataRoot.mkdirs();
+		    if(wasDirecotyMade)System.out.println("Direcoty Created");
+		}
+		
+	}
 	
 	
 	

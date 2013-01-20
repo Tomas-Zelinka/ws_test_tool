@@ -1,5 +1,11 @@
 package central;
 
-public class Agent {
 
+public class Agent implements Runnable{
+
+	public void run()
+	{
+		System.out.println("ahoj");
+	}
+	
 }

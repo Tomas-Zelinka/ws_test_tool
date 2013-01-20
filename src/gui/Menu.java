@@ -15,14 +15,21 @@ public class Menu extends JMenuBar {
 	private static final long serialVersionUID = -5617155576631422259L;
 	
 	private JMenu file;
+	private JMenu newSubMenu;
 	//private JMenu view;
 	//private JMenu project;
 	
 	private JMenuItem fileOpen;
-	private JMenuItem fileNew;
+	//private JMenuItem fileNew;
  	private JMenuItem fileExit;
  	private JMenuItem fileGenerate;
+ 	private JMenuItem fileChangeRoot;
 	
+ 	
+ 	private JMenuItem newTestProject;
+ 	private JMenuItem newTestSuite;
+ 	private JMenuItem newTestCase;
+ 	
 	/**
 	 * 
 	 */
@@ -37,9 +44,11 @@ public class Menu extends JMenuBar {
 	private void initMenus(){
 		
 		file = new JMenu("File");
+		newSubMenu = new JMenu("New");
 		
 		this.add(file);
-		initMenuItems();
+		file.add(newSubMenu);
+		initFileMenuItems();
 		
 		
 		//this.add(view);
@@ -48,18 +57,52 @@ public class Menu extends JMenuBar {
 	/**
 	 * 
 	 */
-	private void initMenuItems()
+	private void initFileMenuItems()
 	{
 		
-		fileNew = new JMenuItem("New");
+		newTestProject = new JMenuItem("Test Project");
+		newSubMenu.add(newTestProject);
+		
+		this.newTestProject.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				
+				
+				
+				System.out.println("new Test Project clicked");
+			}
+			
+		} );
+		
+		
+		newTestSuite = new JMenuItem("Test Suite");
+		newSubMenu.add(newTestSuite);
+		
+		this.newTestSuite.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				System.out.println("new Test Suite clicked");
+			}
+			
+		} );
+		
+		newTestCase = new JMenuItem("Test Case");
+		newSubMenu.add(newTestCase);
+		
+		this.newTestCase.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				System.out.println("new Test Case clicked");
+			}
+			
+		} );
+		/*fileNew = new JMenuItem("New");
 		file.add(fileNew);
 		
 		this.fileNew.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
+				//InternalFrames newFile = new InternalFrames();
 				System.out.println("file open clicked");
 			}
 			
-		} );
+		} );*/
 		
 		fileOpen = new JMenuItem("Open");
 		file.add(fileOpen);
@@ -67,6 +110,16 @@ public class Menu extends JMenuBar {
 		this.fileOpen.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
 				System.out.println("file open clicked");
+			}
+			
+		} );
+		
+		fileChangeRoot = new JMenuItem("Change Project");
+		file.add(fileChangeRoot);
+		
+		this.fileChangeRoot.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				System.out.println("file Chenge Project clicked");
 			}
 			
 		} );

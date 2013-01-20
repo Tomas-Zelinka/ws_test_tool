@@ -20,12 +20,15 @@ public class Perfomer implements Runnable{
 	private FileHandler _loggerHandler;
 	
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		
-		Perfomer program = new Perfomer();
-		program.run();
+		//Perfomer program = new Perfomer();
+		//program.run();
+		Agent pitkin = new Agent();
 		
-	}
+		pitkin.run();
+		
+	}*/
 	
 	/**
 	 * @param

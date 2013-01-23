@@ -19,7 +19,7 @@ public class MainWindow extends JFrame{
 	private final int HEIGTH = 600;
 	private final String APP_NAME = "Testing tool";
 	private Container contentPane; 
-	private String defaultDataPath = "./data"; 
+	public static String dataPath = "./data"; 
 	private File dataRoot;
 		
 	
@@ -40,6 +40,17 @@ public class MainWindow extends JFrame{
 		//this.pack();
 	
 	}
+	
+	public static String getDataPath()
+	{
+		return MainWindow.dataPath;
+	}
+	
+	public static void setDataPath(String path){
+		
+		MainWindow.dataPath = path;
+	}
+	
 	
 	
 	private void windowInit()
@@ -83,7 +94,7 @@ public class MainWindow extends JFrame{
 	
 	private void initDataPath()
 	{
-		this.dataRoot = new File(this.defaultDataPath);
+		this.dataRoot = new File(this.dataPath);
 		
 		if(!dataRoot.exists()){
 			boolean wasDirecotyMade = dataRoot.mkdirs();
@@ -91,6 +102,7 @@ public class MainWindow extends JFrame{
 		}
 		
 	}
+	
 	
 	
 	

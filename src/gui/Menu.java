@@ -20,8 +20,12 @@ public class Menu extends JMenuBar {
 	//private JMenu project;
 	
 	private JMenuItem fileOpen;
-	//private JMenuItem fileNew;
- 	private JMenuItem fileExit;
+	private JMenuItem fileSave;
+	private JMenuItem fileSaveAs;
+	private JMenuItem fileSaveRequest;
+	private JMenuItem fileSaveResponse;
+	 
+	private JMenuItem fileExit;
  	private JMenuItem fileGenerate;
  	private JMenuItem fileChangeRoot;
 	
@@ -29,6 +33,11 @@ public class Menu extends JMenuBar {
  	private JMenuItem newTestProject;
  	private JMenuItem newTestSuite;
  	private JMenuItem newTestCase;
+ 	
+ 	private NewWindow newProjectWindow;
+ 	
+ 	
+ 	
  	
 	/**
 	 * 
@@ -66,8 +75,9 @@ public class Menu extends JMenuBar {
 		this.newTestProject.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
 				
+				newProjectWindow = new NewWindow();
 				
-				
+				newProjectWindow.setVisible(true);
 				System.out.println("new Test Project clicked");
 			}
 			

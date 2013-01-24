@@ -31,7 +31,7 @@ public class NewWindow extends JDialog{
 	private final int HEIGHT = 480;
 	
 	private String dialogName = "New Test Project";
-	private String dataPath;
+	//private String dataPath;
 	
 	private JButton okButton;
 	private JButton cancelButton;
@@ -54,7 +54,7 @@ public class NewWindow extends JDialog{
 		this.setBounds(x, y, this.WIDTH, this.HEIGHT);
 		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGHT));
 		
-		this.dataPath = MainWindow.getDataPath();
+		//this.dataPath = MainWindow.getDataPath();
 		
 		
 		this.cancelButton = new JButton("Cancel");
@@ -74,6 +74,16 @@ public class NewWindow extends JDialog{
             }
         });
 		
+		JSeparator separator1 = new JSeparator();
+        //separator1.setBackground(Color.black);
+		firstPanel = new JPanel( );
+		firstPanel.setPreferredSize(new Dimension(getWidth(),50));
+		firstPanel.setBackground(Color.white);
+		firstPanel.setLayout(new BorderLayout());
+		firstPanel.add(separator1, BorderLayout.PAGE_END);
+		
+		
+		
 		
 		JLabel label = new JLabel("<html><p align=center>"
                 + "This is a non-modal dialog.<br>"
@@ -82,35 +92,31 @@ public class NewWindow extends JDialog{
             label.setHorizontalAlignment(JLabel.CENTER);
             label.setFont(label.getFont().deriveFont(Font.PLAIN,
                                                      14.0f));
-
-		
-		
-		firstPanel = new JPanel( );
-		
-		
-		firstPanel.setPreferredSize(new Dimension(getWidth(),50));
-		firstPanel.setBackground(Color.white);
+      
 		secondPanel = new JPanel();
+		secondPanel.setLayout(new BorderLayout());
+		secondPanel.add(label,BorderLayout.CENTER);
 		
-		secondPanel.add(label);
+		JSeparator separator2 = new JSeparator();
 		
 		thirdPanel = new JPanel();
-		
-		thirdPanel.setLayout(new BoxLayout(thirdPanel,
-                BoxLayout.LINE_AXIS));
-		
+		thirdPanel.setPreferredSize(new Dimension(getWidth(),50));
+		thirdPanel.setLayout(new BorderLayout());
+		thirdPanel.add(separator2, BorderLayout.PAGE_START);
 		thirdPanel.add(cancelButton);
-		thirdPanel.setBorder(BorderFactory.
-             createEmptyBorder(0,0,5,5));
+		
+		//thirdPanel.setBorder(BorderFactory.
+         //    createEmptyBorder(10,getWidth()-100,10,5));
 		thirdPanel.add(okButton);
 		
 		//thirdPanel.
 		
-		this.getContentPane().add(firstPanel,BorderLayout.PAGE_START);
-		this.getContentPane().add( new JSeparator());
-		this.getContentPane().add(secondPanel,BorderLayout.CENTER);
+		
+		this.add(firstPanel,BorderLayout.PAGE_START);
+		//this.add( separator, BorderLayout.NORTH);
+		this.add(secondPanel,BorderLayout.CENTER);
 		//this.getContentPane().add( new JSeparator());
-		this.getContentPane().add(thirdPanel,BorderLayout.PAGE_END);
+		this.add(thirdPanel,BorderLayout.PAGE_END);
 	/*	JTextField projectName = new JTextField(20);
 		
 		JLabel label = new JLabel("<html><p align=center>"

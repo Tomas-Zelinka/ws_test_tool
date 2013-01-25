@@ -3,6 +3,7 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -36,7 +37,7 @@ public class Menu extends JMenuBar {
  	
  	private NewWindow newProjectWindow;
  	
- 	
+ 	private JFrame parentWindow;
  	
  	
 	/**
@@ -52,14 +53,13 @@ public class Menu extends JMenuBar {
 	 */
 	private void initMenus(){
 		
+		parentWindow =(JFrame) getParent();
 		file = new JMenu("File");
 		newSubMenu = new JMenu("New");
 		
 		this.add(file);
 		file.add(newSubMenu);
 		initFileMenuItems();
-		
-		
 		//this.add(view);
 	}
 	
@@ -75,8 +75,8 @@ public class Menu extends JMenuBar {
 		this.newTestProject.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
 				
+				 
 				newProjectWindow = new NewWindow();
-				
 				newProjectWindow.setVisible(true);
 				System.out.println("new Test Project clicked");
 			}
@@ -103,16 +103,7 @@ public class Menu extends JMenuBar {
 			}
 			
 		} );
-		/*fileNew = new JMenuItem("New");
-		file.add(fileNew);
 		
-		this.fileNew.addActionListener( new ActionListener(){
-			public void actionPerformed(ActionEvent ae) {
-				//InternalFrames newFile = new InternalFrames();
-				System.out.println("file open clicked");
-			}
-			
-		} );*/
 		
 		fileOpen = new JMenuItem("Open");
 		file.add(fileOpen);

@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 
 public class MainWindow extends JFrame{
@@ -94,7 +93,7 @@ public class MainWindow extends JFrame{
 	
 	private void initDataPath()
 	{
-		this.dataRoot = new File(this.dataPath);
+		this.dataRoot = new File(MainWindow.dataPath);
 		
 		if(!dataRoot.exists()){
 			boolean wasDirecotyMade = dataRoot.mkdirs();

@@ -3,10 +3,11 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import modalWindows.NewProjectWindow;
 
 public class Menu extends JMenuBar {
 
@@ -21,10 +22,10 @@ public class Menu extends JMenuBar {
 	//private JMenu project;
 	
 	private JMenuItem fileOpen;
-	private JMenuItem fileSave;
-	private JMenuItem fileSaveAs;
-	private JMenuItem fileSaveRequest;
-	private JMenuItem fileSaveResponse;
+	//private JMenuItem fileSave;
+	//private JMenuItem fileSaveAs;
+	//private JMenuItem fileSaveRequest;
+	//private JMenuItem fileSaveResponse;
 	 
 	private JMenuItem fileExit;
  	private JMenuItem fileGenerate;
@@ -35,9 +36,9 @@ public class Menu extends JMenuBar {
  	private JMenuItem newTestSuite;
  	private JMenuItem newTestCase;
  	
- 	private NewWindow newProjectWindow;
+ 	private NewProjectWindow newProjectWindow;
  	
- 	private JFrame parentWindow;
+ 	//private JFrame parentWindow;
  	
  	
 	/**
@@ -53,7 +54,7 @@ public class Menu extends JMenuBar {
 	 */
 	private void initMenus(){
 		
-		parentWindow =(JFrame) getParent();
+		//parentWindow =(JFrame) getParent();
 		file = new JMenu("File");
 		newSubMenu = new JMenu("New");
 		
@@ -75,8 +76,7 @@ public class Menu extends JMenuBar {
 		this.newTestProject.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
 				
-				 
-				newProjectWindow = new NewWindow();
+				newProjectWindow = new NewProjectWindow();
 				newProjectWindow.setVisible(true);
 				System.out.println("new Test Project clicked");
 			}

@@ -1,6 +1,6 @@
 package gui;
 
-import javax.swing.UIManager;
+//import javax.swing.UIManager;
 
 public class Main {
 

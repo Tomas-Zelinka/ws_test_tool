@@ -18,10 +18,14 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
+
+import modalWindows.NewProjectWindow;
 
 
 public class ProjectNavigator extends JPanel {
@@ -34,6 +38,7 @@ public class ProjectNavigator extends JPanel {
 	private JScrollPane scrollPane;
 	//private String activeDirectory;
 	private JPopupMenu treeMenu;
+	private NewProjectWindow newProjectWindow;
 	
 	/** Construct a FileTree */
 	public ProjectNavigator(File dir) {
@@ -103,22 +108,11 @@ public class ProjectNavigator extends JPanel {
 	private void initTree(File dir){
 		tree = new HighlightedTree(addNodes(null, dir));
 		tree.setRootVisible(false);
-		//tree.setEditable(true); //makes tree dynamic
 		tree.setShowsRootHandles(true);
-		//tree.putClientProperty("JTree.lineStyle", "Horizontal");
-  
-		// Add the Selection Listener
-		tree.addTreeSelectionListener(new NodeSelectionListener());
 		
-		
-		// Add the mouse Listener
-		MouseListener menuListener = new PopupListener();
-	    tree.addMouseListener(menuListener);
-	    
-	    MouseListener ml = new MyMouseAdapter(tree); 
+		MouseListener ml = new MyMouseAdapter(); 
 	    tree.addMouseListener(ml);	
-	    
-	    
+	   
 	    TreeSelectionListener treeSelListener = new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent evt) {
 				tree.treeDidChange();
@@ -128,8 +122,6 @@ public class ProjectNavigator extends JPanel {
 	   		
 		
 		MyTreeCellRenderer renderer = new MyTreeCellRenderer();
-		renderer.setBorderSelectionColor(null); // remove selection border
-		renderer.setBackgroundSelectionColor( null); // remove selection background since we paint the selected row ourselves
 		tree.setCellRenderer( renderer);
 	}
 	
@@ -139,10 +131,12 @@ public class ProjectNavigator extends JPanel {
 		treeMenu = new JPopupMenu();
 	    JMenuItem menuItem = new JMenuItem();
 		
-	    menuItem = new JMenuItem("A popup menu item");
+	    menuItem = new JMenuItem("New Project");
 	    menuItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("file open clicked");
+				newProjectWindow = new NewProjectWindow();
+				newProjectWindow.setVisible(true);
+				System.out.println("new Test Project clicked");
 			}
 			
 		});
@@ -167,73 +161,51 @@ public class ProjectNavigator extends JPanel {
 	 */
 	protected class MyMouseAdapter extends MouseAdapter{
     	
-    	private JTree myTree;
     	
-    	MyMouseAdapter(JTree tree){
-    		myTree = tree;
-    	}
     	
     	public void mousePressed(MouseEvent e) {
+    		JTree myTree = (JTree)e.getSource();
+    		
 			int selRow = myTree.getClosestRowForLocation( e.getX(), e.getY());
+			TreePath path = myTree.getPathForLocation( e.getX(),e.getY());
 			if( selRow != -1) {
 				Rectangle bounds = myTree.getRowBounds( selRow);
 				boolean outside = e.getX() < bounds.x || e.getX() > bounds.x + bounds.width || e.getY() < bounds.y || e.getY() >= bounds.y + bounds.height;
-				if( outside) {
+				if( !outside) {
+					System.out.println( "Project Selected: " + path.getPathComponent(1));
 					
-					myTree.setSelectionRow(selRow);
-					System.out.println( "manual selection: " + selRow);
-					
-					// handle doubleclick
-					if( e.getClickCount() == 2) {
-						if( myTree.isCollapsed(selRow))
-							myTree.expandRow( selRow);
-						else if( myTree.isExpanded( selRow))
-							myTree.collapseRow( selRow);
-					}
-					
-				} else {
-					System.out.println( "auto selection: " + selRow);
+					MainWindow.setDataPath(path.getPathComponent(1).toString());
+				    if (SwingUtilities.isRightMouseButton(e))  
+				    	myTree.setSelectionRow(selRow);  
+				      	
 				}
+			
 			}
 		}
-    }
-  
-	
-	protected class PopupListener extends MouseAdapter {
-	    public void mousePressed(MouseEvent e) {
-	        maybeShowPopup(e);
+    	
+    	public void mouseReleased(MouseEvent e) {
+    		 ShowPopup(e);
 	    }
-
-	    public void mouseReleased(MouseEvent e) {
-	        maybeShowPopup(e);
-	    }
-
-	    private void maybeShowPopup(MouseEvent e) {
+    	
+    	private void ShowPopup(MouseEvent e) {
 	        if (e.isPopupTrigger()) {
 	            treeMenu.show(e.getComponent(),
 	                       e.getX(), e.getY());
 	        }
 	    }
-	}
-
-	
-	protected class NodeSelectionListener implements TreeSelectionListener{
+    	
+    }
+  
 	 
-		@Override
-		public void valueChanged(TreeSelectionEvent e) {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
-	            .getPath().getLastPathComponent();
-	        System.out.println("You selected " + node);
-	    }
-	}
-	  
 	  
 	protected class MyTreeCellRenderer extends DefaultTreeCellRenderer {
 		
 		private static final long serialVersionUID = 6647184007329048034L;
-
+		
 		public MyTreeCellRenderer() {
-			setBackgroundNonSelectionColor(null);
+			this.setBorderSelectionColor(null); // remove selection border
+			this.setBackgroundSelectionColor( null); // remove selection background since we paint the selected row ourselves
+			this.setBackgroundNonSelectionColor(null);
 		}
 
 		public Color getBackground() {

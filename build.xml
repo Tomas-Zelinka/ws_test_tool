@@ -1,4 +1,16 @@
-<project name="webservice">
-	<target name="start">
-	</target>
+<project name="FIWS_2.0" default="build" basedir=".">
+	
+	<property name="src.dir" value="src"></property>
+	<property name="build.dir" value=""></property>
+	<property name="jar.dir" value=""></property>
+	
+	
+	
+	<target name="clean"></target>
+	<target name="init" depends="clean"></target>
+	<target name="build" depends="init"></target>
+	<target name="jar" depends="build"></target>
+	<target name="run" depends="jar"></target>
+	
+	
 </project>

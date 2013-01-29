@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -17,7 +18,7 @@ public class Console extends JPanel {
 	 */
 	
 	private JTextArea console;
-	
+	private final int MIN_HEIGHT = 50;
 	private static final long serialVersionUID = 4989941948035851333L;
 	
 	public Console(){
@@ -25,8 +26,12 @@ public class Console extends JPanel {
 
 	    // Make a tree list with all the nodes, and make it a JTree
 	    this.console = new JTextArea("ahoj\n",5,5);
+	    
    
         JScrollPane scrollpane = new JScrollPane();
+        scrollpane.setPreferredSize(new Dimension(getWidth(),HEIGHT));
+        scrollpane.setMaximumSize(new Dimension(getWidth(),80));
+        scrollpane.setMinimumSize(new Dimension(getWidth(),80));
 	    scrollpane.getViewport().add(console);
 	    add(BorderLayout.CENTER, scrollpane);
 	    redirectSystemStreams();

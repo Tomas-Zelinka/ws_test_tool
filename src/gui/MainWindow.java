@@ -1,12 +1,20 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.io.File;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 
 public class MainWindow extends JFrame{
 
@@ -16,11 +24,19 @@ public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 2740437090361841747L;
 	private final int WIDTH = 800;
 	private final int HEIGTH = 600;
+	private final int SPLIT_RESIZERS_WIDTH = 3;
 	private final String APP_NAME = "Testing tool";
+	
+	private JSplitPane centerPane;
+	private JSplitPane bottomPane;
+	
 	private Container contentPane; 
 	public static String dataPath = "./data"; 
 	private File dataRoot;
-		
+	
+	private JPanel editor;
+	private ProjectNavigator navigator;
+	private Console console;
 	
 	/*
 	 * Popis
@@ -29,14 +45,13 @@ public class MainWindow extends JFrame{
 	 * @return
 	 */
 	public MainWindow(){
-		contentPane = this.getContentPane();
 		windowInit();
 		addMenuBar();
-		
-		this.setLayout(new BorderLayout());
-		addTree();
-		addConsole();
-		//this.pack();
+		//addCenterPanel();
+		//addConsole();
+		addCenterPane();
+		addBottomPane();
+		this.pack();
 	
 	}
 	
@@ -55,6 +70,14 @@ public class MainWindow extends JFrame{
 	}
 	
 	
+	public void showCaseEditor(){
+		
+	}
+	
+	public void removeCaseEditor(){
+		
+	}
+	
 	/*
 	 * 
 	 */
@@ -72,7 +95,22 @@ public class MainWindow extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBounds(x, y, this.WIDTH, this.HEIGTH);
 		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
+		this.setLayout(new BorderLayout());
+		initContentPane();
+		this.setBackground(Color.gray);
+		
+		
 	}
+	
+	private void initContentPane(){
+		this.contentPane = this.getContentPane();
+	}
+	
+	private JSplitPane getCenterPane(){
+		return this.centerPane;
+	}
+	
+	
 	
 	/*
 	 * 
@@ -82,21 +120,69 @@ public class MainWindow extends JFrame{
 		
 	}
 	
+	
+	private void addCenterPane(){
+		initDataPath();
+		initContent();
+		this.navigator = new  ProjectNavigator(this.dataRoot);
+		this.centerPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,this.navigator,this.editor);
+		this.centerPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
+		
+	}
+	
+	private void addBottomPane(){
+		initConsole();
+		this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
+		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
+		getContentPane().add(this.bottomPane);
+	}
+	
 	/*private void addToolBar(){
 		
 	}*/
 	
-	private void addTree(){
-		
-		 initDataPath();
-		 this.contentPane.add(new  ProjectNavigator(this.dataRoot),BorderLayout.LINE_START);
-	}
 	
 	/*
 	 * 
 	 */
-	private void addConsole(){
-		this.contentPane.add(new Console(),BorderLayout.PAGE_END);
+	private void initConsole(){
+		this.console = new Console();
+	}
+	
+	private void initContent(){
+		
+		
+		
+		JScrollPane paneEditRequest = new JScrollPane();
+		JScrollPane paneEditResponse = new JScrollPane();
+		
+		JTextArea responseArea = new JTextArea("ahoj",5,10);
+		responseArea.setPreferredSize(new Dimension(100,100));
+		
+		
+		JTextArea requestArea = new JTextArea("ahoj",5,10);
+		requestArea.setPreferredSize(new Dimension(10,10));
+		
+		
+		paneEditRequest.add(requestArea);
+		paneEditResponse.add(responseArea);
+		
+		this.editor = new JPanel();
+		
+		
+		this.editor.setLayout(new FlowLayout());		
+		JSplitPane windows = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,paneEditRequest,responseArea);
+		
+		JDesktopPane desktop = new JDesktopPane();
+		JInternalFrame frame = new JInternalFrame();
+		
+		desktop.add(frame);
+		frame.setSize(100, 100);
+		frame.setVisible(true);
+		//this.editor.;
+		
+		
+		
 	}
 	
 	/*
@@ -104,7 +190,7 @@ public class MainWindow extends JFrame{
 	 */
 	private void initDataPath()
 	{
-		this.dataRoot = new File(MainWindow.dataPath);
+		this.dataRoot = new File(MainWindow.getDataPath());
 		
 		if(!dataRoot.exists()){
 			boolean wasDirectoryMade = dataRoot.mkdirs();
@@ -112,6 +198,9 @@ public class MainWindow extends JFrame{
 		}
 		
 	}
+	
+	
+	
 	
 	
 	

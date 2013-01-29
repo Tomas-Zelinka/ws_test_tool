@@ -7,12 +7,25 @@ public class Main {
 	/**
 	 * @param args
 	 */
+	
+	public static MainWindow main;
+	
 	public static void main(String[] args) {
 	
-		MainWindow main = new MainWindow();
+		main = new MainWindow();
 		
 		main.setVisible(true);
 			
+		
+	}
+	
+	public static void restartGui(){
+		
+		main.dispose();
+		main = new MainWindow();
+		main.setVisible(true);
+		
+		
 		
 	}
 

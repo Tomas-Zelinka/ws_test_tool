@@ -13,7 +13,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
-public abstract class ModalWindow extends JDialog {
+public abstract class InputModalWindow extends JDialog {
 
 	/**
 	 * 
@@ -31,7 +31,7 @@ public abstract class ModalWindow extends JDialog {
 	
 	private static final long serialVersionUID = 9187751988881264097L;
 
-	public ModalWindow(String name,int width, int height){
+	public InputModalWindow(String name,int width, int height){
 		
 		initWindow(name, width, height);
 		initFirstPanel();

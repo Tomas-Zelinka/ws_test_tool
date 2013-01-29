@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.text.Document;
 
 
-public class NewProjectWindow extends ModalWindow{
+public class NewProjectWindow extends InputModalWindow{
 
 	/**
 	 * 
@@ -33,7 +33,7 @@ public class NewProjectWindow extends ModalWindow{
 	@Override
 	protected void putContent(){
 
-		projectName = new JTextField(MainWindow.dataPath,30);
+		projectName = new JTextField(30);
 		JLabel label = new JLabel("Project Name");
         label.setHorizontalAlignment(JLabel.LEFT);
         label.setFont(label.getFont().deriveFont(Font.PLAIN,14.0f));

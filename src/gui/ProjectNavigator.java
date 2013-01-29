@@ -26,6 +26,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import modalWindows.NewProjectWindow;
+import modalWindows.NewTestCaseWindow;
+import modalWindows.NewTestSuiteWindow;
 
 
 public class ProjectNavigator extends JPanel {
@@ -38,8 +40,17 @@ public class ProjectNavigator extends JPanel {
 	private JScrollPane scrollPane;
 	//private String activeDirectory;
 	private JPopupMenu treeMenu;
-	private NewProjectWindow newProjectWindow;
 	
+	
+	private JMenuItem newTestProject;
+ 	private JMenuItem newTestSuite;
+ 	private JMenuItem newTestCase;
+ 	
+ 	private NewProjectWindow newProjectWindow;
+ 	private NewTestSuiteWindow newTestSuiteWindow;
+ 	private NewTestCaseWindow newTestCaseWindow;
+	
+ 
 	/*
 	 * 
 	 */
@@ -63,22 +74,28 @@ public class ProjectNavigator extends JPanel {
 	public Dimension getPreferredSize() {
 	    return new Dimension(200, 400);
 	}
-
-	private class MyTreeCellRenderer extends DefaultTreeCellRenderer {
+	
+	
+	private void initTree(File dir){
+		tree = new HighlightedTree(addNodes(null, dir));
+		tree.setRootVisible(false);
+		tree.setShowsRootHandles(false);
 		
-		private static final long serialVersionUID = 6647184007329048034L;
+		MouseListener ml = new MyMouseAdapter(); 
+	    tree.addMouseListener(ml);	
+	   
+	    TreeSelectionListener treeSelListener = new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent evt) {
+				tree.treeDidChange();
+			}
+		};
+		tree.addTreeSelectionListener(treeSelListener);
+	   		
 		
-		public MyTreeCellRenderer() {
-			this.setBorderSelectionColor(null); // remove selection border
-			this.setBackgroundSelectionColor( null); // remove selection background since we paint the selected row ourselves
-			this.setBackgroundNonSelectionColor(null);
-		}
-
-		public Color getBackground() {
-			return null;
-		}
-
+		MyTreeCellRenderer renderer = new MyTreeCellRenderer();
+		tree.setCellRenderer( renderer);
 	}
+	
 	
 	/*
 	 * 
@@ -126,51 +143,67 @@ public class ProjectNavigator extends JPanel {
 
 	
 	  
-	  
-	private void initTree(File dir){
-		tree = new HighlightedTree(addNodes(null, dir));
-		tree.setRootVisible(false);
-		tree.setShowsRootHandles(true);
+	private class MyTreeCellRenderer extends DefaultTreeCellRenderer {
 		
-		MouseListener ml = new MyMouseAdapter(); 
-	    tree.addMouseListener(ml);	
-	   
-	    TreeSelectionListener treeSelListener = new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent evt) {
-				tree.treeDidChange();
-			}
-		};
-		tree.addTreeSelectionListener(treeSelListener);
-	   		
+		private static final long serialVersionUID = 6647184007329048034L;
 		
-		MyTreeCellRenderer renderer = new MyTreeCellRenderer();
-		tree.setCellRenderer( renderer);
+		public MyTreeCellRenderer() {
+			this.setBorderSelectionColor(null); // remove selection border
+			this.setBackgroundSelectionColor( null); // remove selection background since we paint the selected row ourselves
+			this.setBackgroundNonSelectionColor(null);
+		}
+
+		public Color getBackground() {
+			return null;
+		}
+
 	}
+	
+	
 	
 	
 	private void initPopupMenu(){
 		
 		treeMenu = new JPopupMenu();
-	    JMenuItem menuItem = new JMenuItem();
+		newTestProject = new JMenuItem("Test Project");
+		treeMenu.add(newTestProject);
 		
-	    menuItem = new JMenuItem("New Project");
-	    menuItem.addActionListener(new ActionListener(){
+		this.newTestProject.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
+				
 				newProjectWindow = new NewProjectWindow();
 				newProjectWindow.setVisible(true);
 				System.out.println("new Test Project clicked");
 			}
 			
-		});
-	    treeMenu.add(menuItem);
-	    menuItem = new JMenuItem("Another popup menu item");
-	    menuItem.addActionListener(new ActionListener(){
+		} );
+		
+		
+		newTestSuite = new JMenuItem("Test Suite");
+		treeMenu.add(newTestSuite);
+		
+		this.newTestSuite.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("file open clicked");
+				newTestSuiteWindow = new NewTestSuiteWindow();
+				newTestSuiteWindow.setVisible(true);
+			
+				System.out.println("new Test Suite clicked");
 			}
 			
-		});
-	    treeMenu.add(menuItem);
+		} );
+		
+		newTestCase = new JMenuItem("Test Case");
+		treeMenu.add(newTestCase);
+		
+		this.newTestCase.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				newTestCaseWindow = new NewTestCaseWindow();
+				newTestCaseWindow.setVisible(true);
+				
+				System.out.println("new Test Case clicked");
+			}
+			
+		} );
 	    
 	}
 	

@@ -1,16 +1,13 @@
 //MENU
-//vytvorit strom menu
-// spustit menu nad stromem
-//spustit menu nad jednotlivymi vetvemi
-// vyvolat spravnou akci v menu 
 // po vyvolani akce aktualizovat strom
 // kazdou zmenu zapsat na disk do projektoveho souboru
 
 
 
 //EDITOR
-//otevreni editoru
-//zapani zmen do souboru
+//zapsani zmen do souboru
+//editor ma dve okna - zadost/odpoved - kazde okno ma dva panely textovy rezim a klikaci rezim
+//editor ma toolbox a popupmenu s operacema
 
 
 

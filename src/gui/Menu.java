@@ -3,11 +3,14 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import modalWindows.NewProjectWindow;
+import modalWindows.NewTestCaseWindow;
+import modalWindows.NewTestSuiteWindow;
 
 public class Menu extends JMenuBar {
 
@@ -19,24 +22,28 @@ public class Menu extends JMenuBar {
 	private JMenu file;
 	private JMenu newSubMenu;
 	//private JMenu view;
-	//private JMenu project;
+	private JMenu project;
 	
 	private JMenuItem fileOpen;
+	private JMenuItem fileExit;
+ 	private JMenuItem fileChangeRoot;
+ 	
+ 	private JMenuItem projectSettings;
+ 	private JMenuItem projectRunningOptions;
+ 	private JMenuItem projectRun;
+ 	
 	//private JMenuItem fileSave;
 	//private JMenuItem fileSaveAs;
 	//private JMenuItem fileSaveRequest;
 	//private JMenuItem fileSaveResponse;
 	 
-	private JMenuItem fileExit;
- 	private JMenuItem fileGenerate;
- 	private JMenuItem fileChangeRoot;
-	
- 	
- 	private JMenuItem newTestProject;
+	private JMenuItem newTestProject;
  	private JMenuItem newTestSuite;
  	private JMenuItem newTestCase;
  	
  	private NewProjectWindow newProjectWindow;
+ 	private NewTestSuiteWindow newTestSuiteWindow;
+ 	private NewTestCaseWindow newTestCaseWindow;
  	
  	//private JFrame parentWindow;
  	
@@ -56,12 +63,15 @@ public class Menu extends JMenuBar {
 		
 		//parentWindow =(JFrame) getParent();
 		file = new JMenu("File");
+		project = new JMenu("Project");
 		newSubMenu = new JMenu("New");
 		
 		this.add(file);
+		this.add(project);
 		file.add(newSubMenu);
 		initFileMenuItems();
-		//this.add(view);
+		initProjectMenuItems();
+		
 	}
 	
 	/**
@@ -89,6 +99,9 @@ public class Menu extends JMenuBar {
 		
 		this.newTestSuite.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
+				newTestSuiteWindow = new NewTestSuiteWindow();
+				newTestSuiteWindow.setVisible(true);
+			
 				System.out.println("new Test Suite clicked");
 			}
 			
@@ -99,6 +112,9 @@ public class Menu extends JMenuBar {
 		
 		this.newTestCase.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
+				newTestCaseWindow = new NewTestCaseWindow();
+				newTestCaseWindow.setVisible(true);
+				
 				System.out.println("new Test Case clicked");
 			}
 			
@@ -115,41 +131,84 @@ public class Menu extends JMenuBar {
 			
 		} );
 		
-		fileChangeRoot = new JMenuItem("Change Project");
+		fileChangeRoot = new JMenuItem("Change Root");
 		file.add(fileChangeRoot);
 		
 		this.fileChangeRoot.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("file Chenge Project clicked");
+				 
+				JFileChooser changeRoot = new JFileChooser();
+				changeRoot .setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				String root = "nic nevybrano";
+				int retVal = changeRoot.showDialog(getParent(), "Change");
+				
+				if(retVal == JFileChooser.APPROVE_OPTION){
+					 root = changeRoot.getSelectedFile().toString();
+					MainWindow.setDataPath(root);
+					Main.restartGui();
+				}
+				System.out.println("Project changed to:" + root);
 			}
 			
 		} );
 		
-		fileGenerate = new JMenuItem("Generate");
-		file.add(fileGenerate);
-		
-		this.fileGenerate.addActionListener( new ActionListener(){
-			public void actionPerformed(ActionEvent ae) {
-				System.out.println("file generate clicked");
-			}
-			
-		} );
-		
+//		fileGenerate = new JMenuItem("Generate");
+//		file.add(fileGenerate);
+//		
+//		this.fileGenerate.addActionListener( new ActionListener(){
+//			public void actionPerformed(ActionEvent ae) {
+//				System.out.println("file generate clicked");
+//			}
+//			
+//		} );
+//		
 		fileExit = new JMenuItem("Exit");
 		file.add(fileExit);
 		
 		this.fileExit.addActionListener( new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
 				System.out.println("file exit clicked");
+				System.exit(0);
+			}
+			
+		} );
+	}
+	
+	private void initProjectMenuItems(){
+		
+		projectSettings = new JMenuItem("Project Settings");
+		project.add(projectSettings);
+		
+		this.projectSettings.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+								
+				System.out.println("Project settings clicked");
 			}
 			
 		} );
 		
 		
+		projectRunningOptions = new JMenuItem("Running Options");
+		project.add(projectRunningOptions);
 		
+		this.projectRunningOptions.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+							
+				System.out.println("Running Options clicked");
+			}
+			
+		} );
 		
+		projectRun = new JMenuItem("Run Project");
+		project.add(projectRun);
+		
+		this.projectRun.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+						
+				System.out.println("Project Run clicked");
+			}
+			
+		} );
 	}
-	
-	
-	
+
 }

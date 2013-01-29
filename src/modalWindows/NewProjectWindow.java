@@ -19,8 +19,6 @@ public class NewProjectWindow extends ModalWindow{
 	 */
 	
 	private JTextField projectName;
-	
-	
 	private static final long serialVersionUID = 9187751988881264097L;
 
 	public NewProjectWindow(){
@@ -46,15 +44,26 @@ public class NewProjectWindow extends ModalWindow{
 		
 	}
 	
+	/*
+	 * 
+	 * 
+	 */
 	@Override
 	protected String testEmptyInput(){
 		return getProjectName();
 	}
 	
+	/*
+	 * 
+	 */
 	private String getProjectName(){
 		return projectName.getText();
 	}
 	
+	/*
+	 * 
+	 * 
+	 */
 	@Override
 	protected void initButtons(){
 		JButton okButton = new JButton("Ok");
@@ -72,6 +81,9 @@ public class NewProjectWindow extends ModalWindow{
 		
 	}
 	
+	/*
+	 * 
+	 */
 	private class OkButtonAction  implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e) {
@@ -80,7 +92,9 @@ public class NewProjectWindow extends ModalWindow{
              dispose();
          }
 	}
-	
+	/*
+	 * 
+	 */
 	private class CancelButtonAction  implements ActionListener{
 				
 		public void actionPerformed(ActionEvent e) {

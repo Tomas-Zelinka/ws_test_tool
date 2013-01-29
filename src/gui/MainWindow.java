@@ -40,6 +40,10 @@ public class MainWindow extends JFrame{
 	
 	}
 	
+	/*
+	 * 
+	 */
+	
 	public static String getDataPath()
 	{
 		return MainWindow.dataPath;
@@ -51,7 +55,9 @@ public class MainWindow extends JFrame{
 	}
 	
 	
-	
+	/*
+	 * 
+	 */
 	private void windowInit()
 	{
 		this.setTitle(this.APP_NAME);
@@ -68,6 +74,9 @@ public class MainWindow extends JFrame{
 		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
 	}
 	
+	/*
+	 * 
+	 */
 	private void addMenuBar(){
 		this.setJMenuBar(new Menu());
 		
@@ -83,21 +92,23 @@ public class MainWindow extends JFrame{
 		 this.contentPane.add(new  ProjectNavigator(this.dataRoot),BorderLayout.LINE_START);
 	}
 	
-	/*private void addJPanel(){
-		
-	}*/
-	
+	/*
+	 * 
+	 */
 	private void addConsole(){
 		this.contentPane.add(new Console(),BorderLayout.PAGE_END);
 	}
 	
+	/*
+	 * 
+	 */
 	private void initDataPath()
 	{
 		this.dataRoot = new File(MainWindow.dataPath);
 		
 		if(!dataRoot.exists()){
-			boolean wasDirecotyMade = dataRoot.mkdirs();
-		    if(wasDirecotyMade)System.out.println("Direcoty Created");
+			boolean wasDirectoryMade = dataRoot.mkdirs();
+		    if(wasDirectoryMade)System.out.println("Direcoty Created");
 		}
 		
 	}

@@ -40,7 +40,9 @@ public class ProjectNavigator extends JPanel {
 	private JPopupMenu treeMenu;
 	private NewProjectWindow newProjectWindow;
 	
-	/** Construct a FileTree */
+	/*
+	 * 
+	 */
 	public ProjectNavigator(File dir) {
 		 
 		// Make a tree list with all the nodes, and make it a JTree
@@ -53,8 +55,34 @@ public class ProjectNavigator extends JPanel {
 		 this.scrollPane.getViewport().add(tree);
 		 this.add(BorderLayout.CENTER, scrollPane);
 	}
+	
+	public Dimension getMinimumSize() {
+	    return new Dimension(200, 400);
+	}
 
-	/** Add nodes from under "dir" into curTop. Highly recursive. */
+	public Dimension getPreferredSize() {
+	    return new Dimension(200, 400);
+	}
+
+	private class MyTreeCellRenderer extends DefaultTreeCellRenderer {
+		
+		private static final long serialVersionUID = 6647184007329048034L;
+		
+		public MyTreeCellRenderer() {
+			this.setBorderSelectionColor(null); // remove selection border
+			this.setBackgroundSelectionColor( null); // remove selection background since we paint the selected row ourselves
+			this.setBackgroundNonSelectionColor(null);
+		}
+
+		public Color getBackground() {
+			return null;
+		}
+
+	}
+	
+	/*
+	 * 
+	 */
 	private DefaultMutableTreeNode addNodes(DefaultMutableTreeNode curTop, File dir) {
 	   
 		String curPath = dir.getPath();
@@ -96,13 +124,7 @@ public class ProjectNavigator extends JPanel {
 	    return curDir;
 	}
 
-	public Dimension getMinimumSize() {
-	    return new Dimension(200, 400);
-	}
-
-	public Dimension getPreferredSize() {
-	    return new Dimension(200, 400);
-	}
+	
 	  
 	  
 	private void initTree(File dir){
@@ -159,7 +181,7 @@ public class ProjectNavigator extends JPanel {
 	 * 
 	 * @param 
 	 */
-	protected class MyMouseAdapter extends MouseAdapter{
+	private class MyMouseAdapter extends MouseAdapter{
     	
     	
     	
@@ -198,21 +220,7 @@ public class ProjectNavigator extends JPanel {
   
 	 
 	  
-	protected class MyTreeCellRenderer extends DefaultTreeCellRenderer {
-		
-		private static final long serialVersionUID = 6647184007329048034L;
-		
-		public MyTreeCellRenderer() {
-			this.setBorderSelectionColor(null); // remove selection border
-			this.setBackgroundSelectionColor( null); // remove selection background since we paint the selected row ourselves
-			this.setBackgroundNonSelectionColor(null);
-		}
-
-		public Color getBackground() {
-			return null;
-		}
-
-	}
+	
 	
 	
 }

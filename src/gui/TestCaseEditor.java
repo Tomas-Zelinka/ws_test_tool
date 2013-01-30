@@ -3,11 +3,15 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 
 public class TestCaseEditor extends JPanel {
 
@@ -21,16 +25,19 @@ public class TestCaseEditor extends JPanel {
 		
 		//JTextArea testingArea = new JTextArea("ahoj",5,50);
 		JPanel testingArea = new JPanel();
-		testingArea.setPreferredSize(new Dimension(getWidth(),100));
+		//JScrollPane tablePane = new JScrollPane();
+		ToolBox toolBox = new ToolBox(); 
+		
+		testingArea.setPreferredSize(new Dimension(getWidth(),40));
 		
 		JScrollPane paneEditRequest = new JScrollPane();
 		JScrollPane paneEditResponse = new JScrollPane();
 		
-		JTextArea responseArea = new JTextArea("ahoj",5,10);
+		JTextArea responseArea = new JTextArea("",5,10);
 		responseArea.setPreferredSize(new Dimension(getWidth(),100));
 		
 		
-		JTextArea requestArea = new JTextArea("ahoj",5,10);
+		JTextArea requestArea = new JTextArea("",5,10);
 		requestArea.setPreferredSize(new Dimension(getWidth(),100));
 		
 		
@@ -41,11 +48,27 @@ public class TestCaseEditor extends JPanel {
 		windows.setDividerSize(20);
 		windows.setResizeWeight(0.45);
 		
-	
-		testingArea.setLayout(new BorderLayout());
+		
+		//String[] columnNames = {"Attribute","Value"};
+		//String[][] rowsData = {{"atribute","value"},{"atribute","value"},{"atribute","value"},{"atribute","value"}};
+		//DefaultTableModel model = new DefaultTableModel(rowsData,columnNames);
+		//InteractiveTableModel tableModel  = new InteractiveTableModel(columnNames);
+		//JTable table = new JTable(model);
+		//table.setBackground(Color.lightGray);
+		//table.
+		//table.setPreferredSize(new Dimension(200,60));
+		//table.setSize(new Dimension(200,60));
+		//testingArea.setLayout(new BorderLayout());
+		//tablePane.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+		//tablePane.getViewport().add(table);
+		//testingArea.add(tablePane,BorderLayout.CENTER);
+		
+		
+		
+		testingArea.add(toolBox,BorderLayout.LINE_START);
 		testingArea.add(new JSeparator(),BorderLayout.SOUTH );
 		this.setLayout(new BorderLayout());
-		this.add(testingArea,BorderLayout.NORTH);
+		this.add(toolBox,BorderLayout.NORTH);
 		this.add(windows,BorderLayout.CENTER);
 		this.add(new JSeparator(),BorderLayout.SOUTH);
 	}

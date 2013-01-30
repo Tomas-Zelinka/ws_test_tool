@@ -128,7 +128,7 @@ DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot()
 
 		
 		
-		System.out.println("refresh clicked " + getRootPath()+ " :" +  tree.getModel().getChildCount(root));
+		//System.out.println("refresh clicked " + getRootPath()+ " :" +  tree.getModel().getChildCount(root));
 		
 		
 		
@@ -304,7 +304,7 @@ DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot()
 				Rectangle bounds = myTree.getRowBounds( selRow);
 				boolean outside = e.getX() < bounds.x || e.getX() > bounds.x + bounds.width || e.getY() < bounds.y || e.getY() >= bounds.y + bounds.height;
 				if( !outside) {
-					System.out.println( "Project Selected: " + path.getPathComponent(1));
+					//System.out.println( "Project Selected: " + path.getPathComponent(1));
 					
 					MainWindow.setDataPath(path.getPathComponent(1).toString());
 				    if (SwingUtilities.isRightMouseButton(e))  

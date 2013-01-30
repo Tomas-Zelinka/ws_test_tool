@@ -27,7 +27,7 @@ public class Console extends JPanel {
 		setLayout(new BorderLayout());
 
 	    // Make a tree list with all the nodes, and make it a JTree
-	    this.console = new JTextArea("ahoj\n",5,5);
+	    this.console = new JTextArea("Testing tool ready \n",5,5);
 	    
    
         JScrollPane scrollpane = new JScrollPane();

@@ -1,15 +1,59 @@
-<project name="FIWS_2.0" default="build" basedir=".">
+<project name="FIWS_2.0" default="jar" basedir=".">
+ 	<description>Builds, tests, and runs the FIWS_2.0.</description>
+	<property name="src.dir" value="src" />
+   	<property name="build.dir" value="build" />
+	<property name="lib.dir" value="lib" />
+	<property name="data.dir" value="data" />
+	<property name="class.dir" value="${build.dir}/classes" />
+	<property name="jar.dir" value="${build.dir}/jar" />
 	
-	<property name="src.dir" value="src"></property>
-	<property name="build.dir" value=""></property>
-	<property name="jar.dir" value=""></property>
+	<property name="jar_resources.dir" value="${class.dir}/resources" />
+	<property name="jar_lib.dir" value="${jar.dir}/lib" />
+	<property name="build_data.dir" value="${jar.dir}/data" />
+	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	
+	<property name="dep_cp" value="${toString:dep.runtime}" />
+
+	<path id="dep.runtime">
+		    <fileset dir="./lib">
+		        <include name="**/*.jar" />
+		    </fileset>
+	</path>
 	
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
 	
-	<target name="clean"></target>
-	<target name="init" depends="clean"></target>
-	<target name="build" depends="init"></target>
-	<target name="jar" depends="build"></target>
+	<target name="init" depends="clean">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${class.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<mkdir dir="${jar_lib.dir}" />
+		<mkdir dir="${build_data.dir}" />	
+		<copy todir="${jar_lib.dir}">
+			<fileset dir="${lib.dir}"/>
+		</copy>
+	</target>
+	
+	<target name="build" depends="init,clean">
+		<echo>Compile from ${src.dir} to ${build.dir}</echo>
+			
+	    <javac destdir="${class.dir}" srcdir="${src.dir}" includeantruntime="false">
+	    	<classpath refid="dep.runtime"/>
+	    </javac>
+	</target>
+	
+	<target name="jar" depends="build">
+		<manifestclasspath property="manifest_cp" jarfile="${jar.file}">
+			<classpath refid="dep.runtime" />
+		</manifestclasspath>
+		<jar destfile="${jar.file}" basedir="${class.dir}">
+			<manifest>
+		    	<attribute name="Main-Class" value="gui.Main"/>
+				<attribute name="Class-Path" value="${manifest_cp}" />
+			</manifest>
+		</jar>
+	</target>
 	<target name="run" depends="jar"></target>
 	
 	

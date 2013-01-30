@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -18,7 +20,7 @@ public class Console extends JPanel {
 	 */
 	
 	private JTextArea console;
-	private final int MIN_HEIGHT = 50;
+	private final int MIN_HEIGHT = 30;
 	private static final long serialVersionUID = 4989941948035851333L;
 	
 	public Console(){
@@ -29,9 +31,8 @@ public class Console extends JPanel {
 	    
    
         JScrollPane scrollpane = new JScrollPane();
-        scrollpane.setPreferredSize(new Dimension(getWidth(),HEIGHT));
-        scrollpane.setMaximumSize(new Dimension(getWidth(),80));
-        scrollpane.setMinimumSize(new Dimension(getWidth(),80));
+        this.setPreferredSize(new Dimension(getWidth(),80));
+        this.setMinimumSize(new Dimension(getWidth(),40));
 	    scrollpane.getViewport().add(console);
 	    add(BorderLayout.CENTER, scrollpane);
 	    redirectSystemStreams();
@@ -40,6 +41,7 @@ public class Console extends JPanel {
 	    
 	}
 	
+		
 	public void updateTextArea(final String text) {
 		  SwingUtilities.invokeLater(new Runnable() {
 		    public void run() {

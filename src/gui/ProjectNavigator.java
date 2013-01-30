@@ -23,6 +23,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import modalWindows.NewProjectWindow;
@@ -40,11 +41,12 @@ public class ProjectNavigator extends JPanel {
 	private JScrollPane scrollPane;
 	//private String activeDirectory;
 	private JPopupMenu treeMenu;
-	
+	private String rootPath;
 	
 	private JMenuItem newTestProject;
  	private JMenuItem newTestSuite;
  	private JMenuItem newTestCase;
+ 	private JMenuItem refresh;
  	
  	private NewProjectWindow newProjectWindow;
  	private NewTestSuiteWindow newTestSuiteWindow;
@@ -76,7 +78,10 @@ public class ProjectNavigator extends JPanel {
 	}
 	
 	
+	
+	
 	private void initTree(File dir){
+		setRootPath(dir.getPath());
 		tree = new HighlightedTree(addNodes(null, dir));
 		tree.setRootVisible(false);
 		tree.setShowsRootHandles(false);
@@ -88,12 +93,53 @@ public class ProjectNavigator extends JPanel {
 			public void valueChanged(TreeSelectionEvent evt) {
 				tree.treeDidChange();
 			}
+			
 		};
 		tree.addTreeSelectionListener(treeSelListener);
 	   		
 		
 		MyTreeCellRenderer renderer = new MyTreeCellRenderer();
 		tree.setCellRenderer( renderer);
+		
+	}
+	
+	public void refreshTree(){
+		//tree = null;
+		
+		//tree = new HighlightedTree(addNodes(null, ));
+		//initTree(new File(getRootPath()));
+DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+		
+		((DefaultTreeModel) tree.getModel()).reload();
+		SwingUtilities.updateComponentTreeUI(tree);
+		//tree.st
+		///tree.treeDidChange();
+		//tree.revalidate();
+		//tree.repaint();
+		//this.scrollPane.getViewport().revalidate();
+		//this.scrollPane.getViewport().repaint();
+		this.remove(scrollPane);
+		scrollPane = new JScrollPane();
+		this.add(scrollPane.getViewport().add(tree));
+		this.revalidate();
+		
+		this.repaint();
+	    System.out.println("tree refreshed");
+
+		
+		
+		System.out.println("refresh clicked " + getRootPath()+ " :" +  tree.getModel().getChildCount(root));
+		
+		
+		
+	}
+	
+	private void setRootPath(String path){
+		this.rootPath = path;
+	}
+	
+	private String getRootPath(){
+		return this.rootPath;
 	}
 	
 	
@@ -165,7 +211,7 @@ public class ProjectNavigator extends JPanel {
 	private void initPopupMenu(){
 		
 		treeMenu = new JPopupMenu();
-		newTestProject = new JMenuItem("Test Project");
+		newTestProject = new JMenuItem("New Test Project");
 		treeMenu.add(newTestProject);
 		
 		this.newTestProject.addActionListener( new ActionListener(){
@@ -179,7 +225,7 @@ public class ProjectNavigator extends JPanel {
 		} );
 		
 		
-		newTestSuite = new JMenuItem("Test Suite");
+		newTestSuite = new JMenuItem("New Test Suite");
 		treeMenu.add(newTestSuite);
 		
 		this.newTestSuite.addActionListener( new ActionListener(){
@@ -192,7 +238,7 @@ public class ProjectNavigator extends JPanel {
 			
 		} );
 		
-		newTestCase = new JMenuItem("Test Case");
+		newTestCase = new JMenuItem("New Test Case");
 		treeMenu.add(newTestCase);
 		
 		this.newTestCase.addActionListener( new ActionListener(){
@@ -204,7 +250,38 @@ public class ProjectNavigator extends JPanel {
 			}
 			
 		} );
+		
+		
+		
+		refresh = new JMenuItem("Refresh");
+		treeMenu.add(refresh);
+		
+		this.refresh.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				
+				refreshTree();
+				
+			}
+			
+		} );
 	    
+		JMenuItem reload = new JMenuItem("Reload");
+		treeMenu.add(reload);
+		
+		reload.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				
+				reloadTree();
+				
+			}
+			
+		} );
+		
+		
+	}
+	
+	public void reloadTree(){
+		this.add(scrollPane);
 	}
 	
 	/*

@@ -6,6 +6,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.File;
 
 import javax.swing.JDesktopPane;
@@ -134,13 +136,13 @@ public class MainWindow extends JFrame{
 		initConsole();
 		this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
 		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
+		this.bottomPane.setResizeWeight(0.90);
 		getContentPane().add(this.bottomPane);
 	}
 	
 	/*private void addToolBar(){
 		
 	}*/
-	
 	
 	/*
 	 * 
@@ -153,32 +155,20 @@ public class MainWindow extends JFrame{
 		
 		
 		
-		JScrollPane paneEditRequest = new JScrollPane();
-		JScrollPane paneEditResponse = new JScrollPane();
 		
-		JTextArea responseArea = new JTextArea("ahoj",5,10);
-		responseArea.setPreferredSize(new Dimension(100,100));
+		this.editor = new TestCaseEditor();
 		
 		
-		JTextArea requestArea = new JTextArea("ahoj",5,10);
-		requestArea.setPreferredSize(new Dimension(10,10));
+		//this.editor.setLayout(null);		
+		//JSplitPane windows = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,paneEditRequest,responseArea);
 		
-		
-		paneEditRequest.add(requestArea);
-		paneEditResponse.add(responseArea);
-		
-		this.editor = new JPanel();
-		
-		
-		this.editor.setLayout(new FlowLayout());		
-		JSplitPane windows = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,paneEditRequest,responseArea);
-		
-		JDesktopPane desktop = new JDesktopPane();
-		JInternalFrame frame = new JInternalFrame();
-		
-		desktop.add(frame);
-		frame.setSize(100, 100);
-		frame.setVisible(true);
+//		JInternalFrame frame = new JInternalFrame();
+//		frame.setResizable(true);
+//		frame.setClosable(true);
+//		frame.setMaximizable(true);
+//		this.editor.add(frame);
+//		frame.setSize(100, 100);
+//		frame.setVisible(true);
 		//this.editor.;
 		
 		

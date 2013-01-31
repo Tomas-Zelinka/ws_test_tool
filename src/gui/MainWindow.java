@@ -2,21 +2,16 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
+//import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.File;
 
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
+
+//import central.Project;
 
 public class MainWindow extends JFrame{
 
@@ -32,13 +27,14 @@ public class MainWindow extends JFrame{
 	private JSplitPane centerPane;
 	private JSplitPane bottomPane;
 	
-	private Container contentPane; 
+	//private Container contentPane; 
 	public static String dataPath = "./data"; 
 	private File dataRoot;
 	
 	private JPanel editor;
 	private ProjectNavigator navigator;
 	private Console console;
+	//private Project project;
 	
 	/*
 	 * Popis
@@ -49,8 +45,6 @@ public class MainWindow extends JFrame{
 	public MainWindow(){
 		windowInit();
 		addMenuBar();
-		//addCenterPanel();
-		//addConsole();
 		addCenterPane();
 		addBottomPane();
 		this.pack();
@@ -71,6 +65,10 @@ public class MainWindow extends JFrame{
 		MainWindow.dataPath = path;
 	}
 	
+	
+	public void newProject(String name){
+		
+	}
 	
 	public void showCaseEditor(){
 		
@@ -98,15 +96,15 @@ public class MainWindow extends JFrame{
 		this.setBounds(x, y, this.WIDTH, this.HEIGTH);
 		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
 		this.setLayout(new BorderLayout());
-		initContentPane();
+		//initContentPane();
 		this.setBackground(Color.gray);
 		
 		
 	}
 	
-	private void initContentPane(){
-		this.contentPane = this.getContentPane();
-	}
+//	private void initContentPane(){
+//		this.contentPane = this.getContentPane();
+//	}
 	
 	private JSplitPane getCenterPane(){
 		return this.centerPane;
@@ -152,27 +150,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	private void initContent(){
-		
-		
-		
-		
 		this.editor = new TestCaseEditor();
-		
-		
-		//this.editor.setLayout(null);		
-		//JSplitPane windows = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,paneEditRequest,responseArea);
-		
-//		JInternalFrame frame = new JInternalFrame();
-//		frame.setResizable(true);
-//		frame.setClosable(true);
-//		frame.setMaximizable(true);
-//		this.editor.add(frame);
-//		frame.setSize(100, 100);
-//		frame.setVisible(true);
-		//this.editor.;
-		
-		
-		
 	}
 	
 	/*

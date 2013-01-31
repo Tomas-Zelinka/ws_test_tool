@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 public class HighlightedTree extends JTree {
 	
@@ -14,9 +13,8 @@ public class HighlightedTree extends JTree {
 	public static Color selectedBorderColor = new Color(57,105,138);
 	
 	
-	public HighlightedTree(DefaultMutableTreeNode node)
-	{
-		super(node);
+	public HighlightedTree(){
+		
 	}
 	
 	protected void paintComponent(Graphics g) {

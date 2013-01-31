@@ -2,8 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -20,7 +18,8 @@ public class Console extends JPanel {
 	 */
 	
 	private JTextArea console;
-	private final int MIN_HEIGHT = 30;
+	private final int MIN_HEIGHT = 40;
+	private final int PREFERRED_HEIGHT = 80;
 	private static final long serialVersionUID = 4989941948035851333L;
 	
 	public Console(){
@@ -29,10 +28,9 @@ public class Console extends JPanel {
 	    // Make a tree list with all the nodes, and make it a JTree
 	    this.console = new JTextArea("Testing tool ready \n",5,5);
 	    
-   
         JScrollPane scrollpane = new JScrollPane();
-        this.setPreferredSize(new Dimension(getWidth(),80));
-        this.setMinimumSize(new Dimension(getWidth(),40));
+        this.setPreferredSize(new Dimension(getWidth(),PREFERRED_HEIGHT));
+        this.setMinimumSize(new Dimension(getWidth(),MIN_HEIGHT));
 	    scrollpane.getViewport().add(console);
 	    add(BorderLayout.CENTER, scrollpane);
 	    redirectSystemStreams();
@@ -44,34 +42,35 @@ public class Console extends JPanel {
 		
 	public void updateTextArea(final String text) {
 		  SwingUtilities.invokeLater(new Runnable() {
-		    public void run() {
-		      console.append(text);
-    		  console.setCaretPosition(console.getDocument().getLength());
+			  public void run() {
+				  console.append(text);
+				  console.setCaretPosition(console.getDocument().getLength());
 		    }
 		  });
 		}
 	
 	private void redirectSystemStreams() {
-		  OutputStream out = new OutputStream() {
-		    @Override
-		    public void write(int b) throws IOException {
-		      updateTextArea(String.valueOf((char) b));
-		    }
-		 
-		    @Override
-		    public void write(byte[] b, int off, int len) throws IOException {
-		      updateTextArea(new String(b, off, len));
-		    }
-		 
-		    @Override
-		    public void write(byte[] b) throws IOException {
-		      write(b, 0, b.length);
-		    }
-		  };
-		 
-		  System.setOut(new PrintStream(out, true));
-		  System.setErr(new PrintStream(out, true));
+		OutputStream out = new OutputStream() {
+		
+			@Override
+			public void write(int b) throws IOException {
+				updateTextArea(String.valueOf((char) b));
+			}
+	 
+			@Override
+			public void write(byte[] b, int off, int len) throws IOException {
+				updateTextArea(new String(b, off, len));
+			}
+	 
+			@Override
+			public void write(byte[] b) throws IOException {
+				write(b, 0, b.length);
+			}
+			};
+	 
+			System.setOut(new PrintStream(out, true));
+			System.setErr(new PrintStream(out, true));
 		}
-	
+
 	
 }

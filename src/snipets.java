@@ -1,5 +1,4 @@
 //MENU
-// po vyvolani akce aktualizovat strom
 // kazdou zmenu zapsat na disk do projektoveho souboru
 
 

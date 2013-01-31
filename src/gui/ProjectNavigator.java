@@ -10,8 +10,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.util.Collections;
-import java.util.Vector;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -21,9 +19,7 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import modalWindows.NewProjectWindow;
@@ -39,9 +35,7 @@ public class ProjectNavigator extends JPanel {
 	
 	private JTree tree;
 	private JScrollPane scrollPane;
-	//private String activeDirectory;
 	private JPopupMenu treeMenu;
-	private String rootPath;
 	
 	private JMenuItem newTestProject;
  	private JMenuItem newTestSuite;
@@ -81,8 +75,8 @@ public class ProjectNavigator extends JPanel {
 	
 	
 	private void initTree(File dir){
-		setRootPath(dir.getPath());
-		tree = new HighlightedTree(addNodes(null, dir));
+		tree = new HighlightedTree();
+		tree.setModel(new MyTreeModel(dir));
 		tree.setRootVisible(false);
 		tree.setShowsRootHandles(false);
 		
@@ -104,91 +98,14 @@ public class ProjectNavigator extends JPanel {
 	}
 	
 	public void refreshTree(){
-		//tree = null;
 		
-		//tree = new HighlightedTree(addNodes(null, ));
-		//initTree(new File(getRootPath()));
-DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
-		
-		((DefaultTreeModel) tree.getModel()).reload();
 		SwingUtilities.updateComponentTreeUI(tree);
-		//tree.st
-		///tree.treeDidChange();
-		//tree.revalidate();
-		//tree.repaint();
-		//this.scrollPane.getViewport().revalidate();
-		//this.scrollPane.getViewport().repaint();
-		this.remove(scrollPane);
-		scrollPane = new JScrollPane();
-		this.add(scrollPane.getViewport().add(tree));
-		this.revalidate();
-		
-		this.repaint();
-	    System.out.println("tree refreshed");
-
-		
-		
-		//System.out.println("refresh clicked " + getRootPath()+ " :" +  tree.getModel().getChildCount(root));
-		
-		
-		
-	}
-	
-	private void setRootPath(String path){
-		this.rootPath = path;
-	}
-	
-	private String getRootPath(){
-		return this.rootPath;
+		tree.treeDidChange();
+		 System.out.println("tree refreshed");
 	}
 	
 	
-	/*
-	 * 
-	 */
-	private DefaultMutableTreeNode addNodes(DefaultMutableTreeNode curTop, File dir) {
-	   
-		String curPath = dir.getPath();
-		DefaultMutableTreeNode curDir = new DefaultMutableTreeNode(dir.getName());
-		Vector<String> ol = new Vector<String>();
-	    String[] tmp = dir.list();
-	    File f;
-	    Vector<String> files = new Vector<String>();
-	    
-		
-		if (curTop != null) { // should only be null at root
-	    	curTop.add(curDir);
-	    }
-	    	    
-	    for (int i = 0; i < tmp.length; i++)
-	    	ol.addElement(tmp[i]);
-	    
-	    Collections.sort(ol, String.CASE_INSENSITIVE_ORDER);
-	    	    
-	    // Make two passes, one for Dirs and one for Files. This is #1.
-	    
-	    for (int i = 0; i < ol.size(); i++) {
-	    	String thisObject = (String) ol.elementAt(i);
-	    	String newPath;
-	    	
-	    	if (curPath.equals("."))
-	    		newPath = thisObject;
-	    	else
-	    		newPath = curPath + File.separator + thisObject;
-	    	if ((f = new File(newPath)).isDirectory())
-	    		addNodes(curDir, f);
-	    	else
-	    		files.addElement(thisObject);
-	    }
-	    
-	    // Pass two: for files.
-	    for (int fnum = 0; fnum < files.size(); fnum++)
-	    	curDir.add(new DefaultMutableTreeNode(files.elementAt(fnum)));
-	    return curDir;
-	}
-
 	
-	  
 	private class MyTreeCellRenderer extends DefaultTreeCellRenderer {
 		
 		private static final long serialVersionUID = 6647184007329048034L;

@@ -9,6 +9,28 @@
 //editor ma toolbox a popupmenu s operacema
 
 
+//Project 
+//muze mit vice testovacich sad
+//bude mit soubor s nastavenim, ktery bude slouzit k identifikaci adresare, ze jde prave o projekt
+//programu FIWS
+
+//Testovaci sada 
+//muze mit mit vice testovacich pripadu a bude slouzit k jejich vyhodnocovani a porovnavani
+//bude mit parametry a dvojim poklikem se otevre tabulka s testovacimi pripady 
+// zde bude moci byt spustena testovaci jednotka pro vybrane nebo vsechny tesovaci pripady
+
+//testovaci sada bude mit parametr, kde budou uvedeny testovaci pripady ktere budou predany testovaci
+//jednotce ke zpracovani. Zbyle parametry budou nastaveny u jednotlivych testovacich pripadu
+//tento vyber bude persitetni proto, aby se mohla data predat testovaci jednotce i z CLI
+
+// Testovaci pripad
+// bude sestaven z http pozadavku a mistem pro odpoved, pripadne jiz obdrezene odpovedi
+// bude mit parametry a dvojim poklikem se otevere editor pro http pozadavek a odpoved
+// zde bude moci byt spustena testovaci jednotka nad jednotlivym testovacim pripadem
+
+
+
+
 
 // redirecting outputs
 

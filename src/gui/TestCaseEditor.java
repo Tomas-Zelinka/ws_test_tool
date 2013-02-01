@@ -17,7 +17,7 @@ public class TestCaseEditor extends JPanel {
 
 	
 	/**
-	 * 
+	 * ID for serialization
 	 */
 	private static final long serialVersionUID = -2860238189144324557L;
 

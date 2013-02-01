@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-//import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -11,38 +10,85 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-//import central.Project;
+import logging.ConsoleLog;
+
 
 public class MainWindow extends JFrame{
 
 	/**
-	 * 
+	 * ID for serialization
 	 */
 	private static final long serialVersionUID = 2740437090361841747L;
+	
+	/**
+	 * Width of the main window
+	 */
 	private final int WIDTH = 800;
+	
+	/**
+	 * Height of the main window
+	 */
 	private final int HEIGTH = 600;
+	
+	
+	/**
+	 * Width of the resizing frames
+	 */
 	private final int SPLIT_RESIZERS_WIDTH = 3;
+	
+	/**
+	 * Application title
+	 */
 	private final String APP_NAME = "Testing tool";
 	
+	/**
+	 * Splitpane containing Project navigator and action place
+	 */
 	private JSplitPane centerPane;
+	
+	/**
+	 * SplitPane containing centerPane and Console for tool responses
+	 */
 	private JSplitPane bottomPane;
 	
-	//private Container contentPane; 
+	/**
+	 * 
+	 */
 	public static String dataPath = "./data"; 
+	
+	/**
+	 * 
+	 */
 	private File dataRoot;
 	
+	/**
+	 * JPanel holding the various editors and controls
+	 */
 	private JPanel editor;
-	private ProjectNavigator navigator;
-	private Console console;
-	//private Project project;
 	
-	/*
-	 * Popis
+	/**
+	 * Extended JPanel holding JTree for document navigation
+	 */
+	private ProjectNavigator navigator;
+	
+	/**
+	 * Extended JPanel holding ScrollPane with TextArea for tool responses
+	 */
+	private Console console;
+	
+	/**
+	 * Constructor for main window
 	 * 
-	 * @param
-	 * @return
+	 * At first are initiated the underlying components and then 
+	 * those components are placed into the containers 
+	 * 
 	 */
 	public MainWindow(){
+		
+		initDataPath();
+		initContent();
+		initConsole();
+		
 		windowInit();
 		addMenuBar();
 		addCenterPane();
@@ -51,15 +97,18 @@ public class MainWindow extends JFrame{
 	
 	}
 	
-	/*
+	/**
 	 * 
 	 */
-	
 	public static String getDataPath()
 	{
 		return MainWindow.dataPath;
 	}
 	
+	/**
+	 * 
+	 * @param path
+	 */
 	public static void setDataPath(String path){
 		
 		MainWindow.dataPath = path;
@@ -78,7 +127,7 @@ public class MainWindow extends JFrame{
 		
 	}
 	
-	/*
+	/**
 	 * 
 	 */
 	private void windowInit()
@@ -96,23 +145,22 @@ public class MainWindow extends JFrame{
 		this.setBounds(x, y, this.WIDTH, this.HEIGTH);
 		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
 		this.setLayout(new BorderLayout());
-		//initContentPane();
 		this.setBackground(Color.gray);
-		
 		
 	}
 	
-//	private void initContentPane(){
-//		this.contentPane = this.getContentPane();
-//	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	private JSplitPane getCenterPane(){
 		return this.centerPane;
 	}
 	
 	
 	
-	/*
+	/**
+	 * 
 	 * 
 	 */
 	private void addMenuBar(){
@@ -120,40 +168,43 @@ public class MainWindow extends JFrame{
 		
 	}
 	
-	
+	/**
+	 * 
+	 */
 	private void addCenterPane(){
-		initDataPath();
-		initContent();
+		
 		this.navigator = new  ProjectNavigator(this.dataRoot);
 		this.centerPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,this.navigator,this.editor);
 		this.centerPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
 		
 	}
 	
+	/**
+	 * 
+	 */
 	private void addBottomPane(){
-		initConsole();
+		
 		this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
 		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
 		this.bottomPane.setResizeWeight(0.90);
 		getContentPane().add(this.bottomPane);
 	}
 	
-	/*private void addToolBar(){
-		
-	}*/
-	
-	/*
+	/**
 	 * 
 	 */
 	private void initConsole(){
 		this.console = new Console();
 	}
 	
+	/**
+	 * 
+	 */
 	private void initContent(){
 		this.editor = new TestCaseEditor();
 	}
 	
-	/*
+	/**
 	 * 
 	 */
 	private void initDataPath()
@@ -162,15 +213,10 @@ public class MainWindow extends JFrame{
 		
 		if(!dataRoot.exists()){
 			boolean wasDirectoryMade = dataRoot.mkdirs();
-		    if(wasDirectoryMade)System.out.println("Direcoty Created");
+		    if(wasDirectoryMade)
+		    	ConsoleLog.Print("Direcoty Created");
 		}
 		
 	}
-	
-	
-	
-	
-	
-	
-	
+
 }

@@ -9,31 +9,49 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import logging.ConsoleLog;
+
 public class MyTreeModel implements TreeModel {
 
-	private String root; // The root identifier
+	/**
+	 * 
+	 */
+	private String root; 
 
-	private Vector<TreeModelListener> listeners; // Declare the listeners vector
+	/**
+	 * 
+	 */
+	private Vector<TreeModelListener> listeners; 
 
+	/**
+	 * 
+	 * @param dir
+	 */
 	public MyTreeModel(File dir) {
 
 		root = dir.getPath();
-		// FileNode tempFile = new FileNode(root);
-		//root = tempFile.getParent();
-
 		listeners = new Vector<TreeModelListener>();
 	}
 
+	/**
+	 * 
+	 */
 	public Object getRoot() {
 		return (new FileNode(root));
 	}
 
+	/**
+	 * 
+	 */
 	public Object getChild(Object parent, int index) {
 		FileNode directory = (FileNode) parent;
 		String[] directoryMembers = directory.list();
 		return (new FileNode(directory, directoryMembers[index]));
 	}
 
+	/**
+	 * 
+	 */
 	public int getChildCount(Object parent) {
 		FileNode fileSystemMember = (FileNode) parent;
 	    
@@ -46,6 +64,9 @@ public class MyTreeModel implements TreeModel {
 	    }
 	}
 
+	/**
+	 * 
+	 */
 	public int getIndexOfChild(Object parent, Object child) {
 		FileNode directory = (FileNode) parent;
 	    FileNode directoryMember = (FileNode) child;
@@ -58,30 +79,46 @@ public class MyTreeModel implements TreeModel {
 	    		break;
 	    	}
 	    }
-
 	    return result;
 	}
 
+	/**
+	 * 
+	 */
 	public boolean isLeaf(Object node) {
+		
 		return ((FileNode) node).isFile();
 	}
-
+	
+	/**
+	 * 
+	 */
 	public void addTreeModelListener(TreeModelListener l) {
 		if (l != null && !listeners.contains(l)) {
 			listeners.addElement(l);
 	    }
 	}
 
+	/**
+	 * 
+	 */
 	public void removeTreeModelListener(TreeModelListener l) {
 		if (l != null) {
 			listeners.removeElement(l);
 	    }
 	}
 
+	/**
+	 * 
+	 */
 	public void valueForPathChanged(TreePath path, Object newValue) {
 	    // Does Nothing!
 	}
-
+	
+	/**
+	 * 
+	 * @param e
+	 */
 	public void fireTreeNodesInserted(TreeModelEvent e) {
 	    Enumeration<TreeModelListener> listenerCount = listeners.elements();
 	    while (listenerCount.hasMoreElements()) {
@@ -90,24 +127,34 @@ public class MyTreeModel implements TreeModel {
 	    }
 	}
 
+	/**
+	 * 
+	 * @param e
+	 */
 	public void fireTreeNodesRemoved(TreeModelEvent e) {
 	    Enumeration<TreeModelListener> listenerCount = listeners.elements();
 	    while (listenerCount.hasMoreElements()) {
 	    	TreeModelListener listener = (TreeModelListener) listenerCount.nextElement();
 	    	listener.treeNodesRemoved(e);
 	    }
-
 	}
-
+	
+	/**
+	 * 
+	 * @param e
+	 */
 	public void fireTreeNodesChanged(TreeModelEvent e) {
 	    Enumeration<TreeModelListener> listenerCount = listeners.elements();
 	    while (listenerCount.hasMoreElements()) {
 	    	TreeModelListener listener = (TreeModelListener) listenerCount.nextElement();
 	    	listener.treeNodesChanged(e);
 	    }
-
 	}
 
+	/**
+	 * 
+	 * @param e
+	 */
 	public void fireTreeStructureChanged(TreeModelEvent e) {
 	    Enumeration<TreeModelListener> listenerCount = listeners.elements();
 	    while (listenerCount.hasMoreElements()) {
@@ -117,19 +164,65 @@ public class MyTreeModel implements TreeModel {
 
 	}
 	  
-	  
+  /**
+   * 
+   * @author zelinkat
+   *
+   */
 	public class FileNode extends java.io.File {
 
+		/**
+		 * 
+		 */
 		private static final long serialVersionUID = -2796997206556668704L;
 
+		/**
+		 * 
+		 * @param directory
+		 */
 		public FileNode(String directory) {
 	        super(directory);
 	    }
 
+		/**
+		 * 
+		 * @param parent
+		 * @param child
+		 */
 	    public FileNode(FileNode parent, String child) {
 	        super(parent, child);
 	    }
+	    
+	    /**
+	     * 
+	     * @return
+	     */
+	    public boolean isTestCase(){
+	    	
+	    	if (this.isDirectory()){
+	    		ConsoleLog.Print("testcase double clicked");
+	    		return true;
+	    	}
+	    	return true;
+	    }
 
+	    /**
+	     * 
+	     * @return
+	     */
+	    public boolean isTestSuite(){
+	    	
+	    	if(this.isDirectory()){
+	    		ConsoleLog.Print("testsuite double clicked");
+	    		return true;
+	    	}
+	    	
+	    	return true;
+	    }
+	    
+	    /**
+	     * 
+	     */
 	    @Override
 	    public String toString() {
 	        return getName();

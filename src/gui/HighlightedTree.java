@@ -6,17 +6,36 @@ import java.awt.Rectangle;
 
 import javax.swing.JTree;
 
+/**
+ * 
+ * This class extends JTree because of highlighting the selected nodes
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public class HighlightedTree extends JTree {
 	
+	/**
+	 * ID for serialization
+	 */
 	private static final long serialVersionUID = 8741586474668272227L;
+	
+	/**
+	 * Filling color of selected rectangle
+	 */
 	public static Color selectedColor = new Color(115,164,209);
+	
+	/**
+	 * Border color of selected rectangle
+	 */
 	public static Color selectedBorderColor = new Color(57,105,138);
 	
-	
-	public HighlightedTree(){
-		
-	}
-	
+	/**
+	 * Overridden method for own drawing of the selected tree node
+	 * 
+	 *  @param g - Graphic context for the component
+	 */
+	@Override
 	protected void paintComponent(Graphics g) {
 
 		// paint background
@@ -25,6 +44,12 @@ public class HighlightedTree extends JTree {
 
 		// paint selected node's background and border
 		int fromRow = getRowForPath( getSelectionPath());
+		
+		/*it will color the rectangle around selected node
+		 * we have to get bounds around selected row and
+		 * according these bounds we can fill the rectangle
+		 * around the row 
+		*/
 		if (fromRow != -1) {
 			int toRow = fromRow + 1;
 			Rectangle fromBounds = getRowBounds(fromRow);
@@ -37,9 +62,9 @@ public class HighlightedTree extends JTree {
 			}
 		}
 
-		// perform operation of superclass
-		setOpaque(false); // trick not to paint background
+		//set opaque of node to see our drawn rectangle
+		setOpaque(false); 
 		super.paintComponent(g);
-		setOpaque(false);
+		
 	}
 }

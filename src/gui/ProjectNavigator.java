@@ -22,32 +22,42 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
+import logging.ConsoleLog;
 import modalWindows.NewProjectWindow;
 import modalWindows.NewTestCaseWindow;
 import modalWindows.NewTestSuiteWindow;
 
 
 public class ProjectNavigator extends JPanel {
-	  /**
-	 * 
+	
+	/**
+	 * ID for serialization
 	 */
 	private static final long serialVersionUID = 6495944797574501122L;
 	
+	/**
+	 * 
+	 */
 	private JTree tree;
+	
+	/**
+	 * 
+	 */
 	private JScrollPane scrollPane;
+	
+	/**
+	 * 
+	 */
 	private JPopupMenu treeMenu;
 	
-	private JMenuItem newTestProject;
- 	private JMenuItem newTestSuite;
- 	private JMenuItem newTestCase;
- 	private JMenuItem refresh;
+	
  	
  	private NewProjectWindow newProjectWindow;
  	private NewTestSuiteWindow newTestSuiteWindow;
  	private NewTestCaseWindow newTestCaseWindow;
 	
  
-	/*
+	/**
 	 * 
 	 */
 	public ProjectNavigator(File dir) {
@@ -55,7 +65,6 @@ public class ProjectNavigator extends JPanel {
 		// Make a tree list with all the nodes, and make it a JTree
 	     initTree(dir);
 		 initPopupMenu();
-		 
 		 
 		 this.scrollPane = new JScrollPane();
 		 this.setLayout(new BorderLayout());
@@ -73,7 +82,11 @@ public class ProjectNavigator extends JPanel {
 	
 	
 	
-	
+	/**
+	 * Document tree initialization
+	 *  
+	 * @param dir - the root directory for the tree
+	 */
 	private void initTree(File dir){
 		tree = new HighlightedTree();
 		tree.setModel(new MyTreeModel(dir));
@@ -97,22 +110,122 @@ public class ProjectNavigator extends JPanel {
 		
 	}
 	
+	/**
+	 * method for refreshing tree by user
+	 * for example when the filesystem is changed
+	 * while the tool is running
+	 */
 	public void refreshTree(){
 		
 		SwingUtilities.updateComponentTreeUI(tree);
 		tree.treeDidChange();
-		 System.out.println("tree refreshed");
+		ConsoleLog.Print("tree refreshed");
+	}
+
+	/**
+	 * 
+	 * @param menu
+	 * @param label
+	 * @param listener
+	 */
+	private void addMenuItem(JPopupMenu menu,String label,ActionListener listener){
+		
+		JMenuItem menuItem = new JMenuItem(label);
+		menu.add(menuItem);
+		menuItem.addActionListener(listener);
+		
+	}
+
+	/**
+	 * 
+	 */
+	private void initPopupMenu(){
+		treeMenu = new JPopupMenu();
+		
+		addMenuItem(treeMenu,"New Test Project", new TestProjectListener());
+		addMenuItem(treeMenu,"New Test Suite", new TestSuiteListener());
+		addMenuItem(treeMenu,"New Test Case", new TestCaseListener());
+		addMenuItem(treeMenu,"Edit", new EditListener());
+		addMenuItem(treeMenu,"Refresh", new RefreshTree());
+	}	
+		
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class TestCaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			newTestCaseWindow = new NewTestCaseWindow();
+			newTestCaseWindow.setVisible(true);
+			
+			ConsoleLog.Print("new Test Case clicked");
+		}
+	}
+
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class TestSuiteListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			newTestSuiteWindow = new NewTestSuiteWindow();
+			newTestSuiteWindow.setVisible(true);
+			ConsoleLog.Print("new Test Suite clicked");
+		}
 	}
 	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class TestProjectListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			
+			newProjectWindow = new NewProjectWindow();
+			newProjectWindow.setVisible(true);
+			ConsoleLog.Print("new Test Project clicked");
+		}
+	}		
 	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class EditListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			ConsoleLog.Print("file edit clicked");
+		}
+	} 	
 	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class RefreshTree implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			
+			refreshTree();
+		}
+	} 
+	
+
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
 	private class MyTreeCellRenderer extends DefaultTreeCellRenderer {
 		
 		private static final long serialVersionUID = 6647184007329048034L;
 		
 		public MyTreeCellRenderer() {
-			this.setBorderSelectionColor(null); // remove selection border
-			this.setBackgroundSelectionColor( null); // remove selection background since we paint the selected row ourselves
+			this.setBorderSelectionColor(null); 
+			this.setBackgroundSelectionColor( null); 
 			this.setBackgroundNonSelectionColor(null);
 		}
 
@@ -122,120 +235,58 @@ public class ProjectNavigator extends JPanel {
 
 	}
 	
-	
-	
-	
-	private void initPopupMenu(){
-		
-		treeMenu = new JPopupMenu();
-		newTestProject = new JMenuItem("New Test Project");
-		treeMenu.add(newTestProject);
-		
-		this.newTestProject.addActionListener( new ActionListener(){
-			public void actionPerformed(ActionEvent ae) {
-				
-				newProjectWindow = new NewProjectWindow();
-				newProjectWindow.setVisible(true);
-				System.out.println("new Test Project clicked");
-			}
-			
-		} );
-		
-		
-		newTestSuite = new JMenuItem("New Test Suite");
-		treeMenu.add(newTestSuite);
-		
-		this.newTestSuite.addActionListener( new ActionListener(){
-			public void actionPerformed(ActionEvent ae) {
-				newTestSuiteWindow = new NewTestSuiteWindow();
-				newTestSuiteWindow.setVisible(true);
-			
-				System.out.println("new Test Suite clicked");
-			}
-			
-		} );
-		
-		newTestCase = new JMenuItem("New Test Case");
-		treeMenu.add(newTestCase);
-		
-		this.newTestCase.addActionListener( new ActionListener(){
-			public void actionPerformed(ActionEvent ae) {
-				newTestCaseWindow = new NewTestCaseWindow();
-				newTestCaseWindow.setVisible(true);
-				
-				System.out.println("new Test Case clicked");
-			}
-			
-		} );
-		
-		
-		
-		refresh = new JMenuItem("Refresh");
-		treeMenu.add(refresh);
-		
-		this.refresh.addActionListener( new ActionListener(){
-			public void actionPerformed(ActionEvent ae) {
-				
-				refreshTree();
-				
-			}
-			
-		} );
-	    
-		JMenuItem reload = new JMenuItem("Reload");
-		treeMenu.add(reload);
-		
-		reload.addActionListener( new ActionListener(){
-			public void actionPerformed(ActionEvent ae) {
-				
-				reloadTree();
-				
-			}
-			
-		} );
-		
-		
-	}
-	
-	public void reloadTree(){
-		this.add(scrollPane);
-	}
-	
-	/*
-	 * This inner class is responsible for colorful selection 
-	 * in JTree Navigator frame
+	/**
 	 * 
+	 * This adapter is responsible for mouse event
+	 * handling on the navigation tree
 	 * 
-	 * @param 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
 	 */
 	private class MyMouseAdapter extends MouseAdapter{
-    	
-    	
-    	
-    	public void mousePressed(MouseEvent e) {
+		
+		/**
+		 * 
+		 *  @param e - triggered mouse event 
+		 */
+		public void mousePressed(MouseEvent e) {
     		JTree myTree = (JTree)e.getSource();
-    		
+    		MyTreeModel model = (MyTreeModel) myTree.getModel();
 			int selRow = myTree.getClosestRowForLocation( e.getX(), e.getY());
 			TreePath path = myTree.getPathForLocation( e.getX(),e.getY());
 			if( selRow != -1) {
 				Rectangle bounds = myTree.getRowBounds( selRow);
 				boolean outside = e.getX() < bounds.x || e.getX() > bounds.x + bounds.width || e.getY() < bounds.y || e.getY() >= bounds.y + bounds.height;
 				if( !outside) {
-					//System.out.println( "Project Selected: " + path.getPathComponent(1));
+					//ConsoleLog.Print( "Project Selected: " + path.getPathComponent(1));
 					
 					MainWindow.setDataPath(path.getPathComponent(1).toString());
 				    if (SwingUtilities.isRightMouseButton(e))  
-				    	myTree.setSelectionRow(selRow);  
-				      	
+				    	myTree.setSelectionRow(selRow); 
+				    
+				    if (e.getClickCount() == 2 && !e.isConsumed()) {
+				        e.consume();
+				        
+				        if(model.isLeaf(path.getLastPathComponent()))
+				        	ConsoleLog.Print( "Project Selected: ahoj");
+				   }
 				}
 			
 			}
 		}
     	
+		/**
+		 * 
+		 *  @param e - triggered mouse event 
+		 */
     	public void mouseReleased(MouseEvent e) {
     		 ShowPopup(e);
 	    }
     	
+    	/**
+    	 * 
+    	 * @param e - triggered mouse event 
+    	 */
     	private void ShowPopup(MouseEvent e) {
 	        if (e.isPopupTrigger()) {
 	            treeMenu.show(e.getComponent(),
@@ -244,10 +295,4 @@ public class ProjectNavigator extends JPanel {
 	    }
     	
     }
-  
-	 
-	  
-	
-	
-	
 }

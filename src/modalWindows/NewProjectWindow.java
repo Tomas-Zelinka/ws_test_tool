@@ -1,7 +1,5 @@
 package modalWindows;
 
-import gui.MainWindow;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
+
+import logging.ConsoleLog;
 
 
 public class NewProjectWindow extends InputModalWindow{
@@ -87,7 +87,7 @@ public class NewProjectWindow extends InputModalWindow{
 	private class OkButtonAction  implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e) {
-             System.out.println("New project name: "+getProjectName());
+             ConsoleLog.Print("New project name: "+getProjectName());
          	 setVisible(false);
              dispose();
          }

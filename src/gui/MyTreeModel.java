@@ -46,6 +46,7 @@ public class MyTreeModel implements TreeModel {
 	public Object getChild(Object parent, int index) {
 		FileNode directory = (FileNode) parent;
 		String[] directoryMembers = directory.list();
+		System.out.println("getChild");
 		return (new FileNode(directory, directoryMembers[index]));
 	}
 

@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -51,7 +52,7 @@ public class ProjectNavigator extends JPanel {
 	private JPopupMenu treeMenu;
 	
 	
- 	
+	
  	private NewProjectWindow newProjectWindow;
  	private NewTestSuiteWindow newTestSuiteWindow;
  	private NewTestCaseWindow newTestCaseWindow;
@@ -65,6 +66,8 @@ public class ProjectNavigator extends JPanel {
 		// Make a tree list with all the nodes, and make it a JTree
 	     initTree(dir);
 		 initPopupMenu();
+		
+		 
 		 
 		 this.scrollPane = new JScrollPane();
 		 this.setLayout(new BorderLayout());
@@ -109,7 +112,13 @@ public class ProjectNavigator extends JPanel {
 		tree.setCellRenderer( renderer);
 		
 	}
-	
+
+	/**
+	 * 
+	 */
+	private MainWindow getMainWindowInstance(){
+		return (MainWindow)this.getTopLevelAncestor();
+	}
 	/**
 	 * method for refreshing tree by user
 	 * for example when the filesystem is changed
@@ -267,8 +276,13 @@ public class ProjectNavigator extends JPanel {
 				    if (e.getClickCount() == 2 && !e.isConsumed()) {
 				        e.consume();
 				        
-				        if(model.isLeaf(path.getLastPathComponent()))
-				        	ConsoleLog.Print( "Project Selected: ahoj");
+				     
+				       if(model.isLeaf(path.getLastPathComponent())){
+				    	   getMainWindowInstance().removeContent();
+				    	   getMainWindowInstance().setContent(new TestCaseEditor());
+				    	   ConsoleLog.Print( "Project Selected: ahoj");
+				       }
+				        	
 				   }
 				}
 			

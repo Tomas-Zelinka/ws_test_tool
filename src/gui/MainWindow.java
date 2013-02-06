@@ -114,17 +114,27 @@ public class MainWindow extends JFrame{
 		MainWindow.dataPath = path;
 	}
 	
+	/**
+	 * 
+	 * @param panel
+	 */
+	public void setContent(JPanel panel){
+		this.editor = panel;
+		this.centerPane.add(this.editor);
+	}
+	
 	
 	public void newProject(String name){
 		
 	}
 	
-	public void showCaseEditor(){
-		
-	}
 	
-	public void removeCaseEditor(){
-		
+	/**
+	 * 
+	 */
+	public void removeContent(){
+		this.centerPane.remove(this.editor);
+		this.editor = null;
 	}
 	
 	/**
@@ -148,6 +158,8 @@ public class MainWindow extends JFrame{
 		this.setBackground(Color.gray);
 		
 	}
+	
+	
 	
 	/**
 	 * 
@@ -200,9 +212,11 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	private void initContent(){
-		this.editor = new TestCaseEditor();
+	public void initContent(){
+		this.editor = new PlainPanel();
 	}
+	
+	
 	
 	/**
 	 * 
@@ -218,5 +232,7 @@ public class MainWindow extends JFrame{
 		}
 		
 	}
+	
+	
 
 }

@@ -95,6 +95,13 @@ public class Menu extends JMenuBar {
 	/**
 	 * 
 	 */
+	private MainWindow getMainWindowInstance(){
+		return (MainWindow)this.getTopLevelAncestor();
+	}
+	
+	/**
+	 * 
+	 */
 	private void initFileMenuItems()
 	{
 		
@@ -104,6 +111,7 @@ public class Menu extends JMenuBar {
 		
 		addMenuItem(file,"Open", new OpenListener());
 		addMenuItem(file,"Edit", new EditListener());
+		addMenuItem(file,"Close Editor", new CloseEditorListener());
 		addMenuItem(file,"Change Root", new ChangeRootListener());
 		addMenuItem(file,"Exit", new ExitListener());
 	}
@@ -160,6 +168,21 @@ public class Menu extends JMenuBar {
 			ConsoleLog.Print("file edit clicked");
 		}
 	} 
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class CloseEditorListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().removeContent();
+			getMainWindowInstance().setContent(new PlainPanel());
+			ConsoleLog.Print("file exit clicked");
+			
+		}
+	} 
+	
 	
 	/**
 	 * 

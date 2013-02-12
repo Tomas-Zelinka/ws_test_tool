@@ -26,7 +26,7 @@ public class Agent implements Runnable{
 	
 	private String method;
 	
-	private String[] 
+	//private String[] 
 	
 	
 	/**

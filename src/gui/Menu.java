@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -105,12 +106,13 @@ public class Menu extends JMenuBar {
 	private void initFileMenuItems()
 	{
 		
-		addMenuItem(newSubMenu,"New Test Project", new TestProjectListener());
+		//addMenuItem(newSubMenu,"New Test Project", new TestProjectListener());
 		addMenuItem(newSubMenu,"New Test Suite", new TestSuiteListener());
 		addMenuItem(newSubMenu,"New Test Case", new TestCaseListener());
 		
 		addMenuItem(file,"Open", new OpenListener());
 		addMenuItem(file,"Edit", new EditListener());
+		addMenuItem(file,"Delete", new DeleteListener());
 		addMenuItem(file,"Close Editor", new CloseEditorListener());
 		addMenuItem(file,"Change Root", new ChangeRootListener());
 		addMenuItem(file,"Exit", new ExitListener());
@@ -183,7 +185,26 @@ public class Menu extends JMenuBar {
 		}
 	} 
 	
-	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class DeleteListener implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			File node = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getDataPath());
+			ConsoleLog.Print(MainWindow.getDataRoot()+File.separator+MainWindow.getDataPath());
+			if(node.exists()){
+				ConsoleLog.Print("mazu");
+				node.delete();
+				MainWindow.setDataPath("");
+				ProjectNavigator.refreshTree();
+			}else{
+				//throw new Exception();
+			}
+			
+		}
+	} 
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
@@ -260,7 +281,7 @@ public class Menu extends JMenuBar {
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
-	 */
+	
 	class TestProjectListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			
@@ -268,7 +289,7 @@ public class Menu extends JMenuBar {
 			newProjectWindow.setVisible(true);
 			ConsoleLog.Print("new Test Project clicked");
 		}
-	}	
+	} */	
 	
 	/**
 	 * 

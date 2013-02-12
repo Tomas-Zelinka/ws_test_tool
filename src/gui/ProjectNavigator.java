@@ -37,9 +37,9 @@ public class ProjectNavigator extends JPanel {
 	private static final long serialVersionUID = 6495944797574501122L;
 	
 	/**
-	 * 
+	 * TODO zkusit se zbavit static
 	 */
-	private JTree tree;
+	private static JTree tree;
 	
 	/**
 	 * 
@@ -124,7 +124,7 @@ public class ProjectNavigator extends JPanel {
 	 * for example when the filesystem is changed
 	 * while the tool is running
 	 */
-	public void refreshTree(){
+	public static void refreshTree(){
 		
 		SwingUtilities.updateComponentTreeUI(tree);
 		tree.treeDidChange();
@@ -151,10 +151,11 @@ public class ProjectNavigator extends JPanel {
 	private void initPopupMenu(){
 		treeMenu = new JPopupMenu();
 		
-		addMenuItem(treeMenu,"New Test Project", new TestProjectListener());
+		//addMenuItem(treeMenu,"New Test Project", new TestProjectListener());
 		addMenuItem(treeMenu,"New Test Suite", new TestSuiteListener());
 		addMenuItem(treeMenu,"New Test Case", new TestCaseListener());
 		addMenuItem(treeMenu,"Edit", new EditListener());
+		addMenuItem(treeMenu,"Delete", new DeleteListener());
 		addMenuItem(treeMenu,"Refresh", new RefreshTree());
 	}	
 		
@@ -189,7 +190,7 @@ public class ProjectNavigator extends JPanel {
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
-	 */
+	 
 	class TestProjectListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			
@@ -197,7 +198,7 @@ public class ProjectNavigator extends JPanel {
 			newProjectWindow.setVisible(true);
 			ConsoleLog.Print("new Test Project clicked");
 		}
-	}		
+	}	*/	
 	
 	/**
 	 * 
@@ -209,6 +210,29 @@ public class ProjectNavigator extends JPanel {
 			ConsoleLog.Print("file edit clicked");
 		}
 	} 	
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class DeleteListener implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			File node = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getDataPath());
+			ConsoleLog.Print(MainWindow.getDataRoot()+File.separator+MainWindow.getDataPath());
+			if(node.exists()){
+				ConsoleLog.Print("mazu");
+				node.delete();
+				MainWindow.setDataPath("");
+				ProjectNavigator.refreshTree();
+			}else{
+				//throw new Exception();
+			}
+			
+		}
+	} 
+	
+	
 	
 	/**
 	 * 

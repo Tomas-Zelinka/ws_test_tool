@@ -10,6 +10,7 @@ import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
@@ -24,6 +25,7 @@ public abstract class InputModalWindow extends JDialog {
 	protected JPanel thirdPanel;
 	protected JPanel thirdInsidePanel;
 	protected JPanel secondInsidePanel;
+	protected JLabel messageLabel;
 	
 	
 	private final int TOP_PANEL_HEIGHT = 50;
@@ -69,10 +71,16 @@ public abstract class InputModalWindow extends JDialog {
 	private void initFirstPanel(){
 		JSeparator separator = new JSeparator();
         separator.setForeground(Color.gray);
-		firstPanel = new JPanel( );
+        
+        messageLabel = new JLabel();
+        messageLabel.setForeground(Color.red);
+        messageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
+        firstPanel = new JPanel( );
 		firstPanel.setPreferredSize(new Dimension(getWidth(),this.TOP_PANEL_HEIGHT));
 		firstPanel.setBackground(Color.white);
 		firstPanel.setLayout(new BorderLayout());
+		firstPanel.add(messageLabel,BorderLayout.CENTER);
 		firstPanel.add(separator, BorderLayout.PAGE_END);
 		
 	}

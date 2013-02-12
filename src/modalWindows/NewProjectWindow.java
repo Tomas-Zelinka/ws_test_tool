@@ -71,7 +71,7 @@ public class NewProjectWindow extends InputModalWindow{
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new CancelButtonAction()); 
 		Document projectField = projectName.getDocument();
-		projectField.addDocumentListener(new ButtonStateController(okButton));
+		projectField.addDocumentListener(new ButtonStateController(okButton,projectName,messageLabel));
 		
 		if(testEmptyInput().isEmpty())
 			okButton.setEnabled(false);

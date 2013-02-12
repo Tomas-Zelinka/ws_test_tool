@@ -1,10 +1,12 @@
 package modalWindows;
 
 import gui.MainWindow;
+import gui.ProjectNavigator;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -31,7 +33,7 @@ public class NewTestSuiteWindow extends InputModalWindow {
 	@Override
 	protected void putContent(){
 
-		testSuiteName= new JTextField(MainWindow.dataPath,30);
+		testSuiteName= new JTextField(30);
 		JLabel label = new JLabel("Test Suite Name");
         label.setHorizontalAlignment(JLabel.LEFT);
         label.setFont(label.getFont().deriveFont(Font.PLAIN,14.0f));
@@ -46,13 +48,13 @@ public class NewTestSuiteWindow extends InputModalWindow {
 	 */
 	@Override
 	protected String testEmptyInput(){
-		return getProjectName();
+		return getSuiteName();
 	}
 	
 	/*
 	 * 
 	 */
-	private String getProjectName(){
+	private String getSuiteName(){
 		return testSuiteName.getText();
 	}
 	
@@ -67,7 +69,7 @@ public class NewTestSuiteWindow extends InputModalWindow {
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new CancelButtonAction()); 
 		Document projectField = testSuiteName.getDocument();
-		projectField.addDocumentListener(new ButtonStateController(okButton));
+		projectField.addDocumentListener(new ButtonStateController(okButton,testSuiteName,messageLabel));
 		
 		if(testEmptyInput().isEmpty())
 			okButton.setEnabled(false);
@@ -83,9 +85,19 @@ public class NewTestSuiteWindow extends InputModalWindow {
 	private class OkButtonAction  implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e) {
-             System.out.println("New test suite name: "+getProjectName());
-         	 setVisible(false);
-             dispose();
+             File newTestSuite = new File(MainWindow.getDataRoot()+File.separator+getSuiteName());
+             
+             if (newTestSuite.exists()){
+            	 messageLabel.setText("Test suite with this name already exists");
+             }else{
+            	 
+            	 newTestSuite.mkdir();
+            	 ProjectNavigator.refreshTree();
+            	 System.out.println("New test suite created,name: "+newTestSuite.getPath());
+            	 setVisible(false);
+            	 dispose();
+            	 
+            }
          }
 	}
 	/*

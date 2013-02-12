@@ -54,12 +54,12 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	public static String dataPath = "./data"; 
+	private static String dataPath = "";  
 	
 	/**
 	 * 
 	 */
-	private File dataRoot;
+	private static String dataRoot = "." + File.separator + "data";
 	
 	/**
 	 * JPanel holding the various editors and controls
@@ -85,7 +85,6 @@ public class MainWindow extends JFrame{
 	 */
 	public MainWindow(){
 		
-		initDataPath();
 		initContent();
 		initConsole();
 		
@@ -113,6 +112,27 @@ public class MainWindow extends JFrame{
 		
 		MainWindow.dataPath = path;
 	}
+	
+	
+	/**
+	 * 
+	 */
+	public static String getDataRoot()
+	{
+		return MainWindow.dataRoot;
+	}
+	
+	/**
+	 * 
+	 * @param path
+	 */
+	public static void setDataRoot(String root){
+		
+		MainWindow.dataRoot = root;
+	}
+	
+	
+	
 	
 	/**
 	 * 
@@ -185,7 +205,15 @@ public class MainWindow extends JFrame{
 	 */
 	private void addCenterPane(){
 		
-		this.navigator = new  ProjectNavigator(this.dataRoot);
+		File root = new File(MainWindow.getDataRoot());
+		
+		if(!root.exists()){
+			boolean wasDirectoryMade = root.mkdirs();
+		    if(wasDirectoryMade)
+		    	ConsoleLog.Print("Direcoty Created");
+		}
+		
+		this.navigator = new  ProjectNavigator(root);
 		this.centerPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,this.navigator,this.editor);
 		this.centerPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
 		
@@ -215,24 +243,5 @@ public class MainWindow extends JFrame{
 	public void initContent(){
 		this.editor = new PlainPanel();
 	}
-	
-	
-	
-	/**
-	 * 
-	 */
-	private void initDataPath()
-	{
-		this.dataRoot = new File(MainWindow.getDataPath());
-		
-		if(!dataRoot.exists()){
-			boolean wasDirectoryMade = dataRoot.mkdirs();
-		    if(wasDirectoryMade)
-		    	ConsoleLog.Print("Direcoty Created");
-		}
-		
-	}
-	
-	
 
 }

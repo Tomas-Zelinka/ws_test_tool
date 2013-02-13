@@ -50,16 +50,27 @@ public class MainWindow extends JFrame{
 	 * SplitPane containing centerPane and Console for tool responses
 	 */
 	private JSplitPane bottomPane;
-	
-	/**
-	 * 
-	 */
-	private static String dataPath = "";  
-	
+		
 	/**
 	 * 
 	 */
 	private static String dataRoot = "." + File.separator + "data";
+	
+	/**
+	 * 
+	 */
+	private static String suitePath = "";  
+	
+	/**
+	 * 
+	 */
+	private static String casePath = "";  
+		
+	/**
+	 * 
+	 */
+	private static String endpointPath = "";  
+		
 	
 	/**
 	 * JPanel holding the various editors and controls
@@ -96,24 +107,59 @@ public class MainWindow extends JFrame{
 	
 	}
 	
+	
 	/**
 	 * 
 	 */
-	public static String getDataPath()
+	public static String getEndpointPath()
 	{
-		return MainWindow.dataPath;
+		return MainWindow.endpointPath;
 	}
 	
 	/**
 	 * 
 	 * @param path
 	 */
-	public static void setDataPath(String path){
+	public static void setEndpointPath(String path){
 		
-		MainWindow.dataPath = path;
+		MainWindow.endpointPath = path;
 	}
 	
 	
+	/**
+	 * 
+	 */
+	public static String getCasePath()
+	{
+		return MainWindow.casePath;
+	}
+	
+	/**
+	 * 
+	 * @param path
+	 */
+	public static void setCasePath(String path){
+		
+		MainWindow.casePath = path;
+	}
+		
+	/**
+	 * 
+	 */
+	public static String getSuitePath()
+	{
+		return MainWindow.suitePath;
+	}
+	
+	/**
+	 * 
+	 * @param path
+	 */
+	public static void setSuitePath(String path){
+		
+		MainWindow.suitePath = path;
+	}
+		
 	/**
 	 * 
 	 */

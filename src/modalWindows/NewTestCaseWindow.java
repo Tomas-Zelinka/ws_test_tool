@@ -1,6 +1,7 @@
 package modalWindows;
 
 import gui.MainWindow;
+import gui.ProjectNavigator;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -8,6 +9,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -41,14 +43,14 @@ public class NewTestCaseWindow extends InputModalWindow {
 		JPanel labels = new JPanel(new GridLayout(0,1,0,10));
 		JPanel fields = new JPanel(new GridLayout(0,1,0,10));
 		
-		String selectedPath = MainWindow.getDataPath();
+		String selectedPath = MainWindow.getSuitePath();
 		if(selectedPath.isEmpty()){
 			messageLabel.setText("Path not selected. Please select Test Suite Path");
 			
 		}
 		
-		testCaseName = new JTextField(MainWindow.getDataPath(),10);
-		path = new JTextField(10);
+		testCaseName = new JTextField(10);
+		path = new JTextField(MainWindow.getSuitePath()+ File.separator,10);
 		JLabel label = new JLabel("Test Case: ");
 		JLabel pathLabel = new JLabel("Path: ");
         
@@ -82,13 +84,13 @@ public class NewTestCaseWindow extends InputModalWindow {
 	 */
 	@Override
 	protected String testEmptyInput(){
-		return getProjectName();
+		return getCaseName();
 	}
 	
 	/*
 	 * 
 	 */
-	private String getProjectName(){
+	private String getCaseName(){
 		return testCaseName.getText();
 	}
 	
@@ -119,10 +121,21 @@ public class NewTestCaseWindow extends InputModalWindow {
 	private class OkButtonAction  implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e) {
-             System.out.println("New project name: "+getProjectName());
-         	 setVisible(false);
-             dispose();
-         }
+             
+			File newTestCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+getCaseName());
+             
+			if (newTestCase.exists()){
+            	 messageLabel.setText("Test suite with this name already exists");
+             }else{
+            	 
+            	 newTestCase.mkdir();
+            	 ProjectNavigator.refreshTree();
+			
+            	 System.out.println("New project name: "+ getCaseName());
+            	 setVisible(false);
+            	 dispose();
+             }
+		}
 	}
 	/*
 	 * 

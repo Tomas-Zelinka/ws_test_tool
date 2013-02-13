@@ -109,6 +109,7 @@ public class Menu extends JMenuBar {
 		//addMenuItem(newSubMenu,"New Test Project", new TestProjectListener());
 		addMenuItem(newSubMenu,"New Test Suite", new TestSuiteListener());
 		addMenuItem(newSubMenu,"New Test Case", new TestCaseListener());
+		addMenuItem(newSubMenu,"New Test List", new TestListListener());
 		
 		addMenuItem(file,"Open", new OpenListener());
 		addMenuItem(file,"Edit", new EditListener());
@@ -192,12 +193,12 @@ public class Menu extends JMenuBar {
 	 */
 	class DeleteListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
-			File node = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getDataPath());
-			ConsoleLog.Print(MainWindow.getDataRoot()+File.separator+MainWindow.getDataPath());
+			File node = new File(MainWindow.getEndpointPath());
+			ConsoleLog.Print(MainWindow.getEndpointPath());
 			if(node.exists()){
 				ConsoleLog.Print("mazu");
 				node.delete();
-				MainWindow.setDataPath("");
+				MainWindow.setSuitePath("");
 				ProjectNavigator.refreshTree();
 			}else{
 				//throw new Exception();
@@ -232,7 +233,7 @@ public class Menu extends JMenuBar {
 			
 			if(retVal == JFileChooser.APPROVE_OPTION){
 				 root = changeRoot.getSelectedFile().toString();
-				MainWindow.setDataPath(root);
+				MainWindow.setDataRoot(root);
 				Main.restartGui();
 			}
 			ConsoleLog.Print("Project changed to:" + root);
@@ -274,6 +275,18 @@ public class Menu extends JMenuBar {
 			newTestSuiteWindow = new NewTestSuiteWindow();
 			newTestSuiteWindow.setVisible(true);
 			ConsoleLog.Print("new Test Suite clicked");
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class TestListListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+					
+			ConsoleLog.Print("new Test List clicked");
 		}
 	}
 	

@@ -83,7 +83,14 @@ public class ProjectNavigator extends JPanel {
 	    return new Dimension(200, 400);
 	}
 	
-	
+	void delete(File f)  {
+		  if (f.isDirectory()) {
+		    for (File c : f.listFiles())
+		      delete(c);
+		  }
+		  f.delete();
+		    
+		}
 	
 	/**
 	 * Document tree initialization
@@ -154,6 +161,7 @@ public class ProjectNavigator extends JPanel {
 		//addMenuItem(treeMenu,"New Test Project", new TestProjectListener());
 		addMenuItem(treeMenu,"New Test Suite", new TestSuiteListener());
 		addMenuItem(treeMenu,"New Test Case", new TestCaseListener());
+		addMenuItem(treeMenu,"New Test List", new TestListListener());
 		addMenuItem(treeMenu,"Edit", new EditListener());
 		addMenuItem(treeMenu,"Delete", new DeleteListener());
 		addMenuItem(treeMenu,"Refresh", new RefreshTree());
@@ -190,6 +198,17 @@ public class ProjectNavigator extends JPanel {
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
+	 */
+	class TestListListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+				ConsoleLog.Print("new Test List clicked");
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
 	 
 	class TestProjectListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
@@ -218,15 +237,13 @@ public class ProjectNavigator extends JPanel {
 	 */
 	class DeleteListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
-			File node = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getDataPath());
-			ConsoleLog.Print(MainWindow.getDataRoot()+File.separator+MainWindow.getDataPath());
+			File node = new File(MainWindow.getEndpointPath());
+			ConsoleLog.Print(MainWindow.getEndpointPath());
 			if(node.exists()){
-				ConsoleLog.Print("mazu");
-				node.delete();
-				MainWindow.setDataPath("");
-				ProjectNavigator.refreshTree();
+				delete(node);
+				refreshTree();
 			}else{
-				//throw new Exception();
+				
 			}
 			
 		}
@@ -268,6 +285,10 @@ public class ProjectNavigator extends JPanel {
 
 	}
 	
+	
+	
+	
+	
 	/**
 	 * 
 	 * This adapter is responsible for mouse event
@@ -293,8 +314,14 @@ public class ProjectNavigator extends JPanel {
 				if( !outside) {
 					//ConsoleLog.Print( "Project Selected: " + path.getPathComponent(1));
 					
-					MainWindow.setDataPath(path.getPathComponent(1).toString());
-				    if (SwingUtilities.isRightMouseButton(e))  
+					MainWindow.setSuitePath(path.getPathComponent(1).toString());
+					
+					if(path.getPathCount() > 3)
+						MainWindow.setCasePath(path.getPathComponent(2).toString());
+						
+					MainWindow.setEndpointPath(((FileNode)path.getLastPathComponent()).getAbsolutePath());
+					
+					if (SwingUtilities.isRightMouseButton(e))  
 				    	myTree.setSelectionRow(selRow); 
 				    
 				    if (e.getClickCount() == 2 && !e.isConsumed()) {

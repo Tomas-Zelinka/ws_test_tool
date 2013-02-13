@@ -19,14 +19,13 @@ import  org.apache.http.client.methods.*;
  * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
  *
  */
+
+
 public class Agent implements Runnable{
 
-	
-	
-	
 	private String method;
 	
-	//private String[] 
+	//	private String[] 
 	
 	
 	/**

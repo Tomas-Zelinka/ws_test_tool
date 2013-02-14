@@ -1,6 +1,7 @@
 package forms;
 
 import javax.swing.JPanel;
+import javax.swing.JTable;
 
 public class HttpRequestForm extends JPanel{
 
@@ -12,6 +13,9 @@ public class HttpRequestForm extends JPanel{
 	/**
 	 * public constructor
 	 */
+	
+	private JTable form;
+	
 	public HttpRequestForm(){
 		
 	}

@@ -6,8 +6,6 @@
  */
 package cz.vutbr.fit.dip.fiws.data;
 
-import com.thoughtworks.xstream.XStream;
-import cz.vutbr.fit.dip.fiws.business.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +14,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
+
+import com.thoughtworks.xstream.XStream;
+
+import cz.vutbr.fit.dip.fiws.business.Test;
 
 /**
  * Trida slouzi jako handler pro ziskavani/ukladani testu a nastsaveni z/do XML souboru pomoci knihovny XStream.
@@ -88,13 +91,14 @@ public class DataProvider {
 		Settings settings= null;
 		try {
 			XStream xstream= new XStream();
-			settings= (Settings) xstream.fromXML(new FileInputStream(new File("dbdata/settings.xml")));
+			//settings= (Settings) xstream.fromXML(new FileInputStream(new File("dbdata/settings.xml")));
+			settings = new Settings(5555,80,"localhost",new ArrayList<String>());
 		}
-		catch (FileNotFoundException ex) {
+		/*catch (FileNotFoundException ex) {
 			System.err.println("File settings.xml not found");
 			System.err.println(ex.getMessage());
 			System.exit(-1);
-		}
+		}*/
 		catch(Exception ex)
 		{
 			ex.printStackTrace();

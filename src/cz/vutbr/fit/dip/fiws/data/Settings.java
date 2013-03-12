@@ -21,7 +21,8 @@ public class Settings {
 	private List<String> filePathList;
 
 	
-	
+	public Settings()
+	{}
 	public Settings(int proxyPort, int testedWsPort, String proxyHost, List<String> filePathList) {
 		
 		this.proxyPort = proxyPort;

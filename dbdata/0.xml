@@ -1,35 +1,68 @@
 <cz.vutbr.fit.dip.fiws.business.Test>
   <testId>0</testId>
-  <testName>GAS</testName>
+  <testName>ll</testName>
   <filePath>dbdata/0.xml</filePath>
   <statementList>
     <cz.vutbr.fit.dip.fiws.business.TestStatement>
       <statementId>0</statementId>
-      <statementName>rule1</statementName>
+      <statementName>lll</statementName>
       <conditionSet>
-        <cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+          <conditionId>1</conditionId>
+          <containString>555</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;555&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+          <conditionId>8</conditionId>
+          <containString>jjjj</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;jjjj&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+          <conditionId>3</conditionId>
+          <containString>ffff</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;ffff&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+          <conditionId>6</conditionId>
+          <containString>hhh</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;hhh&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+          <conditionId>4</conditionId>
+          <containString>hhhh</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;hhhh&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+          <conditionId>5</conditionId>
+          <containString>aaaa</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;aaaa&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+          <conditionId>2</conditionId>
+          <containString>fff</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;fff&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+          <conditionId>7</conditionId>
+          <containString>rrrr</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;rrrr&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
+        <cz.vutbr.fit.dip.fiws.business.ContainsCondition>
           <conditionId>0</conditionId>
-          <applyOnRequest>true</applyOnRequest>
-          <typeName>DestinationCondition</typeName>
-          <description>Aplikovat na http požadavek</description>
-        </cz.vutbr.fit.dip.fiws.business.DestinationCondition>
+          <containString>lll</containString>
+          <typeName>ContainsCondition</typeName>
+          <description>The occurrance of &quot;lll&quot;</description>
+        </cz.vutbr.fit.dip.fiws.business.ContainsCondition>
       </conditionSet>
-      <faultList>
-        <cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
-          <faultId>-1</faultId>
-          <xpath>//i</xpath>
-          <changedSubstring>128</changedSubstring>
-          <typeName>XPathCorruptionFault</typeName>
-          <description>Hodnoty elementů/atributů na pozici &quot;//i&quot; nahradit za &quot;128&quot;.</description>
-        </cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
-        <cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
-          <faultId>1</faultId>
-          <xpath>//j</xpath>
-          <changedSubstring>129</changedSubstring>
-          <typeName>XPathCorruptionFault</typeName>
-          <description>Hodnoty elementů/atributů na pozici &quot;//j&quot; nahradit za &quot;129&quot;.</description>
-        </cz.vutbr.fit.dip.fiws.business.XPathCorruptionFault>
-      </faultList>
+      <faultList/>
     </cz.vutbr.fit.dip.fiws.business.TestStatement>
   </statementList>
 </cz.vutbr.fit.dip.fiws.business.Test>

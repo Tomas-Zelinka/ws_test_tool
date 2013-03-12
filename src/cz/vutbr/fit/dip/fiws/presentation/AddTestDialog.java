@@ -76,7 +76,7 @@ public class AddTestDialog extends javax.swing.JDialog {
 
         nameLabel.setText("Test name:");
 
-        imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add_test.png"))); // NOI18N
+        imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_test.png"))); // NOI18N
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {

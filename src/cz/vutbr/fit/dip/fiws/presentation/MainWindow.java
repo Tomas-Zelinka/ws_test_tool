@@ -562,7 +562,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         settingsMenu = new javax.swing.JMenu();
         settingsMenuItem = new javax.swing.JMenuItem();
 
-        addTestMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add_test_small.png"))); // NOI18N
+        addTestMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_test_small.png"))); // NOI18N
         addTestMenuItem.setText("Add test..");
         addTestMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -571,7 +571,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         });
         testTreePopupMenu.add(addTestMenuItem);
 
-        addStatementMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add_statement_small.png"))); // NOI18N
+        addStatementMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_statement_small.png"))); // NOI18N
         addStatementMenuItem.setText("Add statement..");
         addStatementMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -588,7 +588,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         });
         testTreePopupMenu.add(renameMenuItem);
 
-        removeMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/remove_small.png"))); // NOI18N
+        removeMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/remove_small.png"))); // NOI18N
         removeMenuItem.setText("Remove");
         removeMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -612,7 +612,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         testComboBox.setMaximumSize(new java.awt.Dimension(200, 32767));
         topToolBar.add(testComboBox);
 
-        startTestToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/start_inject_small.png"))); // NOI18N
+        startTestToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/start_inject_small.png"))); // NOI18N
         startTestToggleButton.setToolTipText("Run test");
         startTestToggleButton.setFocusable(false);
         startTestToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -625,7 +625,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         topToolBar.add(startTestToggleButton);
         topToolBar.add(jSeparator1);
 
-        proxySettingsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/proxy_settings_small.png"))); // NOI18N
+        proxySettingsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/proxy_settings_small.png"))); // NOI18N
         proxySettingsButton.setToolTipText("Proxy settings");
         proxySettingsButton.setFocusable(false);
         proxySettingsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -637,7 +637,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         });
         topToolBar.add(proxySettingsButton);
 
-        startProxyToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/start_proxy_small.png"))); // NOI18N
+        startProxyToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/start_proxy_small.png"))); // NOI18N
         startProxyToggleButton.setToolTipText("Run proxy");
         startProxyToggleButton.setFocusable(false);
         startProxyToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -832,7 +832,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         testToolBar.setFloatable(false);
         testToolBar.setRollover(true);
 
-        addTestButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add_test_small.png"))); // NOI18N
+        addTestButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_test_small.png"))); // NOI18N
         addTestButton.setToolTipText("Add new test");
         addTestButton.setFocusable(false);
         addTestButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -844,7 +844,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         });
         testToolBar.add(addTestButton);
 
-        addStatementButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add_statement_small.png"))); // NOI18N
+        addStatementButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_statement_small.png"))); // NOI18N
         addStatementButton.setToolTipText("Add new statement");
         addStatementButton.setFocusable(false);
         addStatementButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -857,7 +857,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         testToolBar.add(addStatementButton);
         testToolBar.add(jSeparator2);
 
-        removeNodeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/remove_small.png"))); // NOI18N
+        removeNodeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/remove_small.png"))); // NOI18N
         removeNodeButton.setToolTipText("Remove");
         removeNodeButton.setFocusable(false);
         removeNodeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -918,7 +918,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         conditionTable.getColumnModel().getColumn(0).setPreferredWidth(200);
         conditionTable.getColumnModel().getColumn(1).setPreferredWidth(500);
 
-        addConditionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add_small.png"))); // NOI18N
+        addConditionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_small.png"))); // NOI18N
         addConditionButton.setText("Add");
         addConditionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -926,7 +926,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
             }
         });
 
-        removeConditionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/remove_small.png"))); // NOI18N
+        removeConditionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/remove_small.png"))); // NOI18N
         removeConditionButton.setText("Remove");
         removeConditionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -990,7 +990,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
         faultTable.getColumnModel().getColumn(0).setPreferredWidth(200);
         faultTable.getColumnModel().getColumn(1).setPreferredWidth(500);
 
-        addFaultButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add_small.png"))); // NOI18N
+        addFaultButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_small.png"))); // NOI18N
         addFaultButton.setText("Add");
         addFaultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -998,7 +998,7 @@ public class MainWindow extends javax.swing.JFrame implements NewMessageListener
             }
         });
 
-        removeFaultButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/remove_small.png"))); // NOI18N
+        removeFaultButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/remove_small.png"))); // NOI18N
         removeFaultButton.setText("Remove");
         removeFaultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

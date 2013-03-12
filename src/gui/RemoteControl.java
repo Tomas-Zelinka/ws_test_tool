@@ -1,5 +1,7 @@
 package gui;
 
-public class RemoteControl {
+import javax.swing.JPanel;
+
+public class RemoteControl extends JPanel {
 
 }

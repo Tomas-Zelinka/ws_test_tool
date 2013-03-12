@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -51,13 +52,15 @@ public class Console extends JPanel {
 		setLayout(new BorderLayout());
 	    
 		this.console = new JTextArea("",5,5);
+		
 	    this.setPreferredSize(new Dimension(getWidth(),PREFERRED_HEIGHT));
         this.setMinimumSize(new Dimension(getWidth(),MIN_HEIGHT));
         redirectSystemStreams();
         
-        JScrollPane scrollpane = new JScrollPane();
-	    scrollpane.getViewport().add(console);
-	    add(BorderLayout.CENTER, scrollpane);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+	    scrollPane.getViewport().add(console);
+	    add(BorderLayout.CENTER, scrollPane);
 	    ConsoleLog.Print("Testing tool ready");
 	    
 	}

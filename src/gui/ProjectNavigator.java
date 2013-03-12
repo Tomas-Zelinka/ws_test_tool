@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -12,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -70,7 +70,9 @@ public class ProjectNavigator extends JPanel {
 		 this.scrollPane = new JScrollPane();
 		 this.setLayout(new BorderLayout());
 		 this.scrollPane.getViewport().add(tree);
+		 this.scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		 this.add(BorderLayout.CENTER, scrollPane);
+		 
 	}
 	
 	public Dimension getMinimumSize() {
@@ -327,8 +329,8 @@ public class ProjectNavigator extends JPanel {
 				        
 				     
 				       if(model.isLeaf(path.getLastPathComponent())){
-				    	   getMainWindowInstance().removeContent();
-				    	   getMainWindowInstance().setContent(new TestCaseEditor());
+				    	   //getMainWindowInstance().removeContent();
+				    	   //getMainWindowInstance().setContent(new TestCaseEditor());
 				    	   ConsoleLog.Print( "Project Selected: ahoj");
 				       }
 				        	

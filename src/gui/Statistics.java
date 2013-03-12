@@ -1,5 +1,7 @@
 package gui;
 
-public class Statistics {
+import javax.swing.JPanel;
+
+public class Statistics extends JPanel {
 
 }

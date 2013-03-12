@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -10,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import logging.ConsoleLog;
+import exceptions.EmptyComponentException;
 
 
 public class MainWindow extends JFrame{
@@ -42,16 +44,6 @@ public class MainWindow extends JFrame{
 	private final String APP_NAME = "Testing tool";
 	
 	/**
-	 * Splitpane containing Project navigator and action place
-	 */
-	private JSplitPane centerPane;
-	
-	/**
-	 * SplitPane containing centerPane and Console for tool responses
-	 */
-	private JSplitPane bottomPane;
-		
-	/**
 	 * 
 	 */
 	private static String dataRoot = "." + File.separator + "data";
@@ -70,22 +62,88 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	private static String endpointPath = "";  
-		
 	
 	/**
-	 * JPanel holding the various editors and controls
+	 * Splitpane containing Project navigator and action place
 	 */
-	private JPanel editor;
+	private Container centerPane;
+	
+	private Component centerComponent;
 	
 	/**
-	 * Extended JPanel holding JTree for document navigation
+	 * SplitPane containing centerPane and Console for tool responses
 	 */
-	private ProjectNavigator navigator;
+	private JSplitPane bottomPane;
+	
 	
 	/**
 	 * Extended JPanel holding ScrollPane with TextArea for tool responses
 	 */
 	private Console console;
+	
+	/**
+	 * 
+	 */
+	private void initMainWindow()
+	{
+		this.setTitle(this.APP_NAME);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		 
+		// Determine the new location of the window
+		int x = (dim.width-(this.WIDTH))/2;
+		int y = (dim.height-(this.HEIGTH))/2;
+		 
+		
+		//this.setLayout(new BorderLayout());
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(x, y, this.WIDTH, this.HEIGTH);
+		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
+		this.setLayout(new BorderLayout());
+		this.setBackground(Color.gray);
+		
+		initMenuBar();
+		initCenterPane();
+		initBottomPane();
+		setContentPane(this.bottomPane);
+	}
+		
+	/**
+	 * 
+	 * 
+	 */
+	private void initMenuBar(){
+		this.setJMenuBar(new Menu());
+		
+	}
+	
+	/**
+	 * 
+	 */
+	private void initCenterPane(){
+		try{
+			setContent(new TestCaseEditor());
+		}catch(EmptyComponentException e){
+			System.out.println("MainWindow.nitCenterPane() - The center pane is not Initialized");
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void initBottomPane(){
+		
+		this.console = new Console();
+		
+		try{
+			this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
+		}catch(EmptyComponentException e){
+			System.out.println("The center pane is not Initialized");
+		}
+		
+		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
+		this.bottomPane.setResizeWeight(0.90);
+		
+	}
 	
 	/**
 	 * Constructor for main window
@@ -95,18 +153,10 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	public MainWindow(){
-		
-		initContent();
-		initConsole();
-		
-		windowInit();
-		addMenuBar();
-		addCenterPane();
-		addBottomPane();
+		initMainWindow();
 		this.pack();
 	
 	}
-	
 	
 	/**
 	 * 
@@ -177,117 +227,38 @@ public class MainWindow extends JFrame{
 		MainWindow.dataRoot = root;
 	}
 	
-	
-	
-	
-	/**
-	 * 
-	 * @param panel
-	 */
-	public void setContent(JPanel panel){
-		this.editor = panel;
-		this.centerPane.add(this.editor);
-	}
-	
-	
-	public void newProject(String name){
-		
-	}
-	
-	
-	/**
-	 * 
-	 */
-	public void removeContent(){
-		this.centerPane.remove(this.editor);
-		this.editor = null;
-	}
-	
-	/**
-	 * 
-	 */
-	private void windowInit()
-	{
-		this.setTitle(this.APP_NAME);
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		 
-		// Determine the new location of the window
-		int x = (dim.width-(this.WIDTH))/2;
-		int y = (dim.height-(this.HEIGTH))/2;
-		 
-		
-		this.setLayout(new BorderLayout());
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setBounds(x, y, this.WIDTH, this.HEIGTH);
-		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
-		this.setLayout(new BorderLayout());
-		this.setBackground(Color.gray);
-		
-	}
-	
-	
-	
 	/**
 	 * 
 	 * @return
 	 */
-	private JSplitPane getCenterPane(){
-		return this.centerPane;
-	}
-	
-	
-	
-	/**
-	 * 
-	 * 
-	 */
-	private void addMenuBar(){
-		this.setJMenuBar(new Menu());
-		
-	}
-	
-	/**
-	 * 
-	 */
-	private void addCenterPane(){
-		
-		File root = new File(MainWindow.getDataRoot());
-		
-		if(!root.exists()){
-			boolean wasDirectoryMade = root.mkdirs();
-		    if(wasDirectoryMade)
-		    	ConsoleLog.Print("Direcoty Created");
+	public Container getCenterPane() throws EmptyComponentException{
+		if(this.centerPane == null){
+			throw new EmptyComponentException();
+		}else{
+			return this.centerPane;
 		}
 		
-		this.navigator = new  ProjectNavigator(root);
-		this.centerPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,this.navigator,this.editor);
-		this.centerPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
+	}
+	
+	public void setContent(Component c) throws EmptyComponentException{
 		
-	}
-	
-	/**
-	 * 
-	 */
-	private void addBottomPane(){
-		
-		this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
-		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
-		this.bottomPane.setResizeWeight(0.90);
-		getContentPane().add(this.bottomPane);
-	}
-	
-	/**
-	 * 
-	 */
-	private void initConsole(){
-		this.console = new Console();
-	}
-	
-	/**
-	 * 
-	 */
-	public void initContent(){
-		this.editor = new PlainPanel();
+		if(c == null){
+			throw new EmptyComponentException();
+		}else{
+			if(this.centerPane == null){
+				this.centerPane = getContentPane();
+			}
+			if(this.centerComponent != null)
+				this.centerPane.remove(this.centerComponent);
+			
+			this.centerComponent = c;
+			this.centerPane.add(c);
+			( (JPanel) this.centerPane).revalidate();
+			
+		}
 	}
 
+	
+	
+	
 }

@@ -39,6 +39,11 @@ public class Menu extends JMenuBar {
 	/**
 	 * 
 	 */
+	private JMenu view;
+	
+	/**
+	 * 
+	 */
 	private JMenu proxy;
 	
 	/**
@@ -75,6 +80,7 @@ public class Menu extends JMenuBar {
 		
 		//parentWindow =(JFrame) getParent();
 		file = new JMenu("File");
+		view = new JMenu("View");
 		project = new JMenu("Project");
 		newSubMenu = new JMenu("New");
 		proxy = new JMenu("Proxy");
@@ -82,12 +88,14 @@ public class Menu extends JMenuBar {
 		
 		this.add(file);
 		file.add(newSubMenu);
+		this.add(view);
 		this.add(project);
 		this.add(proxy);
 		this.add(remote);
 		
 		
 		initFileMenuItems();
+		initViewMenuItems();
 		initProjectMenuItems();
 		initProxyMenuItems();
 		initRemoteMenuItems();
@@ -119,6 +127,15 @@ public class Menu extends JMenuBar {
 		addMenuItem(file,"Exit", new ExitListener());
 	}
 	
+	/**
+	 * 
+	 */
+	private void  initViewMenuItems(){
+		addMenuItem(view,"Test Editor",new ViewTestEditorListener());
+		addMenuItem(view,"Test Unit",new ViewTestUnitListener());
+		addMenuItem(view,"Proxy Monitor",new ViewProxyMonitorListener());
+		addMenuItem(view,"Statistics",new ViewStatisticsListener());
+	}
 	/**
 	 * 
 	 */
@@ -303,6 +320,51 @@ public class Menu extends JMenuBar {
 			ConsoleLog.Print("new Test Project clicked");
 		}
 	} */	
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class ViewTestEditorListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			ConsoleLog.Print("Test Editor clicked");
+			}
+	} 
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class ViewTestUnitListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			ConsoleLog.Print("Test Unit clicked");
+			}
+	}
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class ViewProxyMonitorListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			ConsoleLog.Print("Proxy Monitor clicked");
+			}
+	}
+	
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class ViewStatisticsListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			ConsoleLog.Print("Statistics clicked");
+			}
+	}
 	
 	/**
 	 * 

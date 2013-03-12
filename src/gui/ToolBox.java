@@ -19,40 +19,9 @@ public class ToolBox extends JToolBar implements ActionListener {
 	 */
 	private static final long serialVersionUID = 3608875508872233381L;
 	
-	static final private String START = "Start";
-	static final private String EDIT = "Edit";
-	static final private String STOP = "Stop";
-	
-	public ToolBox() {
-			//Create the toolbar.
-		
-		addButtons();
-		
-		//Create the text area used for output.  Request
-		//enough space for 5 rows and 30 columns.
-		//Lay out the main panel.
-		//setPreferredSize(new Dimension(450, 130));
-		
-		
-	}
-	
-	protected void addButtons() {
-		JButton button = null;
-		
-		//first button
-		button = new JButton(START);
-		this.add(button);
-		
-		//second button
-		button = new JButton(EDIT);
-		this.add(button);
-		
-		//third button
-		button = new JButton(STOP);
+	public void addButton( JButton button){
 		this.add(button);
 	}
-	
-	
 	
 	public void actionPerformed(ActionEvent e) {
 		

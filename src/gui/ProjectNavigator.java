@@ -66,8 +66,6 @@ public class ProjectNavigator extends JPanel {
 		// Make a tree list with all the nodes, and make it a JTree
 	     initTree(dir);
 		 initPopupMenu();
-		
-		 
 		 
 		 this.scrollPane = new JScrollPane();
 		 this.setLayout(new BorderLayout());

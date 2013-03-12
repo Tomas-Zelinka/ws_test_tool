@@ -23,12 +23,12 @@ public class MainWindow extends JFrame{
 	/**
 	 * Width of the main window
 	 */
-	private final int WIDTH = 800;
+	private final int WIDTH = 1000;
 	
 	/**
 	 * Height of the main window
 	 */
-	private final int HEIGTH = 600;
+	private final int HEIGTH = 800;
 	
 	
 	/**

@@ -1,12 +1,15 @@
-//MENU
-// kazdou zmenu zapsat na disk do projektoveho souboru
-
-
+//GUI
 
 //EDITOR
 //zapsani zmen do souboru
-//editor ma dve okna - zadost/odpoved - kazde okno ma dva panely textovy rezim a klikaci rezim
-//editor ma toolbox a popupmenu s operacema
+//tretina obrazovky pro navigator
+//dve tretiny pro monitory a editory
+//proxy monitor - vrch monitoru zachycene pozadavky a dole jsou request a response se zmenou viz predchozi prace
+//test list - vrch bude zobrazen list s vlastnostma a statistikama a oznacenim ktere spustit - timhle se bude spoustet
+//			  testovaci jednotka pri kliknuti na test se dole zobrazi pozadavek a odpoved			  
+//test editor - po kliknuti na test se nacte do editoru - editor bude mit zalozky http request, fault injection a settings 
+//remote control - bude kontrolovat vzdalene jednotky, odesilat testlisty s daty, spoustet testy a prijimat vysledky
+//cli			 - bude spoustet test listy - bude moct spustit vic listu - jeden suite muze mit vic listu 
 
 
 //Project 

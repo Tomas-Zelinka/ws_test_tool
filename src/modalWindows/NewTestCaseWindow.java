@@ -2,6 +2,7 @@ package modalWindows;
 
 import gui.MainWindow;
 import gui.ProjectNavigator;
+import gui.TableData;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -90,19 +91,18 @@ public class NewTestCaseWindow extends InputModalWindow {
         
         tabbedPane.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         
-        JComponent panel1 = makeTextPanel("Panel #1");
-        tabbedPane.addTab("Http Request", null, panel1,
-                "Does nothing");
+        //JComponent panel1 = makeTextPanel("Panel #1");
+        JPanel panel1 = new TableData();
+        
+        tabbedPane.addTab("Http Request", panel1);
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
          
         JComponent panel2 = makeTextPanel("Panel #2");
-        tabbedPane.addTab("Fault Injection", null, panel2,
-                "Does twice as much nothing");
+        tabbedPane.addTab("Fault Injection",panel2);
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
          
         JComponent panel3 = makeTextPanel("Panel #3");
-        tabbedPane.addTab("Test Case Settings", null, panel3,
-                "Still does nothing");
+        tabbedPane.addTab("Test Case Settings", panel3);
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
          
          panel1.setPreferredSize(new Dimension(410, 250));
@@ -113,6 +113,9 @@ public class NewTestCaseWindow extends InputModalWindow {
          
         //The following line enables to use scrolling tabs.
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        
+        
+        
     }
      
     

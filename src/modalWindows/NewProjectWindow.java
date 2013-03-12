@@ -27,7 +27,7 @@ public class NewProjectWindow extends InputModalWindow{
 	}
 	
 		
-	/*
+	/**
 	 * 
 	 */
 	@Override
@@ -44,7 +44,7 @@ public class NewProjectWindow extends InputModalWindow{
 		
 	}
 	
-	/*
+	/**
 	 * 
 	 * 
 	 */
@@ -53,14 +53,14 @@ public class NewProjectWindow extends InputModalWindow{
 		return getProjectName();
 	}
 	
-	/*
+	/**
 	 * 
 	 */
 	private String getProjectName(){
 		return projectName.getText();
 	}
 	
-	/*
+	/**
 	 * 
 	 * 
 	 */
@@ -81,7 +81,7 @@ public class NewProjectWindow extends InputModalWindow{
 		
 	}
 	
-	/*
+	/**
 	 * 
 	 */
 	private class OkButtonAction  implements ActionListener{
@@ -92,7 +92,7 @@ public class NewProjectWindow extends InputModalWindow{
              dispose();
          }
 	}
-	/*
+	/**
 	 * 
 	 */
 	private class CancelButtonAction  implements ActionListener{

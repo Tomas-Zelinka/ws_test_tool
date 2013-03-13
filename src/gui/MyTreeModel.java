@@ -9,8 +9,6 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import logging.ConsoleLog;
-
 public class MyTreeModel implements TreeModel {
 
 	/**

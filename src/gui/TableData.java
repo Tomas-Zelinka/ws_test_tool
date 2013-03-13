@@ -19,7 +19,13 @@ import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
  
 public class TableData extends JPanel {
-    private boolean DEBUG = false;
+    
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4286324537862142268L;
+	
+	private boolean DEBUG = false;
  
     
    
@@ -60,7 +66,7 @@ public class TableData extends JPanel {
         JScrollPane contentScrollPane = new JScrollPane();
         JScrollPane scrollPane = new JScrollPane();
         JPanel tablePanel = new JPanel();
-        JPanel contentPanel = new JPanel();
+        //JPanel contentPanel = new JPanel();
         
         tablePanel.setLayout(new BorderLayout());
         

@@ -53,7 +53,6 @@ public class ProjectNavigator extends JPanel {
 	
 	
 	
- 	private NewProjectWindow newProjectWindow;
  	private NewTestSuiteWindow newTestSuiteWindow;
  	private NewTestCaseWindow newTestCaseWindow;
 	
@@ -315,7 +314,7 @@ public class ProjectNavigator extends JPanel {
 					//ConsoleLog.Print( "Project Selected: " + path.getPathComponent(1));
 					
 					MainWindow.setSuitePath(path.getPathComponent(1).toString());
-					
+					 
 					if(path.getPathCount() > 3)
 						MainWindow.setCasePath(path.getPathComponent(2).toString());
 						
@@ -338,6 +337,7 @@ public class ProjectNavigator extends JPanel {
 				}
 			
 			}
+			ShowPopup(e);
 		}
     	
 		/**

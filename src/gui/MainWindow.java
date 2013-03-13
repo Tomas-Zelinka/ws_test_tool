@@ -43,6 +43,7 @@ public class MainWindow extends JFrame{
 	 */
 	private final String APP_NAME = "Testing tool";
 	
+	
 	/**
 	 * 
 	 */
@@ -64,10 +65,13 @@ public class MainWindow extends JFrame{
 	private static String endpointPath = "";  
 	
 	/**
-	 * Splitpane containing Project navigator and action place
+	 * Splitpane containing main components of the GUI
 	 */
 	private Container centerPane;
 	
+	/**
+	 * 
+	 */
 	private Component centerComponent;
 	
 	/**
@@ -81,6 +85,22 @@ public class MainWindow extends JFrame{
 	 */
 	private Console console;
 	
+	
+	private TestCaseEditor editor;
+	
+	private Statistics stats;
+	
+	private RemoteControl remoteControl;
+	
+	private ProxyMonitor proxy;
+	
+	private  TestingUnit testUnit;
+	
+	public static final int TESTCASE_EDITOR = 0;
+	public static final int PROXY_MONITOR = 1;
+	public static final int REMOTE_CONTROL = 2;
+	public static final int STATISTICS = 3;
+	public static final int TESTING_UNIT = 4;
 	/**
 	 * 
 	 */
@@ -93,7 +113,6 @@ public class MainWindow extends JFrame{
 		int x = (dim.width-(this.WIDTH))/2;
 		int y = (dim.height-(this.HEIGTH))/2;
 		 
-		
 		//this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBounds(x, y, this.WIDTH, this.HEIGTH);
@@ -120,11 +139,17 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	private void initCenterPane(){
-		try{
-			setContent(new TestCaseEditor());
-		}catch(EmptyComponentException e){
-			System.out.println("MainWindow.nitCenterPane() - The center pane is not Initialized");
-		}
+		this.centerPane = getContentPane();
+		this.editor = new TestCaseEditor();
+		this.proxy = new ProxyMonitor();
+		this.remoteControl = new RemoteControl();
+		this.stats = new Statistics();
+		this.testUnit = new TestingUnit();
+		this.centerComponent = this.editor;
+		
+		
+		this.centerPane.add(this.centerComponent);
+		
 	}
 	
 	/**
@@ -240,22 +265,34 @@ public class MainWindow extends JFrame{
 		
 	}
 	
-	public void setContent(Component c) throws EmptyComponentException{
+	public void setContent(int component) {
 		
-		if(c == null){
-			throw new EmptyComponentException();
-		}else{
-			if(this.centerPane == null){
-				this.centerPane = getContentPane();
-			}
-			if(this.centerComponent != null)
-				this.centerPane.remove(this.centerComponent);
-			
-			this.centerComponent = c;
-			this.centerPane.add(c);
-			( (JPanel) this.centerPane).revalidate();
-			
+		this.centerPane.remove(this.centerComponent);
+		
+		switch(component){
+			case TESTCASE_EDITOR:
+				this.centerComponent = this.editor;
+				break;
+			case PROXY_MONITOR: 
+				this.centerComponent = this.proxy;
+				break;
+			case REMOTE_CONTROL: 
+				this.centerComponent = this.remoteControl;
+				break;
+			case STATISTICS: 
+				this.centerComponent = this.stats;
+				break;
+			case TESTING_UNIT: 
+				this.centerComponent = this.testUnit;
+				break;	
+			default:
+				System.out.println("MainWindow.setContent() - something is wrong in switch statement");
+				break;
+				
 		}
+		this.centerPane.add(this.centerComponent);
+		((JPanel)this.centerPane).revalidate();
+		this.centerPane.repaint();
 	}
 
 	

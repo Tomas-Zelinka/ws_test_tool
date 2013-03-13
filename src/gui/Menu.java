@@ -10,10 +10,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import logging.ConsoleLog;
-import modalWindows.NewProjectWindow;
 import modalWindows.NewTestCaseWindow;
 import modalWindows.NewTestSuiteWindow;
-import exceptions.EmptyComponentException;
 
 public class Menu extends JMenuBar {
 
@@ -52,11 +50,6 @@ public class Menu extends JMenuBar {
 	 */
 	private JMenu remote;
 	
-	/**
-	 * 
-	 */
-	private NewProjectWindow newProjectWindow;
- 	
 	/**
 	 * 
 	 */
@@ -329,13 +322,8 @@ public class Menu extends JMenuBar {
 	 */
 	class ViewTestEditorListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			try{
-				getMainWindowInstance().setContent(new TestCaseEditor());
+			getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
 				ConsoleLog.Print("Test Editor clicked");
-			}catch(EmptyComponentException e){
-				System.out.println("ViewTestEditor - Test case editor not initialized");
-			}
-				
 		}
 	} 
 	
@@ -346,12 +334,9 @@ public class Menu extends JMenuBar {
 	 */
 	class ViewTestUnitListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			try{
-				getMainWindowInstance().setContent(new PlainPanel());
+			getMainWindowInstance().setContent(MainWindow.STATISTICS);
 				ConsoleLog.Print("Test Unit clicked");
-			}catch(EmptyComponentException e){
-				System.out.println("ViewTestEditor - Test case editor not initialized");
-			}
+			
 			
 		}
 	}
@@ -363,6 +348,7 @@ public class Menu extends JMenuBar {
 	 */
 	class ViewProxyMonitorListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().setContent(MainWindow.PROXY_MONITOR);
 			ConsoleLog.Print("Proxy Monitor clicked");
 			}
 	}
@@ -375,6 +361,7 @@ public class Menu extends JMenuBar {
 	 */
 	class ViewStatisticsListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().setContent(MainWindow.STATISTICS);
 			ConsoleLog.Print("Statistics clicked");
 			}
 	}

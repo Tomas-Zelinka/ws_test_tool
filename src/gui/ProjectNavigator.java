@@ -25,8 +25,8 @@ import javax.swing.tree.TreePath;
 
 import logging.ConsoleLog;
 import modalWindows.NewProjectWindow;
-import modalWindows.NewTestCaseWindow;
-import modalWindows.NewTestSuiteWindow;
+import modalWindows.NewTestCaseDialog;
+import modalWindows.NewTestSuiteDialog;
 
 
 public class ProjectNavigator extends JPanel {
@@ -53,8 +53,8 @@ public class ProjectNavigator extends JPanel {
 	
 	
 	
- 	private NewTestSuiteWindow newTestSuiteWindow;
- 	private NewTestCaseWindow newTestCaseWindow;
+ 	private NewTestSuiteDialog newTestSuiteWindow;
+ 	private NewTestCaseDialog newTestCaseWindow;
 	
  
 	/**
@@ -173,7 +173,7 @@ public class ProjectNavigator extends JPanel {
 	 */
 	class TestCaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			newTestCaseWindow = new NewTestCaseWindow();
+			newTestCaseWindow = new NewTestCaseDialog();
 			newTestCaseWindow.setVisible(true);
 			
 			ConsoleLog.Print("new Test Case clicked");
@@ -187,7 +187,7 @@ public class ProjectNavigator extends JPanel {
 	 */
 	class TestSuiteListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			newTestSuiteWindow = new NewTestSuiteWindow();
+			newTestSuiteWindow = new NewTestSuiteDialog();
 			newTestSuiteWindow.setVisible(true);
 			ConsoleLog.Print("new Test Suite clicked");
 		}

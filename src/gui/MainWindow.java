@@ -5,12 +5,19 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.File;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.text.PlainDocument;
+
+import org.bounce.text.LineNumberMargin;
+import org.bounce.text.xml.XMLEditorKit;
 
 import exceptions.EmptyComponentException;
 
@@ -296,6 +303,26 @@ public class MainWindow extends JFrame{
 	}
 
 	
-	
+	/**
+	 * Metoda pro inicializaci komponenty tridy JEditorPane pro zobrazovani XML zprav.
+	 */
+	protected static void initEditorPane(JEditorPane currentEditorPane, JScrollPane currentScrollPane) {
+		
+		//pouziti bounce editor kitu pro zvyrazneni syntaxe XML
+		XMLEditorKit xmlKit= new XMLEditorKit();
+		currentEditorPane.setEditorKit(xmlKit);
+		
+		//nastaveni fontu
+		currentEditorPane.setFont(new Font("Courier", Font.PLAIN, 12));
+		//nastaveni sirky tabulatoru
+		currentEditorPane.getDocument().putProperty(PlainDocument.tabSizeAttribute, new Integer(1));
+
+		//zobrazeni postranniho panelu s cisly radku
+		JPanel rowHeader= new JPanel(new BorderLayout());
+		//rowHeader.add(new XMLFoldingMargin(reqOriginalEditorPane), BorderLayout.EAST);
+		rowHeader.add(new LineNumberMargin(currentEditorPane), BorderLayout.WEST);
+		currentScrollPane.setRowHeaderView(rowHeader);
+		
+	}
 	
 }

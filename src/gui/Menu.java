@@ -10,8 +10,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import logging.ConsoleLog;
-import modalWindows.NewTestCaseWindow;
-import modalWindows.NewTestSuiteWindow;
+import modalWindows.NewTestCaseDialog;
+import modalWindows.NewTestSuiteDialog;
 
 public class Menu extends JMenuBar {
 
@@ -53,12 +53,12 @@ public class Menu extends JMenuBar {
 	/**
 	 * 
 	 */
-	private NewTestSuiteWindow newTestSuiteWindow;
+	private NewTestSuiteDialog newTestSuiteWindow;
  	
 	/**
 	 * 
 	 */
-	private NewTestCaseWindow newTestCaseWindow;
+	private NewTestCaseDialog newTestCaseWindow;
  	
  	/**
 	 * 
@@ -128,6 +128,7 @@ public class Menu extends JMenuBar {
 		addMenuItem(view,"Test Editor",new ViewTestEditorListener());
 		addMenuItem(view,"Test Unit",new ViewTestUnitListener());
 		addMenuItem(view,"Proxy Monitor",new ViewProxyMonitorListener());
+		addMenuItem(view,"Remote Control",new ViewRemoteControlListener());
 		addMenuItem(view,"Statistics",new ViewStatisticsListener());
 	}
 	/**
@@ -269,7 +270,7 @@ public class Menu extends JMenuBar {
 	 */
 	class TestCaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			newTestCaseWindow = new NewTestCaseWindow();
+			newTestCaseWindow = new NewTestCaseDialog();
 			newTestCaseWindow.setVisible(true);
 			
 			ConsoleLog.Print("new Test Case clicked");
@@ -283,7 +284,7 @@ public class Menu extends JMenuBar {
 	 */
 	class TestSuiteListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			newTestSuiteWindow = new NewTestSuiteWindow();
+			newTestSuiteWindow = new NewTestSuiteDialog();
 			newTestSuiteWindow.setVisible(true);
 			ConsoleLog.Print("new Test Suite clicked");
 		}
@@ -334,10 +335,8 @@ public class Menu extends JMenuBar {
 	 */
 	class ViewTestUnitListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			getMainWindowInstance().setContent(MainWindow.STATISTICS);
+			getMainWindowInstance().setContent(MainWindow.TESTING_UNIT);
 				ConsoleLog.Print("Test Unit clicked");
-			
-			
 		}
 	}
 	
@@ -353,6 +352,17 @@ public class Menu extends JMenuBar {
 			}
 	}
 	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class ViewRemoteControlListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().setContent(MainWindow.REMOTE_CONTROL);
+			ConsoleLog.Print("Remote Control clicked");
+			}
+	}
 	
 	/**
 	 * 

@@ -19,9 +19,9 @@ public class ContainsCondition extends Condition {
 	private String description;
 	
 	
-	public ContainsCondition(int conditionId, String containString) {
+	public ContainsCondition(String containString) {
 		
-		super(conditionId);
+		//super(conditionId);
 		this.containString= containString;
 		typeName= "ContainsCondition";
 		description= "The occurrance of \"" + containString + "\"";

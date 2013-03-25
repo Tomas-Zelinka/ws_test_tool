@@ -13,20 +13,20 @@ package proxyUnit;
 public abstract class Condition {
 	
 	
-	private int conditionId;
+	//private int conditionId;
 	
 	
-	public Condition(int conditionId) {
+	//public Condition(int conditionId) {
 		
-		this.conditionId = conditionId;
+	//	this.conditionId = conditionId;
 		
-	}
+	//}
 
 		
-	public int getConditionId() {
+	//public int getConditionId() {
 		
-		return conditionId;
-	}
+	//	return conditionId;
+	///}
 	
 	
 		

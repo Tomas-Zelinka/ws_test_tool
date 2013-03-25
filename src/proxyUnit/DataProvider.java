@@ -88,14 +88,14 @@ public class DataProvider {
 		try {
 			XStream xstream= new XStream();
 			settings= (Settings) xstream.fromXML(new FileInputStream(new File("dbdata/settings.xml")));
+		//Settings settings = new Settings(1080,55,"localhost",new ArrayList<String>()) ;
 		}
 		catch (FileNotFoundException ex) {
 			System.err.println("File settings.xml not found");
 			System.err.println(ex.getMessage());
 			System.exit(-1);
 		}
-		catch(Exception ex)
-		{
+		catch(Exception ex)	{
 			ex.printStackTrace();
 		}
 		

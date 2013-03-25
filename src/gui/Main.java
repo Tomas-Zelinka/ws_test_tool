@@ -1,5 +1,7 @@
 package gui;
 
+import javax.swing.SwingUtilities;
+
 import logging.ConsoleLog;
 
 /**
@@ -22,10 +24,18 @@ public class Main {
 	public static void main(String[] args) {
 	
 		ConsoleLog.setConsoleLog(true);
+		try{
+		SwingUtilities.invokeAndWait(new Runnable() {
+			  public void run() {
+				  main = new MainWindow();
+				  main.setVisible(true);
+		    }
+		  });
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		
-		main = new MainWindow();
 		
-		main.setVisible(true);
 		
 	}
 	

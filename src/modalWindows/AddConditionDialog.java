@@ -10,6 +10,8 @@ package modalWindows;
 
 import java.awt.CardLayout;
 
+import javax.swing.JFrame;
+
 import proxyUnit.Condition;
 import proxyUnit.ContainsCondition;
 import proxyUnit.DestinationCondition;
@@ -31,19 +33,20 @@ public class AddConditionDialog extends javax.swing.JDialog {
 	
 	
 	private boolean addButtonClicked;
-	private int newConditionId;
+	//private int newConditionId;
 	private Condition newCondition;
 	
 	
 	/** Creates new form AddConditionDialog */
-	public AddConditionDialog(java.awt.Frame parent, boolean modal, int newConditionId) {
+	public AddConditionDialog(JFrame parent, boolean modal) {
+		
 		
 		super(parent, modal);
 		//zobrazit dialog nad hlavnim oknem
 		this.setLocationRelativeTo(parent);
 		this.setLocation(this.getX() - 200, this.getY() - 200);
 		
-		this.newConditionId= newConditionId;
+		//this.newConditionId= newConditionId;
 		addButtonClicked= false;
 		initComponents();
 		//vychozi oznaceni tlacitka Pridat
@@ -266,18 +269,18 @@ public class AddConditionDialog extends javax.swing.JDialog {
 		addButtonClicked= true;
 		String selectedItem= (String) typeComboBox.getSelectedItem();
 		if (selectedItem.equals(CONTAINS_CONDITION_PANEL)) {
-			newCondition= new ContainsCondition(newConditionId, searchTextField.getText());
+			newCondition= new ContainsCondition(searchTextField.getText());
 		}
 		
 		if (selectedItem.equals(URI_CONDITION_PANEL)) {
-			newCondition= new UriCondition(newConditionId, uriTextField.getText());
+			newCondition= new UriCondition(uriTextField.getText());
 		}
 		
 		if (selectedItem.equals(DESTINATION_CONDITION_PANEL)) {
 			if (requestRadioButton.isSelected())
-				newCondition= new DestinationCondition(newConditionId, true);
+				newCondition= new DestinationCondition( true);
 			else
-				newCondition= new DestinationCondition(newConditionId, false);
+				newCondition= new DestinationCondition( false);
 		}
 		
 		this.setVisible(false);
@@ -292,7 +295,7 @@ public class AddConditionDialog extends javax.swing.JDialog {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 
 			public void run() {
-				AddConditionDialog dialog = new AddConditionDialog(new javax.swing.JFrame(), true, 0);
+				AddConditionDialog dialog = new AddConditionDialog(new javax.swing.JFrame(), true);
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 
 					@Override

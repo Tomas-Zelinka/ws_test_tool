@@ -18,9 +18,9 @@ public class UriCondition extends Condition {
 	private String description;
 
 	
-	public UriCondition(int conditionId, String uriPart) {
+	public UriCondition( String uriPart) {
 		
-		super(conditionId);
+		//super(conditionId);
 		this.uriPart= uriPart;
 		typeName= "UriCondition";
 		description= "Occurrance of \"" + uriPart + "\" in URI";

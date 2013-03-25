@@ -18,9 +18,9 @@ public class DestinationCondition extends Condition {
 	private String description;
 
 	
-	public DestinationCondition(int conditionId, boolean applyOnRequest) {
+	public DestinationCondition( boolean applyOnRequest) {
 		
-		super(conditionId);
+		//super(conditionId);
 		this.applyOnRequest = applyOnRequest;
 		typeName= "DestinationCondition";
 		if (applyOnRequest)

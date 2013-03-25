@@ -306,7 +306,7 @@ public class MainWindow extends JFrame{
 	/**
 	 * Metoda pro inicializaci komponenty tridy JEditorPane pro zobrazovani XML zprav.
 	 */
-	protected static void initEditorPane(JEditorPane currentEditorPane, JScrollPane currentScrollPane) {
+	public static void initEditorPane(JEditorPane currentEditorPane, JScrollPane currentScrollPane) {
 		
 		//pouziti bounce editor kitu pro zvyrazneni syntaxe XML
 		XMLEditorKit xmlKit= new XMLEditorKit();

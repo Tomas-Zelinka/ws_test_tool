@@ -1,4 +1,4 @@
-<project name="FIWS_2.0" default="jar" basedir=".">
+<project name="FIWS_2.0" default="run" basedir=".">
  	<description>Builds, tests, and runs the FIWS_2.0.</description>
 	<property name="src.dir" value="src" />
    	<property name="build.dir" value="build" />
@@ -6,8 +6,9 @@
 	<property name="data.dir" value="data" />
 	<property name="class.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jar" />
+	<property name="resources.dir" value="resources" />
 	
-	<property name="jar_resources.dir" value="${class.dir}/resources" />
+	<property name="jar_resources.dir" value="${class.dir}/gui/resources" />
 	<property name="jar_lib.dir" value="${jar.dir}/lib" />
 	<property name="build_data.dir" value="${jar.dir}/data" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
@@ -33,6 +34,9 @@
 		<copy todir="${jar_lib.dir}">
 			<fileset dir="${lib.dir}"/>
 		</copy>
+		<copy todir="${jar_resources.dir}">
+			<fileset dir="${resources.dir}"/>
+		</copy>
 	</target>
 	
 	<target name="build" depends="init,clean">
@@ -54,7 +58,10 @@
 			</manifest>
 		</jar>
 	</target>
-	<target name="run" depends="jar"></target>
+	<target name="run" depends="jar">
+		<echo> Running ${jar.file} </echo>
+		 <java jar="${jar.file}" fork="true" />
+	</target>
 	
 	
 </project>

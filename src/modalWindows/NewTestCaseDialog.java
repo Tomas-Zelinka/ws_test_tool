@@ -2,7 +2,7 @@ package modalWindows;
 
 import gui.MainWindow;
 import gui.ProjectNavigator;
-import gui.HttpHeaderEditor;
+import gui.HttpRequestEditor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -92,7 +92,7 @@ public class NewTestCaseDialog extends InputModalWindow {
         tabbedPane.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         
         //JComponent panel1 = makeTextPanel("Panel #1");
-        JPanel panel1 = new HttpHeaderEditor();
+        JPanel panel1 = new HttpRequestEditor();
         
         tabbedPane.addTab("Http Request", panel1);
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);

@@ -70,7 +70,7 @@ public class ProjectNavigator extends JPanel {
 		 this.setLayout(new BorderLayout());
 		 this.scrollPane.getViewport().add(tree);
 		 this.scrollPane.setBorder(BorderFactory.createEmptyBorder());
-		 this.add(BorderLayout.CENTER, scrollPane);
+		 this.add(BorderLayout.CENTER, scrollPane); 
 		 
 	}
 	

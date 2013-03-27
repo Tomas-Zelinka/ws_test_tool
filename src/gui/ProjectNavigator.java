@@ -82,6 +82,10 @@ public class ProjectNavigator extends JPanel {
 	    return new Dimension(200, 400);
 	}
 	
+	/**
+	 * TODO osetreni
+	 * @param f
+	 */
 	void delete(File f)  {
 		  if (f.isDirectory()) {
 		    for (File c : f.listFiles())

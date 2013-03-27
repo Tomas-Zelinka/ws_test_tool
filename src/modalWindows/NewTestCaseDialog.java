@@ -2,26 +2,24 @@ package modalWindows;
 
 import gui.MainWindow;
 import gui.ProjectNavigator;
-import gui.HttpRequestEditor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.text.Document;
 
 /**
@@ -34,8 +32,14 @@ public class NewTestCaseDialog extends InputModalWindow {
 	 * 
 	 */
 	
+	public static final int TESTTYPE_HTTP = 1;
+	public static final int TESTTYPE_FAULT = 2;
+	public static final int TESTTYPE_HTTP_FAULT = 3;
+	
+	
 	private JTextField testCaseName;
 	private JTextField path;
+	private int testType;
 	private static final long serialVersionUID = 9187751988881264097L;
 
 	public NewTestCaseDialog(){
@@ -49,14 +53,13 @@ public class NewTestCaseDialog extends InputModalWindow {
 	 */
 	@Override
 	protected void putContent(){
-
+		
 		JPanel labels = new JPanel(new GridLayout(0,1,0,10));
 		JPanel fields = new JPanel(new GridLayout(0,1,0,10));
-		
+		testType = 0;
 		String selectedPath = MainWindow.getSuitePath();
 		if(selectedPath.isEmpty()){
 			messageLabel.setText("Path not selected. Please select Test Suite Path");
-			
 		}
 		
 		testCaseName = new JTextField(10);
@@ -84,6 +87,27 @@ public class NewTestCaseDialog extends InputModalWindow {
         getSecondInsidePanel().add(labels,BorderLayout.WEST);
         getSecondInsidePanel().add(fields);
         
+        
+        
+        JPanel checkBoxPanel = new JPanel();
+        JCheckBox box1 = new JCheckBox("HTTP Test");
+        JCheckBox box2 = new JCheckBox("Fault Injection");
+        JCheckBox box3 = new JCheckBox("HTTP Test with Fault Injection");
+        
+        checkBoxPanel.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
+        
+        CheckBoxListener checkBoxListener = new CheckBoxListener();
+        box1.addItemListener(checkBoxListener);
+        box1.addItemListener(checkBoxListener);
+        box1.addItemListener(checkBoxListener);
+        
+        checkBoxPanel.add(box1);
+        checkBoxPanel.add(box2);
+        checkBoxPanel.add(box3);
+        
+        
+        getSecondInsidePanel().add(checkBoxPanel,BorderLayout.SOUTH);
+        /*     
         JTabbedPane tabbedPane = new JTabbedPane();
               
         UIManager.getDefaults().put("TabbedPane.contentBorderInsets", new Insets(1,1,1,1));
@@ -115,11 +139,17 @@ public class NewTestCaseDialog extends InputModalWindow {
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         
         
-        
+        */
     }
      
     
-		
+	private void setTestType (int type){
+		this.testType = type;
+	}
+	
+	private int getTestType(){
+		return this.testType;
+	}
 	
 	/**
 	 * 
@@ -202,6 +232,21 @@ public class NewTestCaseDialog extends InputModalWindow {
             setVisible(false);
             dispose();
         }
+	}
+	
+	
+	
+	private class CheckBoxListener implements ItemListener{
+		
+		public void itemStateChanged(ItemEvent e){
+			Object testCheckBox = e.getItemSelectable();
+			
+			if ((testCheckBox.toString()) == "HTTP Test"){
+				System.out.println("httptest");
+			}else{
+				System.out.println(testCheckBox.toString().);
+			}
+		}
 	}
 	
 }

@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,10 +11,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
  
 public class HttpRequestEditor extends JPanel {
@@ -29,7 +28,7 @@ public class HttpRequestEditor extends JPanel {
  
     private  JTable headers;
     
-    private ToolBox toolBox;
+    private JToolBar toolBox;
     
     DefaultTableModel tableModel;
    
@@ -121,7 +120,7 @@ public class HttpRequestEditor extends JPanel {
  
     private void initComponents(){
     	headers = new JTable();
-    	toolBox = new ToolBox();
+    	toolBox = new JToolBar();
     	initToolBox();
     	initTableModel();
     }
@@ -161,10 +160,10 @@ public class HttpRequestEditor extends JPanel {
          	}
          });
          
-         toolBox.addButton(addButton);
-         toolBox.addButton(removeButton);
-         toolBox.addButton(removeFirstButton);
-         toolBox.addButton(removeLastButton);
+         toolBox.add(addButton);
+         toolBox.add(removeButton);
+         toolBox.add(removeFirstButton);
+         toolBox.add(removeLastButton);
          toolBox.setFloatable(false);
     	
     	

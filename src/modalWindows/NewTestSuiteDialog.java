@@ -27,7 +27,7 @@ public class NewTestSuiteDialog extends InputModalWindow {
 	}
 	
 		
-	/*
+	/**
 	 * 
 	 */
 	@Override
@@ -42,7 +42,7 @@ public class NewTestSuiteDialog extends InputModalWindow {
         addToSecondPanel(testSuiteName);
 	}
 	
-	/*
+	/**
 	 * 
 	 * 
 	 */
@@ -51,14 +51,14 @@ public class NewTestSuiteDialog extends InputModalWindow {
 		return getSuiteName();
 	}
 	
-	/*
+	/**
 	 * 
 	 */
 	private String getSuiteName(){
 		return testSuiteName.getText();
 	}
 	
-	/*
+	/**
 	 * 
 	 * 
 	 */
@@ -85,13 +85,20 @@ public class NewTestSuiteDialog extends InputModalWindow {
 	private class OkButtonAction  implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e) {
+			 
              File newTestSuite = new File(MainWindow.getDataRoot()+File.separator+getSuiteName());
+             File testList = new File(newTestSuite.getPath()+File.separator+"testlist.xml");
              
              if (newTestSuite.exists()){
             	 messageLabel.setText("Test suite with this name already exists");
              }else{
             	 
             	 newTestSuite.mkdir();
+            	 try {
+            		 testList.createNewFile();
+            	 }catch(Exception b){
+            		 b.printStackTrace();
+            	 }
             	 ProjectNavigator.refreshTree();
             	 System.out.println("New test suite created,name: "+newTestSuite.getPath());
             	 setVisible(false);

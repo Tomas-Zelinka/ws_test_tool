@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
  
 public class TableData extends JPanel {
@@ -71,7 +71,7 @@ public class TableData extends JPanel {
         tablePanel.setLayout(new BorderLayout());
         
                
-        ToolBox toolBox = new ToolBox();
+        JToolBar toolBox = new JToolBar();
         JTextArea content = new JTextArea("ahoj", 5,5);
         
         
@@ -111,10 +111,10 @@ public class TableData extends JPanel {
         	}
         });
         
-        toolBox.addButton(addButton);
-        toolBox.addButton(removeButton);
-        toolBox.addButton(removeFirstButton);
-        toolBox.addButton(removeLastButton);
+        toolBox.add(addButton);
+        toolBox.add(removeButton);
+        toolBox.add(removeFirstButton);
+        toolBox.add(removeLastButton);
         toolBox.setFloatable(false);
         tablePanel.add(toolBox,BorderLayout.NORTH);
         tablePanel.add(table);

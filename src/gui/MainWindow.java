@@ -16,6 +16,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.text.PlainDocument;
 
+import logging.ConsoleLog;
+
 import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
 
@@ -71,10 +73,18 @@ public class MainWindow extends JFrame{
 	 */
 	private static String endpointPath = "";  
 	
+	
 	/**
 	 * Splitpane containing main components of the GUI
 	 */
-	private Container centerPane;
+	private JSplitPane centerPane;
+	
+	
+	
+	/**
+	 * Splitpane containing main components of the GUI
+	 */
+	private Component panelPane;
 	
 	/**
 	 * 
@@ -103,6 +113,8 @@ public class MainWindow extends JFrame{
 	
 	private  TestingUnit testUnit;
 	
+	private ProjectNavigator navigator;
+	
 	public static final int TESTCASE_EDITOR = 0;
 	public static final int PROXY_MONITOR = 1;
 	public static final int REMOTE_CONTROL = 2;
@@ -128,6 +140,7 @@ public class MainWindow extends JFrame{
 		this.setBackground(Color.gray);
 		
 		initMenuBar();
+		initContentPane();
 		initCenterPane();
 		initBottomPane();
 		setContentPane(this.bottomPane);
@@ -145,8 +158,12 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	private void initCenterPane(){
-		this.centerPane = getContentPane();
+	private void initContentPane(){
+		//navigator = new  ProjectNavigator(root);
+		
+		
+		
+		
 		this.editor = new TestCaseEditor();
 		this.proxy = new ProxyMonitor();
 		this.remoteControl = new RemoteControl();
@@ -155,9 +172,40 @@ public class MainWindow extends JFrame{
 		this.centerComponent = this.editor;
 		
 		
-		this.centerPane.add(this.centerComponent);
+		//this.panelPane = (JPanel)this.centerComponent;
+		
 		
 	}
+	
+	/**
+	 * 
+	 */
+	
+	
+	/**
+	 * 
+	 */
+	private void initCenterPane(){
+		File root = new File(MainWindow.getDataRoot());
+		
+		if(!root.exists()){
+			boolean wasDirectoryMade = root.mkdirs();
+		    if(wasDirectoryMade)
+		    	ConsoleLog.Print("Direcoty Created");
+		}
+		
+		this.navigator = new ProjectNavigator(root);
+		this.centerPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,this.navigator,this.centerComponent);
+		this.centerPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
+	}
+	
+	/**
+	 * 
+	 */
+	private JSplitPane getCenterPane(){
+		return this.centerPane;
+	}
+	
 	
 	/**
 	 * 
@@ -165,13 +213,7 @@ public class MainWindow extends JFrame{
 	private void initBottomPane(){
 		
 		this.console = new Console();
-		
-		try{
-			this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
-		}catch(EmptyComponentException e){
-			System.out.println("The center pane is not Initialized");
-		}
-		
+		this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
 		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
 		this.bottomPane.setResizeWeight(0.90);
 		
@@ -211,8 +253,7 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	public static String getCasePath()
-	{
+	public static String getCasePath(){
 		return MainWindow.casePath;
 	}
 	
@@ -228,8 +269,7 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	public static String getSuitePath()
-	{
+	public static String getSuitePath(){
 		return MainWindow.suitePath;
 	}
 	
@@ -245,8 +285,7 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	public static String getDataRoot()
-	{
+	public static String getDataRoot(){
 		return MainWindow.dataRoot;
 	}
 	
@@ -263,18 +302,18 @@ public class MainWindow extends JFrame{
 	 * 
 	 * @return
 	 */
-	public Container getCenterPane() throws EmptyComponentException{
-		if(this.centerPane == null){
+	public Component getPanel() throws EmptyComponentException{
+		if(this.centerComponent == null){
 			throw new EmptyComponentException();
 		}else{
-			return this.centerPane;
+			return this.centerComponent;
 		}
 		
 	}
 	
 	public void setContent(int component) {
 		
-		this.centerPane.remove(this.centerComponent);
+		this.centerPane.remove(this.centerComponent);//this.panelPane = this.centerComponent);
 		
 		switch(component){
 			case TESTCASE_EDITOR:
@@ -297,9 +336,13 @@ public class MainWindow extends JFrame{
 				break;
 				
 		}
-		this.centerPane.add(this.centerComponent);
-		((JPanel)this.centerPane).revalidate();
-		this.centerPane.repaint();
+		System.out.println("prepinam");
+		
+		//this.panelPane =  this.centerComponent;
+		this.centerPane.setRightComponent(this.centerComponent);
+		
+		getCenterPane().revalidate();
+		getCenterPane().repaint();
 	}
 
 	

@@ -36,6 +36,7 @@ public abstract class InputModalWindow extends JDialog {
 	public InputModalWindow(String name,int width, int height){
 		
 		initWindow(name, width, height);
+		initComponents();
 		initFirstPanel();
 		initSecondPanel();
 		putContent();
@@ -98,6 +99,7 @@ public abstract class InputModalWindow extends JDialog {
 	}
 	
 	abstract protected void putContent();
+	abstract protected void initComponents();
 	/**
 	 * 
 	 */

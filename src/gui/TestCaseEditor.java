@@ -1,30 +1,14 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.io.File;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
-import logging.ConsoleLog;
 import modalWindows.AntiAliasedEditorPane;
-import proxyUnit.Condition;
-import proxyUnit.Fault;
-import proxyUnit.Test;
-import proxyUnit.TestStatement;
 
 
-public class TestCaseEditor extends JSplitPane {
+public class TestCaseEditor extends JPanel {
 
 	
 	/**
@@ -54,13 +38,12 @@ public class TestCaseEditor extends JSplitPane {
 	    mainTabbedPane.addTab("HTTP Request", httpEditor);
 	    mainTabbedPane.addTab("Fault Injection",statementDetailSplitPane);
 	    mainTabbedPane.addTab("Test Case Settings",settings);
+		setLayout(new BorderLayout());
 		
 		
-		
-		this.setLeftComponent(navigator);
-		this.setRightComponent(mainTabbedPane);
-		this.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		this.setDividerSize(SPLIT_RESIZERS_WIDTH);
+		add(mainTabbedPane,BorderLayout.CENTER);
+		//.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		//this.setDividerSize(SPLIT_RESIZERS_WIDTH);
 		
 	}
 	
@@ -184,16 +167,10 @@ public class TestCaseEditor extends JSplitPane {
 	 */
 	private void initComponents(){
 		
-		File root = new File(MainWindow.getDataRoot());
 		
-		if(!root.exists()){
-			boolean wasDirectoryMade = root.mkdirs();
-		    if(wasDirectoryMade)
-		    	ConsoleLog.Print("Direcoty Created");
-		}
 		
 		settings = new JPanel();
-		navigator = new  ProjectNavigator(root);
+		
 		statementDetailSplitPane = new FaultInjectionEditor();
 		
 		
@@ -252,7 +229,6 @@ public class TestCaseEditor extends JSplitPane {
 	}
 	
 	private JPanel settings;
-	private ProjectNavigator navigator;
 	//private JPanel editor;
 	private JTabbedPane mainTabbedPane;
 	

@@ -44,6 +44,7 @@ public class MyTreeModel implements TreeModel {
 	public Object getChild(Object parent, int index) {
 		FileNode directory = (FileNode) parent;
 		String[] directoryMembers = directory.list();
+		
 		return (new FileNode(directory, directoryMembers[index]));
 	}
 
@@ -52,10 +53,17 @@ public class MyTreeModel implements TreeModel {
 	 */
 	public int getChildCount(Object parent) {
 		FileNode fileSystemMember = (FileNode) parent;
-	    
+	    int count = 0;
+		
+		
 		if (fileSystemMember.isDirectory()) {
-	    	String[] directoryMembers = fileSystemMember.list();
-	    	return directoryMembers.length;
+	    	for (File member: fileSystemMember.listFiles()){
+	    		if (!member.isFile()){
+	    			count++;
+	    		}
+	    	}
+			
+	    	return count;
 	    
 		}else {
 			return 0;
@@ -85,7 +93,15 @@ public class MyTreeModel implements TreeModel {
 	 */
 	public boolean isLeaf(Object node) {
 		
-		return ((FileNode) node).isFile();
+		FileNode test = (FileNode) node;
+		
+		if(test.isFaultInjectionTestCase() || test.isHttpTestCase())
+			return true;
+		
+		if(test.isFile())
+			return true;
+				
+		return false;
 	}
 	
 	/**

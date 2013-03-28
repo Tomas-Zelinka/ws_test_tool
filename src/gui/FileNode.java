@@ -30,29 +30,32 @@ public class FileNode extends java.io.File {
      * 
      * @return
      */
-    public boolean isTestCase(){
+    public boolean isHttpTestCase(){
     	
-    	if (this.isDirectory()){
-    		ConsoleLog.Print("testcase double clicked");
+    	if (this.isDirectory() && (this.getName().compareTo("Http") == 0)){
+    		    		
+    		//ConsoleLog.Print("http test case clicked");
     		return true;
     	}
-    	return true;
+    	return false;
     }
 
+    
     /**
      * 
      * @return
      */
-    public boolean isTestSuite(){
+    public boolean isFaultInjectionTestCase(){
     	
-    	if(this.isDirectory()){
-    		ConsoleLog.Print("testsuite double clicked");
+    	if (this.isDirectory() && (this.getName().compareTo("FaultInjection") == 0)){
+    		
+    		//ConsoleLog.Print("FaultInjection case clicked");
     		return true;
     	}
-    	
-    	return true;
+    	return false;
     }
     
+      
     /**
      * 
      */

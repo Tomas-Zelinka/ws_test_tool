@@ -9,13 +9,10 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,16 +29,14 @@ public class NewTestCaseDialog extends InputModalWindow {
 	 * 
 	 */
 	
-	public static final int TESTTYPE_HTTP = 1;
-	public static final int TESTTYPE_FAULT = 2;
-	public static final int TESTTYPE_HTTP_FAULT = 3;
-	
-	
 	private JTextField testCaseName;
-	private JTextField path;
-	private int testType;
+	private JTextField selectedTestSuite;
+		
 	private static final long serialVersionUID = 9187751988881264097L;
 
+	
+	
+	
 	public NewTestCaseDialog(){
 		super("New Test Case", 640,580);
 		
@@ -56,23 +51,23 @@ public class NewTestCaseDialog extends InputModalWindow {
 		
 		JPanel labels = new JPanel(new GridLayout(0,1,0,10));
 		JPanel fields = new JPanel(new GridLayout(0,1,0,10));
-		testType = 0;
+		
 		String selectedPath = MainWindow.getSuitePath();
 		if(selectedPath.isEmpty()){
-			messageLabel.setText("Path not selected. Please select Test Suite Path");
+			messageLabel.setText("Test suit not selected. Please select Test Suite");
 		}
 		
 		testCaseName = new JTextField(10);
-		path = new JTextField(MainWindow.getSuitePath()+ File.separator,10);
+		selectedTestSuite = new JTextField(MainWindow.getSuitePath(),10);
 		JLabel label = new JLabel("Test Case: ");
-		JLabel pathLabel = new JLabel("Path: ");
+		JLabel pathLabel = new JLabel("Test Suite: ");
         
 		labels.add(pathLabel);
 		labels.add(label);
 		
-		path.setEditable(false);
+		selectedTestSuite.setEditable(false);
 			
-		fields.add(path);
+		fields.add(selectedTestSuite);
 		fields.add(testCaseName);
 		fields.setSize(new Dimension(200,50));
 		
@@ -89,24 +84,24 @@ public class NewTestCaseDialog extends InputModalWindow {
         
         
         
-        JPanel checkBoxPanel = new JPanel();
-        JCheckBox box1 = new JCheckBox("HTTP Test");
-        JCheckBox box2 = new JCheckBox("Fault Injection");
-        JCheckBox box3 = new JCheckBox("HTTP Test with Fault Injection");
-        
-        checkBoxPanel.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
-        
-        CheckBoxListener checkBoxListener = new CheckBoxListener();
-        box1.addItemListener(checkBoxListener);
-        box1.addItemListener(checkBoxListener);
-        box1.addItemListener(checkBoxListener);
-        
-        checkBoxPanel.add(box1);
-        checkBoxPanel.add(box2);
-        checkBoxPanel.add(box3);
-        
-        
-        getSecondInsidePanel().add(checkBoxPanel,BorderLayout.SOUTH);
+//        JPanel checkBoxPanel = new JPanel();
+//        box1 = new JCheckBox("HTTP Test");
+//        box2 = new JCheckBox("Fault Injection");
+//        box3 = new JCheckBox("HTTP Test with Fault Injection");
+//        
+//        checkBoxPanel.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
+//        
+//        CheckBoxListener checkBoxListener = new CheckBoxListener();
+//        box1.addItemListener(checkBoxListener);
+//        box2.addItemListener(checkBoxListener);
+//        box3.addItemListener(checkBoxListener);
+//        
+//        checkBoxPanel.add(box1);
+//        checkBoxPanel.add(box2);
+//        checkBoxPanel.add(box3);
+//        
+//        
+//        getSecondInsidePanel().add(checkBoxPanel,BorderLayout.SOUTH);
         /*     
         JTabbedPane tabbedPane = new JTabbedPane();
               
@@ -143,14 +138,6 @@ public class NewTestCaseDialog extends InputModalWindow {
     }
      
     
-	private void setTestType (int type){
-		this.testType = type;
-	}
-	
-	private int getTestType(){
-		return this.testType;
-	}
-	
 	/**
 	 * 
 	 * @param text
@@ -209,12 +196,18 @@ public class NewTestCaseDialog extends InputModalWindow {
 		public void actionPerformed(ActionEvent e) {
              
 			File newTestCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+getCaseName());
+			File settings = new File(newTestCase.getPath() + File.separator + "settings.xml");
              
 			if (newTestCase.exists()){
             	 messageLabel.setText("Test suite with this name already exists");
              }else{
             	 
             	 newTestCase.mkdir();
+            	 try{
+            		 settings.createNewFile();
+            	 }catch(Exception b){
+            		 b.printStackTrace();
+            	 }
             	 ProjectNavigator.refreshTree();
 			
             	 System.out.println("New project name: "+ getCaseName());
@@ -233,20 +226,27 @@ public class NewTestCaseDialog extends InputModalWindow {
             dispose();
         }
 	}
-	
-	
-	
-	private class CheckBoxListener implements ItemListener{
+	@Override
+	protected void initComponents() {
+		// TODO Auto-generated method stub
 		
-		public void itemStateChanged(ItemEvent e){
-			Object testCheckBox = e.getItemSelectable();
-			
-			if ((testCheckBox.toString()) == "HTTP Test"){
-				System.out.println("httptest");
-			}else{
-				System.out.println(testCheckBox.toString().);
-			}
-		}
 	}
+	
+	
+	
+//	private class CheckBoxListener implements ItemListener{
+//		
+//		public void itemStateChanged(ItemEvent e){
+//			Object testCheckBox = e.getItemSelectable();
+//			
+//			if ((testCheckBox) ==  box1 && box1.isSelected() ){
+//				System.out.println("1");
+//			}if ((testCheckBox) ==  box2 && box2.isSelected()){
+//				System.out.println("2");
+//			}if ((testCheckBox) ==  box3 && box3.isSelected()){
+//				System.out.println("3");
+//			}
+//		}
+//	}
 	
 }

@@ -111,7 +111,7 @@ public class Menu extends JMenuBar {
 		//addMenuItem(newSubMenu,"New Test Project", new TestProjectListener());
 		addMenuItem(newSubMenu,"New Test Suite", new TestSuiteListener());
 		addMenuItem(newSubMenu,"New Test Case", new TestCaseListener());
-		addMenuItem(newSubMenu,"New Test List", new TestListListener());
+		//addMenuItem(newSubMenu,"New Test List", new TestListListener());
 		
 		addMenuItem(file,"Open", new OpenListener());
 		addMenuItem(file,"Edit", new EditListener());

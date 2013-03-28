@@ -24,7 +24,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import logging.ConsoleLog;
-import modalWindows.NewProjectWindow;
+import modalWindows.AddFaultInjectionDialog;
+import modalWindows.AddHttpTestDialog;
 import modalWindows.NewTestCaseDialog;
 import modalWindows.NewTestSuiteDialog;
 
@@ -51,11 +52,14 @@ public class ProjectNavigator extends JPanel {
 	 */
 	private JPopupMenu treeMenu;
 	
-	
+	private final int TEST_UNIT = 2;
+	private final int CASE_EDITOR = 3;
+	private int panelType;
 	
  	private NewTestSuiteDialog newTestSuiteWindow;
  	private NewTestCaseDialog newTestCaseWindow;
-	
+ 	private AddFaultInjectionDialog newFaultInjectionDialog;
+ 	private AddHttpTestDialog newHttpTestDialog;
  
 	/**
 	 * 
@@ -71,7 +75,7 @@ public class ProjectNavigator extends JPanel {
 		 this.scrollPane.getViewport().add(tree);
 		 this.scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		 this.add(BorderLayout.CENTER, scrollPane); 
-		 
+		 this.panelType = 0;
 	}
 	
 	public Dimension getMinimumSize() {
@@ -164,7 +168,8 @@ public class ProjectNavigator extends JPanel {
 		//addMenuItem(treeMenu,"New Test Project", new TestProjectListener());
 		addMenuItem(treeMenu,"New Test Suite", new TestSuiteListener());
 		addMenuItem(treeMenu,"New Test Case", new TestCaseListener());
-		addMenuItem(treeMenu,"New Test List", new TestListListener());
+		addMenuItem(treeMenu,"New HTTP Test", new HttpTestListener());
+		addMenuItem(treeMenu,"New Fault Injection", new FaultInjectionListener());
 		addMenuItem(treeMenu,"Edit", new EditListener());
 		addMenuItem(treeMenu,"Delete", new DeleteListener());
 		addMenuItem(treeMenu,"Refresh", new RefreshTree());
@@ -202,25 +207,66 @@ public class ProjectNavigator extends JPanel {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class TestListListener implements ActionListener{
+	class HttpTestListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-				ConsoleLog.Print("new Test List clicked");
+			
+			File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"Http");
+			File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
+            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
+			
+			if (newHttpCase.exists()){
+            	 System.out.println("You can set only 1 http test to this case");
+             }else{
+            	 
+            	 newHttpCase.mkdir();
+            	 inputDir.mkdir();
+            	 outputDir.mkdir();
+            	 ProjectNavigator.refreshTree();
+			
+            	 System.out.println("New project name: "+ MainWindow.getCasePath());
+            	 
+            	 
+             }
+			
+			
+			ConsoleLog.Print("new HttpTest clicked");
 		}
 	}
 	
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
+	 */
 	 
-	class TestProjectListener implements ActionListener{
+	class FaultInjectionListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			
-			newProjectWindow = new NewProjectWindow();
-			newProjectWindow.setVisible(true);
-			ConsoleLog.Print("new Test Project clicked");
+			File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"FaultInjection");
+			File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
+            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
+			
+			if (newHttpCase.exists()){
+            	 System.out.println("You can set only 1 fault injection test to this case");
+             }else{
+            	 
+            	 newHttpCase.mkdir();
+            	 inputDir.mkdir();
+            	 outputDir.mkdir();
+//            	 try{
+//            		 settings.createNewFile();
+//            	 }catch(Exception b){
+//            		 b.printStackTrace();
+//            	 }
+            	 ProjectNavigator.refreshTree();
+			
+            	 System.out.println("New project name: "+ MainWindow.getCasePath());
+            	 
+            	 
+             }
+			
+			ConsoleLog.Print("new Fault Injection clicked");
 		}
-	}	*/	
+	}		
 	
 	/**
 	 * 
@@ -229,6 +275,18 @@ public class ProjectNavigator extends JPanel {
 	 */
 	class EditListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
+			
+			
+			switch(panelType){
+				case TEST_UNIT:
+					getMainWindowInstance().setContent(MainWindow.TESTING_UNIT);
+					break;
+				case CASE_EDITOR:	
+					getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
+				default:
+					break;
+			}
+			
 			ConsoleLog.Print("file edit clicked");
 		}
 	} 	
@@ -248,7 +306,6 @@ public class ProjectNavigator extends JPanel {
 			}else{
 				
 			}
-			
 		}
 	} 
 	
@@ -318,10 +375,16 @@ public class ProjectNavigator extends JPanel {
 					//ConsoleLog.Print( "Project Selected: " + path.getPathComponent(1));
 					
 					MainWindow.setSuitePath(path.getPathComponent(1).toString());
-					 
-					if(path.getPathCount() > 3)
+					
+									
+					if (path.getPathCount() <= TEST_UNIT)
+						panelType = TEST_UNIT;
+					
+					
+					if(path.getPathCount() == CASE_EDITOR){
+						panelType = CASE_EDITOR;
 						MainWindow.setCasePath(path.getPathComponent(2).toString());
-						
+					}
 					MainWindow.setEndpointPath(((FileNode)path.getLastPathComponent()).getAbsolutePath());
 					
 					if (SwingUtilities.isRightMouseButton(e))  

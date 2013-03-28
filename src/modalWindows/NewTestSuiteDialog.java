@@ -117,5 +117,10 @@ public class NewTestSuiteDialog extends InputModalWindow {
             dispose();
         }
 	}
+	@Override
+	protected void initComponents() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

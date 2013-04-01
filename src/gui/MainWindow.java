@@ -159,11 +159,8 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	private void initContentPane(){
-		//navigator = new  ProjectNavigator(root);
 		
-		
-		
-		
+	
 		this.editor = new TestCaseEditor();
 		this.proxy = new ProxyMonitor();
 		this.remoteControl = new RemoteControl();
@@ -312,12 +309,20 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void setContent(int component) {
-		
+		int panelType = this.navigator.getPanelType();
 		this.centerPane.remove(this.centerComponent);//this.panelPane = this.centerComponent);
 		
 		switch(component){
 			case TESTCASE_EDITOR:
 				this.centerComponent = this.editor;
+				
+				if (panelType == ProjectNavigator.CASE_EDITOR_SETTINGS){
+					this.editor.setTab(TestCaseEditor.SETTINGS_TAB);
+				}else if(panelType == ProjectNavigator.CASE_EDITOR_HTTP){
+					this.editor.setTab(TestCaseEditor.HTTP_TAB);
+				}else if(panelType == ProjectNavigator.CASE_EDITOR_FAULT){
+					this.editor.setTab(TestCaseEditor.FAULT_TAB);
+				}
 				break;
 			case PROXY_MONITOR: 
 				this.centerComponent = this.proxy;
@@ -336,7 +341,7 @@ public class MainWindow extends JFrame{
 				break;
 				
 		}
-		System.out.println("prepinam");
+		
 		
 		//this.panelPane =  this.centerComponent;
 		this.centerPane.setRightComponent(this.centerComponent);

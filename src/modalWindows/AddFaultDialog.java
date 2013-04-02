@@ -19,19 +19,20 @@ import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jdom2.JDOMException;
 
-import proxyUnit.DelayFault;
-import proxyUnit.EmptyingFault;
-import proxyUnit.Fault;
-import proxyUnit.HeaderCorruptionFault;
-import proxyUnit.MultiplicationFault;
-import proxyUnit.StringCorruptionFault;
-import proxyUnit.WsdlOperationFault;
-import proxyUnit.XPathCorruptionFault;
 
 import com.predic8.wsdl.Definitions;
 import com.predic8.wsdl.Message;
 import com.predic8.wsdl.Part;
 import com.predic8.wsdl.WSDLParser;
+
+import data.DelayFault;
+import data.EmptyingFault;
+import data.Fault;
+import data.HeaderCorruptionFault;
+import data.MultiplicationFault;
+import data.StringCorruptionFault;
+import data.WsdlOperationFault;
+import data.XPathCorruptionFault;
 
 /**
  * Dialog pro pridani nove poruchy do prislusneho pravidla.

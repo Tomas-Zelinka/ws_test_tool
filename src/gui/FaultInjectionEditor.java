@@ -4,9 +4,10 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import data.Condition;
+import data.Fault;
+
 import modalWindows.AddConditionDialog;
-import proxyUnit.Condition;
-import proxyUnit.Fault;
 import proxyUnit.TestStatement;
 
 public class FaultInjectionEditor extends JSplitPane {

@@ -3,17 +3,18 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.File;
 
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
 import javax.swing.text.PlainDocument;
 
 import logging.ConsoleLog;
@@ -115,6 +116,8 @@ public class MainWindow extends JFrame{
 	
 	private ProjectNavigator navigator;
 	
+	private JToolBar mainToolBox; 
+	
 	public static final int TESTCASE_EDITOR = 0;
 	public static final int PROXY_MONITOR = 1;
 	public static final int REMOTE_CONTROL = 2;
@@ -138,12 +141,15 @@ public class MainWindow extends JFrame{
 		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
 		this.setLayout(new BorderLayout());
 		this.setBackground(Color.gray);
-		
+		initToolBox();
+		getContentPane().add(mainToolBox,BorderLayout.NORTH);
 		initMenuBar();
 		initContentPane();
 		initCenterPane();
 		initBottomPane();
-		setContentPane(this.bottomPane);
+		getContentPane().add(this.bottomPane,BorderLayout.CENTER);
+		
+		
 	}
 		
 	/**
@@ -214,6 +220,14 @@ public class MainWindow extends JFrame{
 		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
 		this.bottomPane.setResizeWeight(0.90);
 		
+	}
+	
+	private void initToolBox(){
+		mainToolBox = new JToolBar();
+		
+		mainToolBox.setFloatable(false);
+		JButton pokus = new JButton("Save TestCase");
+		mainToolBox.add(pokus);
 	}
 	
 	/**

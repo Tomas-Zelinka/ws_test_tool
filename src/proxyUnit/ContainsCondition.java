@@ -6,6 +6,8 @@
  */
 package proxyUnit;
 
+import data.Condition;
+
 /**
  * Trida reprezentujici podminku spojenou s obsahem retezece ve zprave. Pokud zprava na jakemkoliv miste
  * (bez ohledu na syntaxi XML) obsahuje zadany retezec, pak je podminka splnena.

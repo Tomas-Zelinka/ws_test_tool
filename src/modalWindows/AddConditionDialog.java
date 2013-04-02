@@ -12,10 +12,11 @@ import java.awt.CardLayout;
 
 import javax.swing.JFrame;
 
-import proxyUnit.Condition;
+import data.Condition;
+import data.DestinationCondition;
+import data.UriCondition;
+
 import proxyUnit.ContainsCondition;
-import proxyUnit.DestinationCondition;
-import proxyUnit.UriCondition;
 
 /**
  * Dialog pro pridani nove podminky do prislusneho pravidla. 

@@ -4,7 +4,7 @@
  * Fakulta informacnich technologii VUT Brno
  * 3.2.2012
  */
-package proxyUnit;
+package data;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -20,6 +20,8 @@ import org.jdom2.output.XMLOutputter;
 import org.jdom2.xpath.XPath;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
+
+import proxyUnit.HttpMessage;
 
 /**
  * Trida predstavuje konkretni typ poruchy XML zpravy. Pokud jsou splneny prislusne podminky,

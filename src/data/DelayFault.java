@@ -4,7 +4,9 @@
  * Fakulta informacnich technologii VUT Brno
  * 3.2.2012
  */
-package proxyUnit;
+package data;
+
+import proxyUnit.HttpMessage;
 
 
 /**

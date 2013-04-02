@@ -4,29 +4,35 @@
  * Fakulta informacnich technologii VUT Brno
  * 3.2.2012
  */
-package proxyUnit;
+package data;
+
+import proxyUnit.HttpMessage;
+import proxyUnit.HttpRequest;
+import proxyUnit.HttpResponse;
 
 /**
- * Trida reprezentujici podminku souvisejici s URI zpravy.
+ * Trida reprezentujici podminku udavajici, zda se poruchy budou aplikovat na http pozadavek nebo odpoved.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
  */
-public class UriCondition extends Condition {
-
+public class DestinationCondition extends Condition {
 	
-	private String uriPart;
+	
+	private boolean applyOnRequest;
 	private String typeName;
 	private String description;
 
 	
-	public UriCondition( String uriPart) {
+	public DestinationCondition( boolean applyOnRequest) {
 		
 		//super(conditionId);
-		this.uriPart= uriPart;
-		typeName= "UriCondition";
-		description= "Occurrance of \"" + uriPart + "\" in URI";
+		this.applyOnRequest = applyOnRequest;
+		typeName= "DestinationCondition";
+		if (applyOnRequest)
+			description= "Apply on http request";
+		else
+			description= "Apply on http response";
 	}
-	
-		
+
 	
 	/**
 	 * Metoda pro ziskani popisu podminky.
@@ -38,8 +44,6 @@ public class UriCondition extends Condition {
 		return description;
 	}
 
-	
-	
 	/**
 	 * Metoda pro zjisteni, zda je tato podminka splnena pro danou http zpravu.
 	 * @param message http zprava
@@ -48,12 +52,11 @@ public class UriCondition extends Condition {
 	@Override
 	public boolean isFulfilled(HttpMessage message) {
 		
-		if (message instanceof HttpRequest) {
-			HttpRequest httpRequest= (HttpRequest) message;
-			String uri= httpRequest.getUri();
-			if (uri.contains(uriPart))
-				return true;
-		}
+		if (message instanceof HttpRequest && applyOnRequest)
+			return true;
+		if (message instanceof HttpResponse && !applyOnRequest)
+			return true;
+		
 		return false;
 	}
 

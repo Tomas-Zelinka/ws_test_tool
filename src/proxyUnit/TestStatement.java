@@ -11,6 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import data.Condition;
+import data.Fault;
+
 /**
  * Trida predstavuje testovaci pravidlo sestavajici z mnoziny podminek a seznamu poruch.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)

@@ -21,9 +21,9 @@ public class EmptyingFault extends Fault {
 	
 	
 	
-	public EmptyingFault(int faultId) {
+	public EmptyingFault() {
 		
-		super(faultId);
+		
 		typeName= "EmptyingFault";
 		description= "The body of the message is removed, just the header is forwarded.";
 	}

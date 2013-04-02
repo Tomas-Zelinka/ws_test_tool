@@ -23,9 +23,9 @@ public class StringCorruptionFault extends Fault {
 	private String description;
 
 	
-	public StringCorruptionFault(int faultId, String originalSubstring, String changedSubstring) {
+	public StringCorruptionFault( String originalSubstring, String changedSubstring) {
 		
-		super(faultId);
+		
 		this.originalSubstring= originalSubstring;
 		this.changedSubstring= changedSubstring;
 		typeName= "StringCorruptionFault";

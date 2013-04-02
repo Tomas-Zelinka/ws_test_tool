@@ -40,9 +40,9 @@ public class XPathCorruptionFault extends Fault {
 	private String description;
 
 	
-	public XPathCorruptionFault(int faultId, String xpath, String changedSubstring) throws JDOMException {
+	public XPathCorruptionFault( String xpath, String changedSubstring) throws JDOMException {
 		
-		super(faultId);
+		
 		this.xpath= xpath;
 		//TODO: tohle mozna oddelat...pouze testuje, zda zadany cesta odpovida XPath vyrazu
 		XPath.newInstance(xpath);

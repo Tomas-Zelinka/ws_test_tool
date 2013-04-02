@@ -5,7 +5,9 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import modalWindows.AntiAliasedEditorPane;
+import data.HttpRequestData;
+import data.Test;
+import data.TestCaseSettingsData;
 
 
 public class TestCaseEditor extends JPanel {
@@ -23,15 +25,16 @@ public class TestCaseEditor extends JPanel {
 	public static final int HTTP_TAB = 1;
 	public static final int SETTINGS_TAB = 0;
 	
-	private JPanel settings;
+	private TestCaseSettings settings;
 	private JTabbedPane mainTabbedPane;
-	private javax.swing.JSplitPane statementDetailSplitPane;
+	private FaultInjectionEditor statementDetailSplitPane;
+	private HttpRequestEditor httpEditor;
 	
 	public TestCaseEditor(){
 		
 		initComponents();
 		
-		JPanel httpEditor = new HttpRequestEditor();
+		
 		
 		mainTabbedPane.addTab("Test Case Settings",settings);
 	    mainTabbedPane.addTab("HTTP Request", httpEditor);
@@ -130,8 +133,18 @@ public class TestCaseEditor extends JPanel {
 	 */
 	private void initComponents(){
 		settings = new TestCaseSettings();
-		
+		httpEditor = new HttpRequestEditor();
 		statementDetailSplitPane = new FaultInjectionEditor();
 		mainTabbedPane = new JTabbedPane();
+	}
+	
+	
+	public void saveTestCase(){
+		
+		Test test = statementDetailSplitPane.getFaultInjetionData();
+		HttpRequestData requestData = httpEditor.getHttpRequestData();
+		TestCaseSettingsData settingsData = settings.getSettingsData();
+		
+		System.out.println("saved");
 	}
 }

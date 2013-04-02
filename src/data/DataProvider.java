@@ -4,9 +4,11 @@
  * Fakulta informacnich technologii VUT Brno
  * 3.2.2012
  */
-package proxyUnit;
+package data;
 
 import com.thoughtworks.xstream.XStream;
+
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,6 +17,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import proxyUnit.Settings;
 
 /**
  * Trida slouzi jako handler pro ziskavani/ukladani testu a nastsaveni z/do XML souboru pomoci knihovny XStream.
@@ -62,7 +66,7 @@ public class DataProvider {
 			
 			//pokud se jedna o nove vytvoreny test..vytvorime mu cestu
 			if (filePath == null) {
-				filePath= "dbdata/" + currentTest.getTestId() + ".xml";
+				filePath= "dbdata/" + currentTest.getTestName() + ".xml";
 				currentTest.setFilePath(filePath);
 			}
 			

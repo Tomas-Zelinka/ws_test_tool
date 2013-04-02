@@ -8,7 +8,9 @@
 
 package modalWindows;
 
-import proxyUnit.TestStatement;
+import javax.swing.JFrame;
+
+import data.TestStatement;
 
 /**
  * Trida reprezentujici dialog pro pridani noveho pravidla.
@@ -23,7 +25,7 @@ public class AddStatementDialog extends javax.swing.JDialog {
 	
 	
 	/** Creates new form AddStatementDialog */
-	public AddStatementDialog(java.awt.Frame parent, boolean modal, int newStatementId) {
+	public AddStatementDialog(JFrame parent, boolean modal) {
 		
 		super(parent, modal);
 		//zobrazit dialog nad hlavnim oknem
@@ -31,7 +33,7 @@ public class AddStatementDialog extends javax.swing.JDialog {
 		this.setLocation(this.getX() - 200, this.getY() - 200);
 		
 		okButtonClicked= false;
-		this.newStatementId= newStatementId;
+		//this.newStatementId= newStatementId;
 		initComponents();
 		//vychozi oznaceni tlacitka Ok
 		this.getRootPane().setDefaultButton(okButton);
@@ -157,7 +159,7 @@ public class AddStatementDialog extends javax.swing.JDialog {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 
 			public void run() {
-				AddStatementDialog dialog = new AddStatementDialog(new javax.swing.JFrame(), true, 0);
+				AddStatementDialog dialog = new AddStatementDialog(new javax.swing.JFrame(), true);
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 
 					@Override

@@ -19,19 +19,19 @@ import proxyUnit.HttpMessage;
 public abstract class Fault {
 	
 	
-	private int faultId;
+	//private int faultId;
 
 	
-	public Fault(int faultId) {
+	public Fault() {
 		
-		this.faultId = faultId;
+		//this.faultId = faultId;
 	}
 		
 	
-	public int getFaultId() {
+	//public int getFaultId() {
 		
-		return faultId;
-	}
+		//return faultId;
+	//}
 	
 		
 	/**

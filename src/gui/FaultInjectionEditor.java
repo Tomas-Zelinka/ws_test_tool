@@ -4,11 +4,13 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import modalWindows.AddConditionDialog;
+import modalWindows.AddFaultDialog;
+import modalWindows.AddStatementDialog;
 import data.Condition;
 import data.Fault;
-
-import modalWindows.AddConditionDialog;
-import proxyUnit.TestStatement;
+import data.Test;
+import data.TestStatement;
 
 public class FaultInjectionEditor extends JSplitPane {
 
@@ -45,11 +47,15 @@ public class FaultInjectionEditor extends JSplitPane {
     private javax.swing.JScrollPane jScrollPane4;
     //private javax.swing.JMenuItem exitMenuItem;
     
+    private Test editedTest;
    
     
    // private javax.swing.JMenu fileMenu;
     //private javax.swing.table.DefaultTableModel interactionTableModel;
     //private javax.swing.JTable interactionTable;
+    
+    
+    
     
     
     
@@ -65,11 +71,18 @@ public class FaultInjectionEditor extends JSplitPane {
 		this.setBottomComponent(faultPanel);
 		this.setTopComponent(conditionPanel);
 		
-		
+		editedTest = new Test("01");
 		
 	}
 	
 	
+	public Test getFaultInjetionData(){
+		return this.editedTest;
+	}
+	
+	public void loadTest(){
+		
+	}
 	
 	private void initComponents(){
 		conditionPanel = new javax.swing.JPanel();
@@ -355,20 +368,20 @@ public class FaultInjectionEditor extends JSplitPane {
 ////			return;
 ////		}
 //		//zobrazime novy dialog pro pridani poruchy
-//		AddFaultDialog addFaultDialog= new AddFaultDialog(this, true, controller.getNewFaultId());
-//		addFaultDialog.setVisible(true);
+		AddFaultDialog addFaultDialog= new AddFaultDialog((JFrame)this.getTopLevelAncestor(), true);
+		addFaultDialog.setVisible(true);
 //		
 //		//pokud bylo stisknuto tlacitko "pridat", prevezmeme nove vzniklou poruchu z dialogu a zaradime ji
 //		//do prislusne kolekce
-//		if (addFaultDialog.isAddButtonClicked()) {
-//			Fault newFault= addFaultDialog.getNewFault();
+		if (addFaultDialog.isAddButtonClicked()) {
+			Fault newFault= addFaultDialog.getNewFault();
 //			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou poruchu
 //			DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
 //			TestStatement selectedStatement= (TestStatement) selectedNode.getUserObject();
 //			selectedStatement.addToFaultList(newFault);
 //			//refresh tabulky poruch
 //			refreshFaultPanel(selectedNode);
-//		}
+		}
 	}//GEN-LAST:event_addFaultButtonActionPerformed
 
 	private void addTestMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTestMenuItemActionPerformed
@@ -402,13 +415,13 @@ public class FaultInjectionEditor extends JSplitPane {
 ////			JOptionPane.showMessageDialog(this, "Cannot modify settings of the running test.",
 ////			"Cannot complete operation", JOptionPane.WARNING_MESSAGE);
 ////			return;
-////		}
+////		} 
 //		//zobrazime dialog pro pridani noveho pravidla
-//		AddStatementDialog addStatementDialog= new AddStatementDialog(this, true, controller.getNewTestStatementId());
-//		addStatementDialog.setVisible(true);
+		AddStatementDialog addStatementDialog= new AddStatementDialog((JFrame)this.getTopLevelAncestor(), true);
+		addStatementDialog.setVisible(true);
 //		
 //		//pokud bylo stisknuto "ok", zaradime nove pravidlo do kolekce
-//		if (addStatementDialog.isOkButtonClicked()) {
+		if (addStatementDialog.isOkButtonClicked()) {
 //			TestStatement newStatement= addStatementDialog.getNewStatement();
 //			DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
 //			Test selectedTest= (Test) selectedNode.getUserObject();
@@ -419,7 +432,7 @@ public class FaultInjectionEditor extends JSplitPane {
 //			testTreeModel.insertNodeInto(newNode, selectedNode, selectedNode.getChildCount());
 //			//rozbal strom tak, aby novy uzel sel videt
 //			testTree.scrollPathToVisible(new TreePath(newNode.getPath()));
-//		}
+		}
 //		
 	}//GEN-LAST:event_addStatementMenuItemActionPerformed
 
@@ -596,10 +609,10 @@ public class FaultInjectionEditor extends JSplitPane {
 ////			return;
 ////		}
 //		//zjistime, ktery radek v tabulce je oznacen a ziskame referenci na konkretni podminku
-//		int selectedRow= conditionTable.getSelectedRow();
-//		if (selectedRow == -1)
-//			return;
-//		Condition selectedCondition= (Condition) conditionTableModel.getValueAt(selectedRow, 0);
+		int selectedRow= conditionTable.getSelectedRow();
+		if (selectedRow == -1)
+			return;
+		Condition selectedCondition= (Condition) conditionTableModel.getValueAt(selectedRow, 0);
 //		
 //		//zjistime, ktera podminka ve stromu je oznacena
 //		DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
@@ -607,7 +620,7 @@ public class FaultInjectionEditor extends JSplitPane {
 //		
 //		//odstranime podminku jak z tabulky, tak z kolekce
 //		selectedStatement.removeFromConditionSet(selectedCondition);
-//		conditionTableModel.removeRow(selectedRow);
+		conditionTableModel.removeRow(selectedRow);
 //				
 	}//GEN-LAST:event_removeConditionButtonActionPerformed
 
@@ -620,10 +633,10 @@ public class FaultInjectionEditor extends JSplitPane {
 ////			return;
 ////		}
 //		//zjistime, ktery radek v tabulce je oznacen a ziskame referenci na konkretni poruchu
-//		int selectedRow= faultTable.getSelectedRow();
-//		if (selectedRow == -1)
-//			return;
-//		Fault selectedFault= (Fault) faultTableModel.getValueAt(selectedRow, 0);
+		int selectedRow= faultTable.getSelectedRow();
+		if (selectedRow == -1)
+			return;
+		Fault selectedFault= (Fault) faultTableModel.getValueAt(selectedRow, 0);
 //		
 //		//zjistime, ktera porucha ve stromu je oznacena
 //		DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
@@ -631,7 +644,7 @@ public class FaultInjectionEditor extends JSplitPane {
 //		
 //		//odstranime poruchu jak z tabulky, tak z kolekce
 //		selectedStatement.removeFromFaultList(selectedFault);
-//		faultTableModel.removeRow(selectedRow);
+		faultTableModel.removeRow(selectedRow);
 	}//GEN-LAST:event_removeFaultButtonActionPerformed
 
 	

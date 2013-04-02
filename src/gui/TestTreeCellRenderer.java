@@ -6,13 +6,14 @@
  */
 package gui;
 
-import proxyUnit.Test;
-import proxyUnit.TestStatement;
 import java.awt.Component;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+
+import data.Test;
+import data.TestStatement;
 
 /**
  * Trida reprezentujici render pro vykreslovani ikon v komponente JTree. V zavislosti na typu uzivatelskeho

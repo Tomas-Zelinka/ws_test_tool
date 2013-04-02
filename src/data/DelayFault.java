@@ -22,9 +22,9 @@ public class DelayFault extends Fault {
 	private String description;
 	
 	
-	public DelayFault(int faultId, int numOfMilis) {
+	public DelayFault(int numOfMilis) {
 		
-		super(faultId);
+		//super(faultId);
 		this.numOfMilis= numOfMilis;
 				
 		typeName= "DelayFault";

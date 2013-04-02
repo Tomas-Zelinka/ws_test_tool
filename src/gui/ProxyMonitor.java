@@ -19,12 +19,13 @@ import modalWindows.AntiAliasedEditorPane;
 import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
 
+import data.Test;
+
 import proxyUnit.Controller;
 import proxyUnit.HttpInteraction;
 import proxyUnit.HttpRequest;
 import proxyUnit.HttpResponse;
 import proxyUnit.NewMessageListener;
-import proxyUnit.Test;
 import proxyUnit.UnknownHostListener;
 
 public class ProxyMonitor extends JSplitPane implements NewMessageListener, UnknownHostListener {

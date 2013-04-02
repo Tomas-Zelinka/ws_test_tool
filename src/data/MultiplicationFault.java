@@ -38,9 +38,9 @@ public class MultiplicationFault extends Fault {
 	private String description;
 
 	
-	public MultiplicationFault(int faultId, String xpath, int count) throws JDOMException {
+	public MultiplicationFault( String xpath, int count) throws JDOMException {
 		
-		super(faultId);
+		
 		this.xpath = xpath;
 		this.count = count;
 		//TODO: tohle mozna oddelat...pouze testuje, zda zadany cesta odpovida XPath vyrazu

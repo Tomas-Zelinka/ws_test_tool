@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -104,7 +106,7 @@ public class MainWindow extends JFrame{
 	private Console console;
 	
 	
-	private TestCaseEditor editor;
+	protected TestCaseEditor editor;
 	
 	private Statistics stats;
 	
@@ -117,6 +119,8 @@ public class MainWindow extends JFrame{
 	private ProjectNavigator navigator;
 	
 	private JToolBar mainToolBox; 
+	
+	private JButton saveTestCase;
 	
 	public static final int TESTCASE_EDITOR = 0;
 	public static final int PROXY_MONITOR = 1;
@@ -224,10 +228,14 @@ public class MainWindow extends JFrame{
 	
 	private void initToolBox(){
 		mainToolBox = new JToolBar();
-		
 		mainToolBox.setFloatable(false);
-		JButton pokus = new JButton("Save TestCase");
-		mainToolBox.add(pokus);
+		
+		saveTestCase = new JButton("Save TestCase");
+		saveTestCase.addActionListener(new SaveTestCaseListener());
+		
+		
+		
+		mainToolBox.add(saveTestCase);
 	}
 	
 	/**
@@ -385,6 +393,14 @@ public class MainWindow extends JFrame{
 		rowHeader.add(new LineNumberMargin(currentEditorPane), BorderLayout.WEST);
 		currentScrollPane.setRowHeaderView(rowHeader);
 		
+	}
+	
+	
+	private class SaveTestCaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			System.out.println("Save testcase clicked");
+			editor.saveTestCase();
+		}
 	}
 	
 }

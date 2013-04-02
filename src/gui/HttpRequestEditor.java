@@ -16,6 +16,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
+
+import data.HttpRequestData;
  
 public class HttpRequestEditor extends JPanel {
     
@@ -32,6 +34,7 @@ public class HttpRequestEditor extends JPanel {
     
     DefaultTableModel tableModel;
    
+    private HttpRequestData requestData;
     
     public HttpRequestEditor() {
         super(new BorderLayout());
@@ -87,6 +90,9 @@ public class HttpRequestEditor extends JPanel {
       
     }
     
+    public HttpRequestData getHttpRequestData(){
+    	return this.requestData;
+    }
     
     
     public void readData(){

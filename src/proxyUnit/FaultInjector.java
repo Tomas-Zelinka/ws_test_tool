@@ -11,6 +11,8 @@ import org.jdom2.JDOMException;
 
 import data.Fault;
 import data.MultiplicationFault;
+import data.Test;
+import data.TestStatement;
 import data.XPathCorruptionFault;
 
 /**
@@ -33,15 +35,15 @@ public class FaultInjector {
 	public FaultInjector() {
 	
 		try {
-			Test test0= new Test(0, "Test0");
+			Test test0= new Test("Test0");
 			TestStatement statement0= new TestStatement(0, "Statement0");
-			Fault fault0= new XPathCorruptionFault(0, "/S:Envelope/S:Body/mult/i", "9");
+			Fault fault0= new XPathCorruptionFault("/S:Envelope/S:Body/mult/i", "9");
 			statement0.addToFaultList(fault0);
 			test0.addToStatementList(statement0);
 			
-			Test test1= new Test(1, "Test1");
+			Test test1= new Test("Test1");
 			TestStatement statement1= new TestStatement(1, "Statement1");
-			Fault fault1= new MultiplicationFault(1, "/S:Envelope/S:Body", 1);
+			Fault fault1= new MultiplicationFault("/S:Envelope/S:Body", 1);
 			statement1.addToFaultList(fault1);
 			test1.addToStatementList(statement1);
 

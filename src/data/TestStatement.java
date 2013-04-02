@@ -4,15 +4,15 @@
  * Fakulta informacnich technologii VUT Brno
  * 3.2.2012
  */
-package proxyUnit;
+package data;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import data.Condition;
-import data.Fault;
+import proxyUnit.HttpMessage;
+
 
 /**
  * Trida predstavuje testovaci pravidlo sestavajici z mnoziny podminek a seznamu poruch.

@@ -25,9 +25,9 @@ public class HeaderCorruptionFault extends Fault {
 
 	
 	
-	public HeaderCorruptionFault(int faultId, String originalSubstring, String changedSubstring) {
+	public HeaderCorruptionFault( String originalSubstring, String changedSubstring) {
 		
-		super(faultId);
+		
 		this.originalSubstring = originalSubstring;
 		this.changedSubstring = changedSubstring;
 		

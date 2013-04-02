@@ -40,9 +40,9 @@ public class WsdlOperationFault extends Fault {
 
 	
 	
-	public WsdlOperationFault(int faultId, String wsdlUri, String operationName, String operationContent) {
+	public WsdlOperationFault( String wsdlUri, String operationName, String operationContent) {
 		
-		super(faultId);
+		
 		this.wsdlUri= wsdlUri;
 		this.operationName= operationName;
 		this.operationContent= operationContent;

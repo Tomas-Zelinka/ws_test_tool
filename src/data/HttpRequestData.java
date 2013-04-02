@@ -2,7 +2,7 @@ package data;
 
 import java.util.Map;
 
-public class HttpRequest {
+public class HttpRequestData {
 
 	
 	/**
@@ -20,7 +20,17 @@ public class HttpRequest {
 	 */
 	private String requestPath;
 	
-	public HttpRequest(){
+	public HttpRequestData(){
 		
 	}
+	
+	
+	public void setBody(String inputBody){
+		this.body = inputBody;
+	}
+	
+	
+	
+	
+	
 }

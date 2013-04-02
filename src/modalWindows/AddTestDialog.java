@@ -8,7 +8,7 @@
 
 package modalWindows;
 
-import proxyUnit.Test;
+import data.Test;
 
 /**
  * Trida reprezentuje dialog pro vytvoreni noveho testu.
@@ -142,7 +142,7 @@ public class AddTestDialog extends javax.swing.JDialog {
 	private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 		
 		okButtonClicked= true;
-		newTest= new Test(newTestId, nameTextField.getText());
+		newTest= new Test(nameTextField.getText());
 		this.setVisible(false);
 	}//GEN-LAST:event_okButtonActionPerformed
 

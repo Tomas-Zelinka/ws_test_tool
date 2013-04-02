@@ -4,10 +4,12 @@
  * Fakulta informacnich technologii VUT Brno
  * 3.2.2012
  */
-package proxyUnit;
+package data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import proxyUnit.HttpMessage;
 
 /**
  * Trida reprezentuje uzivatelsky test obsahujici seznam pravidel, podle kterych je testovani webove 
@@ -16,16 +18,16 @@ import java.util.List;
  */
 public class Test {
 	
-	private int testId;
+	//private int testId;
 	private String testName;
 	private String filePath;
 	
 	private List<TestStatement> statementList= new ArrayList<TestStatement>();
 
 	
-	public Test(int testId, String testName) {
+	public Test(String testName) {
 		
-		this.testId= testId;
+		//this.testId= testId;
 		this.testName= testName;
 	}
 
@@ -33,10 +35,10 @@ public class Test {
 	 * Ziskani id testu.
 	 * @return id testu
 	 */
-	public int getTestId() {
+	//public int getTestId() {
 		
-		return testId;
-	}
+	//	return testId;
+	//}
 
 	/**
 	 * Metoda pro ziskani nazvu testu.

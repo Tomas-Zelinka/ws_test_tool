@@ -14,11 +14,11 @@ import java.awt.CardLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jdom2.JDOMException;
-
 
 import com.predic8.wsdl.Definitions;
 import com.predic8.wsdl.Message;
@@ -88,19 +88,19 @@ public class AddFaultDialog extends javax.swing.JDialog {
 	private Thread downloadThread;
 	
 	private boolean addButtonClicked;
-	private int newFaultId;
+	//private int newFaultId;
 	private Fault newFault;
 	
 
 	/** Creates new form AddFaultDialog */
-	public AddFaultDialog(java.awt.Frame parent, boolean modal, int newFaultId) {
+	public AddFaultDialog(JFrame parent, boolean modal) {
 		
 		super(parent, modal);
 		//zobrazit dialog nad hlavnim oknem
 		this.setLocationRelativeTo(parent);
 		this.setLocation(this.getX() - 200, this.getY() - 200);
 		
-		this.newFaultId= newFaultId;
+		//this.newFaultId= newFaultId;
 		initComponents();
 		//vychozi oznaceni tlacitka Pridat
 		this.getRootPane().setDefaultButton(addButton);
@@ -564,14 +564,14 @@ public class AddFaultDialog extends javax.swing.JDialog {
 		
 		//STRING CORRUPTION FAULT
 		if (selectedItem.equals(STRING_CORRUPTION_PANEL)) {
-			newFault= new StringCorruptionFault(newFaultId, originalTextField.getText(), newTextField.getText());
+			newFault= new StringCorruptionFault( originalTextField.getText(), newTextField.getText());
 			this.setVisible(false);
 		}
 		
 		//XPATH CORRUPTION FAULT
 		if (selectedItem.equals(XPATH_CORRUPTION_PANEL)) {
 			try {
-				newFault= new XPathCorruptionFault(newFaultId, xPathTextField.getText(), newXPathTextField.getText());
+				newFault= new XPathCorruptionFault( xPathTextField.getText(), newXPathTextField.getText());
 				this.setVisible(false);
 			}
 			catch (JDOMException ex) {
@@ -585,7 +585,7 @@ public class AddFaultDialog extends javax.swing.JDialog {
 		//MULTIPLICATION FAULT
 		if (selectedItem.equals(MULTIPLICATION_PANEL)) {
 			try {
-				newFault= new MultiplicationFault(newFaultId, xPath2TextField.getText(), 
+				newFault= new MultiplicationFault(xPath2TextField.getText(), 
 						Integer.parseInt(countTextField.getText()));
 				this.setVisible(false);
 			}
@@ -600,19 +600,19 @@ public class AddFaultDialog extends javax.swing.JDialog {
 		
 		//EMPTYING FAULT
 		if (selectedItem.equals(EMPTYING_PANEL)) {
-			newFault= new EmptyingFault(newFaultId);
+			newFault= new EmptyingFault();
 			this.setVisible(false);
 		}
 		
 		//DELAY FAULT
 		if (selectedItem.equals(DELAY_PANEL)) {
-			newFault= new DelayFault(newFaultId, Integer.parseInt(delayTextField.getText()));
+			newFault= new DelayFault(Integer.parseInt(delayTextField.getText()));
 			this.setVisible(false);
 		}
 		
 		//HEADER CORRUPTION FAULT
 		if (selectedItem.equals(HEADER_CORRUPTION_PANEL)) {
-			newFault= new HeaderCorruptionFault(newFaultId, originalHeaderTextField.getText(), 
+			newFault= new HeaderCorruptionFault( originalHeaderTextField.getText(), 
 					newHeaderTextField.getText());
 			this.setVisible(false);
 			
@@ -621,7 +621,7 @@ public class AddFaultDialog extends javax.swing.JDialog {
 		//WSDL OPERATION FAULT
 		if (selectedItem.equals(WSDL_OPERATION_PANEL)) {
 			String nevim= StringEscapeUtils.unescapeXml(contentEditorPane.getText());
-			newFault= new WsdlOperationFault(newFaultId, uriTextField.getText(), 
+			newFault= new WsdlOperationFault(uriTextField.getText(), 
 					(String) operationComboBox.getSelectedItem(),
 					StringEscapeUtils.unescapeXml(contentEditorPane.getText()));
 			this.setVisible(false);
@@ -646,7 +646,7 @@ public class AddFaultDialog extends javax.swing.JDialog {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 
 			public void run() {
-				AddFaultDialog dialog = new AddFaultDialog(new javax.swing.JFrame(), true, 0);
+				AddFaultDialog dialog = new AddFaultDialog(new javax.swing.JFrame(), true);
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 
 					@Override

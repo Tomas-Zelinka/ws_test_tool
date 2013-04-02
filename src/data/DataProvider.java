@@ -26,6 +26,50 @@ import proxyUnit.Settings;
  */
 public class DataProvider {
 	
+	private XStream stream;
+	
+	public DataProvider(){
+		
+		stream = new XStream();
+	}
+	
+	
+	public void writeObject(String path, Object obj){
+		
+		
+		
+		try{
+			PrintWriter writer = new PrintWriter(new FileWriter(path));
+			writer.print(stream.toXML(obj));
+			writer.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public Object readObject(String path){
+		
+		Object obj = null;
+		
+		try {
+			obj= stream.fromXML(new FileInputStream(new File(path)));
+		}
+		catch (FileNotFoundException ex) {
+			System.err.println("File" + "not found");
+			System.err.println(ex.getMessage());
+			System.exit(-1);
+		}
+		catch(Exception ex)	{
+			ex.printStackTrace();
+		}
+		
+		return obj;
+	}
+	
+	
+	
+	
 	
 	/**
 	 * Metoda pro ulozeni nastaveni a referenci na testy do souboru settings.xml

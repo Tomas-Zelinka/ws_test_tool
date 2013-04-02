@@ -24,8 +24,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import logging.ConsoleLog;
-import modalWindows.AddFaultInjectionDialog;
-import modalWindows.AddHttpTestDialog;
 import modalWindows.NewTestCaseDialog;
 import modalWindows.NewTestSuiteDialog;
 

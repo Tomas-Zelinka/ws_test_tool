@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import data.DataProvider;
 import data.HttpRequestData;
 import data.Test;
 import data.TestCaseSettingsData;
@@ -29,6 +30,8 @@ public class TestCaseEditor extends JPanel {
 	private JTabbedPane mainTabbedPane;
 	private FaultInjectionEditor statementDetailSplitPane;
 	private HttpRequestEditor httpEditor;
+	private DataProvider dataProvider;
+	private String testCasePath;
 	
 	public TestCaseEditor(){
 		
@@ -132,19 +135,31 @@ public class TestCaseEditor extends JPanel {
 	 * 
 	 */
 	private void initComponents(){
+		dataProvider = new DataProvider();
 		settings = new TestCaseSettings();
 		httpEditor = new HttpRequestEditor();
 		statementDetailSplitPane = new FaultInjectionEditor();
 		mainTabbedPane = new JTabbedPane();
 	}
 	
+	public void setTestCasePath(String path){
+		this.testCasePath = path;
+	}
+	
+	
 	
 	public void saveTestCase(){
 		
+		Test pokus = null;
 		Test test = statementDetailSplitPane.getFaultInjetionData();
 		HttpRequestData requestData = httpEditor.getHttpRequestData();
 		TestCaseSettingsData settingsData = settings.getSettingsData();
 		
+		dataProvider.writeObject("test", test);
+		
+		pokus = (Test) dataProvider.readObject("test");
+		
+		System.out.println(pokus);
 		System.out.println("saved");
 	}
 }

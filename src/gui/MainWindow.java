@@ -122,6 +122,7 @@ public class MainWindow extends JFrame{
 	
 	private JButton saveTestCase;
 	
+	
 	public static final int TESTCASE_EDITOR = 0;
 	public static final int PROXY_MONITOR = 1;
 	public static final int REMOTE_CONTROL = 2;
@@ -176,7 +177,7 @@ public class MainWindow extends JFrame{
 		this.remoteControl = new RemoteControl();
 		this.stats = new Statistics();
 		this.testUnit = new TestingUnit();
-		this.centerComponent = this.editor;
+		this.centerComponent = new JPanel();
 		
 		
 		//this.panelPane = (JPanel)this.centerComponent;

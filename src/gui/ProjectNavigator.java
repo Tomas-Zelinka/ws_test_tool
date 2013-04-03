@@ -283,6 +283,7 @@ public class ProjectNavigator extends JPanel {
 				case CASE_EDITOR_FAULT:
 				case CASE_EDITOR_HTTP:
 					getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
+					
 					break;
 				default:
 					break;

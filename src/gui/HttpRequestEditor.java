@@ -45,7 +45,7 @@ public class HttpRequestEditor extends JPanel {
         headers.setModel(tableModel);
         headers.setPreferredScrollableViewportSize(new Dimension(500, 70));
         headers.setFillsViewportHeight(true);
-        
+        headers.setOpaque(false);
         if (DEBUG) {
             headers.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
@@ -63,6 +63,7 @@ public class HttpRequestEditor extends JPanel {
         JPanel contentPanel = new JPanel();
         
         JTextArea content = new JTextArea("ahoj",20,5);
+        
         
         tablePanel.setLayout(new BorderLayout());
         contentPanel.setLayout(new BorderLayout());

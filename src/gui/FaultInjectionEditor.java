@@ -127,7 +127,11 @@ public class FaultInjectionEditor extends JSplitPane {
 	                "Type", "Detail"
 	            }
 	        ) {
-	            boolean[] canEdit = new boolean [] {
+	            /**
+				 * 
+				 */
+				private static final long serialVersionUID = 3376163326142594714L;
+				boolean[] canEdit = new boolean [] {
 	                false, false
 	            };
 
@@ -135,7 +139,9 @@ public class FaultInjectionEditor extends JSplitPane {
 	                return canEdit [columnIndex];
 	            }
 	        });
-	        conditionTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+	        //conditionTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+	        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+			
 	        jScrollPane3.setViewportView(conditionTable);
 	        conditionTable.getColumnModel().getColumn(0).setPreferredWidth(200);
 	        conditionTable.getColumnModel().getColumn(1).setPreferredWidth(500);
@@ -194,8 +200,8 @@ public class FaultInjectionEditor extends JSplitPane {
 		
 		faultLabel.setText("Faults:");
 
-        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-
+		jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
         faultTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -212,7 +218,7 @@ public class FaultInjectionEditor extends JSplitPane {
                 return canEdit [columnIndex];
             }
         });
-        faultTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        //faultTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane4.setViewportView(faultTable);
         faultTable.getColumnModel().getColumn(0).setPreferredWidth(200);
         faultTable.getColumnModel().getColumn(1).setPreferredWidth(500);

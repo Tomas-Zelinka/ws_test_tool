@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.io.File;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -14,6 +15,9 @@ import data.TestCaseSettingsData;
 public class TestCaseEditor extends JPanel {
 
 	
+	public static final String settingsFileName = "settings.xml";
+	public static final String httpRequestFileName = "httpRequest.xml";
+	public static final String faultInjectionFileName = "faultInjection.xml";
 	/**
 	 * ID for serialization
 	 */
@@ -37,15 +41,12 @@ public class TestCaseEditor extends JPanel {
 		
 		initComponents();
 		
-		
-		
 		mainTabbedPane.addTab("Test Case Settings",settings);
 	    mainTabbedPane.addTab("HTTP Request", httpEditor);
 	    mainTabbedPane.addTab("Fault Injection",statementDetailSplitPane);
 	    
 		setLayout(new BorderLayout());
 		add(mainTabbedPane,BorderLayout.CENTER);
-		//mainTabbedPane.setSelectedIndex(2);
 	}
 	
 	
@@ -54,6 +55,8 @@ public class TestCaseEditor extends JPanel {
 		mainTabbedPane.setSelectedIndex(tab);
 		mainTabbedPane.revalidate();
 		mainTabbedPane.repaint();
+		setTestCasePath();
+		loadTestCase();
 	}
 	
 	public int getTab(){
@@ -140,26 +143,49 @@ public class TestCaseEditor extends JPanel {
 		httpEditor = new HttpRequestEditor();
 		statementDetailSplitPane = new FaultInjectionEditor();
 		mainTabbedPane = new JTabbedPane();
+		
 	}
 	
-	public void setTestCasePath(String path){
-		this.testCasePath = path;
+	public void setTestCasePath(){
+		this.testCasePath = MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+ File.separator+ MainWindow.getCasePath();
+		System.out.println(this.testCasePath);
 	}
 	
+	public String getTestCasePath(){
+		return this.testCasePath;
+	}
 	
 	
 	public void saveTestCase(){
 		
-		Test pokus = null;
+		System.out.println("saving");
 		Test test = statementDetailSplitPane.getFaultInjetionData();
 		HttpRequestData requestData = httpEditor.getHttpRequestData();
 		TestCaseSettingsData settingsData = settings.getSettingsData();
 		
-		dataProvider.writeObject("test", test);
+		String filePath = getTestCasePath() + File.separator + TestCaseEditor.settingsFileName;
 		
-		pokus = (Test) dataProvider.readObject("test");
-		
-		System.out.println(pokus);
+		dataProvider.writeObject(filePath, settingsData);
+				
 		System.out.println("saved");
+	}
+	
+	
+	public void loadTestCase(){
+		
+		System.out.println("loading");
+		TestCaseSettingsData loadedSettings = null;
+		String filePath = getTestCasePath() + File.separator + TestCaseEditor.settingsFileName;
+		File settingsFile = new File(filePath);
+		
+		if(!settingsFile.exists()){
+			System.out.println("Setting file not found !!!");
+		}else{
+			loadedSettings = (TestCaseSettingsData) dataProvider.readObject(filePath);
+			settings.setSettingsData(loadedSettings);
+		}
+		System.out.println(loadedSettings);
+		System.out.println("loaded");
+		
 	}
 }

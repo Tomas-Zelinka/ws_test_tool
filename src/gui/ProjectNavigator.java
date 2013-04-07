@@ -26,6 +26,9 @@ import javax.swing.tree.TreePath;
 import logging.ConsoleLog;
 import modalWindows.NewTestCaseDialog;
 import modalWindows.NewTestSuiteDialog;
+import data.DataProvider;
+import data.FaultInjectionData;
+import data.HttpRequestData;
 
 
 public class ProjectNavigator extends JPanel {
@@ -217,7 +220,11 @@ public class ProjectNavigator extends JPanel {
 				File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"Http");
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
-				
+	            File httpDataFile = new File(inputDir.getPath() + File.separator + "httpRequest.xml");
+	            DataProvider writer = new DataProvider();
+	            HttpRequestData httpData = new HttpRequestData();
+	            
+	            
 				if (newHttpCase.exists()){
 	            	 System.out.println("You can set only 1 http test to this case");
 	             }else{
@@ -225,6 +232,12 @@ public class ProjectNavigator extends JPanel {
 	            	 newHttpCase.mkdir();
 	            	 inputDir.mkdir();
 	            	 outputDir.mkdir();
+	            	 try{
+		             		httpDataFile.createNewFile();
+		             		writer.writeObject(httpDataFile.getPath(),httpData);
+		             	 }catch(Exception b){
+		             		 b.printStackTrace();
+		             	 }
 	            	 ProjectNavigator.refreshTree();
 	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
 	            	 System.out.println("New project name: "+ MainWindow.getCasePath());
@@ -248,7 +261,11 @@ public class ProjectNavigator extends JPanel {
 				File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"FaultInjection");
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
-				
+	            File faultInjectionDataFile = new File(inputDir.getPath() + File.separator + "faultInjection.xml");
+	            DataProvider writer = new DataProvider();
+	            FaultInjectionData faultData = new FaultInjectionData(newHttpCase.getPath());
+
+	           
 				if (newHttpCase.exists()){
 	            	 System.out.println("You can set only 1 fault injection test to this case");
 	             }else{
@@ -256,6 +273,13 @@ public class ProjectNavigator extends JPanel {
 	            	 newHttpCase.mkdir();
 	            	 inputDir.mkdir();
 	            	 outputDir.mkdir();
+	            	 try{
+	            		 faultInjectionDataFile.createNewFile();
+	            		 writer.writeObject(faultInjectionDataFile.getPath(),faultData);
+	            	 }catch(Exception b){
+	            		 b.printStackTrace();
+	            	 }
+	            	
 	            	 ProjectNavigator.refreshTree();
 	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
 	            	 

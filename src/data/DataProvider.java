@@ -58,7 +58,7 @@ public class DataProvider {
 		catch (FileNotFoundException ex) {
 			System.err.println("File" + "not found");
 			System.err.println(ex.getMessage());
-			System.exit(-1);
+			//System.exit(-1);
 		}
 		catch(Exception ex)	{
 			ex.printStackTrace();
@@ -99,13 +99,13 @@ public class DataProvider {
 	 * Metoda pro ulozeni vsech testu ze seznamu do prislusnych XML souboru na disku.
 	 * @param testList seznam s testy
 	 */
-	public static void serializeTestsToXML(List<Test> testList) {
+	public static void serializeTestsToXML(List<FaultInjectionData> testList) {
 		
 		XStream xstream= new XStream();
 		File dbFolder= new File("dbdata");
 		if (!dbFolder.exists())
 			dbFolder.mkdir();
-		for (Test currentTest : testList) {
+		for (FaultInjectionData currentTest : testList) {
 			String filePath= currentTest.getFilePath();
 			
 			//pokud se jedna o nove vytvoreny test..vytvorime mu cestu
@@ -155,13 +155,13 @@ public class DataProvider {
 	 * @param filePathList seznam s cestami k souborum
 	 * @return seznam instanci testu
 	 */
-	public static List<Test> deserializeTestsFromXML(List<String> filePathList) {
+	public static List<FaultInjectionData> deserializeTestsFromXML(List<String> filePathList) {
 		
-		List<Test> testList= new ArrayList<Test>();
+		List<FaultInjectionData> testList= new ArrayList<FaultInjectionData>();
 		try {
 			XStream xstream= new XStream();
 			for (String filePath : filePathList) {
-				Test loadedTest= (Test) xstream.fromXML(new FileInputStream(new File(filePath)));
+				FaultInjectionData loadedTest= (FaultInjectionData) xstream.fromXML(new FileInputStream(new File(filePath)));
 				testList.add(loadedTest);
 			}
 		}

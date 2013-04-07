@@ -19,7 +19,7 @@ import modalWindows.AntiAliasedEditorPane;
 import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
 
-import data.Test;
+import data.FaultInjectionData;
 
 import proxyUnit.Controller;
 import proxyUnit.HttpInteraction;
@@ -230,7 +230,7 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 		HttpResponse httpResponse= interaction.getHttpResponse();
 		
 		//zapiseme do tabulky pouzity test
-		Test activeTest= controller.getActiveTest();
+		FaultInjectionData activeTest= controller.getActiveTest();
 		String usedTest= "None";
 		if (activeTest != null)
 			usedTest= activeTest.getTestName();

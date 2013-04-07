@@ -8,7 +8,7 @@
 
 package modalWindows;
 
-import data.Test;
+import data.FaultInjectionData;
 
 /**
  * Trida reprezentuje dialog pro vytvoreni noveho testu.
@@ -17,7 +17,7 @@ import data.Test;
 public class AddTestDialog extends javax.swing.JDialog {
 	
 	private boolean okButtonClicked;
-	private Test newTest;
+	private FaultInjectionData newTest;
 	private int newTestId;
 
 	/** Creates new form AddTestDialog */
@@ -39,7 +39,7 @@ public class AddTestDialog extends javax.swing.JDialog {
 	 * Ziskani reference na nove vytvoreny test.
 	 * @return nove vytvoreny test.
 	 */
-	public Test getNewTest() {
+	public FaultInjectionData getNewTest() {
 		
 		return newTest;
 	}
@@ -142,7 +142,7 @@ public class AddTestDialog extends javax.swing.JDialog {
 	private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 		
 		okButtonClicked= true;
-		newTest= new Test(nameTextField.getText());
+		newTest= new FaultInjectionData(nameTextField.getText());
 		this.setVisible(false);
 	}//GEN-LAST:event_okButtonActionPerformed
 

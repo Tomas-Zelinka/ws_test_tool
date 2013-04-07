@@ -11,7 +11,7 @@ import org.jdom2.JDOMException;
 
 import data.Fault;
 import data.MultiplicationFault;
-import data.Test;
+import data.FaultInjectionData;
 import data.TestStatement;
 import data.XPathCorruptionFault;
 
@@ -26,22 +26,22 @@ public class FaultInjector {
 	private int newConditionId;
 	private int newFaultId;
 	
-	private Test activeTest;
+	private FaultInjectionData activeTest;
 		
 	//private List<Test> testList= new ArrayList<Test>();
-	private List<Test> testList;
+	private List<FaultInjectionData> testList;
 	
 	
 	public FaultInjector() {
 	
 		try {
-			Test test0= new Test("Test0");
+			FaultInjectionData test0= new FaultInjectionData("Test0");
 			TestStatement statement0= new TestStatement(0, "Statement0");
 			Fault fault0= new XPathCorruptionFault("/S:Envelope/S:Body/mult/i", "9");
 			statement0.addToFaultList(fault0);
 			test0.addToStatementList(statement0);
 			
-			Test test1= new Test("Test1");
+			FaultInjectionData test1= new FaultInjectionData("Test1");
 			TestStatement statement1= new TestStatement(1, "Statement1");
 			Fault fault1= new MultiplicationFault("/S:Envelope/S:Body", 1);
 			statement1.addToFaultList(fault1);
@@ -65,7 +65,7 @@ public class FaultInjector {
 	}
 
 	
-	public FaultInjector(List<Test> testList) {
+	public FaultInjector(List<FaultInjectionData> testList) {
 		
 		this.testList = testList;
 		initNewIds();
@@ -120,7 +120,7 @@ public class FaultInjector {
 	 * Metoda pro pridani noveho testu do kolekce.
 	 * @param newTest novy test
 	 */
-	public void addToTestList(Test newTest) {
+	public void addToTestList(FaultInjectionData newTest) {
 		
 		testList.add(newTest);
 	}
@@ -129,7 +129,7 @@ public class FaultInjector {
 	 * Metoda pro odstraneni testu z kolekce.
 	 * @param removedTest test k odstraneni
 	 */
-	public void removeFromTestList(Test removedTest) {
+	public void removeFromTestList(FaultInjectionData removedTest) {
 		
 		testList.remove(removedTest);
 	}
@@ -174,7 +174,7 @@ public class FaultInjector {
 	 * Metoda pro zjisteni prave beziciho testu.
 	 * @return prave bezici test
 	 */
-	public Test getActiveTest() {
+	public FaultInjectionData getActiveTest() {
 		
 		return activeTest;
 	}
@@ -184,7 +184,7 @@ public class FaultInjector {
 	 * Metoda pro ziskani seznamu vsech testu.
 	 * @return seznam vsech testu
 	 */
-	public List<Test> getTestList() {
+	public List<FaultInjectionData> getTestList() {
 		
 		return testList;
 	}
@@ -193,7 +193,7 @@ public class FaultInjector {
 	 * Metoda pro nastaveni aktivniho testu.
 	 * @param activeTest aktivni test
 	 */
-	public void setActiveTest(Test activeTest) {
+	public void setActiveTest(FaultInjectionData activeTest) {
 		
 		this.activeTest= activeTest;
 	}

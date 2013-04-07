@@ -12,7 +12,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import data.Test;
+import data.FaultInjectionData;
 import data.TestStatement;
 
 /**
@@ -44,7 +44,7 @@ public class TestTreeCellRenderer extends DefaultTreeCellRenderer {
 		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		DefaultMutableTreeNode renderedNode= (DefaultMutableTreeNode) value;
 		Object renderedNodeObject= renderedNode.getUserObject();
-		if (renderedNodeObject instanceof Test) {
+		if (renderedNodeObject instanceof FaultInjectionData) {
 			setIcon(new ImageIcon(getClass().getResource("resources/test_small.png")));
 		}
 		else

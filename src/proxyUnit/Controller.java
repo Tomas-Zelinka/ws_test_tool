@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import data.DataProvider;
-import data.Test;
+import data.FaultInjectionData;
 
 import proxyUnit.HttpInteraction;
 
@@ -59,7 +59,7 @@ public class Controller {
 		Settings settings= DataProvider.deserializeSettingsFromXML();
 		
 		//ziskame seznam testu z XML
-		List<Test> testList= DataProvider.deserializeTestsFromXML(settings.getFilePathList());
+		List<FaultInjectionData> testList= DataProvider.deserializeTestsFromXML(settings.getFilePathList());
 		
 		//inicializace proxy monitorovaci jednotky
 		proxyMonitor= new ProxyMonitoringUnit(this, settings.getProxyPort(), settings.getTestedWsPort(),
@@ -82,7 +82,7 @@ public class Controller {
 	 * Metoda pro pridani noveho testu do kolekce.
 	 * @param newTest novy test
 	 */
-	public void addToTestList(Test newTest) {
+	public void addToTestList(FaultInjectionData newTest) {
 		
 		faultInjector.addToTestList(newTest);
 	}
@@ -91,7 +91,7 @@ public class Controller {
 	 * Metoda pro odstraneni testu z kolekce.
 	 * @param removedTest test k odstraneni
 	 */
-	public void removeTestFromList(Test removedTest) {
+	public void removeTestFromList(FaultInjectionData removedTest) {
 		
 		faultInjector.removeFromTestList(removedTest);
 	}
@@ -100,7 +100,7 @@ public class Controller {
 	 * Metoda k ziskani seznamu testu z injektoru poruch.
 	 * @return seznam testu
 	 */
-	public List<Test> getTestList() {
+	public List<FaultInjectionData> getTestList() {
 		
 		return faultInjector.getTestList();
 	}
@@ -145,7 +145,7 @@ public class Controller {
 	 * Metoda pro nastaveni aktivniho testu.
 	 * @param activeTest aktivni test
 	 */
-	public void setActiveTest(Test activeTest) {
+	public void setActiveTest(FaultInjectionData activeTest) {
 		
 		faultInjector.setActiveTest(activeTest);
 	}
@@ -154,7 +154,7 @@ public class Controller {
 	 * Metoda k ziskani aktivniho testu.
 	 * @return aktivni test
 	 */
-	public Test getActiveTest() {
+	public FaultInjectionData getActiveTest() {
 		
 		return faultInjector.getActiveTest();
 	}
@@ -336,8 +336,8 @@ public class Controller {
 		
 		//vytvorime seznam vsechy cest k souborum s testy
 		List<String> filePathList= new ArrayList<String>();
-		List<Test> testList= faultInjector.getTestList();
-		for (Test currentTest : testList) {
+		List<FaultInjectionData> testList= faultInjector.getTestList();
+		for (FaultInjectionData currentTest : testList) {
 			filePathList.add(currentTest.getFilePath());
 		}
 		

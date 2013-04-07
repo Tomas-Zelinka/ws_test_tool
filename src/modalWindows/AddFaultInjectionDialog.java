@@ -18,6 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
 
+import data.DataProvider;
+import data.FaultInjectionData;
+
 
 
 public class AddFaultInjectionDialog extends InputModalWindow {
@@ -122,19 +125,23 @@ public class AddFaultInjectionDialog extends InputModalWindow {
 			File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+selectedTestSuitePath+File.separator+selectedTestCasePath+File.separator+"FaultInjection");
 			File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
             File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
-			
+			File faultInjectionDataFile = new File(inputDir.getPath() + File.separator + "faultInjection.xml");
+            DataProvider writer = new DataProvider();
+            FaultInjectionData faultData = new FaultInjectionData(newHttpCase.getPath());
+            
 			if (newHttpCase.exists()){
-            	 messageLabel.setText("Test suite with this name already exists");
+            	 messageLabel.setText("Test case with this name already exists");
              }else{
             	 
             	 newHttpCase.mkdir();
             	 inputDir.mkdir();
             	 outputDir.mkdir();
-//            	 try{
-//            		 settings.createNewFile();
-//            	 }catch(Exception b){
-//            		 b.printStackTrace();
-//            	 }
+            	 try{
+            		 faultInjectionDataFile.createNewFile();
+            		 writer.writeObject(faultInjectionDataFile.getPath(),faultData);
+            	 }catch(Exception b){
+            		 b.printStackTrace();
+            	 }
             	 ProjectNavigator.refreshTree();
 			
             	 System.out.println("New project name: "+ getCaseName());

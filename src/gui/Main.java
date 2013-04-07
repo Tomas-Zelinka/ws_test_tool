@@ -1,5 +1,6 @@
 package gui;
 
+
 import javax.swing.SwingUtilities;
 
 import logging.ConsoleLog;
@@ -34,9 +35,6 @@ public class Main {
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 	
 	/**

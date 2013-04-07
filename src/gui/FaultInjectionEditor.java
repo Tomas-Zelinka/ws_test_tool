@@ -1,7 +1,10 @@
 package gui;
 
+import java.awt.Component;
+
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import modalWindows.AddConditionDialog;
@@ -9,7 +12,7 @@ import modalWindows.AddFaultDialog;
 import modalWindows.AddStatementDialog;
 import data.Condition;
 import data.Fault;
-import data.Test;
+import data.FaultInjectionData;
 import data.TestStatement;
 
 public class FaultInjectionEditor extends JSplitPane {
@@ -47,7 +50,7 @@ public class FaultInjectionEditor extends JSplitPane {
     private javax.swing.JScrollPane jScrollPane4;
     //private javax.swing.JMenuItem exitMenuItem;
     
-    private Test editedTest;
+    private FaultInjectionData editedTest;
    
     
    // private javax.swing.JMenu fileMenu;
@@ -71,18 +74,33 @@ public class FaultInjectionEditor extends JSplitPane {
 		this.setBottomComponent(faultPanel);
 		this.setTopComponent(conditionPanel);
 		
-		editedTest = new Test("01");
+		editedTest = new FaultInjectionData("01");
+		TestStatement testStatement = new TestStatement(editedTest.getNewStatementId(),"statement");
 		
+		editedTest.addToStatementList(testStatement);
+		
+		//ziskame referenci na datovy model tabulky podminek
+		conditionTableModel= (DefaultTableModel) conditionTable.getModel();
+		//ziskame referenci na datovy model tabulky poruch
+		faultTableModel= (DefaultTableModel) faultTable.getModel();
 	}
 	
 	
-	public Test getFaultInjetionData(){
+	public FaultInjectionData getFaultInjetionData(){
 		return this.editedTest;
 	}
-	
-	public void loadTest(){
-		
+	private TestStatement getStatement(){
+		return editedTest.getFirstStatement();
 	}
+	public void setFaultData(FaultInjectionData data){
+		
+		this.editedTest = data;
+		refreshFaultPanel();
+		refreshConditionPanel();
+	}
+	
+	
+	
 	
 	private void initComponents(){
 		conditionPanel = new javax.swing.JPanel();
@@ -275,31 +293,31 @@ public class FaultInjectionEditor extends JSplitPane {
 	 * v testTree.
 	 * @param selectedNode oznacena polozka v testTree
 	 */
-	private void refreshConditionPanel(DefaultMutableTreeNode selectedNode) {
+	private void refreshConditionPanel() {
 		
 		//vymazeme vsechny radky tabulky
 		conditionTableModel.setRowCount(0);
 		
-		Object selectedObject= selectedNode.getUserObject();
+		//Object selectedObject= selectedNode.getUserObject();
 		
 		//pokud bylo kliknuto na pravidlo..zobrazime prislusnou podminku v tabulce
-		if (selectedObject instanceof TestStatement) {
+		//if (selectedObject instanceof TestStatement) {
 			conditionTable.setEnabled(true);
 			addConditionButton.setEnabled(true);
 			removeConditionButton.setEnabled(true);
-			TestStatement selectedStatement= (TestStatement) selectedObject;
+			TestStatement selectedStatement= getStatement();
 			for (Condition currentCondition : selectedStatement.getConditionSet()) {
 				//vlozeni noveho radku do tabulky podminek
 				Object[] newRow= new Object[] {currentCondition, currentCondition.getDescription()};
 				conditionTableModel.insertRow(conditionTable.getRowCount(), newRow);
 			}
-		}
+		//}
 		//pokud byl oznacen test nebo korenovy uzel..znepristupnime tabulky a tlacitka
-		else {
-			conditionTable.setEnabled(false);
-			addConditionButton.setEnabled(false);
-			removeConditionButton.setEnabled(false);
-		}
+		//else {
+	//		conditionTable.setEnabled(false);
+		//	addConditionButton.setEnabled(false);
+	//		removeConditionButton.setEnabled(false);
+	//	}
 			
 	}
 	
@@ -310,31 +328,31 @@ public class FaultInjectionEditor extends JSplitPane {
 	 * testTree.
 	 * @param selectedNode oznacena polozka v testTree
 	 */
-	private void refreshFaultPanel(DefaultMutableTreeNode selectedNode) {
+	private void refreshFaultPanel() {
 		
 		//vymazeme vsechny radky tabulky
 		faultTableModel.setRowCount(0);
 		
-		Object selectedObject= selectedNode.getUserObject();
+		//Object selectedObject= selectedNode.getUserObject();
 		
 		//pokud bylo kliknuto na pravidlo..zobrazime prislusne poruchy v tabulce
-		if (selectedObject instanceof TestStatement) {
+		//if (selectedObject instanceof TestStatement) {
 			faultTable.setEnabled(true);
 			addFaultButton.setEnabled(true);
 			removeFaultButton.setEnabled(true);
-			TestStatement selectedStatement= (TestStatement) selectedObject;
+			TestStatement selectedStatement= getStatement();
 			for (Fault currentFault : selectedStatement.getFaultList()) {
 				//vlozeni noveho radku do tabulky poruch
 				Object[] newRow= new Object[] {currentFault, currentFault.getDescription()};
 				faultTableModel.insertRow(faultTable.getRowCount(), newRow);
 			}
-		}
+	//	}
 		//pokud byl oznacen test nebo korenovy uzel..znepristupnime tabulky a tlacitka
-		else {
-			faultTable.setEnabled(false);
-			addFaultButton.setEnabled(false);
-			removeFaultButton.setEnabled(false);
-		}
+	//	else {
+//		faultTable.setEnabled(false);
+	//		addFaultButton.setEnabled(false);
+	//		removeFaultButton.setEnabled(false);
+	//	}
 	}
 	
 
@@ -354,13 +372,13 @@ public class FaultInjectionEditor extends JSplitPane {
 //		//pokud bylo stisknuto tlacitko "pridat", prevezmeme nove vzniklou podminku z dialogu a zaradime ji
 //		// do prislusne kolekce
 		if (addConditionDialog.isAddButtonClicked()) {
-			//Condition newCondition= addConditionDialog.getNewCondition();
+			Condition newCondition= addConditionDialog.getNewCondition();
 			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou podminku
 			//DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-			//TestStatement selectedStatement= (TestStatement) selectedNode.getUserObject();
-			//selectedStatement.addToConditionSet(newCondition);
+			TestStatement selectedStatement= getStatement();
+			selectedStatement.addToConditionSet(newCondition);
 			//refresh tabulky podminek
-			//refreshConditionPanel(selectedNode);
+			refreshConditionPanel();
 					
 		}
 	}//GEN-LAST:event_addConditionButtonActionPerformed
@@ -381,12 +399,12 @@ public class FaultInjectionEditor extends JSplitPane {
 //		//do prislusne kolekce
 		if (addFaultDialog.isAddButtonClicked()) {
 			Fault newFault= addFaultDialog.getNewFault();
-//			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou poruchu
-//			DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-//			TestStatement selectedStatement= (TestStatement) selectedNode.getUserObject();
-//			selectedStatement.addToFaultList(newFault);
-//			//refresh tabulky poruch
-//			refreshFaultPanel(selectedNode);
+			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou poruchu
+			//DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
+			TestStatement selectedStatement=  getStatement();
+			selectedStatement.addToFaultList(newFault);
+			//refresh tabulky poruch
+			refreshFaultPanel();
 		}
 	}//GEN-LAST:event_addFaultButtonActionPerformed
 
@@ -423,11 +441,11 @@ public class FaultInjectionEditor extends JSplitPane {
 ////			return;
 ////		} 
 //		//zobrazime dialog pro pridani noveho pravidla
-		AddStatementDialog addStatementDialog= new AddStatementDialog((JFrame)this.getTopLevelAncestor(), true);
-		addStatementDialog.setVisible(true);
+//		AddStatementDialog addStatementDialog= new AddStatementDialog((JFrame)this.getTopLevelAncestor(), true);
+//		addStatementDialog.setVisible(true);
 //		
 //		//pokud bylo stisknuto "ok", zaradime nove pravidlo do kolekce
-		if (addStatementDialog.isOkButtonClicked()) {
+//		if (addStatementDialog.isOkButtonClicked()) {
 //			TestStatement newStatement= addStatementDialog.getNewStatement();
 //			DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
 //			Test selectedTest= (Test) selectedNode.getUserObject();
@@ -438,7 +456,7 @@ public class FaultInjectionEditor extends JSplitPane {
 //			testTreeModel.insertNodeInto(newNode, selectedNode, selectedNode.getChildCount());
 //			//rozbal strom tak, aby novy uzel sel videt
 //			testTree.scrollPathToVisible(new TreePath(newNode.getPath()));
-		}
+//		}
 //		
 	}//GEN-LAST:event_addStatementMenuItemActionPerformed
 
@@ -533,30 +551,6 @@ public class FaultInjectionEditor extends JSplitPane {
 //		
 	}//GEN-LAST:event_removeMenuItemActionPerformed
 
-	private void addTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTestButtonActionPerformed
-		
-//		//zobrazime dialog pro pridani noveho testu
-//		AddTestDialog addTestDialog= new AddTestDialog(this, true, controller.getNewTestId());
-//		addTestDialog.setVisible(true);
-//		
-//		//pokud bylo stisknuto "ok", zaradime novy test do kolekce
-//		if (addTestDialog.isOkButtonClicked()) {
-//			Test newTest= addTestDialog.getNewTest();
-//			controller.addToTestList(newTest);
-//			
-//			//vlozime novy uzel do stromu na prislusne misto
-//			DefaultMutableTreeNode newNode= new DefaultMutableTreeNode(newTest);
-//			DefaultMutableTreeNode rootNode= (DefaultMutableTreeNode) testTreeModel.getRoot();
-//			testTreeModel.insertNodeInto(newNode, rootNode, rootNode.getChildCount());
-//			//rozbal strom tak, aby novy uzel sel videt
-//			testTree.scrollPathToVisible(new TreePath(newNode.getPath()));
-//			
-//			//aktualizace testComboBoxu
-//			testComboBoxModel.addElement(newTest);
-//		}
-//		
-	}//GEN-LAST:event_addTestButtonActionPerformed
-
 	private void addStatementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStatementButtonActionPerformed
 		
 //		//zabraneni modifikace prave beziciho testu
@@ -622,10 +616,10 @@ public class FaultInjectionEditor extends JSplitPane {
 //		
 //		//zjistime, ktera podminka ve stromu je oznacena
 //		DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-//		TestStatement selectedStatement= (TestStatement) selectedNode.getUserObject();
+		TestStatement selectedStatement=  getStatement();
 //		
 //		//odstranime podminku jak z tabulky, tak z kolekce
-//		selectedStatement.removeFromConditionSet(selectedCondition);
+		selectedStatement.removeFromConditionSet(selectedCondition);
 		conditionTableModel.removeRow(selectedRow);
 //				
 	}//GEN-LAST:event_removeConditionButtonActionPerformed
@@ -646,10 +640,10 @@ public class FaultInjectionEditor extends JSplitPane {
 //		
 //		//zjistime, ktera porucha ve stromu je oznacena
 //		DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-//		TestStatement selectedStatement= (TestStatement) selectedNode.getUserObject();
+		TestStatement selectedStatement= getStatement();
 //		
 //		//odstranime poruchu jak z tabulky, tak z kolekce
-//		selectedStatement.removeFromFaultList(selectedFault);
+		selectedStatement.removeFromFaultList(selectedFault);
 		faultTableModel.removeRow(selectedRow);
 	}//GEN-LAST:event_removeFaultButtonActionPerformed
 

@@ -18,6 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
 
+import data.DataProvider;
+import data.HttpRequestData;
+
 
 public class AddHttpTestDialog extends InputModalWindow {
 
@@ -127,19 +130,23 @@ public class AddHttpTestDialog extends InputModalWindow {
 			File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+ selectedTestSuitePath + File.separator +selectedTestCasePath +File.separator +"Http");
 			File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
             File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
+            File httpDataFile = new File(inputDir.getPath() + File.separator + "httpRequest.xml");
+            DataProvider writer = new DataProvider();
+            HttpRequestData httpData = new HttpRequestData();
 			
-			if (newHttpCase.exists()){
+            if (newHttpCase.exists()){
             	 messageLabel.setText("Test suite with this name already exists");
              }else{
             	 
             	 newHttpCase.mkdir();
             	 inputDir.mkdir();
             	 outputDir.mkdir();
-//            	 try{
-//            		 settings.createNewFile();
-//            	 }catch(Exception b){
-//            		 b.printStackTrace();
-//            	 }
+            	 try{
+            		httpDataFile.createNewFile();
+            		writer.writeObject(httpDataFile.getPath(),httpData);
+            	 }catch(Exception b){
+            		 b.printStackTrace();
+            	 }
             	 ProjectNavigator.refreshTree();
 			
             	 System.out.println("New project name: "+ getCaseName());

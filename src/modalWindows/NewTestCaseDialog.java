@@ -19,6 +19,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
 
+import data.DataProvider;
+import data.TestCaseSettingsData;
+
 /**
  * 
  * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
@@ -34,12 +37,8 @@ public class NewTestCaseDialog extends InputModalWindow {
 		
 	private static final long serialVersionUID = 9187751988881264097L;
 
-	
-	
-	
 	public NewTestCaseDialog(){
 		super("New Test Case", 640,580);
-		
 	}
 	
 		
@@ -81,60 +80,6 @@ public class NewTestCaseDialog extends InputModalWindow {
         getSecondInsidePanel().setLayout(new BorderLayout());
         getSecondInsidePanel().add(labels,BorderLayout.WEST);
         getSecondInsidePanel().add(fields);
-        
-        
-        
-//        JPanel checkBoxPanel = new JPanel();
-//        box1 = new JCheckBox("HTTP Test");
-//        box2 = new JCheckBox("Fault Injection");
-//        box3 = new JCheckBox("HTTP Test with Fault Injection");
-//        
-//        checkBoxPanel.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
-//        
-//        CheckBoxListener checkBoxListener = new CheckBoxListener();
-//        box1.addItemListener(checkBoxListener);
-//        box2.addItemListener(checkBoxListener);
-//        box3.addItemListener(checkBoxListener);
-//        
-//        checkBoxPanel.add(box1);
-//        checkBoxPanel.add(box2);
-//        checkBoxPanel.add(box3);
-//        
-//        
-//        getSecondInsidePanel().add(checkBoxPanel,BorderLayout.SOUTH);
-        /*     
-        JTabbedPane tabbedPane = new JTabbedPane();
-              
-        UIManager.getDefaults().put("TabbedPane.contentBorderInsets", new Insets(1,1,1,1));
-        UIManager.getDefaults().put("TabbedPane.tabsOverlapBorder", true);
-        
-        tabbedPane.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-        
-        //JComponent panel1 = makeTextPanel("Panel #1");
-        JPanel panel1 = new HttpRequestEditor();
-        
-        tabbedPane.addTab("Http Request", panel1);
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-         
-        JComponent panel2 = makeTextPanel("Panel #2");
-        tabbedPane.addTab("Fault Injection",panel2);
-        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-         
-        JComponent panel3 = makeTextPanel("Panel #3");
-        tabbedPane.addTab("Test Case Settings", panel3);
-        tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
-         
-         panel1.setPreferredSize(new Dimension(410, 250));
-         //panel1.setMinimumSize(new Dimension(410, 220));
-         
-        //Add the tabbed pane to this panel.
-        getSecondInsidePanel().add(tabbedPane,BorderLayout.SOUTH);
-         
-        //The following line enables to use scrolling tabs.
-        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        
-        
-        */
     }
      
     
@@ -197,20 +142,25 @@ public class NewTestCaseDialog extends InputModalWindow {
              
 			File newTestCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+getCaseName());
 			File settings = new File(newTestCase.getPath() + File.separator + "settings.xml");
-             
+            DataProvider writer = new DataProvider();
+            TestCaseSettingsData testCase = new TestCaseSettingsData();
+			
+			
 			if (newTestCase.exists()){
-            	 messageLabel.setText("Test suite with this name already exists");
+            	 messageLabel.setText("Test case with this name already exists");
              }else{
             	 
             	 newTestCase.mkdir();
             	 try{
             		 settings.createNewFile();
+            		 writer.writeObject(settings.getPath(), testCase);
+            		 
             	 }catch(Exception b){
             		 b.printStackTrace();
             	 }
             	 ProjectNavigator.refreshTree();
 			
-            	 System.out.println("New project name: "+ getCaseName());
+            	 System.out.println("New case suite created,name: "+ getCaseName());
             	 setVisible(false);
             	 dispose();
              }
@@ -231,22 +181,5 @@ public class NewTestCaseDialog extends InputModalWindow {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
-	
-//	private class CheckBoxListener implements ItemListener{
-//		
-//		public void itemStateChanged(ItemEvent e){
-//			Object testCheckBox = e.getItemSelectable();
-//			
-//			if ((testCheckBox) ==  box1 && box1.isSelected() ){
-//				System.out.println("1");
-//			}if ((testCheckBox) ==  box2 && box2.isSelected()){
-//				System.out.println("2");
-//			}if ((testCheckBox) ==  box3 && box3.isSelected()){
-//				System.out.println("3");
-//			}
-//		}
-//	}
-	
+
 }

@@ -114,7 +114,7 @@ public class MainWindow extends JFrame{
 	
 	private ProxyMonitor proxy;
 	
-	private  TestingUnit testUnit;
+	private  TestingMonitor testUnit;
 	
 	private ProjectNavigator navigator;
 	
@@ -176,7 +176,7 @@ public class MainWindow extends JFrame{
 		this.proxy = new ProxyMonitor();
 		this.remoteControl = new RemoteControl();
 		this.stats = new Statistics();
-		this.testUnit = new TestingUnit();
+		this.testUnit = new TestingMonitor();
 		this.centerComponent = new JPanel();
 		
 		

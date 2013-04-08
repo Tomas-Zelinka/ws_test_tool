@@ -22,8 +22,6 @@ public class LocalTestUnit implements TestingUnit {
 		threadsNumber = 8;
 		
 		executor = Executors.newFixedThreadPool(getThreadsNumber());
-		
-		
 	}
 	
 	public void runTestList(){
@@ -52,6 +50,7 @@ public class LocalTestUnit implements TestingUnit {
 		return this.threadsNumber;
 	}
 	
+	
 	private void setThreadsNumber(int number){
 		this.threadsNumber = number;
 	}
@@ -60,7 +59,6 @@ public class LocalTestUnit implements TestingUnit {
 	public static void main(String[] args){
 		
 		LocalTestUnit unit = new LocalTestUnit();
-		
 		unit.runTestList();
 	}
 	

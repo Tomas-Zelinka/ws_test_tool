@@ -108,7 +108,10 @@ public class ProjectNavigator extends JPanel {
 		    for (File c : f.listFiles())
 		      delete(c);
 		  }
-		  f.delete();
+		  
+		  if(!f.delete()){
+			  ConsoleLog.Print("Not deleted");
+		  }
 		    
 		}
 	

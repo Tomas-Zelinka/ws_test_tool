@@ -35,9 +35,6 @@ public class DataProvider {
 	
 	
 	public void writeObject(String path, Object obj){
-		
-		
-		
 		try{
 			PrintWriter writer = new PrintWriter(new FileWriter(path));
 			writer.print(stream.toXML(obj));

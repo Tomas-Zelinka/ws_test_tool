@@ -74,10 +74,10 @@ public class FaultInjectionEditor extends JSplitPane {
 		this.setBottomComponent(faultPanel);
 		this.setTopComponent(conditionPanel);
 		
-		editedTest = new FaultInjectionData("01");
-		TestStatement testStatement = new TestStatement(editedTest.getNewStatementId(),"statement");
+		//editedTest = new FaultInjectionData("01");
+		//TestStatement testStatement = new TestStatement(editedTest.getNewStatementId(),"statement");
 		
-		editedTest.addToStatementList(testStatement);
+		//editedTest.addToStatementList(testStatement);
 		
 		//ziskame referenci na datovy model tabulky podminek
 		conditionTableModel= (DefaultTableModel) conditionTable.getModel();
@@ -89,9 +89,11 @@ public class FaultInjectionEditor extends JSplitPane {
 	public FaultInjectionData getFaultInjetionData(){
 		return this.editedTest;
 	}
+	
 	private TestStatement getStatement(){
 		return editedTest.getFirstStatement();
 	}
+	
 	public void setFaultData(FaultInjectionData data){
 		
 		this.editedTest = data;

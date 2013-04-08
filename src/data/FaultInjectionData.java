@@ -22,15 +22,16 @@ public class FaultInjectionData {
 	private String testName;
 	private String filePath;
 	
-	private List<TestStatement> statementList= new ArrayList<TestStatement>();
+	private List<TestStatement> statementList;
 
 	private int newStatementId;
 	
 	public FaultInjectionData(String testName) {
-		
+		statementList = new ArrayList<TestStatement>();
 		//this.testId= testId;
 		this.testName= testName;
 		this.newStatementId = 0;
+		newStatement();
 	}
 
 	/**
@@ -87,6 +88,12 @@ public class FaultInjectionData {
 	public TestStatement getFirstStatement(){
 		
 		return this.statementList.get(0);
+	}
+	
+	private void newStatement(){
+		TestStatement statement = new TestStatement(getNewStatementId(),"01");
+		
+		addToStatementList(statement);
 	}
 		
 	

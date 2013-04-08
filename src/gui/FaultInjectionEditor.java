@@ -11,6 +11,7 @@ import modalWindows.AddConditionDialog;
 import modalWindows.AddFaultDialog;
 import modalWindows.AddStatementDialog;
 import data.Condition;
+import data.DataProvider;
 import data.Fault;
 import data.FaultInjectionData;
 import data.TestStatement;
@@ -165,8 +166,7 @@ public class FaultInjectionEditor extends JSplitPane {
 	        jScrollPane3.setViewportView(conditionTable);
 	        conditionTable.getColumnModel().getColumn(0).setPreferredWidth(200);
 	        conditionTable.getColumnModel().getColumn(1).setPreferredWidth(500);
-
-	        addConditionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_small.png"))); // NOI18N
+	        addConditionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"add_small.png"))); // NOI18N
 	        addConditionButton.setText("Add");
 	        addConditionButton.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -174,7 +174,7 @@ public class FaultInjectionEditor extends JSplitPane {
 	            }
 	        });
 
-	        removeConditionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/remove_small.png"))); // NOI18N
+	        removeConditionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"remove_small.png"))); // NOI18N
 	        removeConditionButton.setText("Remove");
 	        removeConditionButton.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -243,7 +243,7 @@ public class FaultInjectionEditor extends JSplitPane {
         faultTable.getColumnModel().getColumn(0).setPreferredWidth(200);
         faultTable.getColumnModel().getColumn(1).setPreferredWidth(500);
 
-        addFaultButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_small.png"))); // NOI18N
+        addFaultButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"add_small.png"))); // NOI18N
         addFaultButton.setText("Add");
         addFaultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -251,7 +251,7 @@ public class FaultInjectionEditor extends JSplitPane {
             }
         });
 
-        removeFaultButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/remove_small.png"))); // NOI18N
+        removeFaultButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"remove_small.png"))); // NOI18N
         removeFaultButton.setText("Remove");
         removeFaultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

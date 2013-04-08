@@ -10,6 +10,7 @@ package modalWindows;
 
 import javax.swing.JFrame;
 
+import data.DataProvider;
 import data.TestStatement;
 
 /**
@@ -80,7 +81,7 @@ public class AddStatementDialog extends javax.swing.JDialog {
 
         nameLabel.setText("Statement name:");
 
-        imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add_statement.png"))); // NOI18N
+        imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"add_statement.png"))); // NOI18N
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {

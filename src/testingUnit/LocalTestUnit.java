@@ -20,7 +20,6 @@ public class LocalTestUnit implements TestingUnit {
 	public LocalTestUnit(){
 	
 		threadsNumber = 8;
-		
 		executor = Executors.newFixedThreadPool(getThreadsNumber());
 	}
 	

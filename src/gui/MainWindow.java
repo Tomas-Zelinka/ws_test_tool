@@ -121,6 +121,8 @@ public class MainWindow extends JFrame{
 	private JToolBar mainToolBox; 
 	
 	private JButton saveTestCase;
+	private JButton addMachine;
+	private JButton removeMachine;
 	
 	
 	public static final int TESTCASE_EDITOR = 0;
@@ -234,9 +236,15 @@ public class MainWindow extends JFrame{
 		saveTestCase = new JButton("Save TestCase");
 		saveTestCase.addActionListener(new SaveTestCaseListener());
 		
+		addMachine = new JButton("Add Remote Machine");
+		addMachine.addActionListener(new AddMachineListener());
 		
+		removeMachine = new JButton("Remove Remote Machine");
+		removeMachine.addActionListener(new RemoveMachineListener());
 		
 		mainToolBox.add(saveTestCase);
+		mainToolBox.add(addMachine);
+		mainToolBox.add(removeMachine);
 	}
 	
 	/**
@@ -404,4 +412,16 @@ public class MainWindow extends JFrame{
 		}
 	}
 	
+	private class AddMachineListener implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			System.out.println("Add Machine clicked");
+			testUnit.addMachine();
+		}
+	}
+	private class RemoveMachineListener implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			System.out.println("Remove Machine clicked");
+			testUnit.removeMachine();
+		}
+	}
 }

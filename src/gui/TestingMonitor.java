@@ -15,7 +15,6 @@ public class TestingMonitor extends JPanel {
 	private static final long serialVersionUID = -6401376001409493032L;
 
 	
-	
 	private JTabbedPane tabbedPane;
 	
 	private int machineCounter;

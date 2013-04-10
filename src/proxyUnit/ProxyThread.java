@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import central.ProxyController;
+
 /**
  * Trida predstavuje vlakno proxy serveru starajici se bud o prichozi nebo odchozi pozadavky.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
@@ -24,7 +26,7 @@ public class ProxyThread extends Thread {
 	private static final int BUFFER_SIZE= 512;
 	
 	private int interactionId;
-	private Controller controller;
+	private ProxyController controller;
 	private Socket incomingSocket;
 	private Socket outgoingSocket;
 	
@@ -35,7 +37,7 @@ public class ProxyThread extends Thread {
 	private String rawMessage;
 
 	
-	public ProxyThread(int interactionId, Controller controller, Socket incomingSocket, Socket outgoingSocket) {
+	public ProxyThread(int interactionId, ProxyController controller, Socket incomingSocket, Socket outgoingSocket) {
 		
 		this.interactionId= interactionId;
 		this.controller= controller;

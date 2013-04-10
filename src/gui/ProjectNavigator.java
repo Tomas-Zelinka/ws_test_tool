@@ -176,6 +176,7 @@ public class ProjectNavigator extends JPanel {
 	 */
 	private void initPopupMenu(){
 		treeMenu = new JPopupMenu();
+		addMenuItem(treeMenu,"Open Test List", new TestListListener());
 		addMenuItem(treeMenu,"Edit", new EditListener());
 		addMenuItem(treeMenu,"Delete", new DeleteListener());
 		addMenuItem(treeMenu,"New Test Suite", new TestSuiteListener());
@@ -294,6 +295,19 @@ public class ProjectNavigator extends JPanel {
 			ConsoleLog.Print("new Fault Injection clicked");
 		}
 	}		
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	class TestListListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().setContent(MainWindow.TESTING_UNIT);
+			
+			ConsoleLog.Print("test list clicked");
+		}
+	} 	
 	
 	/**
 	 * 

@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import central.Perfomer;
 
 public class Reporter {
 	
@@ -16,7 +15,7 @@ public class Reporter {
 	
 	public Reporter(){
 		try {
-			_logger = Logger.getLogger(Perfomer.class.getName());
+			//_logger = Logger.getLogger(Perfomer.class.getName());
 			_loggerFileHandler = new FileHandler("ja.log",true);
 			_logger.addHandler(_loggerFileHandler);
 			_logger.setLevel(Level.ALL);

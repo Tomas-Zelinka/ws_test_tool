@@ -19,9 +19,10 @@ import modalWindows.AntiAliasedEditorPane;
 import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
 
+import central.ProxyController;
+
 import data.FaultInjectionData;
 
-import proxyUnit.Controller;
 import proxyUnit.HttpInteraction;
 import proxyUnit.HttpRequest;
 import proxyUnit.HttpResponse;
@@ -104,13 +105,13 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
  //   private javax.swing.JToolBar topToolBar;
     
     
-    private Controller controller;
+    private ProxyController controller;
 	private InteractionTablePopupListener interactionTablePopupListener;
 	//private TestTreePopupListener testTreePopupListener;
 		
     
     public ProxyMonitor(){
-    	controller= new Controller();
+    	controller= new ProxyController();
 		//zaregistrujeme se jako odberatel udalosti o novych zpravach z business vrstvy
 		controller.addNewMessageListener(this);
 		controller.addUnknownHostListener(this);

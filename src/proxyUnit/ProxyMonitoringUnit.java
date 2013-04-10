@@ -12,6 +12,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import central.ProxyController;
+
 /**
  * Trida reprezentuje funkcni jednotku pro monitorovani komunikace mezi testovanou webovou sluzbou a jejim
  * okolim. Aplikace navenek pracuje jako bezny proxy server s tim, ze veskera zachycena komunikace bude predana
@@ -27,7 +29,7 @@ public class ProxyMonitoringUnit {
 	
 	private boolean proxyFlag;
 	
-	private Controller controller;
+	private ProxyController controller;
 	
 	private ServerSocket serverSocket;
 	private Socket incomingSocket;
@@ -36,7 +38,7 @@ public class ProxyMonitoringUnit {
 	private int interactionId= 0;
 
 	
-	public ProxyMonitoringUnit(Controller controller, int proxyPort, int testedWsPort, String proxyHost) {
+	public ProxyMonitoringUnit(ProxyController controller, int proxyPort, int testedWsPort, String proxyHost) {
 		
 		proxyFlag= false;
 		this.controller= controller;

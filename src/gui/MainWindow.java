@@ -118,7 +118,10 @@ public class MainWindow extends JFrame{
 	
 	private ProjectNavigator navigator;
 	
-	private JToolBar mainToolBox; 
+	private Component toolBox;
+	private JToolBar testCaseToolBox; 
+	private JToolBar testUnitToolBox;
+	
 	
 	private JButton saveTestCase;
 	private JButton addMachine;
@@ -130,6 +133,9 @@ public class MainWindow extends JFrame{
 	public static final int REMOTE_CONTROL = 2;
 	public static final int STATISTICS = 3;
 	public static final int TESTING_UNIT = 4;
+	
+	public static final int TESTUNIT_TOOLBOX = 5;
+	public static final int TESTCASE_TOOLBOX = 6;
 	/**
 	 * 
 	 */
@@ -149,7 +155,6 @@ public class MainWindow extends JFrame{
 		this.setLayout(new BorderLayout());
 		this.setBackground(Color.gray);
 		initToolBox();
-		getContentPane().add(mainToolBox,BorderLayout.NORTH);
 		initMenuBar();
 		initContentPane();
 		initCenterPane();
@@ -190,11 +195,6 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	
-	
-	/**
-	 * 
-	 */
 	private void initCenterPane(){
 		File root = new File(MainWindow.getDataRoot());
 		
@@ -230,8 +230,12 @@ public class MainWindow extends JFrame{
 	}
 	
 	private void initToolBox(){
-		mainToolBox = new JToolBar();
-		mainToolBox.setFloatable(false);
+		this.toolBox = null;
+		testCaseToolBox = new JToolBar();
+		testUnitToolBox = new JToolBar();
+		
+		testCaseToolBox.setFloatable(false);
+		testUnitToolBox.setFloatable(false);
 		
 		saveTestCase = new JButton("Save TestCase");
 		saveTestCase.addActionListener(new SaveTestCaseListener());
@@ -242,9 +246,9 @@ public class MainWindow extends JFrame{
 		removeMachine = new JButton("Remove Remote Machine");
 		removeMachine.addActionListener(new RemoveMachineListener());
 		
-		mainToolBox.add(saveTestCase);
-		mainToolBox.add(addMachine);
-		mainToolBox.add(removeMachine);
+		testCaseToolBox.add(saveTestCase);
+		testUnitToolBox.add(addMachine);
+		testUnitToolBox.add(removeMachine);
 	}
 	
 	/**
@@ -258,6 +262,26 @@ public class MainWindow extends JFrame{
 		initMainWindow();
 		this.pack();
 	
+	}
+	
+	/**
+	 * 
+	 * @param box
+	 */
+	public void setToolBox(int box){
+		
+		
+		if(toolBox != null){
+			getContentPane().remove(this.toolBox);
+		}
+		
+		if(box == MainWindow.TESTCASE_TOOLBOX){
+			this.toolBox = testCaseToolBox;
+		}else if(box == MainWindow.TESTUNIT_TOOLBOX){
+			this.toolBox = testUnitToolBox;
+		}
+		
+		getContentPane().add(this.toolBox,BorderLayout.NORTH);
 	}
 	
 	/**
@@ -346,7 +370,7 @@ public class MainWindow extends JFrame{
 		switch(component){
 			case TESTCASE_EDITOR:
 				this.centerComponent = this.editor;
-				
+				setToolBox(MainWindow.TESTCASE_TOOLBOX);
 				if (panelType == ProjectNavigator.CASE_EDITOR_SETTINGS){
 					this.editor.setTab(TestCaseEditor.SETTINGS_TAB);
 				}else if(panelType == ProjectNavigator.CASE_EDITOR_HTTP){
@@ -354,6 +378,9 @@ public class MainWindow extends JFrame{
 				}else if(panelType == ProjectNavigator.CASE_EDITOR_FAULT){
 					this.editor.setTab(TestCaseEditor.FAULT_TAB);
 				}
+				
+				
+				
 				break;
 			case PROXY_MONITOR: 
 				this.centerComponent = this.proxy;
@@ -365,7 +392,9 @@ public class MainWindow extends JFrame{
 				this.centerComponent = this.stats;
 				break;
 			case TESTING_UNIT: 
+				setToolBox(MainWindow.TESTUNIT_TOOLBOX);
 				this.centerComponent = this.testUnit;
+				
 				break;	
 			default:
 				System.out.println("MainWindow.setContent() - something is wrong in switch statement");
@@ -379,6 +408,7 @@ public class MainWindow extends JFrame{
 		
 		getCenterPane().revalidate();
 		getCenterPane().repaint();
+		this.revalidate();
 	}
 
 	

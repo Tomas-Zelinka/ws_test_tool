@@ -4,6 +4,8 @@ public class TestList {
 	
 	private DataProvider reader;
 	
+	//private St testList; 
+	
 	
 	public TestList(){
 		
@@ -11,9 +13,22 @@ public class TestList {
 		
 	}
 	
-	
-	private void makeTestList(){
+		
+	public void saveTestList(){
 		
 	}
 	
+	public void loadTestList(){
+		
+	}
+	
+	
+	public void addTestCase(){
+		
+	}
+	
+	
+	public void removeTestCase(String name){
+		
+	}
 }

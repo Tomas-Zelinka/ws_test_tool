@@ -4,7 +4,8 @@ import java.util.Map;
 
 public class HttpRequestData {
 
-	
+	public static final int METHOD_POST = 1;
+	public static final int METHOD_GET = 2;
 	/**
 	 * 
 	 */
@@ -29,6 +30,22 @@ public class HttpRequestData {
 		this.body = inputBody;
 	}
 	
+	public String getBody (String str){
+		return this.body;
+	}
+	
+	public String getRequestPath(){
+		return this.requestPath;
+	}
+	
+	public void setRequestPath(String str){
+		this.requestPath = str;
+	}
+	
+	
+	public int getMethod(){
+		return HttpRequestData.METHOD_GET;
+	}
 	
 	
 	

@@ -4,7 +4,7 @@
  * Fakulta informacnich technologii VUT Brno
  * 3.2.2012
  */
-package proxyUnit;
+package central;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +14,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import data.DataProvider;
 import data.FaultInjectionData;
 
+import proxyUnit.FaultInjector;
 import proxyUnit.HttpInteraction;
+import proxyUnit.HttpMessage;
+import proxyUnit.HttpRequest;
+import proxyUnit.HttpResponse;
+import proxyUnit.NewMessageListener;
+import proxyUnit.ProxyMonitoringUnit;
+import proxyUnit.Settings;
+import proxyUnit.UnknownHostListener;
 
 /**
  * Trida controller zajistuje reakci aplikacni logiky na uzivatelske udalosti generovane v GUI.
  * V podstate predstavuje vzor fasadu pro pristup k business vrstve.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
  */
-public class Controller {
+public class ProxyController {
 	
 	
 	//<editor-fold defaultstate="collapsed" desc="MainProxyThread class">
@@ -53,7 +61,7 @@ public class Controller {
 	private List<UnknownHostListener> unknownHostListenerList= new ArrayList<UnknownHostListener>();
 	
 	
-	public Controller() {
+	public ProxyController() {
 		
 		//ziskame nastaveni z XML
 		Settings settings= DataProvider.deserializeSettingsFromXML();
@@ -248,7 +256,7 @@ public class Controller {
 	 * Metoda pro upozorneni vsech odberatelu o udalosti prichodu nove zpravy (soucast navrhoveho vzoru
 	 * Observer). Protected...je volano z ProxyMonitoringUnit.
 	 */
-	protected void publishUnknownMessageEvent() {
+	public void publishUnknownMessageEvent() {
 		
 		for (UnknownHostListener currentListener : unknownHostListenerList)
 			currentListener.onUnknownHostEvent();

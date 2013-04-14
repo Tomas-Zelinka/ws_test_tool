@@ -18,6 +18,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import logging.ConsoleLog;
+
 import proxyUnit.Settings;
 
 /**
@@ -59,8 +61,8 @@ public class DataProvider {
 			obj= stream.fromXML(new FileInputStream(new File(path)));
 		}
 		catch (FileNotFoundException ex) {
-			System.err.println("File" + "not found");
-			System.err.println(ex.getMessage());
+			ConsoleLog.Print("File" + "not found");
+			ConsoleLog.Print(ex.getMessage());
 			//System.exit(-1);
 		}
 		catch(Exception ex)	{
@@ -93,7 +95,7 @@ public class DataProvider {
 			writer.close();
 		}
 		catch (IOException ex) {
-			System.err.println(ex.getMessage());
+			ConsoleLog.Print(ex.getMessage());
 		}
 		
 	}
@@ -124,7 +126,7 @@ public class DataProvider {
 				writer.close();
 			}
 			catch (IOException ex) {
-				System.err.println(ex.getMessage());
+				ConsoleLog.Print(ex.getMessage());
 			}
 		}
 	}
@@ -142,8 +144,8 @@ public class DataProvider {
 		//Settings settings = new Settings(1080,55,"localhost",new ArrayList<String>()) ;
 		}
 		catch (FileNotFoundException ex) {
-			System.err.println("File settings.xml not found");
-			System.err.println(ex.getMessage());
+			ConsoleLog.Print("File settings.xml not found");
+			ConsoleLog.Print(ex.getMessage());
 			System.exit(-1);
 		}
 		catch(Exception ex)	{

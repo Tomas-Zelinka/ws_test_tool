@@ -1,34 +1,26 @@
 package data;
 
+import java.util.ArrayList;
+
 public class TestList {
 	
-	private DataProvider reader;
-	
-	//private St testList; 
-	
-	
+	private ArrayList<String> testList; 
+		
 	public TestList(){
-		
-		reader = new DataProvider();
-		
+		testList = new ArrayList<String>();
 	}
 	
-		
-	public void saveTestList(){
-		
-	}
-	
-	public void loadTestList(){
+	public void addTestCase(String path){
+		this.testList.add(path);
 		
 	}
 	
 	
-	public void addTestCase(){
-		
+	public void removeTestCase(String path){
+		this.removeTestCase(path);
 	}
 	
-	
-	public void removeTestCase(String name){
-		
+	public ArrayList<String> getTestCases(){
+		return this.testList;
 	}
 }

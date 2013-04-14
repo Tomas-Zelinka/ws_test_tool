@@ -6,6 +6,8 @@ import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import logging.ConsoleLog;
+
 import data.DataProvider;
 import data.HttpRequestData;
 import data.FaultInjectionData;
@@ -51,7 +53,7 @@ public class TestCaseEditor extends JPanel {
 	
 	
 	public void setTab(int tab){
-		System.out.println("tab:"+tab);
+		ConsoleLog.Print("tab:"+tab);
 		mainTabbedPane.setSelectedIndex(tab);
 		mainTabbedPane.revalidate();
 		mainTabbedPane.repaint();
@@ -63,76 +65,6 @@ public class TestCaseEditor extends JPanel {
 		return mainTabbedPane.getSelectedIndex();
 	}
 	
-	/**
-	 * 
-	 */
-//	private void setTestToolbar(){
-//		//testSplitPane.setDividerLocation(220);
-//
-//        //testToolBar.setFloatable(false);
-//        //testToolBar.setRollover(true);
-//
-//        addTestButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_test_small.png"))); // NOI18N
-//        addTestButton.setToolTipText("Add new test");
-//        addTestButton.setFocusable(false);
-//        addTestButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-//        addTestButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-//        addTestButton.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                addTestButtonActionPerformed(evt);
-//            }
-//        });
-//        //testToolBar.add(addTestButton);
-//
-//        addStatementButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/add_statement_small.png"))); // NOI18N
-//        addStatementButton.setToolTipText("Add new statement");
-//        addStatementButton.setFocusable(false);
-//        addStatementButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-//        addStatementButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-//        addStatementButton.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                addStatementButtonActionPerformed(evt);
-//            }
-//        });
-//        //testToolBar.add(addStatementButton);
-//        //testToolBar.add(jSeparator2);
-//
-//        removeNodeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("resources/remove_small.png"))); // NOI18N
-//        removeNodeButton.setToolTipText("Remove");
-//        removeNodeButton.setFocusable(false);
-//        removeNodeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-//        removeNodeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-//        removeNodeButton.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                removeNodeButtonActionPerformed(evt);
-//            }
-//        });
-        //testToolBar.add(removeNodeButton);
-
-        //testScrollPane.setViewportView(testTree);
-        //testTree.addMouseListener(testTreePopupListener);
-        //nastaveni vykresleni ikon v JTree
-        //testTreeRenderer= new TestTreeCellRenderer();
-       // testTree.setCellRenderer(testTreeRenderer);
-
-//        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-//        jPanel8.setLayout(jPanel8Layout);
-//        jPanel8Layout.setHorizontalGroup(
-//            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//            .addComponent(testToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-//            .addComponent(testScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-//        );
-//        jPanel8Layout.setVerticalGroup(
-//            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//            .addGroup(jPanel8Layout.createSequentialGroup()
-//                .addComponent(testToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//                .addComponent(testScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE))
-//        );
-
-       // testSplitPane.setLeftComponent(jPanel8);
-
- //   }
 	
 	/**
 	 * 
@@ -148,7 +80,7 @@ public class TestCaseEditor extends JPanel {
 	
 	public void setTestCasePath(){
 		this.testCasePath = MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+ File.separator+ MainWindow.getCasePath();
-		System.out.println(this.testCasePath);
+		ConsoleLog.Print(this.testCasePath);
 	}
 	
 	public String getTestCasePath(){
@@ -158,7 +90,7 @@ public class TestCaseEditor extends JPanel {
 	
 	public void saveTestCase(){
 		
-		System.out.println("saving");
+		ConsoleLog.Print("saving");
 		FaultInjectionData faultData = faultInjectionEditor.getFaultInjetionData();
 		HttpRequestData requestData = httpEditor.getHttpRequestData();
 		TestCaseSettingsData settingsData = settingsEditor.getSettingsData();
@@ -167,17 +99,22 @@ public class TestCaseEditor extends JPanel {
 		String httpFilePath = getTestCasePath() + File.separator + TestCaseEditor.httpRequestFileName;
 		String faultFilePath = getTestCasePath() + File.separator + TestCaseEditor.faultInjectionFileName;
 		
-		dataProvider.writeObject(settingsFilePath, settingsData);
-		dataProvider.writeObject(httpFilePath, requestData);
-		dataProvider.writeObject(faultFilePath,faultData );
+		if(settingsData != null)
+			dataProvider.writeObject(settingsFilePath, settingsData);
+		
+		if(requestData != null)
+			dataProvider.writeObject(httpFilePath, requestData);
+		
+		if(faultData != null)
+			dataProvider.writeObject(faultFilePath,faultData );
 				
-		System.out.println("saved");
+		ConsoleLog.Print("saved");
 	}
 	
 	
 	public void loadTestCase(){
 		
-		System.out.println("loading");
+		ConsoleLog.Print("loading");
 		TestCaseSettingsData loadedSettings = null;
 		FaultInjectionData loadedFault = null;
 		HttpRequestData loadedHttpData = null;
@@ -191,17 +128,17 @@ public class TestCaseEditor extends JPanel {
 		File faultDataFile = new File(faultFilePath);
 		
 		
-		System.out.println("httpFile:"+ httpDataFile.getPath());
+		ConsoleLog.Print("httpFile:"+ httpDataFile.getPath());
 		if(!settingsFile.exists()){
-			System.out.println("Settings file not found !!!");
+			ConsoleLog.Print("Settings file not found !!!");
 		}else{
 			loadedSettings = (TestCaseSettingsData) dataProvider.readObject(settingsFilePath);
 			settingsEditor.setSettingsData(loadedSettings);
-			System.out.println(loadedSettings);
+			ConsoleLog.Print(loadedSettings.toString());
 		}
 		
 		if(!httpDataFile.exists()){
-			System.out.println("Http Data file not found !!!");
+			ConsoleLog.Print("Http Data file not found !!!");
 		}else{
 			loadedHttpData = (HttpRequestData) dataProvider.readObject(httpFilePath);
 		}
@@ -209,13 +146,13 @@ public class TestCaseEditor extends JPanel {
 		
 		
 		if(!faultDataFile.exists()){
-			System.out.println("Fault Injection file not found !!!");
+			ConsoleLog.Print("Fault Injection file not found !!!");
 		}else{
 			loadedFault = (FaultInjectionData) dataProvider.readObject(faultFilePath);
 			faultInjectionEditor.setFaultData(loadedFault);
 		}
 		
-		System.out.println("loaded");
+		ConsoleLog.Print("loaded");
 		
 	}
 }

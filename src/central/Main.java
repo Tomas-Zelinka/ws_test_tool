@@ -5,13 +5,14 @@ import gui.MainWindow;
 
 import javax.swing.SwingUtilities;
 
+import logging.ConsoleLog;
+
+import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.http.ParseException;
-
-import logging.ConsoleLog;
 
 /**
  * Main class for starting the GUI
@@ -22,6 +23,12 @@ import logging.ConsoleLog;
 public class Main extends Options{
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6417256415716065905L;
+
+
 	private ProxyController proxyController;
 	
 
@@ -29,6 +36,7 @@ public class Main extends Options{
 	
 	
 	private Option help;
+	private Option gui;
 	private Options options;
 	private CommandLineParser parser;
 	
@@ -48,20 +56,10 @@ public class Main extends Options{
 	public static void main(String[] args) {
 	
 		Main main = new Main();
-		ConsoleLog.setConsoleLog(true);
+		ConsoleLog.setConsoleLog(false);
 		
 		main.parseOptions(args);
 		
-		try{
-		SwingUtilities.invokeAndWait(new Runnable() {
-			  public void run() {
-				  MainWindow  gui = new MainWindow();
-				  gui.setVisible(true);
-		    }
-		  });
-		}catch (Exception e){
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -81,10 +79,14 @@ public class Main extends Options{
 	 */
 	private void initOptions(){
 		
-		this.help = new Option("help", "Napoveda");
-		this.options = new Options();
+		this.help = new Option("h", "Napoveda");
+		this.gui = new Option("g","gui");
 		
+		this.options = new Options();
+		this.options.addOption(this.gui);
 		this.options.addOption(this.help);
+		
+		this.parser = new BasicParser();
 	}
 	
 	private void initApplication(){
@@ -92,22 +94,40 @@ public class Main extends Options{
 		testUnitController = new TestUnitController();
 	}
 	
+	
+	
 	public void parseOptions(String[] args){
 		
 		CommandLine line = null;
+		
 		try{
 			
 			line = parser.parse(this.options,args);
 		}catch(ParseException e){
 		
-			System.err.println( "Parsing failed.  Reason: " + e.getMessage());
+			ConsoleLog.Print( "Parsing failed.  Reason: " + e.getMessage());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		if(line.hasOption( "help" ) ){
+		if(line.hasOption( "h" ) ){
 			
-			System.out.println("udelam baf");
+			ConsoleLog.Print("Napoveda");
+		}
+		
+		
+		if(line.hasOption("g")){
+			System.out.println("gui");
+			try{
+			SwingUtilities.invokeAndWait(new Runnable() {
+				  public void run() {
+					  MainWindow  gui = new MainWindow(getProxyController(),getTestUnitController());
+					  gui.setVisible(true);
+			    }
+			  });
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 	}

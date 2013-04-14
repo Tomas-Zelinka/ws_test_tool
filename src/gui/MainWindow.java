@@ -24,6 +24,8 @@ import logging.ConsoleLog;
 import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
 
+import central.ProxyController;
+import central.TestUnitController;
 import exceptions.EmptyComponentException;
 
 
@@ -108,25 +110,31 @@ public class MainWindow extends JFrame{
 	
 	protected TestCaseEditor editor;
 	
-	private Statistics stats;
+	private Statistics statsPanel;
 	
-	private RemoteControl remoteControl;
+	private RemoteControl remoteControlPanel;
 	
-	private ProxyMonitor proxy;
+	private ProxyMonitor proxyPanel;
 	
-	private  TestingMonitor testUnit;
+	private  TestingMonitor testUnitPanel;
 	
 	private ProjectNavigator navigator;
 	
 	private Component toolBox;
 	private JToolBar testCaseToolBox; 
 	private JToolBar testUnitToolBox;
+	private JToolBar proxyToolBox;
 	
 	
 	private JButton saveTestCase;
-	private JButton addMachine;
-	private JButton removeMachine;
-	
+	private JButton addUnit;
+	private JButton removeUnit;
+	private JButton runUnit;
+	private JButton runAllUnits;
+	private JButton saveTestList;
+	private JButton insertTestCase;
+	private JButton removeTestCase;
+	private JButton exportConfiguration;
 	
 	public static final int TESTCASE_EDITOR = 0;
 	public static final int PROXY_MONITOR = 1;
@@ -136,10 +144,11 @@ public class MainWindow extends JFrame{
 	
 	public static final int TESTUNIT_TOOLBOX = 5;
 	public static final int TESTCASE_TOOLBOX = 6;
+	public static final int PROXYMON_TOOLBOX = 7;
 	/**
 	 * 
 	 */
-	private void initMainWindow()
+	private void initMainWindow(ProxyController proxyController, TestUnitController testUnitController)
 	{
 		this.setTitle(this.APP_NAME);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -156,7 +165,7 @@ public class MainWindow extends JFrame{
 		this.setBackground(Color.gray);
 		initToolBox();
 		initMenuBar();
-		initContentPane();
+		initContentPane(proxyController, testUnitController);
 		initCenterPane();
 		initBottomPane();
 		getContentPane().add(this.bottomPane,BorderLayout.CENTER);
@@ -176,14 +185,14 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	private void initContentPane(){
+	private void initContentPane(ProxyController proxyController, TestUnitController testUnitController){
 		
 	
 		this.editor = new TestCaseEditor();
-		this.proxy = new ProxyMonitor();
-		this.remoteControl = new RemoteControl();
-		this.stats = new Statistics();
-		this.testUnit = new TestingMonitor();
+		this.proxyPanel = new ProxyMonitor(proxyController);
+		this.remoteControlPanel = new RemoteControl();
+		this.statsPanel = new Statistics();
+		this.testUnitPanel = new TestingMonitor(testUnitController);
 		this.centerComponent = new JPanel();
 		
 		
@@ -233,22 +242,51 @@ public class MainWindow extends JFrame{
 		this.toolBox = null;
 		testCaseToolBox = new JToolBar();
 		testUnitToolBox = new JToolBar();
-		
+		proxyToolBox = new JToolBar();
+				
 		testCaseToolBox.setFloatable(false);
 		testUnitToolBox.setFloatable(false);
+		proxyToolBox.setFloatable(false);
 		
 		saveTestCase = new JButton("Save TestCase");
 		saveTestCase.addActionListener(new SaveTestCaseListener());
 		
-		addMachine = new JButton("Add Remote Machine");
-		addMachine.addActionListener(new AddMachineListener());
+		addUnit = new JButton("Add Remote Unit");
+		addUnit.addActionListener(new AddUnitListener());
 		
-		removeMachine = new JButton("Remove Remote Machine");
-		removeMachine.addActionListener(new RemoveMachineListener());
+		removeUnit = new JButton("Remove Remote Unit");
+		removeUnit.addActionListener(new RemoveUnitListener());
+		
+		runUnit = new JButton("Run Unit");
+		runUnit.addActionListener(new RunUnitListener());
+		
+		runAllUnits = new JButton("Run All Units");
+		runAllUnits.addActionListener(new RunAllUnitsListener());
+		
+		saveTestList =  new JButton("Save Test List");
+		saveTestList.addActionListener(new SaveTestListListener());
+		
+		insertTestCase =  new JButton("Insert Test Case");
+		insertTestCase.addActionListener(new InsertTestCaseListener());
+		
+		removeTestCase =  new JButton("Remove Test Case");
+		removeTestCase.addActionListener(new RemoveTestCaseListener());
+		
+		exportConfiguration =  new JButton("Export Unit Configuration");
+		exportConfiguration.addActionListener(new ExportConfigurationListener());
 		
 		testCaseToolBox.add(saveTestCase);
-		testUnitToolBox.add(addMachine);
-		testUnitToolBox.add(removeMachine);
+		
+		testUnitToolBox.add(runUnit);
+		testUnitToolBox.add(runAllUnits);
+		testUnitToolBox.add(insertTestCase);
+		testUnitToolBox.add(removeTestCase);
+		testUnitToolBox.add(saveTestList);
+		testUnitToolBox.add(addUnit);
+		testUnitToolBox.add(removeUnit);
+		testUnitToolBox.add(exportConfiguration);
+		
+		
 	}
 	
 	/**
@@ -258,8 +296,8 @@ public class MainWindow extends JFrame{
 	 * those components are placed into the containers 
 	 * 
 	 */
-	public MainWindow(){
-		initMainWindow();
+	public MainWindow(ProxyController proxyController, TestUnitController testUnitController){
+		initMainWindow(proxyController, testUnitController);
 		this.pack();
 	
 	}
@@ -279,6 +317,8 @@ public class MainWindow extends JFrame{
 			this.toolBox = testCaseToolBox;
 		}else if(box == MainWindow.TESTUNIT_TOOLBOX){
 			this.toolBox = testUnitToolBox;
+		}else if(box == MainWindow.PROXYMON_TOOLBOX){
+			this.toolBox = proxyToolBox;
 		}
 		
 		getContentPane().add(this.toolBox,BorderLayout.NORTH);
@@ -378,26 +418,26 @@ public class MainWindow extends JFrame{
 				}else if(panelType == ProjectNavigator.CASE_EDITOR_FAULT){
 					this.editor.setTab(TestCaseEditor.FAULT_TAB);
 				}
-				
-				
-				
+			
 				break;
 			case PROXY_MONITOR: 
-				this.centerComponent = this.proxy;
+				setToolBox(MainWindow.PROXYMON_TOOLBOX);
+				this.centerComponent = this.proxyPanel;
 				break;
 			case REMOTE_CONTROL: 
-				this.centerComponent = this.remoteControl;
+				this.centerComponent = this.remoteControlPanel;
 				break;
 			case STATISTICS: 
-				this.centerComponent = this.stats;
+				this.centerComponent = this.statsPanel;
 				break;
 			case TESTING_UNIT: 
 				setToolBox(MainWindow.TESTUNIT_TOOLBOX);
-				this.centerComponent = this.testUnit;
+				this.centerComponent = this.testUnitPanel;
+				this.testUnitPanel.openTestList(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
 				
 				break;	
 			default:
-				System.out.println("MainWindow.setContent() - something is wrong in switch statement");
+				ConsoleLog.Print("MainWindow.setContent() - something is wrong in switch statement");
 				break;
 				
 		}
@@ -408,7 +448,7 @@ public class MainWindow extends JFrame{
 		
 		getCenterPane().revalidate();
 		getCenterPane().repaint();
-		this.revalidate();
+		this.pack();
 	}
 
 	
@@ -437,21 +477,67 @@ public class MainWindow extends JFrame{
 	
 	private class SaveTestCaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			System.out.println("Save testcase clicked");
+			ConsoleLog.Print("Save testcase clicked");
 			editor.saveTestCase();
 		}
 	}
 	
-	private class AddMachineListener implements ActionListener{
+	private class AddUnitListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-			System.out.println("Add Machine clicked");
-			testUnit.addMachine();
+			ConsoleLog.Print("Add Unit clicked");
+			testUnitPanel.addRemoteUnit();
 		}
 	}
-	private class RemoveMachineListener implements ActionListener{
+	private class RemoveUnitListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-			System.out.println("Remove Machine clicked");
-			testUnit.removeMachine();
+			ConsoleLog.Print("Remove Unit clicked");
+			testUnitPanel.removeUnit();
+		}
+	}
+	
+	private class RunUnitListener implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			ConsoleLog.Print("Run Unit clicked");
+			
+		}
+	}
+	
+	private class RunAllUnitsListener implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			ConsoleLog.Print("Run All Units clicked");
+			
+		}
+	}
+	
+	private class SaveTestListListener implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			ConsoleLog.Print("Save Test Case clicked");
+			
+		}
+	}
+	
+	private class InsertTestCaseListener implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			testUnitPanel.insertTestCase(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"settings.xml");
+			
+			ConsoleLog.Print("Insert Test Case clicked");
+			
+		}
+	}
+	
+	
+	private class RemoveTestCaseListener implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			testUnitPanel.removeTestCase();
+			ConsoleLog.Print("Remove Test Case clicked");
+			
+		}
+	}
+	
+	private class ExportConfigurationListener implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			ConsoleLog.Print("Export Configuration clicked");
+			
 		}
 	}
 }

@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
 
+import logging.ConsoleLog;
+
 import data.DataProvider;
 import data.TestCaseSettingsData;
 
@@ -144,6 +146,7 @@ public class NewTestCaseDialog extends InputModalWindow {
 			File settings = new File(newTestCase.getPath() + File.separator + "settings.xml");
             DataProvider writer = new DataProvider();
             TestCaseSettingsData testCase = new TestCaseSettingsData();
+            testCase.setName(getCaseName());
 			
 			
 			if (newTestCase.exists()){
@@ -160,7 +163,7 @@ public class NewTestCaseDialog extends InputModalWindow {
             	 }
             	 ProjectNavigator.refreshTree();
 			
-            	 System.out.println("New case suite created,name: "+ getCaseName());
+            	 ConsoleLog.Print("New case suite created,name: "+ getCaseName());
             	 setVisible(false);
             	 dispose();
              }

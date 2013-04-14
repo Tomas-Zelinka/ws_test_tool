@@ -3,7 +3,7 @@ package testingUnit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.httpclient.HttpClient;
+import org.apache.http.client.HttpClient;
 
 public class LocalTestUnit implements TestingUnit {
 
@@ -13,23 +13,23 @@ public class LocalTestUnit implements TestingUnit {
 	private int threadsNumber;
 	
 	
-	
+	private HttpClient client;
 	
 	private String[] testList;
 	
 	public LocalTestUnit(){
 	
-		threadsNumber = 4;
+		threadsNumber = 8;
 		executor = Executors.newFixedThreadPool(getThreadsNumber());
 	}
 	
 	public void runTestList(){
 		
 		int MOC = 10;
-//		for (int i =0; i  < 5; i++){
-//				RequestWorker test = new RequestWorker(i,MOC);
-//				executor.execute(test);
-//		}
+		for (int i =0; i  < 5; i++){
+				RequestWorker test = new RequestWorker();
+				executor.execute(test);
+		}
 		
 		System.out.println("Ukoncuju");
 		executor.shutdown();

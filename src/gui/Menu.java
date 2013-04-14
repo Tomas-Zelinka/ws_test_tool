@@ -78,24 +78,24 @@ public class Menu extends JMenuBar {
 		//parentWindow =(JFrame) getParent();
 		file = new JMenu("File");
 		view = new JMenu("View");
-		project = new JMenu("Project");
+		//project = new JMenu("Project");
 		newSubMenu = new JMenu("New");
-		proxy = new JMenu("Proxy");
-		remote = new JMenu("Remote");
+		//proxy = new JMenu("Proxy");
+		//remote = new JMenu("Remote");
 		
 		this.add(file);
 		file.add(newSubMenu);
 		this.add(view);
-		this.add(project);
-		this.add(proxy);
-		this.add(remote);
+		//this.add(project);
+		//this.add(proxy);
+		//this.add(remote);
 		
 		
 		initFileMenuItems();
 		initViewMenuItems();
-		initProjectMenuItems();
-		initProxyMenuItems();
-		initRemoteMenuItems();
+		//initProjectMenuItems();
+		//initProxyMenuItems();
+		//initRemoteMenuItems();
 	}
 	
 	/**
@@ -131,7 +131,7 @@ public class Menu extends JMenuBar {
 		addMenuItem(view,"Test Editor",new ViewTestEditorListener());
 		addMenuItem(view,"Test Unit",new ViewTestUnitListener());
 		addMenuItem(view,"Proxy Monitor",new ViewProxyMonitorListener());
-		addMenuItem(view,"Remote Control",new ViewRemoteControlListener());
+		//addMenuItem(view,"Remote Control",new ViewRemoteControlListener());
 		addMenuItem(view,"Statistics",new ViewStatisticsListener());
 	}
 	/**
@@ -360,12 +360,12 @@ public class Menu extends JMenuBar {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class ViewRemoteControlListener implements ActionListener{
-		public void actionPerformed(ActionEvent ae) {
-			getMainWindowInstance().setContent(MainWindow.REMOTE_CONTROL);
-			ConsoleLog.Print("Remote Control clicked");
-			}
-	}
+//	class ViewRemoteControlListener implements ActionListener{
+//		public void actionPerformed(ActionEvent ae) {
+//			getMainWindowInstance().setContent(MainWindow.REMOTE_CONTROL);
+//			ConsoleLog.Print("Remote Control clicked");
+//			}
+//	}
 	
 	/**
 	 * 

@@ -1,33 +1,21 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.PlainDocument;
 
 import modalWindows.AntiAliasedEditorPane;
-
-import org.bounce.text.LineNumberMargin;
-import org.bounce.text.xml.XMLEditorKit;
-
-import central.ProxyController;
-
-import data.FaultInjectionData;
-
 import proxyUnit.HttpInteraction;
 import proxyUnit.HttpRequest;
 import proxyUnit.HttpResponse;
 import proxyUnit.NewMessageListener;
 import proxyUnit.UnknownHostListener;
+import central.ProxyController;
+import data.FaultInjectionData;
 
 public class ProxyMonitor extends JSplitPane implements NewMessageListener, UnknownHostListener {
 
@@ -110,8 +98,8 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 	//private TestTreePopupListener testTreePopupListener;
 		
     
-    public ProxyMonitor(){
-    	controller= new ProxyController();
+    public ProxyMonitor(ProxyController proxyController){
+    	controller= proxyController;
 		//zaregistrujeme se jako odberatel udalosti o novych zpravach z business vrstvy
 		controller.addNewMessageListener(this);
 		controller.addUnknownHostListener(this);

@@ -14,4 +14,8 @@ public class ConsoleLog {
 	public static void setConsoleLog(boolean input){
 		state = input;
 	}
+	
+	public static void Message(String str){
+		System.err.println("System message: "+str);
+	}
 }

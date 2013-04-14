@@ -13,6 +13,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
 
+import logging.ConsoleLog;
+
+import data.DataProvider;
+import data.TestList;
+
 public class NewTestSuiteDialog extends InputModalWindow {
 	/**
 	 * 
@@ -87,7 +92,11 @@ public class NewTestSuiteDialog extends InputModalWindow {
 		public void actionPerformed(ActionEvent e) {
 			 
              File newTestSuite = new File(MainWindow.getDataRoot()+File.separator+getSuiteName());
-             File testList = new File(newTestSuite.getPath()+File.separator+"testlist.xml");
+             File testListFile = new File(newTestSuite.getPath()+File.separator+"testlist.xml");
+             TestList testListData = new TestList();
+             DataProvider writer = new DataProvider();
+             
+             
              
              if (newTestSuite.exists()){
             	 messageLabel.setText("Test suite with this name already exists");
@@ -95,12 +104,13 @@ public class NewTestSuiteDialog extends InputModalWindow {
             	 
             	 newTestSuite.mkdir();
             	 try {
-            		 testList.createNewFile();
+            		 testListFile.createNewFile();
+            		 writer.writeObject(testListFile.getPath(), testListData);
             	 }catch(Exception b){
             		 b.printStackTrace();
             	 }
             	 ProjectNavigator.refreshTree();
-            	 System.out.println("New test suite created,name: "+newTestSuite.getPath());
+            	 ConsoleLog.Print("New test suite created,name: "+newTestSuite.getPath());
             	 setVisible(false);
             	 dispose();
             	 

@@ -230,7 +230,7 @@ public class ProjectNavigator extends JPanel {
 	            
 	            
 				if (newHttpCase.exists()){
-	            	 System.out.println("You can set only 1 http test to this case");
+					ConsoleLog.Print("You can set only 1 http test to this case");
 	             }else{
 	            	 
 	            	 newHttpCase.mkdir();
@@ -244,10 +244,10 @@ public class ProjectNavigator extends JPanel {
 		             	 }
 	            	 ProjectNavigator.refreshTree();
 	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
-	            	 System.out.println("New project name: "+ MainWindow.getCasePath());
+	            	 ConsoleLog.Print("New project name: "+ MainWindow.getCasePath());
 	            }
 			}else{
-				System.out.println("Test case not selected ");
+				ConsoleLog.Print("Test case not selected ");
 			}
 			ConsoleLog.Print("new HttpTest clicked");
 		}
@@ -271,7 +271,7 @@ public class ProjectNavigator extends JPanel {
 
 	           
 				if (newHttpCase.exists()){
-	            	 System.out.println("You can set only 1 fault injection test to this case");
+					ConsoleLog.Print("You can set only 1 fault injection test to this case");
 	             }else{
 	            	 
 	            	 newHttpCase.mkdir();
@@ -287,10 +287,10 @@ public class ProjectNavigator extends JPanel {
 	            	 ProjectNavigator.refreshTree();
 	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
 	            	 
-	            	 System.out.println("New project name: "+ MainWindow.getCasePath());
+	            	 ConsoleLog.Print("New project name: "+ MainWindow.getCasePath());
 	            }
 			}else{
-				System.out.println("Test case not selected ");
+				ConsoleLog.Print("Test case not selected ");
 			}
 			ConsoleLog.Print("new Fault Injection clicked");
 		}
@@ -446,9 +446,7 @@ public class ProjectNavigator extends JPanel {
 				        
 				     
 				       if(model.isLeaf(path.getLastPathComponent())){
-				    	   //getMainWindowInstance().removeContent();
-				    	   //getMainWindowInstance().setContent(new TestCaseEditor());
-				    	   ConsoleLog.Print( "Project Selected: ahoj");
+				    	  ConsoleLog.Print( "Project Selected: ahoj");
 				       }
 				        	
 				   }

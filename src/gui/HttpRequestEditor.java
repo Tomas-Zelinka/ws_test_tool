@@ -27,7 +27,7 @@ public class HttpRequestEditor extends JPanel {
 	 */
 	private static final long serialVersionUID = 4286324537862142268L;
 	
-	private boolean DEBUG = false;
+//	private boolean DEBUG = false;
  
     private  JTable headers;
     
@@ -47,13 +47,13 @@ public class HttpRequestEditor extends JPanel {
         headers.setPreferredScrollableViewportSize(new Dimension(500, 70));
         headers.setFillsViewportHeight(true);
         headers.setOpaque(false);
-        if (DEBUG) {
-            headers.addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    printDebugData(headers);
-                }
-            });
-        }
+//        if (DEBUG) {
+//            headers.addMouseListener(new MouseAdapter() {
+//                public void mouseClicked(MouseEvent e) {
+//                    printDebugData(headers);
+//                }
+//            });
+//        }
  
         JSplitPane contentPane = new JSplitPane();
         
@@ -75,7 +75,6 @@ public class HttpRequestEditor extends JPanel {
         
         scrollPane.getViewport().add(headers);
         contentScrollPane.getViewport().add(content);
-        //contentScrollPane.setBorder(BorderFactory.createEmptyBorder());
         contentPanel.add(contentScrollPane,BorderLayout.CENTER);
         tablePanel.add(toolBox,BorderLayout.NORTH);
         tablePanel.add(scrollPane,BorderLayout.CENTER);
@@ -112,22 +111,25 @@ public class HttpRequestEditor extends JPanel {
     
     }
  
-    private void printDebugData(JTable table) {
-        int numRows = table.getRowCount();
-        int numCols = table.getColumnCount();
-        javax.swing.table.TableModel model = table.getModel();
+//    private void printDebugData(JTable table) {
+//        int numRows = table.getRowCount();
+//        int numCols = table.getColumnCount();
+//        javax.swing.table.TableModel model = table.getModel();
+// 
+//        System.out.println("Value of data: ");
+//        for (int i=0; i < numRows; i++) {
+//            System.out.print("    row " + i + ":");
+//            for (int j=0; j < numCols; j++) {
+//                System.out.print("  " + model.getValueAt(i, j));
+//            }
+//            System.out.println();
+//        }
+//        System.out.println("--------------------------");
+//    }
  
-        System.out.println("Value of data: ");
-        for (int i=0; i < numRows; i++) {
-            System.out.print("    row " + i + ":");
-            for (int j=0; j < numCols; j++) {
-                System.out.print("  " + model.getValueAt(i, j));
-            }
-            System.out.println();
-        }
-        System.out.println("--------------------------");
-    }
- 
+    /**
+     * 
+     */
     private void initComponents(){
     	headers = new JTable();
     	toolBox = new JToolBar();
@@ -135,6 +137,9 @@ public class HttpRequestEditor extends JPanel {
     	initTableModel();
     }
     
+    /**
+     * 
+     */
     private void initToolBox(){
     	
     	 JButton addButton = new JButton("Add");
@@ -179,6 +184,9 @@ public class HttpRequestEditor extends JPanel {
     	
     }
     
+    /**
+     * 
+     */
     private void initTableModel(){
     	String[] columnNames = {"Key",
         "Value"};
@@ -190,8 +198,6 @@ public class HttpRequestEditor extends JPanel {
 		{"", ""},
 		{"", ""}
 		};
-
-
 		tableModel = new DefaultTableModel(data, columnNames);
     }
     

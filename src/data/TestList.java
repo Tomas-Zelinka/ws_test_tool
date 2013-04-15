@@ -1,26 +1,41 @@
 package data;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TestList {
 	
-	private ArrayList<String> testList; 
-		
+	private HashMap<Integer,String> testList; 
+	private Integer caseCounter;	
+	
+	
+	
 	public TestList(){
-		testList = new ArrayList<String>();
+		testList = new HashMap<Integer,String>();
+		caseCounter = new Integer(0);
 	}
 	
 	public void addTestCase(String path){
-		this.testList.add(path);
+		System.out.println(caseCounter);
+		this.testList.put(caseCounter++,path);
 		
 	}
 	
 	
-	public void removeTestCase(String path){
-		this.removeTestCase(path);
+	public void removeTestCase(Integer id){
+		System.out.println("removing: "+id);
+		this.testList.remove(id);
+		if(this.testList.isEmpty()){
+			caseCounter = 0;
+		}
 	}
 	
-	public ArrayList<String> getTestCases(){
+	public HashMap<Integer,String> getTestCases(){
 		return this.testList;
 	}
+	
+	public Integer getLastId(){
+		return caseCounter-1;
+	}
+	
+	
 }

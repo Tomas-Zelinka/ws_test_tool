@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import data.TestCaseSettingsData;
@@ -23,12 +24,14 @@ public class TestCaseSettings extends JPanel {
 	private JTextField proxyHostField;
 	private JTextField proxyPortField;
 	private JTextField proxyTestedPortField;
+	private JRadioButton runButton;
 	 
 	private JLabel proxyHostLabel;
 	private JLabel proxyTestedPortLabel;
 	private JLabel proxyPortLabel;
 	private JLabel loopNumberLabel;
 	private JLabel threadsNumberLabel;
+	private JLabel runLabel;
 	
 	private JPanel httpRequestSettings;
 	private JPanel proxySettings;
@@ -36,6 +39,7 @@ public class TestCaseSettings extends JPanel {
 	private JPanel proxyFields;
 	private JPanel httpLabels;
 	private JPanel httpFields;
+	
 	
 	private TestCaseSettingsData settingsData;
 	
@@ -50,8 +54,8 @@ public class TestCaseSettings extends JPanel {
 		proxySettings = new JPanel();
 		proxyLabels = new JPanel(new GridLayout(4, 1));
 		proxyFields = new JPanel(new GridLayout(4, 1));
-		httpLabels = new JPanel(new GridLayout(2, 1));
-		httpFields = new JPanel(new GridLayout(2, 1));
+		httpLabels = new JPanel(new GridLayout(3, 1));
+		httpFields = new JPanel(new GridLayout(3, 1));
 		
 		proxyHostField = new JTextField(20);
 		proxyHostLabel = new JLabel("Hostname");
@@ -68,6 +72,9 @@ public class TestCaseSettings extends JPanel {
 		threadsNumberField = new JTextField(20);
 		threadsNumberLabel = new JLabel("Threads number");
 		
+		runButton = new JRadioButton();
+		runLabel = new JLabel("Run test case");
+		
 		settingsData = new TestCaseSettingsData();
 	}
 	
@@ -80,8 +87,10 @@ public class TestCaseSettings extends JPanel {
 		
 		httpLabels.add(threadsNumberLabel);
 		httpLabels.add(loopNumberLabel);
+		httpLabels.add(runLabel); 
 		httpFields.add(threadsNumberField);
 		httpFields.add(loopNumberField);
+		httpFields.add(runButton);
 		
 		proxyLabels.add(proxyHostLabel);
 		proxyLabels.add(proxyPortLabel);
@@ -130,19 +139,25 @@ public class TestCaseSettings extends JPanel {
 		return Integer.parseInt(threadsNumberField.getText());
 	}
 	
-	private void setEditorThreadsNumber(Integer port){
-		this.threadsNumberField.setText(port.toString());
+	private void setEditorThreadsNumber(Integer number){
+		this.threadsNumberField.setText(number.toString());
 	}
 	
 	private Integer getEditorLoopCount(){
 		return Integer.parseInt(loopNumberField.getText());
 	}
 	
-	private void setEditorLoopNumber(Integer port){
-		this.loopNumberField.setText(port.toString());
+	private void setEditorLoopNumber(Integer number){
+		this.loopNumberField.setText(number.toString());
 	}
 	
+	private boolean getEditorRun(){
+		return runButton.isSelected();
+	}
 	
+	private void setEditorRun(boolean run){
+		this.runButton.setSelected(run);
+	}
 	
 	private void saveData(){
 		this.settingsData.setName(MainWindow.getCasePath());
@@ -151,6 +166,7 @@ public class TestCaseSettings extends JPanel {
 		this.settingsData.setProxyTestedPort(getEditorProxyTestedPort());
 		this.settingsData.setProxyPort(getEditorProxyPort());
 		this.settingsData.setProxyHost(getEditorProxyHostName());
+		this.settingsData.setRun(getEditorRun());
 	}
 	
 	
@@ -160,6 +176,7 @@ public class TestCaseSettings extends JPanel {
 		setEditorThreadsNumber(this.settingsData.getThreadsNumber());
 		setEditorLoopNumber(this.settingsData.getLoopNumber());
 		setEditorProxyTestedPort(this.settingsData.getProxyTestedPort());
+		setEditorRun(this.settingsData.getRun());
 	}
 	
 	

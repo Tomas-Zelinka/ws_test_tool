@@ -9,6 +9,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -20,7 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.text.Document;
 
 import logging.ConsoleLog;
-
 import data.DataProvider;
 import data.TestCaseSettingsData;
 
@@ -67,7 +68,8 @@ public class NewTestCaseDialog extends InputModalWindow {
 		labels.add(label);
 		
 		selectedTestSuite.setEditable(false);
-			
+		
+		
 		fields.add(selectedTestSuite);
 		fields.add(testCaseName);
 		fields.setSize(new Dimension(200,50));
@@ -82,9 +84,15 @@ public class NewTestCaseDialog extends InputModalWindow {
         getSecondInsidePanel().setLayout(new BorderLayout());
         getSecondInsidePanel().add(labels,BorderLayout.WEST);
         getSecondInsidePanel().add(fields);
+        
+        addWindowListener(new WindowAdapter(){ 
+        	public void windowOpened( WindowEvent e ){ 
+            	testCaseName.requestFocus(); 
+        	} 
+        });
     }
-     
-    
+  
+	
 	/**
 	 * 
 	 * @param text
@@ -147,6 +155,7 @@ public class NewTestCaseDialog extends InputModalWindow {
             DataProvider writer = new DataProvider();
             TestCaseSettingsData testCase = new TestCaseSettingsData();
             testCase.setName(getCaseName());
+            testCase.setPath(newTestCase.getPath());
 			
 			
 			if (newTestCase.exists()){
@@ -181,7 +190,7 @@ public class NewTestCaseDialog extends InputModalWindow {
 	}
 	@Override
 	protected void initComponents() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

@@ -275,7 +275,6 @@ public class Menu extends JMenuBar {
 		public void actionPerformed(ActionEvent ae) {
 			newTestCaseWindow = new NewTestCaseDialog();
 			newTestCaseWindow.setVisible(true);
-			
 			ConsoleLog.Print("new Test Case clicked");
 		}
 	}

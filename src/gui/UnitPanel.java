@@ -2,8 +2,9 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.HashMap;
 
+import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,7 +14,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import logging.ConsoleLog;
-
 import testingUnit.TestingUnit;
 import data.DataProvider;
 import data.TestCaseSettingsData;
@@ -73,11 +73,11 @@ public class UnitPanel extends JPanel {
 		File testListFile= new File(path);
 		if(testListFile.exists()){
 			testListData =(TestList) ioProvider.readObject(path);
-			ArrayList<String> testCases = testListData.getTestCases();
-			
+			HashMap<Integer,String> testCases = testListData.getTestCases();
+					
 			if(!testCases.isEmpty()){
-				for(String testCasePath : testCases){
-					insertTestCaseToTable(testCasePath);
+				for(Integer testCaseId : testCases.keySet()){
+					putTestCaseToTable(testCaseId);
 				}
 			}
 			
@@ -100,18 +100,29 @@ public class UnitPanel extends JPanel {
 	 * 
 	 * @param casePath
 	 */
-	public void insertTestCaseToTable(String casePath){
+	private void putTestCaseToTable(Integer id){
+		
+		String casePath = this.testListData.getTestCases().get(id);
 		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
 		
+		Object[] newRow = new Object[] {id,testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun())};
+		testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
+		
+	}
+	
+	
+	public void insertTestCaseToTable(String casePath)
+	{
+		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
+				
 		if(detectDuplicityInTable(testCaseSettings.getName())){
 			ConsoleLog.Message("Test case already in test list");
 		}else{
 			this.testListData.addTestCase(casePath);
-			Object[] newRow = new Object[] {null,testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber()};
+			Object[] newRow = new Object[] {this.testListData.getLastId(),testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun())};
 			testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
 		}
 	}
-	
 	/**
 	 * 
 	 */
@@ -119,9 +130,12 @@ public class UnitPanel extends JPanel {
 		
 		int row = testCasesTable.getSelectedRow();
 		ConsoleLog.Print("row: "+row);
-		if(row >= 0)
-			testCasesTableModel.removeRow(row);
 		
+		if(row >= 0){
+			Integer id = (Integer)testCasesTableModel.getValueAt(row, 0);
+			this.testListData.removeTestCase(id);
+			testCasesTableModel.removeRow(row);
+		}
 	}
 	/**
 	 * 
@@ -136,12 +150,13 @@ public class UnitPanel extends JPanel {
 			if(caseNameFromTable.compareTo(caseName) == 0)
 				return true;
 		}
-		
 		return false;
 	}
 	
 	
-	
+	public void setTestUnit(TestingUnit unit){
+		this.testUnit = unit;
+	}
 	
 	
 	/**
@@ -166,7 +181,6 @@ public class UnitPanel extends JPanel {
 		requestEditorPane = new JEditorPane();
 		responseEditorPane = new JEditorPane();
 		ioProvider = new DataProvider();
-		
 	}
 	
 	/**
@@ -196,25 +210,37 @@ public class UnitPanel extends JPanel {
 		testCasesTable.setOpaque(false);
 		responsesTable.setOpaque(false);
 		testCasesTable.setModel(new javax.swing.table.DefaultTableModel(
-	            new Object [][] {
+	            
+				
+				new Object [][] {
 
 	            },
-	            new String [] {
-	                "#", "Name","Threads","Count",
+	            new Object [] {
+	                "#", "Name","Threads","Count","Run"
 	            }
 	        ) {
-	            /**
+				/**
 				 * 
 				 */
-				private static final long serialVersionUID = 3376163326142594714L;
+				private static final long serialVersionUID = 2602176893989437449L;
+
+				public Class<?> getColumnClass(int index){
+					
+					if(index == 4)
+						return Boolean.class;
+					
+					return getValueAt(0, index).getClass();
+				}
+				
 				boolean[] canEdit = new boolean [] {
-	                false, false
+	                false, false,false,false,false
 	            };
 
 	            public boolean isCellEditable(int rowIndex, int columnIndex) {
 	                return canEdit [columnIndex];
 	            }
-	        });
+			
+		}	);
 		
 		testCasesTableModel = (DefaultTableModel) testCasesTable.getModel();
 		responsesTable.setModel(new javax.swing.table.DefaultTableModel(

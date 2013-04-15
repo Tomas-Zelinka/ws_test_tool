@@ -1,9 +1,17 @@
 package testingUnit;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import logging.ConsoleLog;
+
 import org.apache.http.client.HttpClient;
+
+import data.DataProvider;
+import data.TestCaseSettingsData;
+import data.TestList;
 
 public class LocalTestUnit implements TestingUnit {
 
@@ -12,26 +20,38 @@ public class LocalTestUnit implements TestingUnit {
 	
 	private int threadsNumber;
 	
-	
+	private DataProvider reader;
 	private HttpClient client;
 	
-	private String[] testList;
+	private TestList testList;
 	
+	private ArrayList<TestCaseSettingsData> casesToRun;
+	
+	
+	
+
 	public LocalTestUnit(){
 	
-		threadsNumber = 8;
-		executor = Executors.newFixedThreadPool(getThreadsNumber());
+		reader = new DataProvider();
+		
 	}
 	
 	public void runTestList(){
 		
-		int MOC = 10;
-		for (int i =0; i  < 5; i++){
-				RequestWorker test = new RequestWorker();
-				executor.execute(test);
-		}
+		/**
+		 * toto bude predmet testovani, jestli pro jeden testcase vice vlaken nebo sekvencne
+		 * zatim sekvencne
+		 */
+		for (int i =0; i  < casesToRun.size(); i++){
+				
+				TestCaseSettingsData settings = casesToRun.get(i);
+				initTestCase(settings);
+				RequestWorker test = new RequestWorker(settings);
+				test.run();
+				//executor.execute(test);
 		
-		System.out.println("Ukoncuju");
+		
+		System.out.println("Ukoncuju Test case");
 		executor.shutdown();
 		
 		System.out.println("Cekam na vlakna");
@@ -40,8 +60,8 @@ public class LocalTestUnit implements TestingUnit {
 			
 		}
 		
-		System.out.println("Koncim");
-		
+		System.out.println("Jdu na dalsi test case");
+		}
 		
 	}
 	
@@ -59,6 +79,39 @@ public class LocalTestUnit implements TestingUnit {
 		
 		LocalTestUnit unit = new LocalTestUnit();
 		unit.runTestList();
+	}
+	
+	public TestList getTestList() {
+		return testList;
+	}
+
+	public void setTestList(String path) {
+		casesToRun = new ArrayList<TestCaseSettingsData>();
+		this.testList = (TestList)reader.readObject(path);
+		HashMap<Integer,String> testCases = testList.getTestCases();
+		
+		for(Integer caseId : testCases.keySet()){
+			String casePath = testCases.get(caseId);
+			ConsoleLog.Print(casePath);
+			TestCaseSettingsData testCase = (TestCaseSettingsData)reader.readObject(casePath);
+			
+			if(testCase.getRun())
+				casesToRun.add(testCase);
+		}
+		
+	}
+	
+//	public void setTestCase(TestCaseSettingsData data){
+//		testCaseSettings = data;
+//		
+//		loopCount = data.getLoopNumber();
+//		name = data.getName();
+//		System.out.println("Ahoj ja jsem vlakno" + this.name);
+//		threadsNumber = data.getThreadsNumber(); 
+//	}
+	
+	public void initTestCase(TestCaseSettingsData settings){
+		executor = Executors.newFixedThreadPool(settings.getThreadsNumber());
 	}
 	
 	

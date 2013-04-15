@@ -303,7 +303,7 @@ public class ProjectNavigator extends JPanel {
 	 */
 	class TestListListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			getMainWindowInstance().setContent(MainWindow.TESTING_UNIT);
+			getMainWindowInstance().openTestList();
 			
 			ConsoleLog.Print("test list clicked");
 		}
@@ -316,19 +316,7 @@ public class ProjectNavigator extends JPanel {
 	 */
 	class EditListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			switch(panelType){
-				case TEST_UNIT:
-					getMainWindowInstance().setContent(MainWindow.TESTING_UNIT);
-					break;
-				case CASE_EDITOR_SETTINGS:	
-				case CASE_EDITOR_FAULT:
-				case CASE_EDITOR_HTTP:
-					getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
-					
-					break;
-				default:
-					break;
-			}
+			getMainWindowInstance().openTestCaseEditor();
 			ConsoleLog.Print("file edit clicked");
 		}
 	} 	

@@ -6,7 +6,13 @@ public class TestCaseSettingsData {
 	private int threadsNumber;
 	private int loopNumber;
 	private String name;
+	private String path;
 	
+
+	private boolean run;
+	
+
+
 	
 
 
@@ -19,9 +25,17 @@ public class TestCaseSettingsData {
 	
 	
 	public TestCaseSettingsData(){
-		 
+		 initAttributes();
 	 }
 
+	private void initAttributes(){
+		threadsNumber = 0;
+		loopNumber = 0;
+		proxyHost = "";
+		proxyPort = 0;
+		proxyTestedPort = 0;
+		run = false;
+	}
 	public String getName() {
 		return name;
 	}
@@ -80,8 +94,20 @@ public class TestCaseSettingsData {
 	}
 
 
-	
+	public boolean getRun() {
+		return run;
+	}
+
+	public void setRun(boolean run) {
+		this.run = run;
+	}
 	 
-	
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 	 
 }

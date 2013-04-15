@@ -16,6 +16,7 @@ public class TestUnitController {
 	
 	
 	
+	
 	public TestUnitController(){
 		
 		this.unitStorage = new HashMap<Integer,RemoteTestUnit>();
@@ -43,12 +44,30 @@ public class TestUnitController {
 	
 	}
 	
-	public void runTestOnUnit(){
+	public RemoteTestUnit getRemoteTestUnit(Integer key){
 		
+		return this.unitStorage.get(key);
+	}
+	
+	public LocalTestUnit getLocalTestUnit(){
+		return this.localUnit;
+	}
+	
+	
+	
+	public void runTestOnUnit(String path, int unitId){
+		if(unitId == 0){
+			localUnit.setTestList(path);
+			localUnit.runTestList();
+		}else{
+			
+		}
 	}
 	
 	public void runTestOnAllUnits(){
 		
 	}
+	
+	
 		
 }

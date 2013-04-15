@@ -56,7 +56,7 @@ public class Main extends Options{
 	public static void main(String[] args) {
 	
 		Main main = new Main();
-		ConsoleLog.setConsoleLog(false);
+		ConsoleLog.setConsoleLog(true);
 		
 		main.parseOptions(args);
 		

@@ -404,21 +404,13 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void setContent(int component) {
-		int panelType = this.navigator.getPanelType();
+		
 		this.centerPane.remove(this.centerComponent);//this.panelPane = this.centerComponent);
 		
 		switch(component){
 			case TESTCASE_EDITOR:
-				this.centerComponent = this.editor;
 				setToolBox(MainWindow.TESTCASE_TOOLBOX);
-				if (panelType == ProjectNavigator.CASE_EDITOR_SETTINGS){
-					this.editor.setTab(TestCaseEditor.SETTINGS_TAB);
-				}else if(panelType == ProjectNavigator.CASE_EDITOR_HTTP){
-					this.editor.setTab(TestCaseEditor.HTTP_TAB);
-				}else if(panelType == ProjectNavigator.CASE_EDITOR_FAULT){
-					this.editor.setTab(TestCaseEditor.FAULT_TAB);
-				}
-			
+				this.centerComponent = this.editor;
 				break;
 			case PROXY_MONITOR: 
 				setToolBox(MainWindow.PROXYMON_TOOLBOX);
@@ -433,8 +425,6 @@ public class MainWindow extends JFrame{
 			case TESTING_UNIT: 
 				setToolBox(MainWindow.TESTUNIT_TOOLBOX);
 				this.centerComponent = this.testUnitPanel;
-				this.testUnitPanel.openTestList(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
-				
 				break;	
 			default:
 				ConsoleLog.Print("MainWindow.setContent() - something is wrong in switch statement");
@@ -451,6 +441,24 @@ public class MainWindow extends JFrame{
 		this.pack();
 	}
 
+	public void openTestList(){
+		this.testUnitPanel.openTestList(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
+		
+		setContent(MainWindow.TESTING_UNIT);
+	}
+	
+	public void openTestCaseEditor(){
+		int panelType = this.navigator.getPanelType();
+		
+		if (panelType == ProjectNavigator.CASE_EDITOR_SETTINGS){
+			this.editor.setTab(TestCaseEditor.SETTINGS_TAB);
+		}else if(panelType == ProjectNavigator.CASE_EDITOR_HTTP){
+			this.editor.setTab(TestCaseEditor.HTTP_TAB);
+		}else if(panelType == ProjectNavigator.CASE_EDITOR_FAULT){
+			this.editor.setTab(TestCaseEditor.FAULT_TAB);
+		}
+		setContent(MainWindow.TESTCASE_EDITOR);
+	}
 	
 	/**
 	 * Metoda pro inicializaci komponenty tridy JEditorPane pro zobrazovani XML zprav.
@@ -497,6 +505,7 @@ public class MainWindow extends JFrame{
 	
 	private class RunUnitListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
+			testUnitPanel.runUnit(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
 			ConsoleLog.Print("Run Unit clicked");
 			
 		}
@@ -511,6 +520,8 @@ public class MainWindow extends JFrame{
 	
 	private class SaveTestListListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
+			testUnitPanel.saveTestList(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
+			
 			ConsoleLog.Print("Save Test Case clicked");
 			
 		}

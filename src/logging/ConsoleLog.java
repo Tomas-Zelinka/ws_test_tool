@@ -18,4 +18,4 @@ public class ConsoleLog {
 	public static void Message(String str){
 		System.err.println("System message: "+str);
 	}
-}
+} 

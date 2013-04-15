@@ -46,7 +46,7 @@ public class MainWindow extends JFrame{
 	 */
 	private final int HEIGTH = 800;
 	
-	
+	 
 	/**
 	 * Width of the resizing frames
 	 */

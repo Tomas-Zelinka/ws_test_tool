@@ -43,24 +43,24 @@ public class LocalTestUnit implements TestingUnit {
 		 * zatim sekvencne
 		 */
 		for (int i =0; i  < casesToRun.size(); i++){
+			TestCaseSettingsData settings = casesToRun.get(i);
+			for (int j =0; j  < settings.getThreadsNumber(); j++){
 				
-				TestCaseSettingsData settings = casesToRun.get(i);
 				initTestCase(settings);
-				RequestWorker test = new RequestWorker(settings);
-				test.run();
-				//executor.execute(test);
+				RequestWorker test = new RequestWorker(settings,j);
+				executor.execute(test);
 		
 		
-		System.out.println("Ukoncuju Test case");
-		executor.shutdown();
-		
-		System.out.println("Cekam na vlakna");
-		
-		while(!executor.isTerminated()){
+			System.out.println("Ukoncuju Test case");
+			executor.shutdown();
 			
-		}
-		
-		System.out.println("Jdu na dalsi test case");
+			System.out.println("Cekam na vlakna");
+			
+			while(!executor.isTerminated()){ 
+				
+			}
+				}
+			System.out.println("Jdu na dalsi test case");
 		}
 		
 	}

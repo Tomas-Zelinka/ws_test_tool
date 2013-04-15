@@ -65,26 +65,30 @@ public class UnitPanel extends JPanel {
 		setupComponents();
 	}
 	
-	/**
+	 /**
 	 * 
 	 * @param path
 	 */
 	public void openTestList(String path){
+		
+		clearTable();
 		File testListFile= new File(path);
 		if(testListFile.exists()){
 			testListData =(TestList) ioProvider.readObject(path);
-			HashMap<Integer,String> testCases = testListData.getTestCases();
-					
-			if(!testCases.isEmpty()){
-				for(Integer testCaseId : testCases.keySet()){
-					putTestCaseToTable(testCaseId);
-				}
-			}
+//			HashMap<Integer,String> testCases = testListData.getTestCases();
+//					
+//			if(!testCases.isEmpty()){
+//				for(Integer testCaseId : testCases.keySet()){
+//					putTestCaseToTable(testCaseId);
+//				}
+//			}
 			
 			ConsoleLog.Print("Opened Test List: "+path);
 		}else{
 			ConsoleLog.Print("Test list not found: "+path);
 		}
+		
+		
 	}
 	
 	/**
@@ -105,9 +109,12 @@ public class UnitPanel extends JPanel {
 		String casePath = this.testListData.getTestCases().get(id);
 		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
 		
-		Object[] newRow = new Object[] {id,testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun())};
-		testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
-		
+		if(testCaseSettings == null){
+			ConsoleLog.Message("Test case file from list not found.");
+		}else{
+			Object[] newRow = new Object[] {id,testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun())};
+			testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
+		}
 	}
 	
 	
@@ -126,11 +133,19 @@ public class UnitPanel extends JPanel {
 	/**
 	 * 
 	 */
-	public void removeTestCase(){
+	public void removeSelectedTestCase(){
 		
 		int row = testCasesTable.getSelectedRow();
 		ConsoleLog.Print("row: "+row);
 		
+		if(row >= 0){
+			Integer id = (Integer)testCasesTableModel.getValueAt(row, 0);
+			this.testListData.removeTestCase(id);
+			testCasesTableModel.removeRow(row);
+		}
+	}
+	
+	public void removeTestCaseAt(int row){
 		if(row >= 0){
 			Integer id = (Integer)testCasesTableModel.getValueAt(row, 0);
 			this.testListData.removeTestCase(id);
@@ -158,6 +173,14 @@ public class UnitPanel extends JPanel {
 		this.testUnit = unit;
 	}
 	
+	private void clearTable(){
+		
+		ConsoleLog.Print(""+testCasesTableModel.getRowCount());
+		for(int i = 0; i < testCasesTableModel.getRowCount(); i++){
+			removeTestCaseAt(i);
+		}
+			
+	}
 	
 	/**
 	 * 

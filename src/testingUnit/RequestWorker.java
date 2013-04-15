@@ -24,10 +24,12 @@ public class RequestWorker implements Runnable{
 	private HttpMessage method;
 	private String responseBody;
 	private TestCaseSettingsData testCaseSettings;
+	private int threadId;
 	
 	
 	
-	public RequestWorker(TestCaseSettingsData data){
+	public RequestWorker(TestCaseSettingsData data, int id){
+		threadId = id;
 		testCaseSettings = data;
 		client = new DefaultHttpClient();
 	}
@@ -39,12 +41,12 @@ public class RequestWorker implements Runnable{
 		int resultCode = 0;
 		HttpGet clientMethod = new HttpGet("http://www.google.com/");
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
-		HttpHost proxy = new HttpHost("158.234.170.80", 3128);
-		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		//HttpHost proxy = new HttpHost("158.234.170.80", 3128);
+		//client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		
-		for(int i = 0; i < testCaseSettings.getLoopNumber(); i++){
+		for(int i = 0; i < testCaseSettings.getLoopNumber(); i++){ 
 			ConsoleLog.Print("Testcase run" + testCaseSettings.getName()+" "+ i);
-			
+			 
 			try{
 				clientResponseBody[i] = client.execute(clientMethod,responseHandler);
 				
@@ -61,7 +63,7 @@ public class RequestWorker implements Runnable{
 		for(int i = 0; i < clientResponseBody.length; i++){
 			
 			try{
-				File output = new File(testCaseSettings.getPath()+File.separator+testCaseSettings.getName()+"_"+ i+".txt");
+				File output = new File(testCaseSettings.getPath()+File.separator+testCaseSettings.getName()+"_"+threadId+"_"+ i+".txt");
 				System.out.println(output.getPath());
 				
 				if (!output.exists()) {

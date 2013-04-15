@@ -54,7 +54,7 @@ public class Main extends Options{
 	 * @param args - Array of program arguments
 	 */
 	public static void main(String[] args) {
-	
+		
 		Main main = new Main();
 		ConsoleLog.setConsoleLog(true);
 		
@@ -90,6 +90,7 @@ public class Main extends Options{
 	}
 	
 	private void initApplication(){
+		
 		proxyController = new ProxyController();
 		testUnitController = new TestUnitController();
 	}
@@ -100,7 +101,7 @@ public class Main extends Options{
 		
 		CommandLine line = null;
 		
-		try{
+		try{ 
 			
 			line = parser.parse(this.options,args);
 		}catch(ParseException e){

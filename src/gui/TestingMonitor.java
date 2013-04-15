@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.io.File;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -146,10 +147,13 @@ public class TestingMonitor extends JPanel {
 	 */
 	public void openTestList(String path){
 		
+		int panelIndex = tabbedPane.getSelectedIndex();
+		String title = tabbedPane.getTitleAt(panelIndex);
+		tabbedPane.setTitleAt(panelIndex, title+" - "+MainWindow.getSuitePath() );
 		getSelectedPanel().openTestList(path);
-	}
+	} 
 	
-	/**
+	/** 
 	 * 
 	 * @param path
 	 */
@@ -166,7 +170,7 @@ public class TestingMonitor extends JPanel {
 	 * 
 	 */
 	public void removeTestCase(){
-		getSelectedPanel().removeTestCase(); 
+		getSelectedPanel().removeSelectedTestCase(); 
 	}
 	
 	/**

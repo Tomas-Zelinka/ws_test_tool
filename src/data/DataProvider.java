@@ -146,7 +146,7 @@ public class DataProvider {
 		catch (FileNotFoundException ex) {
 			ConsoleLog.Print("File settings.xml not found");
 			ConsoleLog.Print(ex.getMessage());
-			System.exit(-1);
+			//System.exit(-1);
 		}
 		catch(Exception ex)	{
 			ex.printStackTrace();
@@ -172,7 +172,7 @@ public class DataProvider {
 		}
 		catch (FileNotFoundException ex) {
 			System.err.println(ex.getMessage());
-			System.exit(-1);
+			//System.exit(-1);
 		}
 		
 		return testList;

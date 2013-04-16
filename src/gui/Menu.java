@@ -36,7 +36,7 @@ public class Menu extends JMenuBar {
 	/**
 	 * 
 	 */
-	private JMenu project;
+	//private JMenu project;
 	
 	/**
 	 * 
@@ -46,12 +46,12 @@ public class Menu extends JMenuBar {
 	/**
 	 * 
 	 */
-	private JMenu proxy;
+	//private JMenu proxy;
 	
 	/**
 	 * 
 	 */
-	private JMenu remote;
+	//private JMenu remote;
 	
 	/**
 	 * 
@@ -137,31 +137,31 @@ public class Menu extends JMenuBar {
 	/**
 	 * 
 	 */
-	private void initProjectMenuItems(){
-		
-		addMenuItem(project,"Project Settings", new OpenListener());
-		addMenuItem(project,"Running Options", new ChangeRootListener());
-		addMenuItem(project,"Run Project", new ExitListener());
-		
-	}	
-	
+//	private void initProjectMenuItems(){
+//		
+//		addMenuItem(project,"Project Settings", new OpenListener());
+//		addMenuItem(project,"Running Options", new ChangeRootListener());
+//		addMenuItem(project,"Run Project", new ExitListener());
+//		
+//	}	
+//	
+//	/**
+//	 * 
+//	 */
+//	private void initProxyMenuItems(){ 
+//		
+//		addMenuItem(proxy,"Proxy Run", new ProxyRunListener());
+//		addMenuItem(proxy,"Proxy Monitor", new ProxyMonitorListener());
+//		addMenuItem(proxy,"Proxy Log", new ProxyLogListener());
+//		addMenuItem(proxy,"Proxy Settings", new ProxySettingsListener());
+//	}
+//	
 	/**
 	 * 
 	 */
-	private void initProxyMenuItems(){
-		
-		addMenuItem(proxy,"Proxy Run", new ProxyRunListener());
-		addMenuItem(proxy,"Proxy Monitor", new ProxyMonitorListener());
-		addMenuItem(proxy,"Proxy Log", new ProxyLogListener());
-		addMenuItem(proxy,"Proxy Settings", new ProxySettingsListener());
-	}
-	
-	/**
-	 * 
-	 */
-	private void initRemoteMenuItems(){
-		addMenuItem(remote,"Remote Control", new RemoteControlListener());
-	}
+//	private void initRemoteMenuItems(){
+//		addMenuItem(remote,"Remote Control", new RemoteControlListener());
+//	}
 
 	/**
 	 * 
@@ -441,7 +441,7 @@ public class Menu extends JMenuBar {
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
-	 */
+	 */ 
 	class ProxyRunListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 					

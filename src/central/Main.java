@@ -15,7 +15,7 @@ import org.apache.commons.cli.Options;
 import org.apache.http.ParseException;
 
 /**
- * Main class for starting the GUI
+ * Main class for starting the application
  * 
  * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
  *
@@ -24,32 +24,24 @@ public class Main extends Options{
 
 	
 	/**
-	 * 
+	 * Variable for serializing
 	 */
 	private static final long serialVersionUID = -6417256415716065905L;
-
-
 	private ProxyController proxyController;
-	
-
 	private TestUnitController testUnitController;
-	
-	
 	private Option help;
 	private Option gui;
 	private Options options;
 	private CommandLineParser parser;
 	
-	
-	
 	/**
-	 * Head component of the GUI
+	 * The main of the application
 	 */
-	
 	public Main(){
 		initOptions();
 		initApplication();
 	}
+	
 	/**
 	 * @param args - Array of program arguments
 	 */
@@ -57,9 +49,7 @@ public class Main extends Options{
 		
 		Main main = new Main();
 		ConsoleLog.setConsoleLog(true);
-		
 		main.parseOptions(args);
-		
 	}
 	
 	/**
@@ -75,7 +65,7 @@ public class Main extends Options{
 	}
 	
 	/**
-	 * 
+	 * Option initialization
 	 */
 	private void initOptions(){
 		
@@ -89,43 +79,45 @@ public class Main extends Options{
 		this.parser = new BasicParser();
 	}
 	
+	/**
+	 * Head controllers initialization
+	 */
 	private void initApplication(){
-		
 		proxyController = new ProxyController();
 		testUnitController = new TestUnitController();
 	}
 	
 	
-	
+	/**
+	 * Function for parsing command line arguments
+	 * 
+	 * @param args
+	 */
 	public void parseOptions(String[] args){
 		
 		CommandLine line = null;
 		
 		try{ 
-			
 			line = parser.parse(this.options,args);
 		}catch(ParseException e){
-		
 			ConsoleLog.Print( "Parsing failed.  Reason: " + e.getMessage());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
 		if(line.hasOption( "h" ) ){
-			
 			ConsoleLog.Print("Napoveda");
 		}
-		
 		
 		if(line.hasOption("g")){
 			System.out.println("gui");
 			try{
-			SwingUtilities.invokeAndWait(new Runnable() {
-				  public void run() {
-					  MainWindow  gui = new MainWindow(getProxyController(),getTestUnitController());
-					  gui.setVisible(true);
-			    }
-			  });
+				SwingUtilities.invokeAndWait(new Runnable() {
+					public void run() {
+						MainWindow  gui = new MainWindow(getProxyController(),getTestUnitController());
+						gui.setVisible(true);
+					}
+				});
 			}catch (Exception e){
 				e.printStackTrace();
 			}
@@ -134,18 +126,32 @@ public class Main extends Options{
 	}
 
 	
-	
+	/**
+	 * @return ProxyController
+	 */
 	public ProxyController getProxyController() {
 		return proxyController;
 	}
+	/**
+	 * 
+	 * @param proxyController
+	 */
 	public void setProxyController(ProxyController proxyController) {
 		this.proxyController = proxyController;
 	}
 
-	
+	/**
+	 * 
+	 * @return TestUnitController
+	 */
 	public TestUnitController getTestUnitController() {
 		return testUnitController;
 	}
+	
+	/**
+	 * 
+	 * @param testUnitController
+	 */
 	public void setTestUnitController(TestUnitController testUnitController) {
 		this.testUnitController = testUnitController;
 	}

@@ -8,8 +8,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import logging.ConsoleLog;
-import testingUnit.LocalTestUnit;
-import testingUnit.RemoteTestUnit;
 import central.TestUnitController;
 
 /**
@@ -79,7 +77,7 @@ public class TestingMonitor extends JPanel  {
 	public void addLocalUnit(){
 		
 		UnitPanel panel = new UnitPanel(unitCounter);
-		panel.setTestUnit(getLocalTestUnit());
+		//panel.setTestUnit(getLocalTestUnit());
 		tabbedPane.addTab("Local Unit",panel);
 		unitCounter++;
 	}
@@ -98,7 +96,7 @@ public class TestingMonitor extends JPanel  {
 		tabbedPane.setSelectedIndex(selectedPanel);
 		
 		controller.addRemoteUnit(unitCounter);
-		panel.setTestUnit(getRemoteTestUnit(unitCounter));
+		//panel.setTestUnit(getRemoteTestUnit(unitCounter));
 		
 		unitCounter++;
 	}
@@ -193,14 +191,14 @@ public class TestingMonitor extends JPanel  {
 	}
 
 	
-	private LocalTestUnit getLocalTestUnit(){
-		return controller.getLocalTestUnit();
-	}
-	
-	private RemoteTestUnit getRemoteTestUnit(Integer id){
-		return controller.getRemoteTestUnit(id);
-	}
-	
+//	private LocalTestUnit getLocalTestUnit(){
+//		return controller.getLocalTestUnit();
+//	}
+//	
+//	private RemoteTestUnit getRemoteTestUnit(Integer id){
+//		return controller.getRemoteTestUnit(id);
+//	}
+//	
 	public void runUnit(String testListPath){
 		controller.runTestOnUnit(testListPath,getUnitKey());
 		ConsoleLog.Print("executed");

@@ -56,9 +56,12 @@ public class LocalTestUnit  implements TestingUnit  {
 		
 		finalOutputs = new String [casesToRun.size()][];
 		for (int i =0; i  < casesToRun.size(); i++){
-			Set<Future<String[]>> outputs = new HashSet<Future<String[]>>();
+			
 			TestCaseSettingsData settings = casesToRun.get(i);
+			Set<Future<String[]>> outputs = new HashSet<Future<String[]>>();
 			int threadsNumber = settings.getThreadsNumber();
+			String[] responses = new String[threadsNumber]; 
+			ConsoleLog.Print("bude se provadet: "+threadsNumber+" vlaken");
 			for (int j =0; j  <  threadsNumber; j++){
 				
 				initTestCase(settings);
@@ -71,27 +74,27 @@ public class LocalTestUnit  implements TestingUnit  {
 				
 				System.out.println("Cekam na vlakna");
 				
-				while(!executor.isTerminated()){ 
+				//while(!executor.isTerminated()){ 
 					
-				}
-			}
-			
-			String[] responses = new String[threadsNumber]; 
-			
-			for (Future<String[]> output : outputs){
-				try {
-					responses = output.get();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+				//}
 				
+				
+				
+				for (Future<String[]> output : outputs){
+					try {
+						responses = output.get();
+						//unitPanel.insertResponse(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}
 			finalOutputs[i]= responses;
-			
 			System.out.println("Jdu na dalsi test case");
 		}
 		

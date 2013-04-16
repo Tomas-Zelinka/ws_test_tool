@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.util.HashMap;
 
-import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,7 +13,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import logging.ConsoleLog;
-import testingUnit.TestingUnit;
 import data.DataProvider;
 import data.TestCaseSettingsData;
 import data.TestList;
@@ -26,10 +24,6 @@ public class UnitPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = -5352882010763584802L;
-	
-	private static final String settingsPath = "";
-	private static final String HttpPath = "";
-	
 	
 	private JTable testCasesTable;
 	private JTable responsesTable;
@@ -52,15 +46,10 @@ public class UnitPanel extends JPanel {
 	private JLabel 		requestLabel;
 	private JEditorPane requestEditorPane;
 	private JEditorPane responseEditorPane;
-	
-	private TestingUnit testUnit;
 	private DataProvider ioProvider;
-	
 	private TestList testListData;
-	private int unitType;
-	
+		
 	public UnitPanel (int type){
-		this.unitType = type;
 		initComponents();
 		setupComponents();
 	}
@@ -71,7 +60,7 @@ public class UnitPanel extends JPanel {
 	 */
 	public void openTestList(String path){
 		
-		clearTable();
+		clearTestCasesTable();
 		File testListFile= new File(path);
 		if(testListFile.exists()){
 			testListData =(TestList) ioProvider.readObject(path);
@@ -87,8 +76,6 @@ public class UnitPanel extends JPanel {
 		}else{
 			ConsoleLog.Print("Test list not found: "+path);
 		}
-		
-		
 	}
 	
 	/**
@@ -169,11 +156,9 @@ public class UnitPanel extends JPanel {
 	}
 	
 	
-	public void setTestUnit(TestingUnit unit){
-		this.testUnit = unit;
-	}
 	
-	private void clearTable(){
+	
+	private void clearTestCasesTable(){
 		
 		ConsoleLog.Print(""+testCasesTableModel.getRowCount());
 		for(int i = 0; i < testCasesTableModel.getRowCount(); i++){
@@ -181,7 +166,26 @@ public class UnitPanel extends JPanel {
 		}
 			
 	}
-	//public void cle
+	
+	public void clearResponsesTable(){
+		for(int i = 0; i < responsesTableModel.getRowCount(); i++){
+			removeResponseAt(i);
+		}
+	}
+	
+	public void removeResponseAt(int row){
+		if(row >= 0){
+			//Integer id = (Integer)responsesTableModel.getValueAt(row, 0);
+			//this.testListData.removeTestCase(id);
+			responsesTableModel.removeRow(row);
+		}
+	}
+	
+	public void insertResponse(int id ){
+		Object[] newRow = new Object[] {id};
+		testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
+	
+	}
 	
 	/**
 	 * 

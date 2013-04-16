@@ -75,13 +75,13 @@ public class UnitPanel extends JPanel {
 		File testListFile= new File(path);
 		if(testListFile.exists()){
 			testListData =(TestList) ioProvider.readObject(path);
-//			HashMap<Integer,String> testCases = testListData.getTestCases();
-//					
-//			if(!testCases.isEmpty()){
-//				for(Integer testCaseId : testCases.keySet()){
-//					putTestCaseToTable(testCaseId);
-//				}
-//			}
+			HashMap<Integer,String> testCases = testListData.getTestCases();
+					
+			if(!testCases.isEmpty()){
+				for(Integer testCaseId : testCases.keySet()){
+					putTestCaseToTable(testCaseId);
+				}
+			}
 			
 			ConsoleLog.Print("Opened Test List: "+path);
 		}else{
@@ -181,6 +181,7 @@ public class UnitPanel extends JPanel {
 		}
 			
 	}
+	//public void cle
 	
 	/**
 	 * 

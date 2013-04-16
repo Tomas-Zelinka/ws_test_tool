@@ -4,7 +4,7 @@ import data.TestList;
 
 public interface TestingUnit {
 	
-	public void runTestList();
+	public void run();
 		
 	public TestList getTestList(); 
 

@@ -13,7 +13,7 @@ public class RemoteTestUnit implements TestingUnit {
 	}
 	
 	
-	public void runTestList(){
+	public void run(){
 		
 	}
 	

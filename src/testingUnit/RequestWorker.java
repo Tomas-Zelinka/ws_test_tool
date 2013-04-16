@@ -2,8 +2,7 @@ package testingUnit;
 
 import java.io.File;
 import java.io.FileOutputStream;
-
-import logging.ConsoleLog;
+import java.util.concurrent.Callable;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpMessage;
@@ -17,7 +16,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import data.HttpRequestData;
 import data.TestCaseSettingsData;
 
-public class RequestWorker implements Runnable{
+public class RequestWorker implements Callable<String[]>{
 	
 	private DefaultHttpClient client;
 	private HttpRequestData data;
@@ -36,48 +35,49 @@ public class RequestWorker implements Runnable{
 	
 	
 	
-	public void run(){
+	public String[] call(){
 		String[] clientResponseBody = new String[testCaseSettings.getLoopNumber()];
 		int resultCode = 0;
 		HttpGet clientMethod = new HttpGet("http://www.google.com/");
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
-		//HttpHost proxy = new HttpHost("158.234.170.80", 3128);
-		//client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		HttpHost proxy = new HttpHost("158.234.170.80", 3128);
+		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		
 		for(int i = 0; i < testCaseSettings.getLoopNumber(); i++){ 
-			ConsoleLog.Print("Testcase run" + testCaseSettings.getName()+" "+ i);
+			//ConsoleLog.Print("Testcase run" + testCaseSettings.getName()+" "+ i);
 			 
 			try{
 				clientResponseBody[i] = client.execute(clientMethod,responseHandler);
 				
 			}catch(Exception ex){
 				ex.printStackTrace();
-				return;
+				
 			}finally{
 				clientMethod.releaseConnection();
 			}
 			
 		}
 		
-		
-		for(int i = 0; i < clientResponseBody.length; i++){
-			
-			try{
-				File output = new File(testCaseSettings.getPath()+File.separator+testCaseSettings.getName()+"_"+threadId+"_"+ i+".txt");
-				System.out.println(output.getPath());
-				
-				if (!output.exists()) {
-					output.createNewFile();
-				}
-				
-				byte[] contentInBytes = clientResponseBody[i].getBytes();
-				
-				FileOutputStream writer = new FileOutputStream(output);
-				writer.write(contentInBytes);
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
-		}
+		Thread.yield();
+		return clientResponseBody;
+//		for(int i = 0; i < clientResponseBody.length; i++){
+//			
+//			try{
+//				File output = new File(testCaseSettings.getPath()+File.separator+testCaseSettings.getName()+"_"+threadId+"_"+ i+".txt");
+//				System.out.println(output.getPath());
+//				
+//				if (!output.exists()) {
+//					output.createNewFile();
+//				}
+//				
+//				byte[] contentInBytes = clientResponseBody[i].getBytes();
+//				
+//				FileOutputStream writer = new FileOutputStream(output);
+//				writer.write(contentInBytes);
+//			}catch(Exception ex){
+//				ex.printStackTrace();
+//			}
+//		}
 		
 	}
 	

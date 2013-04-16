@@ -3,6 +3,9 @@ package central;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.SwingWorker;
+
+import logging.ConsoleLog;
 import testingUnit.LocalTestUnit;
 import testingUnit.RemoteTestUnit;
 
@@ -16,7 +19,6 @@ public class TestUnitController {
 	
 	
 	public TestUnitController(){
-		
 		this.unitStorage = new HashMap<Integer,RemoteTestUnit>();
 	}
 	
@@ -47,18 +49,34 @@ public class TestUnitController {
 	
 	
 	public void runTestOnUnit(String path, int unitId){
-		if(unitId == 0){
-			localUnit.setTestList(path);
-			localUnit.runTestList();
-		}else{
-			
-		}
+		BackgroundWorker worker = new BackgroundWorker(path,unitId);
+		worker.execute();
 	}
 	
 	public void runTestOnAllUnits(){
 		
 	}
 	
-	
+	private class BackgroundWorker extends SwingWorker<String,Void>{
+		
+		private String path;
+		private int id;
+		
+		
+		BackgroundWorker(String path, int unitId){
+			this.path = path;
+			this.id = unitId;
+		}
+		
+		public String doInBackground(){
+			if(id == 0){
+				localUnit.setTestList(path);
+				localUnit.run();
+			}else{
+				
+			}
+			return "";
+		}
+	}
 		
 }

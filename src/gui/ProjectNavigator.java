@@ -177,7 +177,7 @@ public class ProjectNavigator extends JPanel {
 	private void initPopupMenu(){
 		treeMenu = new JPopupMenu();
 		addMenuItem(treeMenu,"Open Test List", new TestListListener());
-		addMenuItem(treeMenu,"Edit", new EditListener());
+		addMenuItem(treeMenu,"Open TestCase", new OpenTestCaseistener());
 		addMenuItem(treeMenu,"Delete", new DeleteListener());
 		addMenuItem(treeMenu,"New Test Suite", new TestSuiteListener());
 		addMenuItem(treeMenu,"New Test Case", new TestCaseListener());
@@ -314,7 +314,7 @@ public class ProjectNavigator extends JPanel {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class EditListener implements ActionListener{
+	class OpenTestCaseistener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			getMainWindowInstance().openTestCaseEditor();
 			ConsoleLog.Print("file edit clicked");

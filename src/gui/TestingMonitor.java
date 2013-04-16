@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.io.File;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -13,7 +12,13 @@ import testingUnit.LocalTestUnit;
 import testingUnit.RemoteTestUnit;
 import central.TestUnitController;
 
-public class TestingMonitor extends JPanel {
+/**
+ *  Testing monitor is swing kontejner holding all testing unit
+ *  
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
+public class TestingMonitor extends JPanel  {
 
 	/**
 	 * 
@@ -80,7 +85,8 @@ public class TestingMonitor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * This method inserts remote unit tab to the tabbed pane
+	 * and initialize new remote unit in unit controller
 	 */
 	public void addRemoteUnit(){
 		
@@ -117,7 +123,8 @@ public class TestingMonitor extends JPanel {
 	
 	/**
 	 * 
-	 * @return
+	 * @return int - return unit key, the key is used in tab titles
+	 * 				 and like an id for testing units
 	 */
 	private int getUnitKey(){
 		
@@ -133,7 +140,7 @@ public class TestingMonitor extends JPanel {
 	
 	/**
 	 * 
-	 * @return
+	 * @return JPanel - returns the selected unit panel
 	 */
 	private UnitPanel getSelectedPanel(){
 		UnitPanel selectedPanel = (UnitPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
@@ -143,13 +150,18 @@ public class TestingMonitor extends JPanel {
 	
 	/**
 	 * 
-	 * @param path
+	 * @param String - calls the openTestList method in unit panel
 	 */
 	public void openTestList(String path){
 		
 		int panelIndex = tabbedPane.getSelectedIndex();
-		String title = tabbedPane.getTitleAt(panelIndex);
-		tabbedPane.setTitleAt(panelIndex, title+" - "+MainWindow.getSuitePath() );
+		
+		if(panelIndex == 0){
+			tabbedPane.setTitleAt(panelIndex,"Local Unit "+" - "+MainWindow.getSuitePath() );
+		}else{
+			tabbedPane.setTitleAt(panelIndex,"Remote Unit "+ getUnitKey() +" - "+MainWindow.getSuitePath() );
+			
+		}
 		getSelectedPanel().openTestList(path);
 	} 
 	
@@ -191,5 +203,7 @@ public class TestingMonitor extends JPanel {
 	
 	public void runUnit(String testListPath){
 		controller.runTestOnUnit(testListPath,getUnitKey());
+		ConsoleLog.Print("executed");
+		 
 	}
 }

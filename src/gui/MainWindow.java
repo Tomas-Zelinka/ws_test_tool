@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.text.PlainDocument;
 
 import logging.ConsoleLog;
@@ -505,7 +506,13 @@ public class MainWindow extends JFrame{
 	
 	private class RunUnitListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
+			
+			//final String path = testListPath;
 			testUnitPanel.runUnit(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
+			
+			
+			
+			//testUnitPanel.runUnit(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
 			ConsoleLog.Print("Run Unit clicked");
 			
 		}

@@ -1,9 +1,17 @@
 package testingUnit;
 
+import gui.UnitPanel;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import javax.swing.JPanel;
 
 import logging.ConsoleLog;
 
@@ -13,7 +21,7 @@ import data.DataProvider;
 import data.TestCaseSettingsData;
 import data.TestList;
 
-public class LocalTestUnit implements TestingUnit {
+public class LocalTestUnit  implements TestingUnit  {
 
 	
 	private ExecutorService executor;
@@ -27,42 +35,70 @@ public class LocalTestUnit implements TestingUnit {
 	
 	private ArrayList<TestCaseSettingsData> casesToRun;
 	
+	private String[][] finalOutputs;
 	
+	private UnitPanel unitPanel;
 	
-
 	public LocalTestUnit(){
-	
+		unitPanel = null;
 		reader = new DataProvider();
 		
 	}
 	
-	public void runTestList(){
+	public void run(){
 		
 		/**
 		 * toto bude predmet testovani, jestli pro jeden testcase vice vlaken nebo sekvencne
 		 * zatim sekvencne
 		 */
+		ConsoleLog.Print("runned");
+		
+		
+		finalOutputs = new String [casesToRun.size()][];
 		for (int i =0; i  < casesToRun.size(); i++){
+			Set<Future<String[]>> outputs = new HashSet<Future<String[]>>();
 			TestCaseSettingsData settings = casesToRun.get(i);
-			for (int j =0; j  < settings.getThreadsNumber(); j++){
+			int threadsNumber = settings.getThreadsNumber();
+			for (int j =0; j  <  threadsNumber; j++){
 				
 				initTestCase(settings);
 				RequestWorker test = new RequestWorker(settings,j);
-				executor.execute(test);
+				Future<String[]> workerOutput = executor.submit(test);
+				outputs.add(workerOutput);
 		
-		
-			System.out.println("Ukoncuju Test case");
-			executor.shutdown();
-			
-			System.out.println("Cekam na vlakna");
-			
-			while(!executor.isTerminated()){ 
+				System.out.println("Ukoncuju Test case");
+				executor.shutdown();
 				
-			}
+				System.out.println("Cekam na vlakna");
+				
+				while(!executor.isTerminated()){ 
+					
 				}
+			}
+			
+			String[] responses = new String[threadsNumber]; 
+			
+			for (Future<String[]> output : outputs){
+				try {
+					responses = output.get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+				
+			finalOutputs[i]= responses;
+			
 			System.out.println("Jdu na dalsi test case");
 		}
 		
+	}
+	
+	public String[][] getResponses(){
+		return this.finalOutputs;
 	}
 	
 	private int getThreadsNumber(){
@@ -78,7 +114,7 @@ public class LocalTestUnit implements TestingUnit {
 	public static void main(String[] args){
 		
 		LocalTestUnit unit = new LocalTestUnit();
-		unit.runTestList();
+		unit.run();
 	}
 	
 	public TestList getTestList() {
@@ -114,5 +150,7 @@ public class LocalTestUnit implements TestingUnit {
 		executor = Executors.newFixedThreadPool(settings.getThreadsNumber());
 	}
 	
-	
+	public void setUnitPanel(UnitPanel panel){
+		unitPanel = panel;
+	}
 }

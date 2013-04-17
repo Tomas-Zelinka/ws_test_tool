@@ -13,11 +13,13 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import logging.ConsoleLog;
+import proxyUnit.HttpInteraction;
+import testingUnit.NewResponseListener;
 import data.DataProvider;
 import data.TestCaseSettingsData;
 import data.TestList;
 
-public class UnitPanel extends JPanel {
+public class UnitPanel extends JPanel implements NewResponseListener {
 
 	
 	/**
@@ -78,6 +80,10 @@ public class UnitPanel extends JPanel {
 		}
 	}
 	
+	@Override
+	public void onNewResponseEvent(String message) {
+		requestEditorPane.setText(message);
+	}
 	/**
 	 * 
 	 * @param path

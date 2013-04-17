@@ -56,7 +56,8 @@ public class TestCaseSettings extends JPanel {
 		proxyFields = new JPanel(new GridLayout(4, 1));
 		httpLabels = new JPanel(new GridLayout(3, 1));
 		httpFields = new JPanel(new GridLayout(3, 1));
-		
+		httpLabels.setBorder(BorderFactory.createBevelBorder(1));;
+		httpFields.setBorder(BorderFactory.createBevelBorder(1));
 		proxyHostField = new JTextField(20);
 		proxyHostLabel = new JLabel("Hostname");
 		
@@ -81,7 +82,8 @@ public class TestCaseSettings extends JPanel {
 	private void setupComponents(){
 		
 		this.setLayout(new BorderLayout());
-				
+		httpRequestSettings.setLayout(new BorderLayout());
+		
 		httpRequestSettings.setBorder(BorderFactory.createTitledBorder("Testing Unit Settings"));
 		proxySettings.setBorder(BorderFactory.createTitledBorder("Proxy Unit Settings"));
 		
@@ -99,8 +101,8 @@ public class TestCaseSettings extends JPanel {
 		proxyFields.add(proxyPortField);
 		proxyFields.add(proxyTestedPortField);
 		
-		httpRequestSettings.add(httpLabels);
-		httpRequestSettings.add(httpFields);
+		httpRequestSettings.add(httpLabels,BorderLayout.LINE_START);
+		httpRequestSettings.add(httpFields,BorderLayout.CENTER);
 		
 		proxySettings.add(proxyLabels);
 		proxySettings.add(proxyFields);

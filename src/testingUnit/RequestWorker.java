@@ -40,8 +40,8 @@ public class RequestWorker implements Callable<String[]>{
 		int resultCode = 0;
 		HttpGet clientMethod = new HttpGet("http://www.google.com/");
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
-		HttpHost proxy = new HttpHost("158.234.170.80", 3128);
-		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		//HttpHost proxy = new HttpHost("158.234.170.80", 3128);
+		//client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		
 		for(int i = 0; i < testCaseSettings.getLoopNumber(); i++){ 
 			//ConsoleLog.Print("Testcase run" + testCaseSettings.getName()+" "+ i);

@@ -62,6 +62,7 @@ public class TestingMonitor extends JPanel  {
 	private void setupComponents(){
 		addLocalUnit();
 		controller.addLocalUnit();
+		
 	}
 	
 	/**
@@ -79,6 +80,7 @@ public class TestingMonitor extends JPanel  {
 		UnitPanel panel = new UnitPanel(unitCounter);
 		//panel.setTestUnit(getLocalTestUnit());
 		tabbedPane.addTab("Local Unit",panel);
+		controller.addResponseListener(panel);
 		unitCounter++;
 	}
 	

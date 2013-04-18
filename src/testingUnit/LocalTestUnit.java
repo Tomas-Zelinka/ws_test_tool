@@ -17,6 +17,8 @@ import logging.ConsoleLog;
 
 import org.apache.http.client.HttpClient;
 
+import central.TestUnitController;
+
 import data.DataProvider;
 import data.TestCaseSettingsData;
 import data.TestList;
@@ -38,10 +40,12 @@ public class LocalTestUnit  implements TestingUnit  {
 	private String[][] finalOutputs;
 	
 	private UnitPanel unitPanel;
+	private TestUnitController controller;
 	
-	public LocalTestUnit(){
+	public LocalTestUnit(TestUnitController unitController){
 		unitPanel = null;
 		reader = new DataProvider();
+		this.controller = unitController;
 		
 	}
 	
@@ -74,25 +78,29 @@ public class LocalTestUnit  implements TestingUnit  {
 				
 				System.out.println("Cekam na vlakna");
 				
-				//while(!executor.isTerminated()){ 
-					
-				//}
 				
 				
+			}
+			//while(!executor.isTerminated()){ 
 				
-				for (Future<String[]> output : outputs){
-					try {
-						responses = output.get();
-						//unitPanel.insertResponse(1);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (ExecutionException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			//}
+			
+			
+			
+			for (Future<String[]> output : outputs){
+				try {
+					System.out.println("Cekam na response");
+					responses = output.get();
+					System.out.println("Cekam na panel");
+					controller.publishNewMessageEvent(responses[0]);
+					System.out.println("nevim");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				
 			}
 			finalOutputs[i]= responses;
 			System.out.println("Jdu na dalsi test case");
@@ -104,21 +112,7 @@ public class LocalTestUnit  implements TestingUnit  {
 		return this.finalOutputs;
 	}
 	
-	private int getThreadsNumber(){
-		return this.threadsNumber;
-	}
-	
-	
-	private void setThreadsNumber(int number){
-		this.threadsNumber = number;
-	}
-	
-	
-	public static void main(String[] args){
-		
-		LocalTestUnit unit = new LocalTestUnit();
-		unit.run();
-	}
+
 	
 	public TestList getTestList() {
 		return testList;

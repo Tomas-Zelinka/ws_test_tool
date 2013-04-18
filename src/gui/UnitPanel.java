@@ -13,11 +13,13 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import logging.ConsoleLog;
+import proxyUnit.HttpInteraction;
+import testingUnit.NewResponseListener;
 import data.DataProvider;
 import data.TestCaseSettingsData;
 import data.TestList;
 
-public class UnitPanel extends JPanel {
+public class UnitPanel extends JPanel implements NewResponseListener {
 
 	
 	/**
@@ -78,6 +80,10 @@ public class UnitPanel extends JPanel {
 		}
 	}
 	
+	@Override
+	public void onNewResponseEvent(String message) {
+		requestEditorPane.setText(message);
+	}
 	/**
 	 * 
 	 * @param path
@@ -104,7 +110,10 @@ public class UnitPanel extends JPanel {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * @param casePath
+	 */
 	public void insertTestCaseToTable(String casePath)
 	{
 		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
@@ -117,6 +126,7 @@ public class UnitPanel extends JPanel {
 			testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
 		}
 	}
+	
 	/**
 	 * 
 	 */
@@ -132,6 +142,10 @@ public class UnitPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param row
+	 */
 	public void removeTestCaseAt(int row){
 		if(row >= 0){
 			Integer id = (Integer)testCasesTableModel.getValueAt(row, 0);
@@ -139,6 +153,37 @@ public class UnitPanel extends JPanel {
 			testCasesTableModel.removeRow(row);
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	public void clearResponsesTable(){
+		for(int i = 0; i < responsesTableModel.getRowCount(); i++){
+			removeResponseAt(i);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param row
+	 */
+	public void removeResponseAt(int row){
+		if(row >= 0){
+			//Integer id = (Integer)responsesTableModel.getValueAt(row, 0);
+			//this.testListData.removeTestCase(id);
+			responsesTableModel.removeRow(row);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 */
+	public void insertResponse(int id ){
+		Object[] newRow = new Object[] {id};
+		testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
+	}
+	
 	/**
 	 * 
 	 */
@@ -155,38 +200,16 @@ public class UnitPanel extends JPanel {
 		return false;
 	}
 	
-	
-	
-	
+	/**
+	 * 
+	 */
 	private void clearTestCasesTable(){
 		
 		ConsoleLog.Print(""+testCasesTableModel.getRowCount());
 		for(int i = 0; i < testCasesTableModel.getRowCount(); i++){
 			removeTestCaseAt(i);
 		}
-			
 	}
-	
-	public void clearResponsesTable(){
-		for(int i = 0; i < responsesTableModel.getRowCount(); i++){
-			removeResponseAt(i);
-		}
-	}
-	
-	public void removeResponseAt(int row){
-		if(row >= 0){
-			//Integer id = (Integer)responsesTableModel.getValueAt(row, 0);
-			//this.testListData.removeTestCase(id);
-			responsesTableModel.removeRow(row);
-		}
-	}
-	
-	public void insertResponse(int id ){
-		Object[] newRow = new Object[] {id};
-		testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
-	
-	}
-	
 	/**
 	 * 
 	 */

@@ -22,9 +22,11 @@ import data.TestStatement;
  */
 public class TestTreeCellRenderer extends DefaultTreeCellRenderer {
 
-	
-	
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5970097674771307495L;
+
 	/**
 	 * Metoda predefinovava puvodni metodu tridy DefaultTreeCellRenderer pro vykresleni jednotlivych uzlu
 	 * JTree komponenty.

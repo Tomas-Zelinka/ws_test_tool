@@ -29,19 +29,26 @@ import proxyUnit.Settings;
 public class DataProvider {
 	
 	private XStream stream;
-	
 	private static final String resourcePath = ".."+File.separator+"resources" + File.separator;
+	
 	public DataProvider(){
 		
 		stream = new XStream();
 	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public static String getResourcePath(){
 		return DataProvider.resourcePath;
 	}
 	
-	
+	/**
+	 * 
+	 * @param path
+	 * @param obj
+	 */
 	public void writeObject(String path, Object obj){
 		try{
 			PrintWriter writer = new PrintWriter(new FileWriter(path));
@@ -52,7 +59,11 @@ public class DataProvider {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * @param path
+	 * @return
+	 */
 	public Object readObject(String path){
 		
 		Object obj = null;

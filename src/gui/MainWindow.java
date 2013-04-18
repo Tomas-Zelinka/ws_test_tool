@@ -85,13 +85,6 @@ public class MainWindow extends JFrame{
 	 */
 	private JSplitPane centerPane;
 	
-	
-	
-	/**
-	 * Splitpane containing main components of the GUI
-	 */
-	private Component panelPane;
-	
 	/**
 	 * 
 	 */
@@ -110,15 +103,10 @@ public class MainWindow extends JFrame{
 	
 	
 	protected TestCaseEditor editor;
-	
 	private Statistics statsPanel;
-	
-	private RemoteControl remoteControlPanel;
-	
+	//private RemoteControl remoteControlPanel;
 	private ProxyMonitor proxyPanel;
-	
 	private  TestingMonitor testUnitPanel;
-	
 	private ProjectNavigator navigator;
 	
 	private Component toolBox;
@@ -146,149 +134,8 @@ public class MainWindow extends JFrame{
 	public static final int TESTUNIT_TOOLBOX = 5;
 	public static final int TESTCASE_TOOLBOX = 6;
 	public static final int PROXYMON_TOOLBOX = 7;
-	/**
-	 * 
-	 */
-	private void initMainWindow(ProxyController proxyController, TestUnitController testUnitController)
-	{
-		this.setTitle(this.APP_NAME);
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		 
-		// Determine the new location of the window
-		int x = (dim.width-(this.WIDTH))/2;
-		int y = (dim.height-(this.HEIGTH))/2;
-		 
-		//this.setLayout(new BorderLayout());
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setBounds(x, y, this.WIDTH, this.HEIGTH);
-		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
-		this.setLayout(new BorderLayout());
-		this.setBackground(Color.gray);
-		initToolBox();
-		initMenuBar();
-		initContentPane(proxyController, testUnitController);
-		initCenterPane();
-		initBottomPane();
-		getContentPane().add(this.bottomPane,BorderLayout.CENTER);
-		
-		
-	}
-		
-	/**
-	 * 
-	 * 
-	 */
-	private void initMenuBar(){
-		this.setJMenuBar(new Menu());
-		
-	}
-	
-	/**
-	 * 
-	 */
-	private void initContentPane(ProxyController proxyController, TestUnitController testUnitController){
-		
-	
-		this.editor = new TestCaseEditor();
-		this.proxyPanel = new ProxyMonitor(proxyController);
-		this.remoteControlPanel = new RemoteControl();
-		this.statsPanel = new Statistics();
-		this.testUnitPanel = new TestingMonitor(testUnitController);
-		this.centerComponent = new JPanel();
-		
-		
-		//this.panelPane = (JPanel)this.centerComponent;
-		
-		
-	}
-	
-	/**
-	 * 
-	 */
-	private void initCenterPane(){
-		File root = new File(MainWindow.getDataRoot());
-		
-		if(!root.exists()){
-			boolean wasDirectoryMade = root.mkdirs();
-		    if(wasDirectoryMade)
-		    	ConsoleLog.Print("Direcoty Created");
-		}
-		
-		this.navigator = new ProjectNavigator(root);
-		this.centerPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,this.navigator,this.centerComponent);
-		this.centerPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
-	}
-	
-	/**
-	 * 
-	 */
-	private JSplitPane getCenterPane(){
-		return this.centerPane;
-	}
 	
 	
-	/**
-	 * 
-	 */
-	private void initBottomPane(){
-		
-		this.console = new Console();
-		this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
-		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
-		this.bottomPane.setResizeWeight(0.90);
-		
-	}
-	
-	private void initToolBox(){
-		this.toolBox = null;
-		testCaseToolBox = new JToolBar();
-		testUnitToolBox = new JToolBar();
-		proxyToolBox = new JToolBar();
-				
-		testCaseToolBox.setFloatable(false);
-		testUnitToolBox.setFloatable(false);
-		proxyToolBox.setFloatable(false);
-		
-		saveTestCase = new JButton("Save TestCase");
-		saveTestCase.addActionListener(new SaveTestCaseListener());
-		
-		addUnit = new JButton("Add Remote Unit");
-		addUnit.addActionListener(new AddUnitListener());
-		
-		removeUnit = new JButton("Remove Remote Unit");
-		removeUnit.addActionListener(new RemoveUnitListener());
-		
-		runUnit = new JButton("Run Unit");
-		runUnit.addActionListener(new RunUnitListener());
-		
-		runAllUnits = new JButton("Run All Units");
-		runAllUnits.addActionListener(new RunAllUnitsListener());
-		
-		saveTestList =  new JButton("Save Test List");
-		saveTestList.addActionListener(new SaveTestListListener());
-		
-		insertTestCase =  new JButton("Insert Test Case");
-		insertTestCase.addActionListener(new InsertTestCaseListener());
-		
-		removeTestCase =  new JButton("Remove Test Case");
-		removeTestCase.addActionListener(new RemoveTestCaseListener());
-		
-		exportConfiguration =  new JButton("Export Unit Configuration");
-		exportConfiguration.addActionListener(new ExportConfigurationListener());
-		
-		testCaseToolBox.add(saveTestCase);
-		
-		testUnitToolBox.add(runUnit);
-		testUnitToolBox.add(runAllUnits);
-		testUnitToolBox.add(insertTestCase);
-		testUnitToolBox.add(removeTestCase);
-		testUnitToolBox.add(saveTestList);
-		testUnitToolBox.add(addUnit);
-		testUnitToolBox.add(removeUnit);
-		testUnitToolBox.add(exportConfiguration);
-		
-		
-	}
 	
 	/**
 	 * Constructor for main window
@@ -417,9 +264,9 @@ public class MainWindow extends JFrame{
 				setToolBox(MainWindow.PROXYMON_TOOLBOX);
 				this.centerComponent = this.proxyPanel;
 				break;
-			case REMOTE_CONTROL: 
-				this.centerComponent = this.remoteControlPanel;
-				break;
+//			case REMOTE_CONTROL: 
+//				this.centerComponent = this.remoteControlPanel;
+//				break;
 			case STATISTICS: 
 				this.centerComponent = this.statsPanel;
 				break;
@@ -480,10 +327,147 @@ public class MainWindow extends JFrame{
 		//rowHeader.add(new XMLFoldingMargin(reqOriginalEditorPane), BorderLayout.EAST);
 		rowHeader.add(new LineNumberMargin(currentEditorPane), BorderLayout.WEST);
 		currentScrollPane.setRowHeaderView(rowHeader);
+	}
+	
+	/**
+	 * 
+	 */
+	private void initMainWindow(ProxyController proxyController, TestUnitController testUnitController)
+	{
+		this.setTitle(this.APP_NAME);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		 
+		// Determine the new location of the window
+		int x = (dim.width-(this.WIDTH))/2;
+		int y = (dim.height-(this.HEIGTH))/2;
+		 
+		//this.setLayout(new BorderLayout());
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(x, y, this.WIDTH, this.HEIGTH);
+		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
+		this.setLayout(new BorderLayout());
+		this.setBackground(Color.gray);
+		initToolBox();
+		initMenuBar();
+		initContentPane(proxyController, testUnitController);
+		initCenterPane();
+		initBottomPane();
+		getContentPane().add(this.bottomPane,BorderLayout.CENTER);
+	}
 		
+	/**
+	 * 
+	 * 
+	 */
+	private void initMenuBar(){
+		this.setJMenuBar(new Menu());
+	}
+	
+	/**
+	 * 
+	 */
+	private void initContentPane(ProxyController proxyController, TestUnitController testUnitController){
+		
+	
+		this.editor = new TestCaseEditor();
+		this.proxyPanel = new ProxyMonitor(proxyController);
+		//this.remoteControlPanel = new RemoteControl();
+		this.statsPanel = new Statistics();
+		this.testUnitPanel = new TestingMonitor(testUnitController);
+		this.centerComponent = new JPanel();
+		//this.panelPane = (JPanel)this.centerComponent;
+	}
+	
+	/**
+	 * 
+	 */
+	private void initCenterPane(){
+		File root = new File(MainWindow.getDataRoot());
+		
+		if(!root.exists()){
+			boolean wasDirectoryMade = root.mkdirs();
+		    if(wasDirectoryMade)
+		    	ConsoleLog.Print("Direcoty Created");
+		}
+		
+		this.navigator = new ProjectNavigator(root);
+		this.centerPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,this.navigator,this.centerComponent);
+		this.centerPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
+	}
+	
+	/**
+	 * 
+	 */
+	private JSplitPane getCenterPane(){
+		return this.centerPane;
 	}
 	
 	
+	/**
+	 * 
+	 */
+	private void initBottomPane(){
+		
+		this.console = new Console();
+		this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
+		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
+		this.bottomPane.setResizeWeight(0.90);
+		
+	}
+	
+	/**
+	 * 
+	 */
+	private void initToolBox(){
+		this.toolBox = null;
+		testCaseToolBox = new JToolBar();
+		testUnitToolBox = new JToolBar();
+		proxyToolBox = new JToolBar();
+				
+		testCaseToolBox.setFloatable(false);
+		testUnitToolBox.setFloatable(false);
+		proxyToolBox.setFloatable(false);
+		
+		saveTestCase = new JButton("Save TestCase");
+		saveTestCase.addActionListener(new SaveTestCaseListener());
+		
+		addUnit = new JButton("Add Remote Unit");
+		addUnit.addActionListener(new AddUnitListener());
+		
+		removeUnit = new JButton("Remove Remote Unit");
+		removeUnit.addActionListener(new RemoveUnitListener());
+		
+		runUnit = new JButton("Run Unit");
+		runUnit.addActionListener(new RunUnitListener());
+		
+		runAllUnits = new JButton("Run All Units");
+		runAllUnits.addActionListener(new RunAllUnitsListener());
+		
+		saveTestList =  new JButton("Save Test List");
+		saveTestList.addActionListener(new SaveTestListListener());
+		
+		insertTestCase =  new JButton("Insert Test Case");
+		insertTestCase.addActionListener(new InsertTestCaseListener());
+		
+		removeTestCase =  new JButton("Remove Test Case");
+		removeTestCase.addActionListener(new RemoveTestCaseListener());
+		
+		exportConfiguration =  new JButton("Export Unit Configuration");
+		exportConfiguration.addActionListener(new ExportConfigurationListener());
+		
+		testCaseToolBox.add(saveTestCase);
+		
+		testUnitToolBox.add(runUnit);
+		testUnitToolBox.add(runAllUnits);
+		testUnitToolBox.add(insertTestCase);
+		testUnitToolBox.add(removeTestCase);
+		testUnitToolBox.add(saveTestList);
+		testUnitToolBox.add(addUnit);
+		testUnitToolBox.add(removeUnit);
+		testUnitToolBox.add(exportConfiguration);
+		
+		
+	}
 	private class SaveTestCaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			ConsoleLog.Print("Save testcase clicked");

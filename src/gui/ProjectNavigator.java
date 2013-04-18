@@ -1,5 +1,13 @@
 package gui;
 
+import gui.Menu.DeleteListener;
+import gui.Menu.FaultInjectionListener;
+import gui.Menu.HttpTestListener;
+import gui.Menu.OpenListener;
+import gui.Menu.RefreshTree;
+import gui.Menu.TestCaseListener;
+import gui.Menu.TestSuiteListener;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,6 +20,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 
 import javax.swing.BorderFactory;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -23,12 +32,13 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
-import logging.ConsoleLog;
-import modalWindows.NewTestCaseDialog;
-import modalWindows.NewTestSuiteDialog;
 import data.DataProvider;
 import data.FaultInjectionData;
 import data.HttpRequestData;
+
+import logging.ConsoleLog;
+import modalWindows.NewTestCaseDialog;
+import modalWindows.NewTestSuiteDialog;
 
 
 public class ProjectNavigator extends JPanel {
@@ -52,6 +62,7 @@ public class ProjectNavigator extends JPanel {
 	 * 
 	 */
 	private JPopupMenu treeMenu;
+	private JMenu newMenu;
 	
 	private final int SUITE_PATH_LENGTH = 2;
 	private final int CASE_PATH_LENGTH = 3;
@@ -103,7 +114,7 @@ public class ProjectNavigator extends JPanel {
 	 * TODO osetreni
 	 * @param f
 	 */
-	void delete(File f)  {
+	private void delete(File f)  {
 		  if (f.isDirectory()) {
 		    for (File c : f.listFiles())
 		      delete(c);
@@ -171,18 +182,27 @@ public class ProjectNavigator extends JPanel {
 		menuItem.addActionListener(listener);
 	}
 
+	private void addMenuItem(JMenu menu,String label,ActionListener listener){
+		
+		JMenuItem menuItem = new JMenuItem(label);
+		menu.add(menuItem);
+		menuItem.addActionListener(listener);
+	}
 	/**
 	 * 
 	 */
 	private void initPopupMenu(){
 		treeMenu = new JPopupMenu();
-		addMenuItem(treeMenu,"Open Test List", new TestListListener());
-		addMenuItem(treeMenu,"Open TestCase", new OpenTestCaseistener());
+		newMenu = new JMenu("New");
+		addMenuItem(newMenu,"Test Suite", new TestSuiteListener() );
+		addMenuItem(newMenu,"Test Case", new TestCaseListener());
+		addMenuItem(newMenu,"HTTP Test", new HttpTestListener());
+		addMenuItem(newMenu,"Fault Injection", new FaultInjectionListener());
+		treeMenu.add(newMenu);
+		treeMenu.addSeparator();
+		addMenuItem(treeMenu,"Open", new OpenListener());
 		addMenuItem(treeMenu,"Delete", new DeleteListener());
-		addMenuItem(treeMenu,"New Test Suite", new TestSuiteListener());
-		addMenuItem(treeMenu,"New Test Case", new TestCaseListener());
-		addMenuItem(treeMenu,"New HTTP Test", new HttpTestListener());
-		addMenuItem(treeMenu,"New Fault Injection", new FaultInjectionListener());
+		treeMenu.addSeparator();
 		addMenuItem(treeMenu,"Refresh", new RefreshTree());
 	}	
 		
@@ -191,7 +211,7 @@ public class ProjectNavigator extends JPanel {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class TestCaseListener implements ActionListener{
+	public class TestCaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			newTestCaseWindow = new NewTestCaseDialog();
 			newTestCaseWindow.setVisible(true);
@@ -205,7 +225,7 @@ public class ProjectNavigator extends JPanel {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class TestSuiteListener implements ActionListener{
+	public class TestSuiteListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			newTestSuiteWindow = new NewTestSuiteDialog();
 			newTestSuiteWindow.setVisible(true);
@@ -218,7 +238,7 @@ public class ProjectNavigator extends JPanel {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class HttpTestListener implements ActionListener{
+	public class HttpTestListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			if(!MainWindow.getCasePath().isEmpty()){
 				File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"Http");
@@ -258,7 +278,7 @@ public class ProjectNavigator extends JPanel {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 */
 	 
-	class FaultInjectionListener implements ActionListener{
+	public class FaultInjectionListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			
 			if(!MainWindow.getCasePath().isEmpty()){
@@ -301,11 +321,17 @@ public class ProjectNavigator extends JPanel {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class TestListListener implements ActionListener{
+	public class OpenListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			getMainWindowInstance().openTestList();
+			if(panelType == ProjectNavigator.CASE_EDITOR_FAULT || panelType == ProjectNavigator.CASE_EDITOR_SETTINGS
+				||	panelType == ProjectNavigator.CASE_EDITOR_HTTP	){
+				
+				getMainWindowInstance().openTestCaseEditor();
+				ConsoleLog.Print("file edit clicked");
 			
-			ConsoleLog.Print("test list clicked");
+			}else if(panelType == ProjectNavigator.TEST_UNIT){
+				getMainWindowInstance().openTestList();
+			}
 		}
 	} 	
 	
@@ -314,19 +340,7 @@ public class ProjectNavigator extends JPanel {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class OpenTestCaseistener implements ActionListener{
-		public void actionPerformed(ActionEvent ae) {
-			getMainWindowInstance().openTestCaseEditor();
-			ConsoleLog.Print("file edit clicked");
-		}
-	} 	
-	
-	/**
-	 * 
-	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
-	 */
-	class DeleteListener implements ActionListener {
+	public class DeleteListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			File node = new File(MainWindow.getEndpointPath());
 			ConsoleLog.Print(MainWindow.getEndpointPath());
@@ -346,11 +360,12 @@ public class ProjectNavigator extends JPanel {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class RefreshTree implements ActionListener{
+	public class RefreshTree implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			refreshTree();
 		}
 	} 
+	
 	
 
 	/**

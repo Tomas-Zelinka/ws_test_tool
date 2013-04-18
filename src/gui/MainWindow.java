@@ -238,6 +238,14 @@ public class MainWindow extends JFrame{
 		MainWindow.dataRoot = root;
 	}
 	
+	public int getPanelType(){
+		return this.navigator.getPanelType();
+	}
+	
+	public void refreshTree(){
+		this.navigator.refreshTree();
+	}
+	
 	/**
 	 * 
 	 * @return
@@ -296,6 +304,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void openTestCaseEditor(){
+		
 		int panelType = this.navigator.getPanelType();
 		
 		if (panelType == ProjectNavigator.CASE_EDITOR_SETTINGS){

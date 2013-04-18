@@ -1,20 +1,23 @@
 package gui;
 
+import gui.ProjectNavigator.FaultInjectionListener;
+import gui.ProjectNavigator.HttpTestListener;
+import gui.ProjectNavigator.RefreshTree;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import central.Main;
-
-
 import logging.ConsoleLog;
 import modalWindows.NewTestCaseDialog;
 import modalWindows.NewTestSuiteDialog;
+import data.DataProvider;
+import data.FaultInjectionData;
+import data.HttpRequestData;
 
 public class Menu extends JMenuBar {
 
@@ -111,16 +114,18 @@ public class Menu extends JMenuBar {
 	private void initFileMenuItems()
 	{
 		
-		//addMenuItem(newSubMenu,"New Test Project", new TestProjectListener());
-		addMenuItem(newSubMenu,"New Test Suite", new TestSuiteListener());
-		addMenuItem(newSubMenu,"New Test Case", new TestCaseListener());
-		//addMenuItem(newSubMenu,"New Test List", new TestListListener());
 		
+		addMenuItem(newSubMenu,"Test Suite", new TestSuiteListener());
+		addMenuItem(newSubMenu,"Test Case", new TestCaseListener());
+		addMenuItem(newSubMenu,"HTTP Test", new HttpTestListener());
+		addMenuItem(newSubMenu,"Fault Injection", new FaultInjectionListener());
+		file.addSeparator();
 		addMenuItem(file,"Open", new OpenListener());
-		addMenuItem(file,"Edit", new EditListener());
 		addMenuItem(file,"Delete", new DeleteListener());
-		addMenuItem(file,"Close Editor", new CloseEditorListener());
-		addMenuItem(file,"Change Root", new ChangeRootListener());
+		addMenuItem(file,"Refresh", new RefreshTree());
+		file.addSeparator();
+		//addMenuItem(file,"Close Editor", new CloseEditorListener());
+		//addMenuItem(file,"Change Root", new ChangeRootListener());
 		addMenuItem(file,"Exit", new ExitListener());
 	}
 	
@@ -181,46 +186,46 @@ public class Menu extends JMenuBar {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class EditListener implements ActionListener{
-		public void actionPerformed(ActionEvent ae) {
-			ConsoleLog.Print("file edit clicked");
-		}
-	} 
+//	class EditListener implements ActionListener{
+//		public void actionPerformed(ActionEvent ae) {
+//			ConsoleLog.Print("file edit clicked");
+//		}
+//	} 
 	
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class CloseEditorListener implements ActionListener{
-		public void actionPerformed(ActionEvent ae) {
-			//getMainWindowInstance().removeContent();
-			//getMainWindowInstance().setContent(new PlainPanel());
-			ConsoleLog.Print("file exit clicked");
-			
-		}
-	} 
+//	class CloseEditorListener implements ActionListener{
+//		public void actionPerformed(ActionEvent ae) {
+//			//getMainWindowInstance().removeContent();
+//			//getMainWindowInstance().setContent(new PlainPanel());
+//			ConsoleLog.Print("file exit clicked");
+//			
+//		}
+//	} 
 	
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class DeleteListener implements ActionListener {
-		public void actionPerformed(ActionEvent ae) {
-			File node = new File(MainWindow.getEndpointPath());
-			ConsoleLog.Print(MainWindow.getEndpointPath());
-			if(node.exists()){
-				ConsoleLog.Print("mazu");
-				node.delete();
-				MainWindow.setSuitePath("");
-				ProjectNavigator.refreshTree();
-			}else{
-				//throw new Exception();
-			}
-			
-		}
-	} 
+//	class DeleteListener implements ActionListener {
+//		public void actionPerformed(ActionEvent ae) {
+//			File node = new File(MainWindow.getEndpointPath());
+//			ConsoleLog.Print(MainWindow.getEndpointPath());
+//			if(node.exists()){
+//				ConsoleLog.Print("mazu");
+//				node.delete();
+//				MainWindow.setSuitePath("");
+//				ProjectNavigator.refreshTree();
+//			}else{
+//				//throw new Exception();
+//			}
+//			
+//		}
+//	} 
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
@@ -238,59 +243,59 @@ public class Menu extends JMenuBar {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class ChangeRootListener implements ActionListener{
-		public void actionPerformed(ActionEvent ae) {
-			 
-			JFileChooser changeRoot = new JFileChooser();
-			changeRoot .setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			String root = "nic nevybrano";
-			int retVal = changeRoot.showDialog(getParent(), "Change");
-			
-			if(retVal == JFileChooser.APPROVE_OPTION){
-				 root = changeRoot.getSelectedFile().toString();
-				MainWindow.setDataRoot(root);
-				Main.restartGui();
-			}
-			ConsoleLog.Print("Project changed to:" + root);
-		}
-	} 
+//	class ChangeRootListener implements ActionListener{
+//		public void actionPerformed(ActionEvent ae) {
+//			 
+//			JFileChooser changeRoot = new JFileChooser();
+//			changeRoot .setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//			String root = "nic nevybrano";
+//			int retVal = changeRoot.showDialog(getParent(), "Change");
+//			
+//			if(retVal == JFileChooser.APPROVE_OPTION){
+//				 root = changeRoot.getSelectedFile().toString();
+//				MainWindow.setDataRoot(root);
+//				Main.restartGui();
+//			}
+//			ConsoleLog.Print("Project changed to:" + root);
+//		}
+//	} 
 	
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class OpenListener implements ActionListener{
-		public void actionPerformed(ActionEvent ae) {
-			ConsoleLog.Print("file open clicked");
-		}
-	} 
+//	class OpenListener implements ActionListener{
+//		public void actionPerformed(ActionEvent ae) {
+//			ConsoleLog.Print("file open clicked");
+//		}
+//	} 
 	
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class TestCaseListener implements ActionListener{
-		public void actionPerformed(ActionEvent ae) {
-			newTestCaseWindow = new NewTestCaseDialog();
-			newTestCaseWindow.setVisible(true);
-			ConsoleLog.Print("new Test Case clicked");
-		}
-	}
+//	class TestCaseListener implements ActionListener{
+//		public void actionPerformed(ActionEvent ae) {
+//			newTestCaseWindow = new NewTestCaseDialog();
+//			newTestCaseWindow.setVisible(true);
+//			ConsoleLog.Print("new Test Case clicked");
+//		}
+//	}
 
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	class TestSuiteListener implements ActionListener{
-		public void actionPerformed(ActionEvent ae) {
-			newTestSuiteWindow = new NewTestSuiteDialog();
-			newTestSuiteWindow.setVisible(true);
-			ConsoleLog.Print("new Test Suite clicked");
-		}
-	}
+//	class TestSuiteListener implements ActionListener{
+//		public void actionPerformed(ActionEvent ae) {
+//			newTestSuiteWindow = new NewTestSuiteDialog();
+//			newTestSuiteWindow.setVisible(true);
+//			ConsoleLog.Print("new Test Suite clicked");
+//		}
+//	}
 	
 	/**
 	 * 
@@ -474,4 +479,177 @@ public class Menu extends JMenuBar {
 		}
 	} 
 	
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	public class TestCaseListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			newTestCaseWindow = new NewTestCaseDialog();
+			newTestCaseWindow.setVisible(true);
+			
+			ConsoleLog.Print("new Test Case clicked");
+		}
+	}
+
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	public class TestSuiteListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			newTestSuiteWindow = new NewTestSuiteDialog();
+			newTestSuiteWindow.setVisible(true);
+			ConsoleLog.Print("new Test Suite clicked");
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	public class HttpTestListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			if(!MainWindow.getCasePath().isEmpty()){
+				File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"Http");
+				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
+	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
+	            File httpDataFile = new File(inputDir.getPath() + File.separator + "httpRequest.xml");
+	            DataProvider writer = new DataProvider();
+	            HttpRequestData httpData = new HttpRequestData();
+	            
+	            
+				if (newHttpCase.exists()){
+					ConsoleLog.Print("You can set only 1 http test to this case");
+	             }else{
+	            	 
+	            	 newHttpCase.mkdir();
+	            	 inputDir.mkdir();
+	            	 outputDir.mkdir();
+	            	 try{
+		             		httpDataFile.createNewFile();
+		             		writer.writeObject(httpDataFile.getPath(),httpData);
+		             	 }catch(Exception b){
+		             		 b.printStackTrace();
+		             	 }
+	            	 ProjectNavigator.refreshTree();
+	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
+	            	 ConsoleLog.Print("New project name: "+ MainWindow.getCasePath());
+	            }
+			}else{
+				ConsoleLog.Print("Test case not selected ");
+			}
+			ConsoleLog.Print("new HttpTest clicked");
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 */
+	 
+	public class FaultInjectionListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			
+			if(!MainWindow.getCasePath().isEmpty()){
+				File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"FaultInjection");
+				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
+	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
+	            File faultInjectionDataFile = new File(inputDir.getPath() + File.separator + "faultInjection.xml");
+	            DataProvider writer = new DataProvider();
+	            FaultInjectionData faultData = new FaultInjectionData(newHttpCase.getPath());
+
+	           
+				if (newHttpCase.exists()){
+					ConsoleLog.Print("You can set only 1 fault injection test to this case");
+	             }else{
+	            	 
+	            	 newHttpCase.mkdir();
+	            	 inputDir.mkdir();
+	            	 outputDir.mkdir();
+	            	 try{
+	            		 faultInjectionDataFile.createNewFile();
+	            		 writer.writeObject(faultInjectionDataFile.getPath(),faultData);
+	            	 }catch(Exception b){
+	            		 b.printStackTrace();
+	            	 }
+	            	
+	            	 ProjectNavigator.refreshTree();
+	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
+	            	 
+	            	 ConsoleLog.Print("New project name: "+ MainWindow.getCasePath());
+	            }
+			}else{
+				ConsoleLog.Print("Test case not selected ");
+			}
+			ConsoleLog.Print("new Fault Injection clicked");
+		}
+	}		
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	public class OpenListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			int panelType = getMainWindowInstance().getPanelType();
+			if(panelType == ProjectNavigator.CASE_EDITOR_FAULT || panelType == ProjectNavigator.CASE_EDITOR_SETTINGS
+				||	panelType == ProjectNavigator.CASE_EDITOR_HTTP	){
+				
+				getMainWindowInstance().openTestCaseEditor();
+				ConsoleLog.Print("file edit clicked");
+			
+			}else if(panelType == ProjectNavigator.TEST_UNIT){
+				getMainWindowInstance().openTestList();
+			}
+		}
+	} 	
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	public class DeleteListener implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			File node = new File(MainWindow.getEndpointPath());
+			ConsoleLog.Print(MainWindow.getEndpointPath());
+			if(node.exists()){
+				delete(node);
+				getMainWindowInstance().refreshTree();
+			}else{
+				//TODO neco sem
+			}
+		}
+	} 
+	
+	
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	public class RefreshTree implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().refreshTree();
+		}
+	} 
+	
+	public void delete(File f)  {
+		  if (f.isDirectory()) {
+		    for (File c : f.listFiles())
+		      delete(c);
+		  }
+		  
+		  if(!f.delete()){
+			  ConsoleLog.Print("Not deleted");
+		  }
+		    
+		}
 }

@@ -1,12 +1,16 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import data.TestCaseSettingsData;
@@ -32,6 +36,8 @@ public class TestCaseSettings extends JPanel {
 	private JLabel loopNumberLabel;
 	private JLabel threadsNumberLabel;
 	private JLabel runLabel;
+	private JLabel httpSettingsLabel;
+	private JLabel proxySettingsLabel;
 	
 	private JPanel httpRequestSettings;
 	private JPanel proxySettings;
@@ -39,7 +45,9 @@ public class TestCaseSettings extends JPanel {
 	private JPanel proxyFields;
 	private JPanel httpLabels;
 	private JPanel httpFields;
-	
+	private JPanel httpFieldsBox;
+	private JPanel proxyFieldBox;
+	private JSeparator separator;
 	
 	private TestCaseSettingsData settingsData;
 	
@@ -56,13 +64,15 @@ public class TestCaseSettings extends JPanel {
 		proxyFields = new JPanel(new GridLayout(4, 1));
 		httpLabels = new JPanel(new GridLayout(3, 1));
 		httpFields = new JPanel(new GridLayout(3, 1));
-		httpLabels.setBorder(BorderFactory.createBevelBorder(1));;
-		httpFields.setBorder(BorderFactory.createBevelBorder(1));
 		proxyHostField = new JTextField(20);
 		proxyHostLabel = new JLabel("Hostname");
-		
+		httpFieldsBox = new JPanel(new BorderLayout());
 		proxyPortField = new JTextField(20);
 		proxyPortLabel = new JLabel("Port");
+		httpSettingsLabel = new JLabel("HTTP SETTINGS");
+		proxySettingsLabel = new JLabel("PROXY SETTINGS");
+		separator = new JSeparator();
+		proxyFieldBox = new JPanel(new BorderLayout());
 		
 		proxyTestedPortField = new JTextField(20);
 		proxyTestedPortLabel = new JLabel("Tested Port");
@@ -71,6 +81,7 @@ public class TestCaseSettings extends JPanel {
 		loopNumberLabel = new JLabel("Requests number");
 		
 		threadsNumberField = new JTextField(20);
+		
 		threadsNumberLabel = new JLabel("Threads number");
 		
 		runButton = new JRadioButton();
@@ -84,15 +95,15 @@ public class TestCaseSettings extends JPanel {
 		this.setLayout(new BorderLayout());
 		httpRequestSettings.setLayout(new BorderLayout());
 		
-		httpRequestSettings.setBorder(BorderFactory.createTitledBorder("Testing Unit Settings"));
-		proxySettings.setBorder(BorderFactory.createTitledBorder("Proxy Unit Settings"));
-		
+		 
 		httpLabels.add(threadsNumberLabel);
 		httpLabels.add(loopNumberLabel);
 		httpLabels.add(runLabel); 
 		httpFields.add(threadsNumberField);
 		httpFields.add(loopNumberField);
 		httpFields.add(runButton);
+		httpFields.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
+		
 		
 		proxyLabels.add(proxyHostLabel);
 		proxyLabels.add(proxyPortLabel);
@@ -101,14 +112,34 @@ public class TestCaseSettings extends JPanel {
 		proxyFields.add(proxyPortField);
 		proxyFields.add(proxyTestedPortField);
 		
+		httpSettingsLabel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
+			
 		httpRequestSettings.add(httpLabels,BorderLayout.LINE_START);
 		httpRequestSettings.add(httpFields,BorderLayout.CENTER);
+		httpRequestSettings.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 		
-		proxySettings.add(proxyLabels);
-		proxySettings.add(proxyFields);
+		proxySettings.add(proxyLabels,BorderLayout.LINE_START);
+		proxySettings.add(proxyFields,BorderLayout.CENTER);
 		
-		add(httpRequestSettings,BorderLayout.NORTH);		
-		add(proxySettings,BorderLayout.CENTER);		
+		separator.setBorder(BorderFactory.createEmptyBorder(20,0,0,20));
+		separator.setForeground(Color.gray);
+				
+		httpSettingsLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		proxySettingsLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		
+		proxyFieldBox.setBorder(BorderFactory.createEmptyBorder(5,10,10,20));
+		proxyFieldBox.add(proxySettingsLabel,BorderLayout.NORTH);
+		proxyFieldBox.add(proxySettings,BorderLayout.LINE_START);
+			
+		httpFieldsBox.setBorder(BorderFactory.createEmptyBorder(5,10,10,20));
+		httpFieldsBox.add(httpSettingsLabel,BorderLayout.NORTH);
+		httpFieldsBox.add(httpRequestSettings,BorderLayout.LINE_START);
+		httpFieldsBox.add(separator,BorderLayout.SOUTH);
+		
+		
+		
+		add(httpFieldsBox,BorderLayout.NORTH);		
+		add(proxyFieldBox,BorderLayout.CENTER);		
 	}
 	
 	private String getEditorProxyHostName(){

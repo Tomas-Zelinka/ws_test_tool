@@ -12,7 +12,7 @@ import org.jdom2.JDOMException;
 import data.Fault;
 import data.MultiplicationFault;
 import data.FaultInjectionData;
-import data.TestStatement;
+import data.FaultInjectionData;
 import data.XPathCorruptionFault;
 
 /**
@@ -22,52 +22,13 @@ import data.XPathCorruptionFault;
 public class FaultInjector {
 	
 	private int newTestId;
-	private int newTestStatementId;
 	private int newConditionId;
 	private int newFaultId;
 	
 	private FaultInjectionData activeTest;
 		
-	//private List<Test> testList= new ArrayList<Test>();
-	private List<FaultInjectionData> testList;
-	
-	
 	public FaultInjector() {
-	
-		try {
-			FaultInjectionData test0= new FaultInjectionData("Test0");
-			TestStatement statement0= new TestStatement(0, "Statement0");
-			Fault fault0= new XPathCorruptionFault("/S:Envelope/S:Body/mult/i", "9");
-			statement0.addToFaultList(fault0);
-			test0.addToStatementList(statement0);
-			
-			FaultInjectionData test1= new FaultInjectionData("Test1");
-			TestStatement statement1= new TestStatement(1, "Statement1");
-			Fault fault1= new MultiplicationFault("/S:Envelope/S:Body", 1);
-			statement1.addToFaultList(fault1);
-			test1.addToStatementList(statement1);
-
-
-
-
-			
-
-			testList.add(test0);
-			testList.add(test1);
-
-			initNewIds();
-		}
-		catch (JDOMException ex) {
-
-		}
 		
-		
-	}
-
-	
-	public FaultInjector(List<FaultInjectionData> testList) {
-		
-		this.testList = testList;
 		initNewIds();
 	}
 	
@@ -116,23 +77,8 @@ public class FaultInjector {
 					
 	}
 	
-	/**
-	 * Metoda pro pridani noveho testu do kolekce.
-	 * @param newTest novy test
-	 */
-	public void addToTestList(FaultInjectionData newTest) {
-		
-		testList.add(newTest);
-	}
 	
-	/**
-	 * Metoda pro odstraneni testu z kolekce.
-	 * @param removedTest test k odstraneni
-	 */
-	public void removeFromTestList(FaultInjectionData removedTest) {
-		
-		testList.remove(removedTest);
-	}
+	
 	
 	/**
 	 * Metoda pro ziskani id pro novou podminku.
@@ -162,15 +108,6 @@ public class FaultInjector {
 	}
 
 	/**
-	 * Metoda pro ziskani id pro nove pravidlo.
-	 * @return id noveho pravidla
-	 */
-	public int getNewTestStatementId() {
-		
-		return newTestStatementId++;
-	}
-
-	/**
 	 * Metoda pro zjisteni prave beziciho testu.
 	 * @return prave bezici test
 	 */
@@ -180,15 +117,6 @@ public class FaultInjector {
 	}
 			
 	
-	/**
-	 * Metoda pro ziskani seznamu vsech testu.
-	 * @return seznam vsech testu
-	 */
-	public List<FaultInjectionData> getTestList() {
-		
-		return testList;
-	}
-
 	/**
 	 * Metoda pro nastaveni aktivniho testu.
 	 * @param activeTest aktivni test

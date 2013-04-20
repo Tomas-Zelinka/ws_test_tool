@@ -8,7 +8,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import logging.ConsoleLog;
-import central.TestUnitController;
+import central.UnitController;
 
 /**
  *  Testing monitor is swing kontejner holding all testing unit
@@ -25,17 +25,18 @@ public class TestingMonitor extends JPanel  {
 
 	
 	private JTabbedPane tabbedPane;
-	private TestUnitController controller;
-	private int unitCounter;
+	private UnitController controller;
+	private int testUnitCounter;
+	
 	
 	
 	/**
 	 * 
 	 * @param testUnitController
 	 */
-	public TestingMonitor(TestUnitController testUnitController){
+	public TestingMonitor(UnitController testUnitController){
 		controller = testUnitController;
-		unitCounter = 0;
+		testUnitCounter = 0;
 		initComponents();
 		setupComponents();
 		
@@ -60,8 +61,9 @@ public class TestingMonitor extends JPanel  {
 	 * 
 	 */
 	private void setupComponents(){
-		addLocalUnit();
-		controller.addLocalUnit();
+		controller.addLocalTestUnit();
+		addLocalTestUnit();
+		
 		
 	}
 	
@@ -75,13 +77,13 @@ public class TestingMonitor extends JPanel  {
 	/**
 	 * 
 	 */
-	public void addLocalUnit(){
+	public void addLocalTestUnit(){
 		
-		UnitPanel panel = new UnitPanel(unitCounter);
+		UnitPanel panel = new UnitPanel(testUnitCounter);
 		//panel.setTestUnit(getLocalTestUnit());
 		tabbedPane.addTab("Local Unit",panel);
-		controller.addResponseListener(panel);
-		unitCounter++;
+		controller.setResponseListener(panel);
+		testUnitCounter++;
 	}
 	
 	/**
@@ -90,17 +92,17 @@ public class TestingMonitor extends JPanel  {
 	 */
 	public void addRemoteUnit(){
 		
-		UnitPanel panel = new UnitPanel(unitCounter);
+		UnitPanel panel = new UnitPanel(testUnitCounter);
 		
-		tabbedPane.addTab("Remote Unit "  + unitCounter,panel);
-		int selectedPanel = tabbedPane.indexOfTab("Remote Unit " +unitCounter);
+		tabbedPane.addTab("Remote Unit "  + testUnitCounter,panel);
+		int selectedPanel = tabbedPane.indexOfTab("Remote Unit " +testUnitCounter);
 		ConsoleLog.Print("panel index:" + selectedPanel);
 		tabbedPane.setSelectedIndex(selectedPanel);
 		
-		controller.addRemoteUnit(unitCounter);
+		controller.addRemoteTestUnit(testUnitCounter);
 		//panel.setTestUnit(getRemoteTestUnit(unitCounter));
 		
-		unitCounter++;
+		testUnitCounter++;
 	}
 	
 	/**
@@ -111,7 +113,7 @@ public class TestingMonitor extends JPanel  {
 		int panelIndex = tabbedPane.getSelectedIndex();
 		if (panelIndex != 0){
 			ConsoleLog.Print("Removed Unit: " + getUnitKey());
-			controller.removeRemoteUnit(getUnitKey());
+			controller.removeRemoteTestUnit(getUnitKey());
 			tabbedPane.remove(panelIndex);
 			tabbedPane.revalidate();
 			
@@ -201,8 +203,9 @@ public class TestingMonitor extends JPanel  {
 //		return controller.getRemoteTestUnit(id);
 //	}
 //	
-	public void runUnit(String testListPath){
-		controller.runTestOnUnit(testListPath,getUnitKey());
+	public void runUnit(String path){
+		getSelectedPanel().saveTestList(path); 
+		controller.runTest(path,getUnitKey());
 		ConsoleLog.Print("executed");
 		 
 	}

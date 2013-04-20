@@ -11,7 +11,7 @@ package modalWindows;
 import javax.swing.JFrame;
 
 import data.DataProvider;
-import data.TestStatement;
+import data.FaultInjectionData;
 
 /**
  * Trida reprezentujici dialog pro pridani noveho pravidla.
@@ -21,7 +21,7 @@ public class AddStatementDialog extends javax.swing.JDialog {
 
 	
 	private boolean okButtonClicked;
-	private TestStatement newStatement;
+	private FaultInjectionData newStatement;
 	private int newStatementId;
 	
 	
@@ -44,7 +44,7 @@ public class AddStatementDialog extends javax.swing.JDialog {
 	 * Metoda pro ziskani nove vytvoreneho pravidla.
 	 * @return nove vytvorene pravidlo
 	 */
-	public TestStatement getNewStatement() {
+	public FaultInjectionData getNewStatement() {
 		
 		return newStatement;
 	}
@@ -147,7 +147,8 @@ public class AddStatementDialog extends javax.swing.JDialog {
 	private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 		
 		okButtonClicked= true;
-		newStatement= new TestStatement(newStatementId, nameTextField.getText());
+		//newStatement= new FaultInjectionData(newStatementId, nameTextField.getText());
+		newStatement= new FaultInjectionData(nameTextField.getText());
 		this.setVisible(false);
 	}//GEN-LAST:event_okButtonActionPerformed
 

@@ -1,74 +1,47 @@
 package gui;
 
-import java.awt.Component;
-
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import modalWindows.AddConditionDialog;
 import modalWindows.AddFaultDialog;
-import modalWindows.AddStatementDialog;
 import data.Condition;
 import data.DataProvider;
 import data.Fault;
 import data.FaultInjectionData;
-import data.TestStatement;
 
 public class FaultInjectionEditor extends JSplitPane {
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7371762817016101649L;
+	
 	private javax.swing.JLabel faultLabel;
     private javax.swing.JPanel faultPanel;
-	
-    private javax.swing.JLabel conditionLabel;
+	private javax.swing.JLabel conditionLabel;
     private javax.swing.JPanel conditionPanel;
-    
     private javax.swing.JButton addConditionButton;
     private javax.swing.JButton addFaultButton;
-    private javax.swing.JButton addStatementButton;
-    private javax.swing.JMenuItem addStatementMenuItem;
-    private javax.swing.JButton addTestButton;
-    private javax.swing.JMenuItem addTestMenuItem;
-	
-    
     private javax.swing.JButton removeConditionButton;
     private javax.swing.JButton removeFaultButton;
-    private javax.swing.JMenuItem removeMenuItem;
-    private javax.swing.JButton removeNodeButton;
-    
-    
-    
     private javax.swing.table.DefaultTableModel faultTableModel;
     private javax.swing.table.DefaultTableModel conditionTableModel;
     private javax.swing.JTable conditionTable;
     private javax.swing.JTable faultTable;
-    
-    
-    //private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    //private javax.swing.JMenuItem exitMenuItem;
-    
     private FaultInjectionData editedTest;
    
     
-   // private javax.swing.JMenu fileMenu;
-    //private javax.swing.table.DefaultTableModel interactionTableModel;
-    //private javax.swing.JTable interactionTable;
-    
-    
-    
-    
-    
-    
-	public FaultInjectionEditor(){
+    public FaultInjectionEditor(){
 		
 		initComponents();
 		setConditionPane();
 		setFaultPane();
-		
+		setEnableButtons(false);
 		
 		this.setDividerLocation(250);
 		this.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -87,15 +60,13 @@ public class FaultInjectionEditor extends JSplitPane {
 	}
 	
 	
-	public FaultInjectionData getFaultInjetionData(){
+	public FaultInjectionData getTest(){
 		return this.editedTest;
 	}
 	
-	private TestStatement getStatement(){
-		return editedTest.getFirstStatement();
-	}
 	
-	public void setFaultData(FaultInjectionData data){
+	
+	public void setTest(FaultInjectionData data){
 		
 		this.editedTest = data;
 		refreshFaultPanel();
@@ -112,26 +83,27 @@ public class FaultInjectionEditor extends JSplitPane {
         faultPanel = new javax.swing.JPanel();
         faultLabel = new javax.swing.JLabel();
         
-        addTestMenuItem = new javax.swing.JMenuItem();
-        addStatementMenuItem = new javax.swing.JMenuItem();
-        addTestButton = new javax.swing.JButton();
-        addStatementButton = new javax.swing.JButton();
         addConditionButton = new javax.swing.JButton();
         addFaultButton = new javax.swing.JButton();
         
-        
-        removeNodeButton = new javax.swing.JButton();
         removeFaultButton = new javax.swing.JButton();
-        removeMenuItem = new javax.swing.JMenuItem();
         removeConditionButton = new javax.swing.JButton();
-        
         
         conditionTable = new javax.swing.JTable();
         faultTable = new javax.swing.JTable();
         
         jScrollPane3 = new javax.swing.JScrollPane();
         jScrollPane4 = new javax.swing.JScrollPane();
+        
 	}
+	
+	private void setEnableButtons(boolean enable){
+			addFaultButton.setEnabled(enable);
+			addConditionButton.setEnabled(enable);
+			removeFaultButton.setEnabled(enable);
+			removeConditionButton.setEnabled(enable);
+	}
+	
 	
 	/**
 	 * 
@@ -307,8 +279,8 @@ public class FaultInjectionEditor extends JSplitPane {
 			conditionTable.setEnabled(true);
 			addConditionButton.setEnabled(true);
 			removeConditionButton.setEnabled(true);
-			TestStatement selectedStatement= getStatement();
-			for (Condition currentCondition : selectedStatement.getConditionSet()) {
+			FaultInjectionData selectedTest= getTest();
+			for (Condition currentCondition : selectedTest.getConditionSet()) {
 				//vlozeni noveho radku do tabulky podminek
 				Object[] newRow= new Object[] {currentCondition, currentCondition.getDescription()};
 				conditionTableModel.insertRow(conditionTable.getRowCount(), newRow);
@@ -342,8 +314,8 @@ public class FaultInjectionEditor extends JSplitPane {
 			faultTable.setEnabled(true);
 			addFaultButton.setEnabled(true);
 			removeFaultButton.setEnabled(true);
-			TestStatement selectedStatement= getStatement();
-			for (Fault currentFault : selectedStatement.getFaultList()) {
+			FaultInjectionData selectedTest= getTest();
+			for (Fault currentFault : selectedTest.getFaultList()) {
 				//vlozeni noveho radku do tabulky poruch
 				Object[] newRow= new Object[] {currentFault, currentFault.getDescription()};
 				faultTableModel.insertRow(faultTable.getRowCount(), newRow);
@@ -377,8 +349,8 @@ public class FaultInjectionEditor extends JSplitPane {
 			Condition newCondition= addConditionDialog.getNewCondition();
 			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou podminku
 			//DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-			TestStatement selectedStatement= getStatement();
-			selectedStatement.addToConditionSet(newCondition);
+			FaultInjectionData selectedTest= getTest();
+			selectedTest.addToConditionSet(newCondition);
 			//refresh tabulky podminek
 			refreshConditionPanel();
 					
@@ -403,8 +375,8 @@ public class FaultInjectionEditor extends JSplitPane {
 			Fault newFault= addFaultDialog.getNewFault();
 			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou poruchu
 			//DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-			TestStatement selectedStatement=  getStatement();
-			selectedStatement.addToFaultList(newFault);
+			FaultInjectionData selectedTest=  getTest();
+			selectedTest.addToFaultList(newFault);
 			//refresh tabulky poruch
 			refreshFaultPanel();
 		}
@@ -618,10 +590,10 @@ public class FaultInjectionEditor extends JSplitPane {
 //		
 //		//zjistime, ktera podminka ve stromu je oznacena
 //		DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-		TestStatement selectedStatement=  getStatement();
+		FaultInjectionData selectedTest=  getTest();
 //		
 //		//odstranime podminku jak z tabulky, tak z kolekce
-		selectedStatement.removeFromConditionSet(selectedCondition);
+		selectedTest.removeFromConditionSet(selectedCondition);
 		conditionTableModel.removeRow(selectedRow);
 //				
 	}//GEN-LAST:event_removeConditionButtonActionPerformed
@@ -642,10 +614,10 @@ public class FaultInjectionEditor extends JSplitPane {
 //		
 //		//zjistime, ktera porucha ve stromu je oznacena
 //		DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-		TestStatement selectedStatement= getStatement();
+		FaultInjectionData selectedTest= getTest();
 //		
 //		//odstranime poruchu jak z tabulky, tak z kolekce
-		selectedStatement.removeFromFaultList(selectedFault);
+		selectedTest.removeFromFaultList(selectedFault);
 		faultTableModel.removeRow(selectedRow);
 	}//GEN-LAST:event_removeFaultButtonActionPerformed
 

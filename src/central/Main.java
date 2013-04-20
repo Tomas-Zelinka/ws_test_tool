@@ -27,8 +27,7 @@ public class Main extends Options{
 	 * Variable for serializing
 	 */
 	private static final long serialVersionUID = -6417256415716065905L;
-	private ProxyController proxyController;
-	private TestUnitController testUnitController;
+	private UnitController unitController;
 	private Option help;
 	private Option gui;
 	private Options options;
@@ -83,8 +82,7 @@ public class Main extends Options{
 	 * Head controllers initialization
 	 */
 	private void initApplication(){
-		proxyController = new ProxyController();
-		testUnitController = new TestUnitController();
+		unitController = new UnitController();
 	}
 	
 	
@@ -114,7 +112,7 @@ public class Main extends Options{
 			try{
 				SwingUtilities.invokeAndWait(new Runnable() {
 					public void run() {
-						MainWindow  gui = new MainWindow(getProxyController(),getTestUnitController());
+						MainWindow  gui = new MainWindow(getTestUnitController());
 						gui.setVisible(true);
 					}
 				});
@@ -127,32 +125,18 @@ public class Main extends Options{
 
 	
 	/**
-	 * @return ProxyController
-	 */
-	public ProxyController getProxyController() {
-		return proxyController;
-	}
-	/**
-	 * 
-	 * @param proxyController
-	 */
-	public void setProxyController(ProxyController proxyController) {
-		this.proxyController = proxyController;
-	}
-
-	/**
 	 * 
 	 * @return TestUnitController
 	 */
-	public TestUnitController getTestUnitController() {
-		return testUnitController;
+	public UnitController getTestUnitController() {
+		return unitController;
 	}
 	
 	/**
 	 * 
 	 * @param testUnitController
 	 */
-	public void setTestUnitController(TestUnitController testUnitController) {
-		this.testUnitController = testUnitController;
+	public void setTestUnitController(UnitController testUnitController) {
+		this.unitController = testUnitController;
 	}
 }

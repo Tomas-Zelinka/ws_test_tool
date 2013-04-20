@@ -89,26 +89,29 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	 * @param path
 	 */
 	public void saveTestList(String path){
-		
+			
+		HashMap<Integer,String> testCases = this.testListData.getTestCases();
+
+		ConsoleLog.Print(""+testCases.size());
+		for(Integer id: testCases.keySet()){
+			
+			String casePath = testCases.get(id);
+			Integer threadsNumberRow = (Integer)testCasesTableModel.getValueAt(id,2);
+			Integer loopsCountRow =  (Integer)testCasesTableModel.getValueAt(id,3);
+			Boolean runTestRow =  (Boolean)testCasesTableModel.getValueAt(id,4);
+			
+			TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
+			testCaseSettings.setThreadsNumber(threadsNumberRow);
+			testCaseSettings.setLoopNumber(loopsCountRow);
+			testCaseSettings.setRun(runTestRow);
+			
+			ioProvider.writeObject(casePath, testCaseSettings);
+		}
 		ioProvider.writeObject(path, this.testListData);
+		
 	}
 	
-	/**
-	 * 
-	 * @param casePath
-	 */
-	private void putTestCaseToTable(Integer id){
-		
-		String casePath = this.testListData.getTestCases().get(id);
-		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
-		
-		if(testCaseSettings == null){
-			ConsoleLog.Message("Test case file from list not found.");
-		}else{
-			Object[] newRow = new Object[] {id,testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun())};
-			testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
-		}
-	}
+	
 	
 	/**
 	 * 
@@ -122,7 +125,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 			ConsoleLog.Message("Test case already in test list");
 		}else{
 			this.testListData.addTestCase(casePath);
-			Object[] newRow = new Object[] {this.testListData.getLastId(),testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun())};
+			Object[] newRow = new Object[] {this.testListData.getLastId(),testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun()),new Boolean(testCaseSettings.getUseProxy())};
 			testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
 		}
 	}
@@ -182,6 +185,23 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	public void insertResponse(int id ){
 		Object[] newRow = new Object[] {id};
 		testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
+	}
+	
+	/**
+	 * 
+	 * @param casePath
+	 */
+	private void putTestCaseToTable(Integer id){
+		
+		String casePath = this.testListData.getTestCases().get(id);
+		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
+		
+		if(testCaseSettings == null){
+			ConsoleLog.Message("Test case file from list not found.");
+		}else{
+			Object[] newRow = new Object[] {id,testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun())};
+			testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
+		}
 	}
 	
 	/**
@@ -267,7 +287,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 
 	            },
 	            new Object [] {
-	                "#", "Name","Threads","Count","Run"
+	                "#", "Name","Threads","Count","Http Unit","Proxy Unit"
 	            }
 	        ) {
 				/**
@@ -277,14 +297,14 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 
 				public Class<?> getColumnClass(int index){
 					
-					if(index == 4)
+					if(index == 4 || index == 5)
 						return Boolean.class;
 					
 					return getValueAt(0, index).getClass();
 				}
 				
 				boolean[] canEdit = new boolean [] {
-	                false, false,false,false,false
+	                false, false,true,true,true,false
 	            };
 
 	            public boolean isCellEditable(int rowIndex, int columnIndex) {

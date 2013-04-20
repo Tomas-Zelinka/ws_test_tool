@@ -10,25 +10,23 @@ public class TestCaseSettingsData {
 	
 
 	private boolean run;
-	
-
-
-	
-
-
 	private String proxyHost;
 	private int proxyPort;
 	private int proxyTestedPort;
+	private boolean useProxy;
 	
 	
 	
 	
 	
+	
+
 	public TestCaseSettingsData(){
 		 initAttributes();
 	 }
 
 	private void initAttributes(){
+		useProxy = false;
 		threadsNumber = 0;
 		loopNumber = 0;
 		proxyHost = "";
@@ -36,8 +34,18 @@ public class TestCaseSettingsData {
 		proxyTestedPort = 0;
 		run = false;
 	}
+	
+	
+	public boolean getUseProxy() {
+		return this.useProxy;
+	}
+
+	public void setUseProxy(boolean use) {
+		this.useProxy = use;
+	}
+	
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -45,7 +53,7 @@ public class TestCaseSettingsData {
 	}
 	
 	public String getProxyHost() {
-		return proxyHost;
+		return this.proxyHost;
 	}
 
 
@@ -55,7 +63,7 @@ public class TestCaseSettingsData {
 
 
 	public int getProxyPort() {
-		return proxyPort;
+		return this.proxyPort;
 	}
 
 
@@ -65,7 +73,7 @@ public class TestCaseSettingsData {
 
 
 	public int getProxyTestedPort() {
-		return proxyTestedPort;
+		return this.proxyTestedPort;
 	}
 
 
@@ -75,7 +83,7 @@ public class TestCaseSettingsData {
 
 	
 	public int getThreadsNumber() {
-		return threadsNumber;
+		return this.threadsNumber;
 	}
 
 
@@ -85,7 +93,7 @@ public class TestCaseSettingsData {
 
 
 	public int getLoopNumber() {
-		return loopNumber;
+		return this.loopNumber;
 	}
 
 
@@ -95,7 +103,7 @@ public class TestCaseSettingsData {
 
 
 	public boolean getRun() {
-		return run;
+		return this.run;
 	}
 
 	public void setRun(boolean run) {
@@ -103,7 +111,7 @@ public class TestCaseSettingsData {
 	}
 	 
 	public String getPath() {
-		return path;
+		return this.path;
 	}
 
 	public void setPath(String path) {

@@ -7,145 +7,152 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import proxyUnit.HttpMessage;
 
+
 /**
- * Trida reprezentuje uzivatelsky test obsahujici seznam pravidel, podle kterych je testovani webove 
- * sluzby provadeno.
+ * Trida predstavuje testovaci pravidlo sestavajici z mnoziny podminek a seznamu poruch.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
  */
 public class FaultInjectionData {
 	
-	//private int testId;
+	private int testId;
 	private String testName;
-	private String filePath;
 	
-	private List<TestStatement> statementList;
+	private Set<Condition> conditionSet= new HashSet<Condition>();
+	private List<Fault> faultList= new ArrayList<Fault>();
 
-	private int newStatementId;
 	
-	public FaultInjectionData(String testName) {
-		statementList = new ArrayList<TestStatement>();
-		//this.testId= testId;
-		this.testName= testName;
-		this.newStatementId = 0;
-		newStatement();
+	public FaultInjectionData( String name) {
+		
+		//this.testId = id;
+		this.testName = name;
 	}
 
+	
 	/**
-	 * Ziskani id testu.
-	 * @return id testu
+	 * Metoda pro ziskani nazvu pravidla.
+	 * @return nazev pravidla
 	 */
-	//public int getTestId() {
+	public int getTestId() {
 		
-	//	return testId;
-	//}
+		return testId;
+	}
 
+	
 	/**
-	 * Metoda pro ziskani nazvu testu.
-	 * @return nazev testu
+	 * Metoda pro nastaveni nazvu pravidla.
+	 * @param statementName nazev pravidla
 	 */
 	public String getTestName() {
 		
-		return testName;
+		return this.testName;
 	}
 	
 	
-
 	/**
-	 * Metoda pro nastaveni nazvu testu.
-	 * @param testName novy nazev testu
+	 * Metoda pro nastaveni nazvu pravidla.
+	 * @param statementName nazev pravidla
 	 */
 	public void setTestName(String testName) {
 		
 		this.testName= testName;
 	}
-
-	
+		
 	/**
-	 * Metoda pro ziskani cesty k souboru s testem.
-	 * @return cesta k souboru
+	 * Metoda pro ziskani mnoziny podminek.
+	 * @return mnozina podminek
 	 */
-	public String getFilePath() {
-		return filePath;
-	}
-
-	/**
-	 * Metoda pro nastaveni cesty k souboru s testem.
-	 * @param filePath cesta k souboru
-	 */
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
-	
-	
-	public int getNewStatementId(){
-		return this.newStatementId;
-	}
-	
-	public TestStatement getFirstStatement(){
+	public Set<Condition> getConditionSet() {
 		
-		return this.statementList.get(0);
-	}
-	
-	private void newStatement(){
-		TestStatement statement = new TestStatement(getNewStatementId(),"01");
-		
-		addToStatementList(statement);
-	}
-		
-	
-	/**
-	 * Ziskani seznamu pravidel pro dany test.
-	 * @return seznam pravidel
-	 */
-	public List<TestStatement> getStatementList() {
-		
-		return statementList;
+		return conditionSet;
 	}
 	
 	/**
-	 * Pridani noveho pravidla do seznamu pravidel pro dany test.
-	 * @param statement nove pravidlo
+	 * Metoda pro pridani nove podminky do kolekce.
+	 * @param newCondition nova podminka
 	 */
-	public void addToStatementList(TestStatement statement) {
+	public void addToConditionSet(Condition newCondition) {
 		
-		statementList.add(statement);
-		this.newStatementId++;
+		conditionSet.add(newCondition);
 	}
 	
 	/**
-	 * Odstraneni pravidla ze seznamu.
-	 * @param removedStatement pravidlo urcene k odstraneni
+	 * Metoda pro odstraneni podminky z kolekce.
+	 * @param removedCondition podminka k odstraneni
 	 */
-	public void removeFromStatementList(TestStatement removedStatement) {
+	public void removeFromConditionSet(Condition removedCondition) {
 		
-		statementList.remove(removedStatement);
+		conditionSet.remove(removedCondition);
+	}
+	
+	/**
+	 * Metoda pro pridani nove poruchy do seznamu.
+	 * @param newFault nova porucha
+	 */
+	public void addToFaultList(Fault newFault) {
+		
+		faultList.add(newFault);
+	}
+	
+	/**
+	 * Metoda pro odstraneni poruchy z kolekce.
+	 * @param removedFault porucha k odstraneni
+	 */
+	public void removeFromFaultList(Fault removedFault) {
+		
+		faultList.remove(removedFault);
 	}
 
 	/**
-	 * Prepsani metody toString() kvuli zobrazovani nazvu testu v komponente JTree.
-	 * @return nazev testu
-	 */	
+	 * Metoda pro ziskani seznamu poruch.
+	 * @return seznam poruch
+	 */
+	public List<Fault> getFaultList() {
+		
+		return faultList;
+	}
+
+	/**
+	 * Prepsani metody toString() kvuli zobrazovani nazvu pravidla v komponente JTree.
+	 * @return nazev pravidla
+	 */
 	@Override
 	public String toString() {
 		
 		return testName;
 	}
 	
-	
 	/**
-	 * Metoda pro zahajeni aplikace testu.
+	 * Metoda pro aplikovani pravidla nad http zpravou.
 	 * @param message http zprava
 	 */
 	public void applyTest(HttpMessage message) {
 		
-		//aplikujeme vsechna pravidla v danem testu
-		for (TestStatement currentStatement : statementList)
-			currentStatement.applyStatement(message);
+		//nejprve zjistime, zda jsou splneny vsechny podminky
+		boolean conditionsFulfilled= true;
+		for (Condition currentCondition : conditionSet) {
+			if (!currentCondition.isFulfilled(message)) {
+				conditionsFulfilled= false;
+				break;
+			}
+		}
+		
+		//pokud jsou splneny vsechny podminky, vlozime do zpravy prislusne chyby
+		if (conditionsFulfilled)
+			for (Fault currentFault : faultList) {
+				currentFault.inject(message);
+			}
+		
+		
+		
 	}
+	
+	
 	
 	
 	

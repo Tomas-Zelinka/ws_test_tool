@@ -11,8 +11,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import central.ProxyController;
-
 /**
  * Trida predstavuje vlakno proxy serveru starajici se bud o prichozi nebo odchozi pozadavky.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
@@ -26,21 +24,20 @@ public class ProxyThread extends Thread {
 	private static final int BUFFER_SIZE= 512;
 	
 	private int interactionId;
-	private ProxyController controller;
 	private Socket incomingSocket;
 	private Socket outgoingSocket;
 	
 	OutputStream outputStream;
 	InputStream inputStream;
 	
-	
+	private ProxyMonitoringUnit proxyUnit;
 	private String rawMessage;
 
 	
-	public ProxyThread(int interactionId, ProxyController controller, Socket incomingSocket, Socket outgoingSocket) {
+	public ProxyThread(int interactionId, ProxyMonitoringUnit unit, Socket incomingSocket, Socket outgoingSocket) {
 		
+		this.proxyUnit = unit;
 		this.interactionId= interactionId;
-		this.controller= controller;
 		this.incomingSocket= incomingSocket;
 		this.outgoingSocket= outgoingSocket;
 		rawMessage= "";
@@ -134,7 +131,7 @@ public class ProxyThread extends Thread {
 							//rozparsujeme telo zpravy
 							HttpMessageParser.parseHttpContent(httpMessage, rawMessage, false);
 							//upozornime controller na tuto udalost
-							controller.newMessageNotifier(interactionId, httpMessage);
+							proxyUnit.newMessageNotifier(interactionId, httpMessage);
 		
 							//odeslani pozmenene zpravy
 							bytesToBeRead= -1;
@@ -162,7 +159,7 @@ public class ProxyThread extends Thread {
 								//rozparsujeme telo zpravy
 								HttpMessageParser.parseHttpContent(httpMessage, rawMessage, false);
 								//upozornime controller na tuto udalost
-								controller.newMessageNotifier(interactionId, httpMessage);
+								proxyUnit.newMessageNotifier(interactionId, httpMessage);
 
 								//odeslani pozmenene zpravy
 								bytesToBeRead= -1;
@@ -196,7 +193,7 @@ public class ProxyThread extends Thread {
 								
 								
 								//upozornime controller na tuto udalost
-								controller.newMessageNotifier(interactionId, httpMessage);
+								proxyUnit.newMessageNotifier(interactionId, httpMessage);
 
 								//odeslani pozmenene zpravy
 								bytesToBeRead= -1;

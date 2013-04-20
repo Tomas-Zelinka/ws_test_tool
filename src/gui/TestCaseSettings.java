@@ -2,14 +2,18 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
@@ -28,7 +32,9 @@ public class TestCaseSettings extends JPanel {
 	private JTextField proxyHostField;
 	private JTextField proxyPortField;
 	private JTextField proxyTestedPortField;
-	private JRadioButton runButton;
+	private JCheckBox runButton;
+	private JCheckBox useProxyBox;
+	
 	 
 	private JLabel proxyHostLabel;
 	private JLabel proxyTestedPortLabel;
@@ -38,6 +44,7 @@ public class TestCaseSettings extends JPanel {
 	private JLabel runLabel;
 	private JLabel httpSettingsLabel;
 	private JLabel proxySettingsLabel;
+	private JLabel useProxyLabel;
 	
 	private JPanel httpRequestSettings;
 	private JPanel proxySettings;
@@ -60,10 +67,10 @@ public class TestCaseSettings extends JPanel {
 		
 		httpRequestSettings = new JPanel();
 		proxySettings = new JPanel();
-		proxyLabels = new JPanel(new GridLayout(4, 1));
-		proxyFields = new JPanel(new GridLayout(4, 1));
-		httpLabels = new JPanel(new GridLayout(3, 1));
-		httpFields = new JPanel(new GridLayout(3, 1));
+		proxyLabels = new JPanel(new GridLayout(4,1,0,5));
+		proxyFields = new JPanel(new GridLayout(4,1,0,5));
+		httpLabels = new JPanel(new GridLayout(4,1,0,5));
+		httpFields = new JPanel(new GridLayout(4,1,0,5));
 		proxyHostField = new JTextField(20);
 		proxyHostLabel = new JLabel("Hostname");
 		httpFieldsBox = new JPanel(new BorderLayout());
@@ -81,11 +88,14 @@ public class TestCaseSettings extends JPanel {
 		loopNumberLabel = new JLabel("Requests number");
 		
 		threadsNumberField = new JTextField(20);
-		
 		threadsNumberLabel = new JLabel("Threads number");
 		
-		runButton = new JRadioButton();
+		runButton = new JCheckBox();
 		runLabel = new JLabel("Run test case");
+		
+		useProxyBox = new JCheckBox();
+		useProxyLabel = new JLabel("Use Proxy");
+		
 		
 		settingsData = new TestCaseSettingsData();
 	}
@@ -93,54 +103,72 @@ public class TestCaseSettings extends JPanel {
 	private void setupComponents(){
 		
 		this.setLayout(new BorderLayout());
-		httpRequestSettings.setLayout(new BorderLayout());
 		
-		 
+		httpRequestSettings.setLayout(new BorderLayout());
+		proxySettings.setLayout(new BorderLayout());
+		useProxyBox.addActionListener(new UseProxyListener());
+		runButton.addActionListener(new UseHttpListener());
+		
+		httpLabels.add(runLabel);
 		httpLabels.add(threadsNumberLabel);
 		httpLabels.add(loopNumberLabel);
-		httpLabels.add(runLabel); 
+		
+		httpFields.add(runButton);
 		httpFields.add(threadsNumberField);
 		httpFields.add(loopNumberField);
-		httpFields.add(runButton);
 		httpFields.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
 		
 		
+		proxyLabels.add(useProxyLabel);
 		proxyLabels.add(proxyHostLabel);
 		proxyLabels.add(proxyPortLabel);
 		proxyLabels.add(proxyTestedPortLabel);
+		
+		proxyFields.add(useProxyBox);
 		proxyFields.add(proxyHostField);
 		proxyFields.add(proxyPortField);
 		proxyFields.add(proxyTestedPortField);
 		
+		proxyFields.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
+		
 		httpSettingsLabel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
-			
+		httpSettingsLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		
+		proxySettingsLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		proxySettingsLabel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
+		
 		httpRequestSettings.add(httpLabels,BorderLayout.LINE_START);
 		httpRequestSettings.add(httpFields,BorderLayout.CENTER);
-		httpRequestSettings.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 		
 		proxySettings.add(proxyLabels,BorderLayout.LINE_START);
 		proxySettings.add(proxyFields,BorderLayout.CENTER);
 		
-		separator.setBorder(BorderFactory.createEmptyBorder(20,0,0,20));
 		separator.setForeground(Color.gray);
-				
-		httpSettingsLabel.setFont(new Font("Arial", Font.BOLD, 13));
-		proxySettingsLabel.setFont(new Font("Arial", Font.BOLD, 13));
+	
+		httpFieldsBox.setBorder(BorderFactory.createEmptyBorder(5,10,0,20));
 		
-		proxyFieldBox.setBorder(BorderFactory.createEmptyBorder(5,10,10,20));
-		proxyFieldBox.add(proxySettingsLabel,BorderLayout.NORTH);
-		proxyFieldBox.add(proxySettings,BorderLayout.LINE_START);
-			
-		httpFieldsBox.setBorder(BorderFactory.createEmptyBorder(5,10,10,20));
 		httpFieldsBox.add(httpSettingsLabel,BorderLayout.NORTH);
 		httpFieldsBox.add(httpRequestSettings,BorderLayout.LINE_START);
 		httpFieldsBox.add(separator,BorderLayout.SOUTH);
 		
 		
+		proxyFieldBox.setBorder(BorderFactory.createEmptyBorder(5,10,0,20));
+		proxyFieldBox.add(proxySettingsLabel,BorderLayout.NORTH);
+		proxyFieldBox.add(proxySettings,BorderLayout.LINE_START);
 		
-		add(httpFieldsBox,BorderLayout.NORTH);		
-		add(proxyFieldBox,BorderLayout.CENTER);		
+		JPanel pokus = new JPanel(new GridLayout(2, 1));
+			
+		pokus.add(httpFieldsBox);		
+		pokus.add(proxyFieldBox);
+		
+		add(pokus,BorderLayout.NORTH);
+		setEnableHttpPanel(false);
+		setEnableProxyPanel(false);
 	}
+	
+	
+	
+	
 	
 	private String getEditorProxyHostName(){
 		return proxyHostField.getText();
@@ -192,29 +220,46 @@ public class TestCaseSettings extends JPanel {
 		this.runButton.setSelected(run);
 	}
 	
+	
+	private boolean getEditorUseProxy(){
+		return useProxyBox.isSelected();
+	}
+	
+	private void setEditorUseProxy(boolean use){
+		this.useProxyBox.setSelected(use);
+	}
+	
+	
 	private void saveData(){
-		this.settingsData.setName(MainWindow.getCasePath());
-		this.settingsData.setThreadsNumber(getEditorThreadsNumber());
-		this.settingsData.setLoopNumber(getEditorLoopCount());
-		this.settingsData.setProxyTestedPort(getEditorProxyTestedPort());
-		this.settingsData.setProxyPort(getEditorProxyPort());
-		this.settingsData.setProxyHost(getEditorProxyHostName());
 		this.settingsData.setRun(getEditorRun());
+		this.settingsData.setUseProxy(getEditorUseProxy());
+		
+		if(getEditorUseProxy()){
+			this.settingsData.setName(MainWindow.getCasePath());
+			this.settingsData.setThreadsNumber(getEditorThreadsNumber());
+			this.settingsData.setLoopNumber(getEditorLoopCount());
+		}
+		if(getEditorUseProxy()){
+			this.settingsData.setProxyTestedPort(getEditorProxyTestedPort());
+			this.settingsData.setProxyPort(getEditorProxyPort());
+			this.settingsData.setProxyHost(getEditorProxyHostName());
+		}
 	}
 	
 	
 	private void loadData(){
+		setEnableHttpPanel(true);
 		setEditorProxyPort(this.settingsData.getProxyPort());
 		setEditorProxyHostName(this.settingsData.getProxyHost());
 		setEditorThreadsNumber(this.settingsData.getThreadsNumber());
 		setEditorLoopNumber(this.settingsData.getLoopNumber());
 		setEditorProxyTestedPort(this.settingsData.getProxyTestedPort());
 		setEditorRun(this.settingsData.getRun());
+		setEditorUseProxy(this.settingsData.getUseProxy());
+		
+		setEnableProxyPanel(this.settingsData.getUseProxy());
+		setEnableHttpPanel(this.settingsData.getRun());
 	}
-	
-	
-	
-	
 	
 	public void setSettingsData(TestCaseSettingsData data){
 		this.settingsData = data;
@@ -224,6 +269,55 @@ public class TestCaseSettings extends JPanel {
 	public TestCaseSettingsData getSettingsData(){
 		saveData();
 		return this.settingsData;
+	}
+	
+	private void setEnableProxyPanel(boolean use){
+		Component[] fields = proxyFields.getComponents(); 
+        Component[] labels = proxyLabels.getComponents();
+		
+		for (int a = 1; a < fields.length; a++) {  
+			fields[a].setEnabled(use);
+   	     	labels[a].setEnabled(use);
+		} 
+		
+	}
+	
+	
+	private void setEnableHttpPanel(boolean use){
+		Component[] fields = httpFields.getComponents(); 
+        Component[] labels = httpLabels.getComponents();
+		
+		for (int a = 1; a < fields.length; a++) {  
+   	     	fields[a].setEnabled(use);
+   	     	labels[a].setEnabled(use);
+		} 
+		
+	}
+	
+	
+	
+	public class UseProxyListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			AbstractButton abstractButton = (AbstractButton)e.getSource();
+	        boolean selected = abstractButton.getModel().isSelected();
+	        if(selected){
+	        	setEnableProxyPanel(true);
+	        }else{
+	        	setEnableProxyPanel(false);
+	        }
+		}
+	}
+	
+	public class UseHttpListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			AbstractButton abstractButton = (AbstractButton)e.getSource();
+	        boolean selected = abstractButton.getModel().isSelected();
+	        if(selected){
+	        	setEnableHttpPanel(true);
+	        }else{
+	        	setEnableHttpPanel(false);
+	        }
+		}
 	}
 	
 	

@@ -13,7 +13,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import data.FaultInjectionData;
-import data.TestStatement;
+import data.FaultInjectionData;
 
 /**
  * Trida reprezentujici render pro vykreslovani ikon v komponente JTree. V zavislosti na typu uzivatelskeho
@@ -50,7 +50,7 @@ public class TestTreeCellRenderer extends DefaultTreeCellRenderer {
 			setIcon(new ImageIcon(getClass().getResource("resources/test_small.png")));
 		}
 		else
-			if (renderedNodeObject instanceof TestStatement)
+			if (renderedNodeObject instanceof FaultInjectionData)
 				setIcon(new ImageIcon(getClass().getResource("resources/statement_small.png")));
 			else
 				setIcon(getDefaultClosedIcon());

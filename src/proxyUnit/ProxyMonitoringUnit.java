@@ -11,8 +11,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import central.ProxyController;
+import data.FaultInjectionData;
 
 /**
  * Trida reprezentuje funkcni jednotku pro monitorovani komunikace mezi testovanou webovou sluzbou a jejim
@@ -24,29 +28,81 @@ public class ProxyMonitoringUnit {
 	
 		
 	private int proxyPort= 55555;
-	private int testedWsPort= 8080;
+	private int testedWsPort= 80;
 	private String proxyHost= "localhost";
-	
+	private FaultInjector faultInjector;
 	private boolean proxyFlag;
-	
-	private ProxyController controller;
 	
 	private ServerSocket serverSocket;
 	private Socket incomingSocket;
 	private Socket outgoingSocket;
+
+	
+	private Thread proxyThread;
 	
 	private int interactionId= 0;
-
+	private Map<Integer, HttpInteraction> interactionMap= new ConcurrentHashMap<Integer, HttpInteraction>();
 	
-	public ProxyMonitoringUnit(ProxyController controller, int proxyPort, int testedWsPort, String proxyHost) {
+	private List<NewMessageListener> newMessageListenerList= new ArrayList<NewMessageListener>();
+	private List<UnknownHostListener> unknownHostListenerList= new ArrayList<UnknownHostListener>();
+	
+	
+	public ProxyMonitoringUnit() {
 		
 		proxyFlag= false;
-		this.controller= controller;
-		this.proxyPort= proxyPort;
-		this.testedWsPort= testedWsPort;
-		this.proxyHost= proxyHost;
+		faultInjector= new FaultInjector();
+		
 	}
 
+		
+	/**
+	 * Metoda k ziskani noveho id pro novy test.
+	 * @return nove id
+	 */
+	public int getNewTestId() {
+		
+		return faultInjector.getNewTestId();
+	}
+	
+	/**
+	 * Metoda k ziskani noveho id pro novou podminku.
+	 * @return nove id
+	 */
+	public int getNewConditionId() {
+		
+		return faultInjector.getNewConditionId();
+	}
+	
+	/**
+	 * Metoda k ziskani noveho id pro novou poruchu.
+	 * @return nove id
+	 */
+	public int getNewFaultId() {
+		
+		return faultInjector.getNewFaultId();
+	}
+	
+	/**
+	 * Metoda pro nastaveni aktivniho testu.
+	 * @param activeTest aktivni test
+	 */
+	public void setActiveTest(FaultInjectionData activeTest) {
+		
+		faultInjector.setActiveTest(activeTest);
+	}
+	
+	/**
+	 * Metoda k ziskani aktivniho testu.
+	 * @return aktivni test
+	 */
+	public FaultInjectionData getActiveTest() {
+		
+		return faultInjector.getActiveTest();
+	}
+	
+	
+	
+	
 	/**
 	 * Metoda pro nastaveni id interakce.
 	 * @param interactionId id interakce
@@ -57,60 +113,6 @@ public class ProxyMonitoringUnit {
 	}
 		
 
-	/**
-	 * Metoda pro ziskani URI proxy hostu
-	 * @return proxy host URI
-	 */
-	public String getProxyHost() {
-		
-		return proxyHost;
-	}
-
-	/**
-	 * Metoda pro ziskani portu, na kterem nasloucha proxy server.
-	 * @return port proxy serveru
-	 */
-	public int getProxyPort() {
-		
-		return proxyPort;
-	}
-
-	/**
-	 * Metoda pro ziskani portu, na kterem bezi testovana sluzba.
-	 * @return port testovane sluzby
-	 */
-	public int getTestedWsPort() {
-		
-		return testedWsPort;
-	}
-
-	/**
-	 * Metoda pro nastaveni portu, na kterem nasloucha testovana webova sluzba.
-	 * @param proxyHost port testovane webove sluzby
-	 */
-	public void setProxyHost(String proxyHost) {
-		
-		this.proxyHost = proxyHost;
-	}
-
-	/**
-	 * Metoda pro nastaveni portu, na kterem nasloucha proxy server.
-	 * @param proxyPort port proxy serveru
-	 */
-	public void setProxyPort(int proxyPort) {
-		
-		this.proxyPort = proxyPort;
-	}
-
-	/**
-	 * Metoda pro nastaveni URI proxy hostu.
-	 * @param testedWsPort URI proxy hostu
-	 */
-	public void setTestedWsPort(int testedWsPort) {
-		
-		this.testedWsPort = testedWsPort;
-	}
-	
 	
 	
 	private synchronized boolean isProxyFlag() {
@@ -126,8 +128,8 @@ public class ProxyMonitoringUnit {
 	
 	/**
 	 * Metoda pro spusteni proxy serveru.
-	 */
-	public void startProxy() {
+	 */ 
+	public void run() {
 		
 		setProxyFlag(true);
 		try {
@@ -144,8 +146,8 @@ public class ProxyMonitoringUnit {
 				outgoingSocket= new Socket(proxyHost, testedWsPort);
 				
 				//vytvoreni dvou vlaken pro prichozi a odchozi spojeni
-				ProxyThread inThread= new ProxyThread(interactionId, controller, incomingSocket, outgoingSocket);
-				ProxyThread outThread= new ProxyThread(interactionId, controller, outgoingSocket, incomingSocket);
+				ProxyThread inThread= new ProxyThread(interactionId, this, incomingSocket, outgoingSocket);
+				ProxyThread outThread= new ProxyThread(interactionId,this, outgoingSocket, incomingSocket);
 				inThread.start();
 				outThread.start();
 				interactionId++;
@@ -156,11 +158,12 @@ public class ProxyMonitoringUnit {
 		//radne ukonceni proxy serveru..
 		catch(SocketException ex) {
 			//TODO: tohle se okamzite vyhodi, pokud nastaveny proxy port je jiz pouzivan jinou aplikaci
+			ex.printStackTrace();
 			System.out.println("Proxy server stopped");
 		}
 		//zadany host nenalezen..predame udalost GUI k zobrazeni dialogu
 		catch(UnknownHostException ex) {
-			controller.publishUnknownMessageEvent();
+			this.publishUnknownMessageEvent();
 			stopProxy();
 			
 		}
@@ -189,9 +192,167 @@ public class ProxyMonitoringUnit {
 		}
 	}
 	
-	public static void main(String[] args) {
+	
+	/**
+	 * Metoda k ziskani seznamu interakci.
+	 * @return seznam interakci
+	 */
+	public Map<Integer, HttpInteraction> getInteractionMap() {
 		
-//		ProxyMonitoringUnit proxyMonitor= new ProxyMonitoringUnit();
-//		proxyMonitor.startProxy();
+		return interactionMap;
 	}
+	
+	
+	
+	
+	/**
+	 * Metoda pro ziskani URI proxy hostu
+	 * @return proxy host URI
+	 */
+	public String getProxyHost() {
+		
+		return this.getProxyHost();
+	}
+
+	/**
+	 * Metoda pro ziskani portu, na kterem nasloucha proxy server.
+	 * @return port proxy serveru
+	 */
+	public int getProxyPort() {
+		
+		return this.getProxyPort();
+	}
+
+	/**
+	 * Metoda pro ziskani portu, na kterem bezi testovana sluzba.
+	 * @return port testovane sluzby
+	 */
+	public int getTestedWsPort() {
+		
+		return this.getTestedWsPort();
+	}
+	
+	
+	/**
+	 * Metoda pro nastaveni portu, na kterem nasloucha testovana webova sluzba.
+	 * @param proxyHost port testovane webove sluzby
+	 */
+	public void setProxyHost(String proxyHost) {
+		
+		this.setProxyHost(proxyHost);
+	}
+
+	/**
+	 * Metoda pro nastaveni portu, na kterem nasloucha proxy server.
+	 * @param proxyPort port proxy serveru
+	 */
+	public void setProxyPort(int proxyPort) {
+		
+		this.setProxyPort(proxyPort);
+	}
+
+	/**
+	 * Metoda pro nastaveni URI proxy hostu.
+	 * @param testedWsPort URI proxy hostu
+	 */
+	public void setTestedWsPort(int testedWsPort) {
+		
+		this.setTestedWsPort(testedWsPort);
+	}
+		
+	
+	/**
+	 * Metoda pro zaregistrovani odberatele udalosti o nove zprave (soucast navrhoveho vzoru Observer).
+	 * @param listener odberatel
+	 */
+	public void addNewMessageListener(NewMessageListener listener) {
+		
+		newMessageListenerList.add(listener);
+	}
+	
+	/**
+	 * Metoda pro upozorneni vsech odberatelu o udalosti prichodu nove zpravy (soucast navrhoveho vzoru
+	 * Observer).
+	 */
+	private void publishNewMessageEvent(int interactionId, HttpInteraction interaction) {
+		
+		for (NewMessageListener currentListener : newMessageListenerList)
+			currentListener.onNewMessageEvent(interactionId, interaction);
+	}
+	
+	/**
+	 * Metoda pro zaregistrovani odberatele udalosti o nove zpravy (soucast navrhoveho vzoru Observer).
+	 * @param listener odberatel
+	 */
+	public void addUnknownHostListener(UnknownHostListener listener) {
+		
+		unknownHostListenerList.add(listener);
+	}
+	
+	/**
+	 * Metoda pro upozorneni vsech odberatelu o udalosti prichodu nove zpravy (soucast navrhoveho vzoru
+	 * Observer). Protected...je volano z ProxyMonitoringUnit.
+	 */
+	public void publishUnknownMessageEvent() {
+		
+		for (UnknownHostListener currentListener : unknownHostListenerList)
+			currentListener.onUnknownHostEvent();
+	}
+	
+	/**
+	 * Metoda pro oznameni z proxy monitoru o prichodu nove zpravy. Vytvori se reprezentace interakce
+	 * obsahujici httpRequest a prislusny httpResponse. Nasledne je zprava predana injektoru poruch
+	 * a pote jsou publikovany zmeny pro vsechny odberatele.
+	 * @param interactionId id interakce
+	 * @param httpMessage nova zprava
+	 */
+	public void newMessageNotifier(int interactionId, HttpMessage httpMessage) {
+		
+		//SITUACE KDY SPOJENI NENI RADNE UKONCENO A PROXY VLAKNA BEZI
+		//je potreba inkrementovat id interakce..jinak se bude v GUI prepisovat porad stejny radek
+		while (interactionMap.get(interactionId) != null && interactionMap.get(interactionId).getHttpRequest() != null &&
+				interactionMap.get(interactionId).getHttpResponse() != null) {
+			
+			interactionId++;
+			this.setInteractionId(interactionId);
+		}
+			
+		
+		HttpInteraction interaction;
+		//pokud v mape dosud neni prislusna http interakce..vytvorime novou
+		if (!interactionMap.containsKey(interactionId)) {
+			interaction= new HttpInteraction();
+			if (httpMessage instanceof HttpRequest)
+				interaction.setHttpRequest((HttpRequest) httpMessage);
+			else
+				interaction.setHttpResponse((HttpResponse) httpMessage);
+			
+			//vlozeni objektu interakce do mapy
+			interactionMap.put(interactionId, interaction);
+		}
+		//pokud v mape jiz existuje tato interakce..pridame k ni prislusny request/response
+		else {
+			interaction= interactionMap.get(interactionId);
+			if (httpMessage instanceof HttpRequest)
+				interaction.setHttpRequest((HttpRequest) httpMessage);
+			else
+				interaction.setHttpResponse((HttpResponse) httpMessage);
+		}
+		
+		//aplikujeme pripadne poruchy do zpravy
+		faultInjector.applyTest(httpMessage);
+		
+		//publikujeme zmeny v mape interakci
+		publishNewMessageEvent(interactionId, interaction);
+		
+//		System.out.println("*********************");
+//		System.out.println("changedContent" + httpMessage.getChangedContent());
+//		System.out.println("*********************");
+		
+		
+		
+	}
+	
+	
+	
 }

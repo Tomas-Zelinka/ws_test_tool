@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import javax.swing.text.PlainDocument;
 
 import logging.ConsoleLog;
@@ -25,8 +24,7 @@ import logging.ConsoleLog;
 import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
 
-import central.ProxyController;
-import central.TestUnitController;
+import central.UnitController;
 import exceptions.EmptyComponentException;
 
 
@@ -144,8 +142,8 @@ public class MainWindow extends JFrame{
 	 * those components are placed into the containers 
 	 * 
 	 */
-	public MainWindow(ProxyController proxyController, TestUnitController testUnitController){
-		initMainWindow(proxyController, testUnitController);
+	public MainWindow(UnitController testUnitController){
+		initMainWindow(testUnitController);
 		this.pack();
 	
 	}
@@ -341,7 +339,7 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	private void initMainWindow(ProxyController proxyController, TestUnitController testUnitController)
+	private void initMainWindow(UnitController testUnitController)
 	{
 		this.setTitle(this.APP_NAME);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -358,7 +356,7 @@ public class MainWindow extends JFrame{
 		this.setBackground(Color.gray);
 		initToolBox();
 		initMenuBar();
-		initContentPane(proxyController, testUnitController);
+		initContentPane(testUnitController);
 		initCenterPane();
 		initBottomPane();
 		getContentPane().add(this.bottomPane,BorderLayout.CENTER);
@@ -375,11 +373,11 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	private void initContentPane(ProxyController proxyController, TestUnitController testUnitController){
+	private void initContentPane(UnitController testUnitController){
 		
 	
 		this.editor = new TestCaseEditor();
-		this.proxyPanel = new ProxyMonitor(proxyController);
+		this.proxyPanel = new ProxyMonitor(testUnitController);
 		//this.remoteControlPanel = new RemoteControl();
 		this.statsPanel = new Statistics();
 		this.testUnitPanel = new TestingMonitor(testUnitController);
@@ -446,7 +444,7 @@ public class MainWindow extends JFrame{
 		removeUnit = new JButton("Remove Remote Unit");
 		removeUnit.addActionListener(new RemoveUnitListener());
 		
-		runUnit = new JButton("Run Unit");
+		runUnit = new JButton("Run Tests");
 		runUnit.addActionListener(new RunUnitListener());
 		
 		runAllUnits = new JButton("Run All Units");

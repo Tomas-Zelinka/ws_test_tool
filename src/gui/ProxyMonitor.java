@@ -14,7 +14,7 @@ import proxyUnit.HttpRequest;
 import proxyUnit.HttpResponse;
 import proxyUnit.NewMessageListener;
 import proxyUnit.UnknownHostListener;
-import central.ProxyController;
+import central.UnitController;
 import data.FaultInjectionData;
 
 public class ProxyMonitor extends JSplitPane implements NewMessageListener, UnknownHostListener {
@@ -23,45 +23,17 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 	 * 
 	 */
 	private static final long serialVersionUID = -7672468377133931212L;
-	//private javax.swing.JButton addConditionButton;
-    //private javax.swing.JButton addFaultButton;
-   // private javax.swing.JButton addStatementButton;
-    //private javax.swing.JMenuItem addStatementMenuItem;
-   // private javax.swing.JButton addTestButton;
-    //private javax.swing.JMenuItem addTestMenuItem;
-   // private javax.swing.JLabel conditionLabel;
-   // private javax.swing.JPanel conditionPanel;
-  //  private javax.swing.table.DefaultTableModel conditionTableModel;
-   /// private javax.swing.JTable conditionTable;
-   // private javax.swing.JMenuItem exitMenuItem;
-   // private javax.swing.JLabel faultLabel;
-    //private javax.swing.JPanel faultPanel;
-  //  private javax.swing.table.DefaultTableModel faultTableModel;
-   // private javax.swing.JTable faultTable;
-   // private javax.swing.JMenu fileMenu;
-    private javax.swing.table.DefaultTableModel interactionTableModel;
+	 private javax.swing.table.DefaultTableModel interactionTableModel;
     private javax.swing.JTable interactionTable;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-   // private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-   // private javax.swing.JScrollPane jScrollPane3;
-    //private javax.swing.JScrollPane jScrollPane4;
-   // private javax.swing.JToolBar.Separator jSeparator1;
-   // private javax.swing.JToolBar.Separator jSeparator2;
-    //private javax.swing.JTabbedPane mainTabbedPane;
     private javax.swing.JSplitPane messageSplitPane;
     private javax.swing.JTabbedPane messageTabbedPane;
-    //private javax.swing.JButton proxySettingsButton;
-   // private javax.swing.JButton removeConditionButton;
-   // private javax.swing.JButton removeFaultButton;
-   // private javax.swing.JMenuItem removeMenuItem;
-   // private javax.swing.JButton removeNodeButton;
-   /// private javax.swing.JMenuItem renameMenuItem;
-    private javax.swing.JEditorPane reqChangedEditorPane;
+     private javax.swing.JEditorPane reqChangedEditorPane;
     private javax.swing.JLabel reqChangedLabel;
     private javax.swing.JScrollPane reqChangedScrollPane;
     private javax.swing.JEditorPane reqOriginalEditorPane;
@@ -75,45 +47,26 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
     private javax.swing.JLabel resOriginalLabel;
     private javax.swing.JScrollPane resOriginalScrollPane;
     private javax.swing.JSplitPane resSplitPane;
-   // private javax.swing.JMenu settingsMenu;
-   /// private javax.swing.JMenuItem settingsMenuItem;
-    //private javax.swing.JToggleButton startProxyToggleButton;
-    //private javax.swing.JToggleButton startTestToggleButton;
-    //private javax.swing.JSplitPane statementDetailSplitPane;
-   // private javax.swing.DefaultComboBoxModel testComboBoxModel;
-   // private javax.swing.JComboBox testComboBox;
-   // private javax.swing.JScrollPane testScrollPane;
-    //private javax.swing.JSplitPane testSplitPane;
-   // private javax.swing.JToolBar testToolBar;
-    //private javax.swing.tree.DefaultTreeModel testTreeModel;
-   // private javax.swing.tree.DefaultTreeCellRenderer testTreeRenderer;
-    //private javax.swing.JTree testTree;
-   // private javax.swing.JPopupMenu testTreePopupMenu;
-  //  private javax.swing.JMenuBar topMenuBar;
- //   private javax.swing.JToolBar topToolBar;
     
     
-    private ProxyController controller;
+    private UnitController controller;
 	private InteractionTablePopupListener interactionTablePopupListener;
 	//private TestTreePopupListener testTreePopupListener;
 		
     
-    public ProxyMonitor(ProxyController proxyController){
+    public ProxyMonitor(UnitController proxyController){
     	controller= proxyController;
 		//zaregistrujeme se jako odberatel udalosti o novych zpravach z business vrstvy
-		controller.addNewMessageListener(this);
-		controller.addUnknownHostListener(this);
+		controller.addLocalProxyUnit();
+    	
+    	controller.setNewMessageListener(this);
+		controller.setUnknownHostListener(this);
 		
 		interactionTablePopupListener= new InteractionTablePopupListener();
 		//testTreePopupListener= new TestTreePopupListener();
 				
 		initComponents();
 		
-		//pripravime testComboBox
-		//initTestComboBox();
-		
-		//pripravime datovy model pro testTree komponentu
-		//initTestTreeModel();
 		//ziskame referenci na datovy model interakcni tabulky
 		interactionTableModel= (DefaultTableModel) interactionTable.getModel();
 		//ziskame referenci na datovy model tabulky podminek
@@ -219,7 +172,7 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 		HttpResponse httpResponse= interaction.getHttpResponse();
 		
 		//zapiseme do tabulky pouzity test
-		FaultInjectionData activeTest= controller.getActiveTest();
+		FaultInjectionData activeTest= controller.getProxyActiveTest();
 		String usedTest= "None";
 		if (activeTest != null)
 			usedTest= activeTest.getTestName();
@@ -304,32 +257,7 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
         resChangedLabel = new javax.swing.JLabel();
         resChangedScrollPane = new javax.swing.JScrollPane();
         resChangedEditorPane = new AntiAliasedEditorPane();
-        //testSplitPane = new javax.swing.JSplitPane();
-       // jPanel8 = new javax.swing.JPanel();
-       // testToolBar = new javax.swing.JToolBar();
-        //addTestButton = new javax.swing.JButton();
-       // addStatementButton = new javax.swing.JButton();
-       // jSeparator2 = new javax.swing.JToolBar.Separator();
-        //removeNodeButton = new javax.swing.JButton();
-       // testScrollPane = new javax.swing.JScrollPane();
-       // testTree = new javax.swing.JTree();
-        //statementDetailSplitPane = new javax.swing.JSplitPane();
-       // conditionPanel = new javax.swing.JPanel();
-        //conditionLabel = new javax.swing.JLabel();
-       // jScrollPane3 = new javax.swing.JScrollPane();
-       // conditionTable = new javax.swing.JTable();
-        //addConditionButton = new javax.swing.JButton();
-      //  removeConditionButton = new javax.swing.JButton();
-       // faultPanel = new javax.swing.JPanel();
-       // faultLabel = new javax.swing.JLabel();
-       // jScrollPane4 = new javax.swing.JScrollPane();
-      //  faultTable = new javax.swing.JTable();
-       // addFaultButton = new javax.swing.JButton();
-      //  removeFaultButton = new javax.swing.JButton();
        
-       // messageSplitPane.setDividerLocation(200);
-       // messageSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-
         this.setDividerLocation(200);
         this.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         interactionTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -508,12 +436,7 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
         messageTabbedPane.addTab("Response", resSplitPane);
         this.setBottomComponent(messageTabbedPane);
 
-        //mainTabbedPane.addTab("Service communication", messageSplitPane);
-
-        //mainTabbedPane.addTab("Service tests", testSplitPane);
-
-        //this.add(messageSplitPane);
-       
+           
     }// </editor-fold>//GEN-END:initComponents
 	
 	

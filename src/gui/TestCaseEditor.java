@@ -91,7 +91,7 @@ public class TestCaseEditor extends JPanel {
 	public void saveTestCase(){
 		
 		ConsoleLog.Print("saving");
-		FaultInjectionData faultData = faultInjectionEditor.getFaultInjetionData();
+		FaultInjectionData faultData = faultInjectionEditor.getTest();
 		HttpRequestData requestData = httpEditor.getHttpRequestData();
 		TestCaseSettingsData settingsData = settingsEditor.getSettingsData();
 		
@@ -149,7 +149,7 @@ public class TestCaseEditor extends JPanel {
 			ConsoleLog.Print("Fault Injection file not found !!!");
 		}else{
 			loadedFault = (FaultInjectionData) dataProvider.readObject(faultFilePath);
-			faultInjectionEditor.setFaultData(loadedFault);
+			faultInjectionEditor.setTest(loadedFault);
 		}
 		
 		ConsoleLog.Print("loaded");

@@ -20,7 +20,8 @@ public class HttpResponse implements HttpMessage {
 	private int contentLength;
 	private String transferEncoding;
 	private String contentEncoding;
-	
+	private String initiatorIp;
+	private int initiatorPort;
 	private String content;
 	private String formattedContent;
 	
@@ -29,9 +30,11 @@ public class HttpResponse implements HttpMessage {
 	
 	
 	
-	public HttpResponse(String httpCode, String httpCodeDesc, String errorMessage, String httpHeader,
+	public HttpResponse(String httpCode, String initiatorIp, int initiatorPort, String httpCodeDesc, String errorMessage, String httpHeader,
 			int contentLength, String transferEncoding, String contentEncoding) {
 		
+		this.initiatorIp = initiatorIp;
+		this.initiatorPort= initiatorPort;
 		this.httpCode = httpCode;
 		this.httpCodeDesc= httpCodeDesc;
 		this.errorMessage = errorMessage;
@@ -42,6 +45,35 @@ public class HttpResponse implements HttpMessage {
 		
 	}
 
+	
+	/**
+	 * Metoda pro ziskani iniciatora spojeni.
+	 * @return iniciator spojeni
+	 */
+	public String getInitiator() {
+		
+		return initiatorIp + ":" + initiatorPort;
+	}
+	
+	/**
+	 * Metoda pro ziskani IP adresy iniciatora spojeni.
+	 * @return IP adresa iniciatora spojeni
+	 */
+	public String getInitiatorIp() {
+		
+		return initiatorIp;
+	}
+
+	/**
+	 * Metoda pro ziskani portu iniciatora spojeni.
+	 * @return port iniciatora spojeni
+	 */
+	public int getInitiatorPort() {
+		
+		return initiatorPort;
+	}
+	
+	
 	/**
 	 * Metoda pro ziskani pozmenene http hlavicky.
 	 * @return pozmenena http hlavicka

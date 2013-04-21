@@ -14,7 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 import data.DataProvider;
-import data.HttpRequestData;
+import data.HttpMessageData;
  
 public class HttpRequestEditor extends JPanel {
     
@@ -35,7 +35,7 @@ public class HttpRequestEditor extends JPanel {
     private JEditorPane httpBodyEditorPane;
     private DefaultTableModel  headersTableModel;
     private JScrollPane httpBodyScrollPane;
-    private HttpRequestData requestData;
+    private HttpMessageData requestData;
     private JSplitPane contentPane;
     private JPanel httpBodyPanel;
     
@@ -52,7 +52,7 @@ public class HttpRequestEditor extends JPanel {
         contentPane.setResizeWeight(0.4);
     }
     
-    public HttpRequestData getHttpRequestData(){
+    public HttpMessageData getHttpRequestData(){
     	return this.requestData;
     }
     

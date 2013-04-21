@@ -1,5 +1,7 @@
 package data;
 
+import java.io.File;
+
 public class TestCaseSettingsData {
 	 
 	
@@ -14,7 +16,7 @@ public class TestCaseSettingsData {
 	private int proxyPort;
 	private int proxyTestedPort;
 	private boolean useProxy;
-	
+	public static final String filename = File.separator+"settings.xml";
 	
 	
 	

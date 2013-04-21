@@ -1,9 +1,5 @@
 package gui;
 
-import gui.ProjectNavigator.FaultInjectionListener;
-import gui.ProjectNavigator.HttpTestListener;
-import gui.ProjectNavigator.RefreshTree;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -17,7 +13,8 @@ import modalWindows.NewTestCaseDialog;
 import modalWindows.NewTestSuiteDialog;
 import data.DataProvider;
 import data.FaultInjectionData;
-import data.HttpRequestData;
+import data.HttpMessageData;
+import data.TestCaseSettingsData;
 
 public class Menu extends JMenuBar {
 
@@ -519,8 +516,11 @@ public class Menu extends JMenuBar {
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
 	            File httpDataFile = new File(inputDir.getPath() + File.separator + "httpRequest.xml");
-	            DataProvider writer = new DataProvider();
-	            HttpRequestData httpData = new HttpRequestData();
+	            DataProvider ioProvider = new DataProvider();
+	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath() + TestCaseSettingsData.filename );
+	            HttpMessageData httpData = new HttpMessageData(settings.getName());
+	            
+	           
 	            
 	            
 				if (newHttpCase.exists()){
@@ -532,7 +532,7 @@ public class Menu extends JMenuBar {
 	            	 outputDir.mkdir();
 	            	 try{
 		             		httpDataFile.createNewFile();
-		             		writer.writeObject(httpDataFile.getPath(),httpData);
+		             		ioProvider.writeObject(httpDataFile.getPath(),httpData);
 		             	 }catch(Exception b){
 		             		 b.printStackTrace();
 		             	 }
@@ -560,9 +560,11 @@ public class Menu extends JMenuBar {
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
 	            File faultInjectionDataFile = new File(inputDir.getPath() + File.separator + "faultInjection.xml");
-	            DataProvider writer = new DataProvider();
-	            FaultInjectionData faultData = new FaultInjectionData(newHttpCase.getPath());
-
+	            DataProvider ioProvider = new DataProvider();
+	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath() + TestCaseSettingsData.filename );
+	            FaultInjectionData faultData = new FaultInjectionData(settings.getName());
+          
+	           
 	           
 				if (newHttpCase.exists()){
 					ConsoleLog.Print("You can set only 1 fault injection test to this case");
@@ -573,7 +575,7 @@ public class Menu extends JMenuBar {
 	            	 outputDir.mkdir();
 	            	 try{
 	            		 faultInjectionDataFile.createNewFile();
-	            		 writer.writeObject(faultInjectionDataFile.getPath(),faultData);
+	            		 ioProvider.writeObject(faultInjectionDataFile.getPath(),faultData);
 	            	 }catch(Exception b){
 	            		 b.printStackTrace();
 	            	 }

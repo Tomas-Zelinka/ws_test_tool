@@ -72,7 +72,7 @@ public class DataProvider {
 			obj= stream.fromXML(new FileInputStream(new File(path)));
 		}
 		catch (FileNotFoundException ex) {
-			ConsoleLog.Print("File" + "not found");
+			ConsoleLog.Print("File " +path+ " not found");
 			ConsoleLog.Print(ex.getMessage());
 			//System.exit(-1);
 		}

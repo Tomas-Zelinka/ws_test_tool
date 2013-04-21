@@ -13,9 +13,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import logging.ConsoleLog;
-import proxyUnit.HttpInteraction;
 import testingUnit.NewResponseListener;
 import data.DataProvider;
+import data.HttpMessageData;
 import data.TestCaseSettingsData;
 import data.TestList;
 
@@ -81,34 +81,52 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	}
 	
 	@Override
-	public void onNewResponseEvent(String message) {
-		requestEditorPane.setText(message);
+	public void onNewResponseEvent(HttpMessageData[] dataArray) {
+		ConsoleLog.Print("[UnitPanel] dostal jsem data, delka:" + dataArray.length);
+		
+		
+		
+		for(HttpMessageData data : dataArray){
+			Object[] newRow = new Object[] {data.getName(),null,null,null,null,null};
+			responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
+			//responseEditorPane.setText(data.getBody()); 
+		}
+		ConsoleLog.Print("[UnitPanel] vracim se");
 	}
 	/**
 	 * 
 	 * @param path
 	 */
 	public void saveTestList(String path){
-			
-		HashMap<Integer,String> testCases = this.testListData.getTestCases();
-
-		ConsoleLog.Print(""+testCases.size());
-		for(Integer id: testCases.keySet()){
-			
-			String casePath = testCases.get(id);
-			Integer threadsNumberRow = (Integer)testCasesTableModel.getValueAt(id,2);
-			Integer loopsCountRow =  (Integer)testCasesTableModel.getValueAt(id,3);
-			Boolean runTestRow =  (Boolean)testCasesTableModel.getValueAt(id,4);
-			
-			TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
-			testCaseSettings.setThreadsNumber(threadsNumberRow);
-			testCaseSettings.setLoopNumber(loopsCountRow);
-			testCaseSettings.setRun(runTestRow);
-			
-			ioProvider.writeObject(casePath, testCaseSettings);
-		}
-		ioProvider.writeObject(path, this.testListData);
 		
+		if(this.testListData != null ){
+			String suitePath = path;
+			HashMap<Integer,String> testCases = this.testListData.getTestCases();
+			
+			if(this.testListData.getTestCases().size() == testCasesTableModel.getRowCount()){
+			
+				ConsoleLog.Print(""+testCases.size());
+				for(int id = 0; id <testCasesTableModel.getRowCount(); id++){
+					
+					String casePath = testCases.get((Integer)testCasesTableModel.getValueAt(id,0));
+					Integer threadsNumberRow = (Integer)testCasesTableModel.getValueAt(id,2);
+					Integer loopsCountRow =  (Integer)testCasesTableModel.getValueAt(id,3);
+					Boolean runTestRow =  (Boolean)testCasesTableModel.getValueAt(id,4);
+					
+					TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
+					testCaseSettings.setThreadsNumber(threadsNumberRow);
+					testCaseSettings.setLoopNumber(loopsCountRow);
+					testCaseSettings.setRun(runTestRow);
+					
+					ioProvider.writeObject(casePath+File.separator+"settings.xml", testCaseSettings);
+				}
+				ioProvider.writeObject(suitePath, this.testListData);
+			}else{
+				ConsoleLog.Print("neshode pri poctu testu v tabulce a objektu");
+			}
+		}else{
+			ConsoleLog.Message("Any opened test suite");
+		}
 	}
 	
 	
@@ -117,16 +135,20 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	 * 
 	 * @param casePath
 	 */
-	public void insertTestCaseToTable(String casePath)
-	{
+	public void insertTestCaseToTable(String casePath){
+		
+		
 		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
-				
-		if(detectDuplicityInTable(testCaseSettings.getName())){
-			ConsoleLog.Message("Test case already in test list");
+		if(this.testListData != null){
+			if(detectDuplicityInTable(testCaseSettings.getName())){
+				ConsoleLog.Message("Test case already in test list");
+			}else{
+				this.testListData.addTestCase(casePath.substring(0, casePath.length() - "settings.xml".length() ));
+				Object[] newRow = new Object[] {this.testListData.getLastId(),testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun()),new Boolean(testCaseSettings.getUseProxy())};
+				testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
+			}
 		}else{
-			this.testListData.addTestCase(casePath);
-			Object[] newRow = new Object[] {this.testListData.getLastId(),testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun()),new Boolean(testCaseSettings.getUseProxy())};
-			testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
+			ConsoleLog.Message("Any opened test suite");
 		}
 	}
 	
@@ -194,12 +216,12 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	private void putTestCaseToTable(Integer id){
 		
 		String casePath = this.testListData.getTestCases().get(id);
-		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
+		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
 		
 		if(testCaseSettings == null){
 			ConsoleLog.Message("Test case file from list not found.");
 		}else{
-			Object[] newRow = new Object[] {id,testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun())};
+			Object[] newRow = new Object[] {id,testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun()),new Boolean(testCaseSettings.getUseProxy())};
 			testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
 		}
 	}
@@ -319,7 +341,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 
 	            },
 	            new String [] {
-	            		 "#", "Http Code","Method","URI"
+	            		 "Name", "Loop number","Thread number", "Http Code","Method","URI"
 	            }
 	        ) {
 	            /**
@@ -327,7 +349,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 				 */
 				private static final long serialVersionUID = 3376163326142594714L;
 				boolean[] canEdit = new boolean [] {
-	                false, false
+	                false, false,false, false,false, false,
 	            };
 
 	            public boolean isCellEditable(int rowIndex, int columnIndex) {

@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
 
+import logging.ConsoleLog;
 import modalWindows.AntiAliasedEditorPane;
 import proxyUnit.HttpInteraction;
 import proxyUnit.HttpRequest;
@@ -110,20 +111,22 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 	 * @param interaction objekt interakce
 	 */
 	@Override
-	public void onNewMessageEvent(int interactionId, HttpInteraction interaction) {
-		
+	public void onNewMessageEvent(int port, HttpInteraction interaction) {
+		//ConsoleLog.Print("[ProxyUnitPanel] vkladam do tabulky" + port);
 		//hledame v tabulce, zda tam jiz prislusna interakce neni..pokud ano, pridame nove informace
-		boolean interactionInserted= false;
-		for (int i= 0; i < interactionTableModel.getRowCount(); i++)
-			if ((Integer)interactionId == interactionTableModel.getValueAt(i, 0)) {
-				setValueAtInteractionTable(i, interactionId, interaction);
-				interactionInserted= true;
-				break;
-			}
-		
-		//pokud interakce nebyla nalezena, vytvorime novy radek
-		if (!interactionInserted)
-			insertRowInteractionTable(interactionId, interaction);
+//		boolean interactionInserted= false;
+//		for (int i= 0; i < interactionTableModel.getRowCount(); i++){
+//			ConsoleLog.Print("[ProxyUnitPanel] hledam"+ port+" nachazim " +interactionTableModel.getValueAt(i, 4));
+//			if (port == (Integer)interactionTableModel.getValueAt(i, 4)) {
+//				ConsoleLog.Print("[ProxyUnitPanel] AGREGUJU" + port);
+//				setValueAtInteractionTable(i,interaction);
+//				interactionInserted= true;
+//				break;
+//			}
+//		}
+//		//pokud interakce nebyla nalezena, vytvorime novy radek
+//		if (!interactionInserted)
+			insertRowInteractionTable(interactionTable.getRowCount(), interaction);
 		
 	}
 	
@@ -133,13 +136,13 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 	 * @param interactionId id interakce
 	 * @param interaction objekt interakce
 	 */
-	private void setValueAtInteractionTable(int row, int interactionId, HttpInteraction interaction) {
+	private void setValueAtInteractionTable(int row, HttpInteraction interaction) {
 		
 		HttpRequest httpRequest= interaction.getHttpRequest();
 		HttpResponse httpResponse= interaction.getHttpResponse();
 		
 		//vlozeni cisla interakce
-		interactionTableModel.setValueAt(interactionId, row, 0);
+		//interactionTableModel.setValueAt(interactionId, row, 0);
 		
 		//HTTP REQUEST
 		if (httpRequest != null) {
@@ -148,7 +151,9 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 			//vlozeni iniciatora komunikace
 			interactionTableModel.setValueAt(httpRequest.getInitiator(), row, 3);
 			//vlozeni URI
-			interactionTableModel.setValueAt(httpRequest.getUri(), row, 4);
+			interactionTableModel.setValueAt(httpRequest.getInitiatorPort(), row, 4);
+			
+			interactionTableModel.setValueAt(httpRequest.getUri(), row, 5);
 		}
 		
 		//HTTP RESPONSE
@@ -180,14 +185,14 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 		//HTTP REQUEST
 		if (httpRequest != null) {
 			Object[] newRow= new Object[] {interactionId, null, httpRequest.getHttpMethod(),
-					httpRequest.getInitiator(), httpRequest.getUri(), usedTest};
+					httpRequest.getInitiator(),httpRequest.getInitiatorPort(), httpRequest.getUri(), usedTest};
 			interactionTableModel.insertRow(interactionTable.getRowCount(), newRow);
 		}
 		
 		//HTTP RESPONSE
 		else {
 			Object[] newRow= new Object[] {interactionId, httpResponse.getHttpCode() + " " + 
-					httpResponse.getHttpCodeDesc(), null, null, null, usedTest};
+					httpResponse.getHttpCodeDesc(), null,null,httpResponse.getInitiatorPort(), null, usedTest};
 			interactionTableModel.insertRow(interactionTable.getRowCount(), newRow);
 		}
 		
@@ -265,7 +270,7 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 
             },
             new String [] {
-                "#", "Http code", "Method", "Initiator", "URI", "Test"
+                "#", "Http code", "Method", "Initiator","Local Port", "URI", "Test"
             }
         ) {
             /**
@@ -273,7 +278,7 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 			 */
 			private static final long serialVersionUID = 7932709950895630069L;
 			boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false,false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -450,21 +455,18 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 		 */
 		public class InteractionTablePopupListener extends MouseAdapter {
 
-			
 			private int lastSelectedInteraction= -1;
 			
 			
 			@Override
 			public void mousePressed(MouseEvent me) {
 				clickAction(me);
-				
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent me) {
 				if (me.isPopupTrigger())
 					clickAction(me);
-				
 			}
 			
 			private void clickAction(MouseEvent me) {
@@ -472,13 +474,14 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 				//zjistime id interakce, na kterou bylo kliknuto
 				Point point= me.getPoint();
 				int row= interactionTable.rowAtPoint(point);
-				int interactionId= (Integer) interactionTable.getValueAt(row, 0);
+				int port= (Integer) interactionTable.getValueAt(row, 4);
 				
 				//pokud nebylo znovu kliknuto na stejnou interakci..
-				if (interactionId != lastSelectedInteraction) {
+				if (port != lastSelectedInteraction) {
 					//zobrazime obsah http zprav do komponent tridy JEditorPane
-					lastSelectedInteraction= interactionId;
-					HttpInteraction selectedInteraction= controller.getInteractionMap().get(interactionId);
+					lastSelectedInteraction= port;
+					//ConsoleLog.Print("[ProxyUnitPanel] vkladam interakci");
+					HttpInteraction selectedInteraction= controller.getInteractionMap().get(port);
 					HttpRequest httpRequest= selectedInteraction.getHttpRequest();
 					HttpResponse httpResponse= selectedInteraction.getHttpResponse();
 					if (httpRequest != null) {
@@ -506,8 +509,6 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 				}
 				
 			}
-			
-			
 		}
 }
 

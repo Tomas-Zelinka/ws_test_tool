@@ -244,6 +244,11 @@ public class MainWindow extends JFrame{
 		this.navigator.refreshTree();
 	}
 	
+	public void insertTestCase(){
+		testUnitPanel.insertTestCase(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"settings.xml");
+		
+	}
+	
 	/**
 	 * 
 	 * @return
@@ -527,8 +532,7 @@ public class MainWindow extends JFrame{
 	
 	private class InsertTestCaseListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-			testUnitPanel.insertTestCase(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"settings.xml");
-			
+			insertTestCase();
 			ConsoleLog.Print("Insert Test Case clicked");
 			
 		}
@@ -549,4 +553,7 @@ public class MainWindow extends JFrame{
 			
 		}
 	}
+	
+	
+	
 }

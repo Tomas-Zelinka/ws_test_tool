@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import logging.ConsoleLog;
+
 import data.FaultInjectionData;
 
 /**
@@ -38,9 +40,7 @@ public class ProxyMonitoringUnit {
 	private Socket outgoingSocket;
 
 	
-	private Thread proxyThread;
-	
-	private int interactionId= 0;
+	private Integer interactionId= 0;
 	private Map<Integer, HttpInteraction> interactionMap= new ConcurrentHashMap<Integer, HttpInteraction>();
 	
 	private List<NewMessageListener> newMessageListenerList= new ArrayList<NewMessageListener>();
@@ -133,23 +133,24 @@ public class ProxyMonitoringUnit {
 		
 		setProxyFlag(true);
 		try {
-			serverSocket= new ServerSocket(proxyPort);
+			serverSocket= new ServerSocket(this.proxyPort);
 			System.out.println("Proxy server is running at port " + proxyPort);
-			
 			//int interactionId= 0;
 			while(isProxyFlag()) {
+				ConsoleLog.Print("[ProxyUnit] interakce" + interactionId);
 				//server vytvori pro kazde prichozi spojeni novy soket (blokujici operace)
 				incomingSocket= serverSocket.accept();
 //				if (!isProxyFlag())
 //					break;
 				//vytvoreni odchoziho soketu pro preposlani zpravy
-				outgoingSocket= new Socket(proxyHost, testedWsPort);
+				outgoingSocket= new Socket(this.proxyHost, this.testedWsPort);
 				
 				//vytvoreni dvou vlaken pro prichozi a odchozi spojeni
 				ProxyThread inThread= new ProxyThread(interactionId, this, incomingSocket, outgoingSocket);
 				ProxyThread outThread= new ProxyThread(interactionId,this, outgoingSocket, incomingSocket);
 				inThread.start();
 				outThread.start();
+				//ConsoleLog.Print("[ProxyUnit] interakce" + interactionId);
 				interactionId++;
 			}
 			
@@ -158,8 +159,8 @@ public class ProxyMonitoringUnit {
 		//radne ukonceni proxy serveru..
 		catch(SocketException ex) {
 			//TODO: tohle se okamzite vyhodi, pokud nastaveny proxy port je jiz pouzivan jinou aplikaci
-			ex.printStackTrace();
-			System.out.println("Proxy server stopped");
+			
+			System.out.println("Proxy server stopped:" + ex.getMessage());
 		}
 		//zadany host nenalezen..predame udalost GUI k zobrazeni dialogu
 		catch(UnknownHostException ex) {
@@ -237,27 +238,27 @@ public class ProxyMonitoringUnit {
 	 * Metoda pro nastaveni portu, na kterem nasloucha testovana webova sluzba.
 	 * @param proxyHost port testovane webove sluzby
 	 */
-	public void setProxyHost(String proxyHost) {
+	public void setProxyHost(String host) {
 		
-		this.setProxyHost(proxyHost);
+		this.proxyHost = host ;
 	}
 
 	/**
 	 * Metoda pro nastaveni portu, na kterem nasloucha proxy server.
 	 * @param proxyPort port proxy serveru
 	 */
-	public void setProxyPort(int proxyPort) {
+	public void setProxyPort(int port) {
 		
-		this.setProxyPort(proxyPort);
+		this.proxyPort = port;
 	}
 
 	/**
 	 * Metoda pro nastaveni URI proxy hostu.
 	 * @param testedWsPort URI proxy hostu
 	 */
-	public void setTestedWsPort(int testedWsPort) {
+	public void setTestedWsPort(int port) {
 		
-		this.setTestedWsPort(testedWsPort);
+		this.testedWsPort =port;
 	}
 		
 	
@@ -306,21 +307,24 @@ public class ProxyMonitoringUnit {
 	 * @param interactionId id interakce
 	 * @param httpMessage nova zprava
 	 */
-	public void newMessageNotifier(int interactionId, HttpMessage httpMessage) {
+	public synchronized  void newMessageNotifier(int interactionId, HttpMessage httpMessage) {
 		
 		//SITUACE KDY SPOJENI NENI RADNE UKONCENO A PROXY VLAKNA BEZI
 		//je potreba inkrementovat id interakce..jinak se bude v GUI prepisovat porad stejny radek
-		while (interactionMap.get(interactionId) != null && interactionMap.get(interactionId).getHttpRequest() != null &&
-				interactionMap.get(interactionId).getHttpResponse() != null) {
-			
-			interactionId++;
-			this.setInteractionId(interactionId);
-		}
-			
+//		while (interactionMap.get(interactionId) != null && interactionMap.get(interactionId).getHttpRequest() != null &&
+//				interactionMap.get(interactionId).getHttpResponse() != null) {
+//			
+//			interactionId++;
+//			this.setInteractionId(interactionId);
+//		}
 		
+		
+		int port = httpMessage.getInitiatorPort();
+			
+		//ConsoleLog.Print(""+port);
 		HttpInteraction interaction;
 		//pokud v mape dosud neni prislusna http interakce..vytvorime novou
-		if (!interactionMap.containsKey(interactionId)) {
+		if (!interactionMap.containsKey(port) ){
 			interaction= new HttpInteraction();
 			if (httpMessage instanceof HttpRequest)
 				interaction.setHttpRequest((HttpRequest) httpMessage);
@@ -328,11 +332,11 @@ public class ProxyMonitoringUnit {
 				interaction.setHttpResponse((HttpResponse) httpMessage);
 			
 			//vlozeni objektu interakce do mapy
-			interactionMap.put(interactionId, interaction);
+			interactionMap.put(port, interaction);
 		}
 		//pokud v mape jiz existuje tato interakce..pridame k ni prislusny request/response
 		else {
-			interaction= interactionMap.get(interactionId);
+			interaction= interactionMap.get(port);
 			if (httpMessage instanceof HttpRequest)
 				interaction.setHttpRequest((HttpRequest) httpMessage);
 			else
@@ -343,7 +347,7 @@ public class ProxyMonitoringUnit {
 		faultInjector.applyTest(httpMessage);
 		
 		//publikujeme zmeny v mape interakci
-		publishNewMessageEvent(interactionId, interaction);
+		publishNewMessageEvent(port, interaction);
 		
 //		System.out.println("*********************");
 //		System.out.println("changedContent" + httpMessage.getChangedContent());

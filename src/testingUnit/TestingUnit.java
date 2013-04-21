@@ -1,14 +1,14 @@
 package testingUnit;
 
-import data.TestList;
+import data.HttpMessageData;
+import data.TestCaseSettingsData;
 
 public interface TestingUnit {
 	
 	public void run();
 		
-	public TestList getTestList(); 
-
-	public void setTestList(String path);
+	
+	public void setTest(HttpMessageData request, TestCaseSettingsData settings);
 }
 
  

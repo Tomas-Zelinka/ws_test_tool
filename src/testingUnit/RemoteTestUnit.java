@@ -1,6 +1,8 @@
 package testingUnit;
 
 import data.DataProvider;
+import data.HttpMessageData;
+import data.TestCaseSettingsData;
 import data.TestList;
 
 public class RemoteTestUnit implements TestingUnit {
@@ -18,12 +20,8 @@ public class RemoteTestUnit implements TestingUnit {
 	}
 	
 	
-	public TestList getTestList() {
-		return testList;
-	}
-
-	public void setTestList(String path) {
-		this.testList = (TestList) reader.readObject(path);
-	}
+	
+	public void setTest(HttpMessageData request, TestCaseSettingsData settings) {
+		}
 	
 }

@@ -1,7 +1,9 @@
 package testingUnit;
 
+import data.HttpMessageData;
+
 
 
 public interface NewResponseListener {
-	public void onNewResponseEvent(String message);
+	public void onNewResponseEvent(HttpMessageData[] data);
 }

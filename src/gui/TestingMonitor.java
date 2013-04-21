@@ -206,7 +206,7 @@ public class TestingMonitor extends JPanel  {
 	public void runUnit(String path){
 		getSelectedPanel().saveTestList(path); 
 		controller.runTest(path,getUnitKey());
-		ConsoleLog.Print("executed");
+		
 		 
 	}
 }

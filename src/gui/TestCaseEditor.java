@@ -9,7 +9,7 @@ import javax.swing.JTabbedPane;
 import logging.ConsoleLog;
 
 import data.DataProvider;
-import data.HttpRequestData;
+import data.HttpMessageData;
 import data.FaultInjectionData;
 import data.TestCaseSettingsData;
 
@@ -92,7 +92,7 @@ public class TestCaseEditor extends JPanel {
 		
 		ConsoleLog.Print("saving");
 		FaultInjectionData faultData = faultInjectionEditor.getTest();
-		HttpRequestData requestData = httpEditor.getHttpRequestData();
+		HttpMessageData requestData = httpEditor.getHttpRequestData();
 		TestCaseSettingsData settingsData = settingsEditor.getSettingsData();
 		
 		String settingsFilePath = getTestCasePath() + File.separator + TestCaseEditor.settingsFileName;
@@ -117,7 +117,7 @@ public class TestCaseEditor extends JPanel {
 		ConsoleLog.Print("loading");
 		TestCaseSettingsData loadedSettings = null;
 		FaultInjectionData loadedFault = null;
-		HttpRequestData loadedHttpData = null;
+		HttpMessageData loadedHttpData = null;
 		
 		String settingsFilePath = getTestCasePath() + File.separator + TestCaseEditor.settingsFileName;
 		String httpFilePath = getTestCasePath() + File.separator + TestCaseEditor.httpRequestFileName;
@@ -140,7 +140,7 @@ public class TestCaseEditor extends JPanel {
 		if(!httpDataFile.exists()){
 			ConsoleLog.Print("Http Data file not found !!!");
 		}else{
-			loadedHttpData = (HttpRequestData) dataProvider.readObject(httpFilePath);
+			loadedHttpData = (HttpMessageData) dataProvider.readObject(httpFilePath);
 		}
 		
 		

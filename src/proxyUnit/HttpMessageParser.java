@@ -104,6 +104,9 @@ public class HttpMessageParser {
 		else {
 			//parsujeme navratovy kod
 			//HTTP/1.1 200 OK
+			String initiatorIp= incomingSocket.getInetAddress().getHostAddress();
+			int initiatorPort= incomingSocket.getLocalPort();
+			
 			pattern= Pattern.compile("^HTTP[^ ]* ([^ ]*) (.*)$", Pattern.MULTILINE);
 			matcher= pattern.matcher(rawMessage);
 			String httpCode= null;
@@ -147,7 +150,7 @@ public class HttpMessageParser {
 				contentEncoding= matcher.group(1);
 			}
 			
-			return new HttpResponse(httpCode, httpCodeDesc, null, httpHeader, contentLength, transferEncoding,
+			return new HttpResponse(httpCode,initiatorIp,initiatorPort, httpCodeDesc, null, httpHeader, contentLength, transferEncoding,
 					contentEncoding);
 		}
 	}

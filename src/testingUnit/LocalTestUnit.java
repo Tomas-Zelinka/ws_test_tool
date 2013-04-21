@@ -1,9 +1,6 @@
 package testingUnit;
 
-import gui.UnitPanel;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,17 +9,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.swing.JPanel;
-
 import logging.ConsoleLog;
-
-import org.apache.http.client.HttpClient;
-
-import central.UnitController;
-
-import data.DataProvider;
+import data.HttpMessageData;
 import data.TestCaseSettingsData;
-import data.TestList;
 
 public class LocalTestUnit  implements TestingUnit  {
 
@@ -30,15 +19,13 @@ public class LocalTestUnit  implements TestingUnit  {
 	
 	
 	private ExecutorService executor;
-	private DataProvider reader;
-	private TestList testList;
-	private ArrayList<TestCaseSettingsData> casesToRun;
-	private String[][] finalOutputs;
+	private HttpMessageData httpRequest;
+	private TestCaseSettingsData settingsData;
+	private HttpMessageData[][] messages;
 	
 	
 	
 	public LocalTestUnit(){
-		reader = new DataProvider();
 	}
 	
 	public void run(){
@@ -49,102 +36,67 @@ public class LocalTestUnit  implements TestingUnit  {
 		 */
 		ConsoleLog.Print("runned");
 		
+		Set<Future<HttpMessageData[]>> outputs = new HashSet<Future<HttpMessageData[]>>();
+		int threadsNumber = settingsData.getThreadsNumber();
+		messages = new HttpMessageData [threadsNumber][settingsData.getLoopNumber()];
+		ConsoleLog.Print("bude se provadet: "+threadsNumber+" vlaken");
 		
-		finalOutputs = new String [casesToRun.size()][];
-		for (int i =0; i  < casesToRun.size(); i++){
-			
-			TestCaseSettingsData settings = casesToRun.get(i);
-			Set<Future<String[]>> outputs = new HashSet<Future<String[]>>();
-			int threadsNumber = settings.getThreadsNumber();
-			String[] responses = new String[threadsNumber]; 
-			ConsoleLog.Print("bude se provadet: "+threadsNumber+" vlaken");
-			for (int j =0; j  <  threadsNumber; j++){
-				
-				initTestCase(settings);
-				RequestWorker test = new RequestWorker(settings,j);
-				Future<String[]> workerOutput = executor.submit(test);
-				outputs.add(workerOutput);
 		
-				System.out.println("Ukoncuju Test case");
-				executor.shutdown();
-				
-				System.out.println("Cekam na vlakna");
-				
-				
-				
+		
+		for (int j =0; j  <  threadsNumber; j++){
+			
+			initTestCase(settingsData);
+			RequestWorker test = new RequestWorker(settingsData,httpRequest,j);
+			Future<HttpMessageData[]> workerOutput = executor.submit(test);
+			outputs.add(workerOutput);
+		}
+	
+		
+		
+		int i = 0;
+		for (Future<HttpMessageData[]> output : outputs){
+			try {
+				//ConsoleLog.Print("[TestUnit] Cekam na response");
+				messages[i] = output.get();
+				//ConsoleLog.Print("[TestUnit] Cekam na panel");
+				this.publishNewMessageEvent(messages[i]);
+				ConsoleLog.Print("[TestUnit] koncim vlakno" + i);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			//while(!executor.isTerminated()){ 
-				
-			//}
-			
-			
-			
-			for (Future<String[]> output : outputs){
-				try {
-					System.out.println("Cekam na response");
-					responses = output.get();
-					System.out.println("Cekam na panel");
-					this.publishNewMessageEvent(responses[0]);
-					System.out.println("nevim");
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			finalOutputs[i]= responses;
-			System.out.println("Jdu na dalsi test case");
+			i++;
 		}
 		
+//		for(int a = 0; a <messages.length ; a++){
+//			this.publishNewMessageEvent(messages[a]);
+//		}
+		
+		System.out.println("Koncim case");
+		executor.shutdown();
 	}
+		
+	
 	
 	public void addResponseListener(NewResponseListener listener){
 		newResponseListenerList.add(listener);
 	}
 	
-	public void publishNewMessageEvent(String message) {
+	public void publishNewMessageEvent(HttpMessageData[] data) {
 		
 		for (NewResponseListener currentListener : newResponseListenerList)
-			currentListener.onNewResponseEvent(message);
+			currentListener.onNewResponseEvent(data);
 	}
 	
-	
-	public String[][] getResponses(){
-		return this.finalOutputs;
-	}
-	
-
-	
-	public TestList getTestList() {
-		return testList;
+		
+	public void setTest(HttpMessageData request, TestCaseSettingsData settings) {
+		this.settingsData = settings;
+		this.httpRequest = request;
 	}
 
-	public void setTestList(String path) {
-		casesToRun = new ArrayList<TestCaseSettingsData>();
-		this.testList = (TestList)reader.readObject(path);
-		HashMap<Integer,String> testCases = testList.getTestCases();
-		
-		for(Integer caseId : testCases.keySet()){
-			String casePath = testCases.get(caseId);
-			ConsoleLog.Print(casePath);
-			TestCaseSettingsData testCase = (TestCaseSettingsData)reader.readObject(casePath);
-			
-			if(testCase.getRun())
-				casesToRun.add(testCase);
-		}
-		
-	}
-	
-//	public void setTestCase(TestCaseSettingsData data){
-//		testCaseSettings = data;
-//		
-//		loopCount = data.getLoopNumber();
-//		name = data.getName();
-//		System.out.println("Ahoj ja jsem vlakno" + this.name);
-//		threadsNumber = data.getThreadsNumber(); 
-//	}
 	
 	public void initTestCase(TestCaseSettingsData settings){
 		executor = Executors.newFixedThreadPool(settings.getThreadsNumber());

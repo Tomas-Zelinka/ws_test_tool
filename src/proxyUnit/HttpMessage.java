@@ -13,6 +13,26 @@ package proxyUnit;
 public interface HttpMessage {
 
 	
+	
+	
+	/**
+	 * Metoda pro ziskani iniciatora spojeni.
+	 * @return iniciator spojeni
+	 */
+	public String getInitiator(); 
+	
+	/**
+	 * Metoda pro ziskani IP adresy iniciatora spojeni.
+	 * @return IP adresa iniciatora spojeni
+	 */
+	public String getInitiatorIp(); 
+
+	/**
+	 * Metoda pro ziskani portu iniciatora spojeni.
+	 * @return port iniciatora spojeni
+	 */
+	public int getInitiatorPort();
+	
 	/**
 	 * Ziskani http hlavicky.
 	 * @return http hlavicka

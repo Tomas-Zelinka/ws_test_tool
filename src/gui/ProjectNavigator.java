@@ -1,13 +1,5 @@
 package gui;
 
-import gui.Menu.DeleteListener;
-import gui.Menu.FaultInjectionListener;
-import gui.Menu.HttpTestListener;
-import gui.Menu.OpenListener;
-import gui.Menu.RefreshTree;
-import gui.Menu.TestCaseListener;
-import gui.Menu.TestSuiteListener;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,13 +24,13 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
-import data.DataProvider;
-import data.FaultInjectionData;
-import data.HttpRequestData;
-
 import logging.ConsoleLog;
 import modalWindows.NewTestCaseDialog;
 import modalWindows.NewTestSuiteDialog;
+import data.DataProvider;
+import data.FaultInjectionData;
+import data.HttpMessageData;
+import data.TestCaseSettingsData;
 
 
 public class ProjectNavigator extends JPanel {
@@ -111,6 +103,18 @@ public class ProjectNavigator extends JPanel {
 	}
 	
 	/**
+	 * method for refreshing tree by user
+	 * for example when the filesystem is changed
+	 * while the tool is running
+	 */
+	public static void refreshTree(){
+		
+		SwingUtilities.updateComponentTreeUI(tree);
+		tree.treeDidChange();
+		ConsoleLog.Print("tree refreshed");
+	}
+	
+	/**
 	 * TODO osetreni
 	 * @param f
 	 */
@@ -157,17 +161,7 @@ public class ProjectNavigator extends JPanel {
 	private MainWindow getMainWindowInstance(){
 		return (MainWindow)this.getTopLevelAncestor();
 	}
-	/**
-	 * method for refreshing tree by user
-	 * for example when the filesystem is changed
-	 * while the tool is running
-	 */
-	public static void refreshTree(){
-		
-		SwingUtilities.updateComponentTreeUI(tree);
-		tree.treeDidChange();
-		ConsoleLog.Print("tree refreshed");
-	}
+	
 
 	/**
 	 * 
@@ -199,6 +193,8 @@ public class ProjectNavigator extends JPanel {
 		addMenuItem(newMenu,"HTTP Test", new HttpTestListener());
 		addMenuItem(newMenu,"Fault Injection", new FaultInjectionListener());
 		treeMenu.add(newMenu);
+		treeMenu.addSeparator();
+		addMenuItem(treeMenu,"Insert to Unit", new InsertTestCaseListener());
 		treeMenu.addSeparator();
 		addMenuItem(treeMenu,"Open", new OpenListener());
 		addMenuItem(treeMenu,"Delete", new DeleteListener());
@@ -245,8 +241,9 @@ public class ProjectNavigator extends JPanel {
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
 	            File httpDataFile = new File(inputDir.getPath() + File.separator + "httpRequest.xml");
-	            DataProvider writer = new DataProvider();
-	            HttpRequestData httpData = new HttpRequestData();
+	            DataProvider ioProvider = new DataProvider();
+	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath() + TestCaseSettingsData.filename );
+	            HttpMessageData httpData = new HttpMessageData(settings.getName());
 	            
 	            
 				if (newHttpCase.exists()){
@@ -258,7 +255,7 @@ public class ProjectNavigator extends JPanel {
 	            	 outputDir.mkdir();
 	            	 try{
 		             		httpDataFile.createNewFile();
-		             		writer.writeObject(httpDataFile.getPath(),httpData);
+		             		ioProvider.writeObject(httpDataFile.getPath(),httpData);
 		             	 }catch(Exception b){
 		             		 b.printStackTrace();
 		             	 }
@@ -286,8 +283,9 @@ public class ProjectNavigator extends JPanel {
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
 	            File faultInjectionDataFile = new File(inputDir.getPath() + File.separator + "faultInjection.xml");
-	            DataProvider writer = new DataProvider();
-	            FaultInjectionData faultData = new FaultInjectionData(newHttpCase.getPath());
+	            DataProvider ioProvider = new DataProvider();
+	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath() + TestCaseSettingsData.filename );
+	            FaultInjectionData faultData = new FaultInjectionData(settings.getName());
 
 	           
 				if (newHttpCase.exists()){
@@ -299,7 +297,7 @@ public class ProjectNavigator extends JPanel {
 	            	 outputDir.mkdir();
 	            	 try{
 	            		 faultInjectionDataFile.createNewFile();
-	            		 writer.writeObject(faultInjectionDataFile.getPath(),faultData);
+	            		 ioProvider.writeObject(faultInjectionDataFile.getPath(),faultData);
 	            	 }catch(Exception b){
 	            		 b.printStackTrace();
 	            	 }
@@ -353,7 +351,13 @@ public class ProjectNavigator extends JPanel {
 		}
 	} 
 	
-	
+	private class InsertTestCaseListener implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			getMainWindowInstance().insertTestCase();
+			ConsoleLog.Print("Insert Test Case clicked");
+			
+		}
+	}
 	
 	/**
 	 * 

@@ -6,6 +6,7 @@
  */
 package data;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ public class FaultInjectionData {
 	private Set<Condition> conditionSet= new HashSet<Condition>();
 	private List<Fault> faultList= new ArrayList<Fault>();
 
+	public static final String filename = File.separator+"FaultInjection"+File.separator+"input"+File.separator+"faultInjection.xml";
 	
 	public FaultInjectionData( String name) {
 		

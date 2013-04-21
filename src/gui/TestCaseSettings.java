@@ -234,7 +234,7 @@ public class TestCaseSettings extends JPanel {
 		this.settingsData.setRun(getEditorRun());
 		this.settingsData.setUseProxy(getEditorUseProxy());
 		
-		if(getEditorUseProxy()){
+		if(getEditorRun()){
 			this.settingsData.setName(MainWindow.getCasePath());
 			this.settingsData.setThreadsNumber(getEditorThreadsNumber());
 			this.settingsData.setLoopNumber(getEditorLoopCount());

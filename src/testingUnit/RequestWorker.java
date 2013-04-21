@@ -1,111 +1,81 @@
 package testingUnit;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.concurrent.Callable;
+
+import logging.ConsoleLog;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpMessage;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import data.HttpRequestData;
+import data.HttpMessageData;
 import data.TestCaseSettingsData;
 
-public class RequestWorker implements Callable<String[]>{
+public class RequestWorker implements Callable<HttpMessageData[]>{
 	
 	private DefaultHttpClient client;
-	private HttpRequestData data;
+	private HttpMessageData data;
 	private HttpMessage method;
 	private String responseBody;
-	private TestCaseSettingsData testCaseSettings;
+	private TestCaseSettingsData settings;
 	private int threadId;
 	
 	
 	
-	public RequestWorker(TestCaseSettingsData data, int id){
-		threadId = id;
-		testCaseSettings = data;
-		client = new DefaultHttpClient();
+	public RequestWorker(TestCaseSettingsData settings, HttpMessageData data, int id){
+		this.threadId = id;
+		this.data = data;
+		this.settings = settings;
+		this.client = new DefaultHttpClient();
+		this.responseBody = "";
 	}
 	
 	
 	
-	public String[] call(){
-		String[] clientResponseBody = new String[testCaseSettings.getLoopNumber()];
-		int resultCode = 0;
-		HttpGet clientMethod = new HttpGet("http://www.google.com/");
+	public HttpMessageData[] call(){
+		HttpMessageData[] clientResponseData = initResponseData(settings.getLoopNumber());
+		HttpGet clientMethod = new HttpGet("http://www.seznam.cz/");
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
-		HttpHost proxy = new HttpHost("localhost", 55555);
-		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		//Console
 		
-		for(int i = 0; i < testCaseSettings.getLoopNumber(); i++){ 
-			//ConsoleLog.Print("Testcase run" + testCaseSettings.getName()+" "+ i);
+		if(settings.getUseProxy()){
+			HttpHost proxy = new HttpHost(settings.getProxyHost(),settings.getProxyPort());
+			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		}
+		for(int i = 0; i < settings.getLoopNumber(); i++){ 
+			//ConsoleLog.Print("[Worker]Testcase run" + settings.getName()+" "+ i);
 			 
 			try{
-				clientResponseBody[i] = client.execute(clientMethod,responseHandler);
-				
+				responseBody = client.execute(clientMethod,responseHandler);
+				clientResponseData[i].setBody(responseBody);
 			}catch(Exception ex){
 				ex.printStackTrace();
 				
 			}finally{
 				clientMethod.releaseConnection();
 			}
-			
+			//ConsoleLog.Print("konec smycky: " + i +" - vlakno: " +this.threadId);
+			//clientResponseData[i].setBody("ahoj");
 		}
 		
-		Thread.yield();
-		return clientResponseBody;
-//		for(int i = 0; i < clientResponseBody.length; i++){
-//			
-//			try{
-//				File output = new File(testCaseSettings.getPath()+File.separator+testCaseSettings.getName()+"_"+threadId+"_"+ i+".txt");
-//				System.out.println(output.getPath());
-//				
-//				if (!output.exists()) {
-//					output.createNewFile();
-//				}
-//				
-//				byte[] contentInBytes = clientResponseBody[i].getBytes();
-//				
-//				FileOutputStream writer = new FileOutputStream(output);
-//				writer.write(contentInBytes);
-//			}catch(Exception ex){
-//				ex.printStackTrace();
-//			}
-//		}
+		//Thread.yield();
 		
+		//ConsoleLog.Print("Odesilam vysledky - vlakno: " +this.threadId);
+		return clientResponseData;
 	}
+
 	
-	private void setMethod(int type){
+	private HttpMessageData[] initResponseData(int count){
 		
-		switch (type){
-		case HttpRequestData.METHOD_GET:
-				this.method = new HttpPost();
-			break;
-		case HttpRequestData.METHOD_POST:
-				this.method = new HttpGet();
-			break;
-		default:
-			break;
+		HttpMessageData[] responseData = new HttpMessageData[settings.getLoopNumber()];
+		for(int i =0; i < count; i++){
+			responseData[i] = new HttpMessageData(settings.getName());
 		}
+		
+		return responseData;
 	}
-	
-//	private HttpMethod getMethod(){
-//		return this.method;
-//	}
-	
-	
-	
-	public String getResponseBody() {
-		return responseBody;
-	}
-	public void setResponseBody(String responseBody) {
-		responseBody = responseBody;
-	}
-	
 }

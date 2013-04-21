@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import logging.ConsoleLog;
+
 /**
  * Trida predstavuje vlakno proxy serveru starajici se bud o prichozi nebo odchozi pozadavky.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
@@ -35,7 +37,6 @@ public class ProxyThread extends Thread {
 
 	
 	public ProxyThread(int interactionId, ProxyMonitoringUnit unit, Socket incomingSocket, Socket outgoingSocket) {
-		
 		this.proxyUnit = unit;
 		this.interactionId= interactionId;
 		this.incomingSocket= incomingSocket;
@@ -52,7 +53,7 @@ public class ProxyThread extends Thread {
 		
 		
 		byte[] buffer= new byte[BUFFER_SIZE];
-			
+		ConsoleLog.Print("[ProxyThread] vlakno spusteno");	
 		
 		try {
 			outputStream= outgoingSocket.getOutputStream();
@@ -69,6 +70,7 @@ public class ProxyThread extends Thread {
 					incomingSocket.close();
 					outgoingSocket.close();
 					bytesToBeRead= -2;
+					break;
 				}
 
 //				//TODO: vyzkouset...melo by byt v poradku, ale rychlejsi
@@ -131,6 +133,8 @@ public class ProxyThread extends Thread {
 							//rozparsujeme telo zpravy
 							HttpMessageParser.parseHttpContent(httpMessage, rawMessage, false);
 							//upozornime controller na tuto udalost
+							
+							
 							proxyUnit.newMessageNotifier(interactionId, httpMessage);
 		
 							//odeslani pozmenene zpravy

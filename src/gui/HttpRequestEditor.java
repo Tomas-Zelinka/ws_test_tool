@@ -1,8 +1,9 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -10,9 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
+import modalWindows.AddWsdlToTestSuite;
 import data.DataProvider;
 import data.HttpMessageData;
  
@@ -26,11 +27,13 @@ public class HttpRequestEditor extends JPanel {
 //	private boolean DEBUG = false;
  
     private  JTable headersTable;
+    
     private JLabel headersLabel;
     private JLabel contentLabel;
     private JScrollPane headersScrollPane;
     private JButton addHeaderButton;
     private JButton removeHeaderButton;
+    private JButton addWsdlButton;
     private  JPanel headersPanel;
     private JEditorPane httpBodyEditorPane;
     private DefaultTableModel  headersTableModel;
@@ -38,6 +41,7 @@ public class HttpRequestEditor extends JPanel {
     private HttpMessageData requestData;
     private JSplitPane contentPane;
     private JPanel httpBodyPanel;
+    private AddWsdlToTestSuite wsdlWindow;
     
     public HttpRequestEditor() {
         super(new BorderLayout());
@@ -56,13 +60,9 @@ public class HttpRequestEditor extends JPanel {
     	return this.requestData;
     }
     
-    
- 
-    
     public void readData(){
     	
     }
-    
     
     public void saveData(){
     	
@@ -85,6 +85,7 @@ public class HttpRequestEditor extends JPanel {
     	httpBodyScrollPane = new JScrollPane();
     	addHeaderButton = new JButton();
     	removeHeaderButton = new JButton(); 
+    	addWsdlButton = new JButton();
     	httpBodyEditorPane = new JEditorPane();
     	contentPane = new JSplitPane();
     	
@@ -94,7 +95,8 @@ public class HttpRequestEditor extends JPanel {
     
     private void initHeaderPane(){
 		 
-		headersLabel.setText("Http header:");
+    		addWsdlButton.addActionListener(new AddWsdlListener());
+			headersLabel.setText("Http header:");
 
 	        headersTable.setModel(new javax.swing.table.DefaultTableModel(
 	            new Object [][] {
@@ -123,6 +125,8 @@ public class HttpRequestEditor extends JPanel {
 	        headersScrollPane.setViewportView(headersTable);
 	        headersTable.getColumnModel().getColumn(0).setPreferredWidth(200);
 	        headersTable.getColumnModel().getColumn(1).setPreferredWidth(500);
+	        
+	        
 	        addHeaderButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"add_small.png"))); // NOI18N
 	        addHeaderButton.setText("Add");
 	        addHeaderButton.addActionListener(new java.awt.event.ActionListener() {
@@ -142,6 +146,14 @@ public class HttpRequestEditor extends JPanel {
 	         		}
 	            }
 	        });
+	        
+	        addWsdlButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"add_small.png"))); // NOI18N
+	        addWsdlButton.setText("Get WSDL");
+	        addWsdlButton.addActionListener(new java.awt.event.ActionListener() {
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	 System.out.println("haoj");
+	            }
+	        });
 
 	        javax.swing.GroupLayout conditionPanelLayout = new javax.swing.GroupLayout(headersPanel);
 	        headersPanel.setLayout(conditionPanelLayout);
@@ -155,7 +167,8 @@ public class HttpRequestEditor extends JPanel {
 	                    .addGroup(conditionPanelLayout.createSequentialGroup()
 	                        .addComponent(addHeaderButton)
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(removeHeaderButton)))
+	                        .addComponent(removeHeaderButton)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
 	                .addContainerGap())
 	        );
 	        conditionPanelLayout.setVerticalGroup(
@@ -202,5 +215,20 @@ public class HttpRequestEditor extends JPanel {
 	    );
     
     }
+    
+    
+    
+    private class AddWsdlListener implements ActionListener{
+    	public void actionPerformed(ActionEvent e){
+    		wsdlWindow = new AddWsdlToTestSuite();
+    		wsdlWindow.setVisible(true);
+    		
+    	}
+    }
+    
+    
+    
+    
+    
     
 }

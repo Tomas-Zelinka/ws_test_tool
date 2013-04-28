@@ -20,6 +20,8 @@ import javax.swing.JToolBar;
 import javax.swing.text.PlainDocument;
 
 import logging.ConsoleLog;
+import modalWindows.AddWsdlToTestSuite;
+import modalWindows.GenerateFromWSDLDialog;
 
 import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
@@ -114,6 +116,8 @@ public class MainWindow extends JFrame{
 	
 	
 	private JButton saveTestCase;
+	private JButton addWSDL;
+	private JButton generateRequest;
 	private JButton addUnit;
 	private JButton removeUnit;
 	private JButton runUnit;
@@ -467,7 +471,16 @@ public class MainWindow extends JFrame{
 		exportConfiguration =  new JButton("Export Unit Configuration");
 		exportConfiguration.addActionListener(new ExportConfigurationListener());
 		
+		addWSDL = new JButton("Add WSDL");
+		addWSDL.addActionListener( new AddWSDLListener());
+		
+		generateRequest = new JButton("Generate content");
+		generateRequest.addActionListener(new GenerateRequestListner());
+		
+		
 		testCaseToolBox.add(saveTestCase);
+		testCaseToolBox.add(addWSDL);
+		testCaseToolBox.add(generateRequest);
 		
 		testUnitToolBox.add(runUnit);
 		testUnitToolBox.add(runAllUnits);
@@ -554,6 +567,21 @@ public class MainWindow extends JFrame{
 		}
 	}
 	
+	private class AddWSDLListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			 AddWsdlToTestSuite window = new AddWsdlToTestSuite();
+			 window.setVisible(true);
+			 
+			
+		}
+	}
+	
+	private class GenerateRequestListner implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			GenerateFromWSDLDialog window = new GenerateFromWSDLDialog();  
+			window.setVisible(true);
+		}
+	}
 	
 	
 }

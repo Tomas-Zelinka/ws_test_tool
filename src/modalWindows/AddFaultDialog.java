@@ -57,7 +57,7 @@ public class AddFaultDialog extends javax.swing.JDialog {
 				List<String> operationList= parseWSDL(uriTextField.getText());
 				for (String operation : operationList)
 					operationComboBox.addItem(operation);
-
+				
 				downloadLabel.setText("");
 				operationComboBox.setEnabled(true);
 				contentEditorPane.setEnabled(true);
@@ -222,6 +222,8 @@ public class AddFaultDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
 
+       
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add fault");
         setResizable(false);
@@ -657,6 +659,16 @@ public class AddFaultDialog extends javax.swing.JDialog {
 				dialog.setVisible(true);
 			}
 		});
+		
+		
+		
+		
+		  
+		
+		
+		
+		
+		
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;

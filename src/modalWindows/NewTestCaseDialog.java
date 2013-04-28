@@ -31,19 +31,36 @@ import data.TestCaseSettingsData;
  *
  */
 public class NewTestCaseDialog extends InputModalWindow {
-	/**
-	 * 
-	 */
-	
+   /**
+	* 
+	*/
 	private JTextField testCaseName;
 	private JTextField selectedTestSuite;
-		
+	private JPanel labels;
+	private JPanel fields;
+	private JLabel label;
+	private JLabel pathLabel;
+	private JButton okButton;
+	private JButton cancelButton;
+	
 	private static final long serialVersionUID = 9187751988881264097L;
 
 	public NewTestCaseDialog(){
 		super("New Test Case", 640,580);
 	}
 	
+	@Override
+	protected void initComponents() {
+		
+		labels = new JPanel(new GridLayout(0,1,0,10));
+		fields = new JPanel(new GridLayout(0,1,0,10));
+		testCaseName = new JTextField(10);
+		selectedTestSuite = new JTextField(MainWindow.getSuitePath(),10);
+		label = new JLabel("Test Case: ");
+		pathLabel = new JLabel("Test Suite: ");
+		okButton = new JButton("Ok");
+		cancelButton = new JButton("Cancel");
+	}
 		
 	/**
 	 * 
@@ -51,30 +68,20 @@ public class NewTestCaseDialog extends InputModalWindow {
 	@Override
 	protected void putContent(){
 		
-		JPanel labels = new JPanel(new GridLayout(0,1,0,10));
-		JPanel fields = new JPanel(new GridLayout(0,1,0,10));
-		
 		String selectedPath = MainWindow.getSuitePath();
 		if(selectedPath.isEmpty()){
 			messageLabel.setText("Test suit not selected. Please select Test Suite");
 		}
-		
-		testCaseName = new JTextField(10);
-		selectedTestSuite = new JTextField(MainWindow.getSuitePath(),10);
-		JLabel label = new JLabel("Test Case: ");
-		JLabel pathLabel = new JLabel("Test Suite: ");
-        
+	
 		labels.add(pathLabel);
 		labels.add(label);
 		
 		selectedTestSuite.setEditable(false);
 		
-		
 		fields.add(selectedTestSuite);
 		fields.add(testCaseName);
 		fields.setSize(new Dimension(200,50));
 		
-				
 		label.setHorizontalAlignment(JLabel.RIGHT);
         label.setFont(label.getFont().deriveFont(Font.PLAIN,14.0f));
         pathLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -93,19 +100,6 @@ public class NewTestCaseDialog extends InputModalWindow {
     }
   
 	
-	/**
-	 * 
-	 * @param text
-	 * @return
-	 */
-	protected JComponent makeTextPanel(String text) {
-		JPanel panel = new JPanel(false);
-		JLabel filler = new JLabel(text);
-	    filler.setHorizontalAlignment(JLabel.CENTER);
-	    panel.setLayout(new GridLayout(1, 1));
-	    panel.add(filler);
-	    return panel;
-	}
 	/**
 	 * 
 	 * 
@@ -128,10 +122,10 @@ public class NewTestCaseDialog extends InputModalWindow {
 	 */
 	@Override
 	protected void initButtons(){
-		JButton okButton = new JButton("Ok");
+		
 		okButton.addActionListener(new OkButtonAction());
-		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new CancelButtonAction()); 
+		
 		Document projectField = testCaseName.getDocument();
 		projectField.addDocumentListener(new ButtonStateController(okButton,testCaseName,messageLabel));
 		
@@ -156,7 +150,6 @@ public class NewTestCaseDialog extends InputModalWindow {
             TestCaseSettingsData testCase = new TestCaseSettingsData();
             testCase.setName(getCaseName());
             testCase.setPath(newTestCase.getPath());
-			
 			
 			if (newTestCase.exists()){
             	 messageLabel.setText("Test case with this name already exists");
@@ -188,10 +181,6 @@ public class NewTestCaseDialog extends InputModalWindow {
             dispose();
         }
 	}
-	@Override
-	protected void initComponents() {
-		
-		
-	}
+	
 
 }

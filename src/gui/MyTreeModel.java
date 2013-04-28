@@ -58,9 +58,8 @@ public class MyTreeModel implements TreeModel {
 		
 		if (fileSystemMember.isDirectory()) {
 	    	for (File member: fileSystemMember.listFiles()){
-	    		if (!member.isFile()){
 	    			count++;
-	    		}
+	    		
 	    	}
 			
 	    	return count;
@@ -95,12 +94,21 @@ public class MyTreeModel implements TreeModel {
 		
 		FileNode test = (FileNode) node;
 		
-		if(test.isFaultInjectionTestCase() || test.isHttpTestCase())
+		if(test.isFaultInjectionTestCase() )
 			return true;
 		
-		if(test.isFile())
+		if(test.isHttpTestCase())
 			return true;
-				
+		
+		if(test.isWSDL())
+			return true;
+		
+		if(test.isTestList())
+			return true;
+		
+		if(test.isSettings())
+			return true;
+		
 		return false;
 	}
 	

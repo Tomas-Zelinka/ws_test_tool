@@ -24,6 +24,9 @@ public class NewTestSuiteDialog extends InputModalWindow {
 	 */
 	
 	private JTextField testSuiteName;
+	private JLabel label;
+	private JButton okButton;
+	private JButton cancelButton;
 	private static final long serialVersionUID = 9187751988881264097L;
 
 	public NewTestSuiteDialog(){
@@ -31,16 +34,21 @@ public class NewTestSuiteDialog extends InputModalWindow {
 		
 	}
 	
-		
+	@Override
+	protected void initComponents() {
+		testSuiteName= new JTextField(30);
+		label = new JLabel("Test Suite Name");
+		okButton = new JButton("Ok");
+		cancelButton = new JButton("Cancel");
+	}
+	
 	/**
 	 * 
 	 */
 	@Override
 	protected void putContent(){
-
-		testSuiteName= new JTextField(30);
-		JLabel label = new JLabel("Test Suite Name");
-        label.setHorizontalAlignment(JLabel.LEFT);
+				
+		label.setHorizontalAlignment(JLabel.LEFT);
         label.setFont(label.getFont().deriveFont(Font.PLAIN,14.0f));
         
         addToSecondPanel(label);
@@ -69,10 +77,10 @@ public class NewTestSuiteDialog extends InputModalWindow {
 	 */
 	@Override
 	protected void initButtons(){
-		JButton okButton = new JButton("Ok");
+		
 		okButton.addActionListener(new OkButtonAction());
-		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new CancelButtonAction()); 
+		
 		Document projectField = testSuiteName.getDocument();
 		projectField.addDocumentListener(new ButtonStateController(okButton,testSuiteName,messageLabel));
 		
@@ -84,7 +92,7 @@ public class NewTestSuiteDialog extends InputModalWindow {
 		
 	}
 	
-	/*
+	/**
 	 * 
 	 */
 	private class OkButtonAction  implements ActionListener{
@@ -117,7 +125,8 @@ public class NewTestSuiteDialog extends InputModalWindow {
             }
          }
 	}
-	/*
+	
+	/**
 	 * 
 	 */
 	private class CancelButtonAction  implements ActionListener{
@@ -126,11 +135,6 @@ public class NewTestSuiteDialog extends InputModalWindow {
             setVisible(false);
             dispose();
         }
-	}
-	@Override
-	protected void initComponents() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

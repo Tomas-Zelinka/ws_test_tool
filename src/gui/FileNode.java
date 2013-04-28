@@ -1,5 +1,7 @@
 package gui;
 
+import logging.ConsoleLog;
+
 
 public class FileNode extends java.io.File {
 
@@ -39,6 +41,40 @@ public class FileNode extends java.io.File {
     	return false;
     }
 
+    public boolean isWSDL(){
+    		
+    	String filename = this.getName().substring(this.getName().length()-4,this.getName().length());
+    	
+    	if (this.isFile() && (filename.compareTo("wsdl") == 0)){
+    		    		
+    		//ConsoleLog.Print("wsdl test case clicked");
+    		return true;
+    	}
+    	return false;
+    }
+    
+    
+    
+    public boolean isTestList(){
+	    	
+    	if (this.isFile() && (this.getName().compareTo("testlist.xml") == 0)){
+    		    		
+    		//ConsoleLog.Print("wsdl test case clicked");
+    		return true;
+    	}
+    	return false;
+    }
+    
+    public boolean isSettings(){
+    	
+    	if (this.isFile() && (this.getName().compareTo("settings.xml") == 0)){
+    		    		
+    		//ConsoleLog.Print("wsdl test case clicked");
+    		return true;
+    	}
+    	return false;
+    }
+    
     
     /**
      * 

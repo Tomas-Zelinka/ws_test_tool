@@ -50,6 +50,8 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	private JEditorPane responseEditorPane;
 	private DataProvider ioProvider;
 	private TestList testListData;
+	private JLabel requestTableLabel;
+	private JLabel responsesTableLabel;
 		
 	public UnitPanel (int type){
 		initComponents();
@@ -274,6 +276,8 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 		requestEditorPane = new JEditorPane();
 		responseEditorPane = new JEditorPane();
 		ioProvider = new DataProvider();
+		requestTableLabel = new JLabel("Requests");
+		responsesTableLabel = new JLabel("Responses");
 	}
 	
 	/**
@@ -363,20 +367,20 @@ public class UnitPanel extends JPanel implements NewResponseListener {
         topPanelLayout.setHorizontalGroup(
             topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(topPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            	 .addContainerGap()
+            	  .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(testCasesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
-                    .addGroup(topPanelLayout.createSequentialGroup()
-                   .addContainerGap())))
+                    .addComponent(requestTableLabel))
+                 .addContainerGap())
         );
             
         topPanelLayout.setVerticalGroup(
             topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(topPanelLayout.createSequentialGroup()
-                .addContainerGap()
+               
+                 .addComponent(requestTableLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(testCasesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addContainerGap())
         );
 		
@@ -391,14 +395,15 @@ public class UnitPanel extends JPanel implements NewResponseListener {
                 .addContainerGap()
                 .addGroup(centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(responsesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
-                    .addGroup(topPanelLayout.createSequentialGroup()
-                   .addContainerGap())))
+                    .addComponent(responsesTableLabel))
+                   .addContainerGap())
         );
             
         centerPanelLayout.setVerticalGroup(
             centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(centerPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                
+                .addComponent(responsesTableLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(responsesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE,100, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)

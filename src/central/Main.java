@@ -12,7 +12,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.http.ParseException;
+import org.apache.commons.cli.ParseException;
 
 /**
  * Main class for starting the application

@@ -20,7 +20,6 @@ import javax.swing.JToolBar;
 import javax.swing.text.PlainDocument;
 
 import logging.ConsoleLog;
-import modalWindows.AddWsdlToTestSuite;
 import modalWindows.GenerateFromWSDLDialog;
 
 import org.bounce.text.LineNumberMargin;
@@ -116,7 +115,6 @@ public class MainWindow extends JFrame{
 	
 	
 	private JButton saveTestCase;
-	private JButton addWSDL;
 	private JButton generateRequest;
 	private JButton addUnit;
 	private JButton removeUnit;
@@ -245,7 +243,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void refreshTree(){
-		this.navigator.refreshTree();
+		ProjectNavigator.refreshTree();
 	}
 	
 	public void insertTestCase(){
@@ -471,15 +469,12 @@ public class MainWindow extends JFrame{
 		exportConfiguration =  new JButton("Export Unit Configuration");
 		exportConfiguration.addActionListener(new ExportConfigurationListener());
 		
-		addWSDL = new JButton("Add WSDL");
-		addWSDL.addActionListener( new AddWSDLListener());
-		
+	
 		generateRequest = new JButton("Generate content");
 		generateRequest.addActionListener(new GenerateRequestListner());
 		
 		
 		testCaseToolBox.add(saveTestCase);
-		testCaseToolBox.add(addWSDL);
 		testCaseToolBox.add(generateRequest);
 		
 		testUnitToolBox.add(runUnit);
@@ -563,15 +558,6 @@ public class MainWindow extends JFrame{
 	private class ExportConfigurationListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			ConsoleLog.Print("Export Configuration clicked");
-			
-		}
-	}
-	
-	private class AddWSDLListener implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			 AddWsdlToTestSuite window = new AddWsdlToTestSuite();
-			 window.setVisible(true);
-			 
 			
 		}
 	}

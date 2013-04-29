@@ -1,10 +1,15 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventObject;
 
+import javax.swing.AbstractCellEditor;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,6 +17,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import modalWindows.AddWsdlToTestSuite;
 import data.DataProvider;
@@ -42,6 +50,7 @@ public class HttpRequestEditor extends JPanel {
     private JSplitPane contentPane;
     private JPanel httpBodyPanel;
     private AddWsdlToTestSuite wsdlWindow;
+    
     
     public HttpRequestEditor() {
         super(new BorderLayout());
@@ -97,28 +106,61 @@ public class HttpRequestEditor extends JPanel {
 		 
     		addWsdlButton.addActionListener(new AddWsdlListener());
 			headersLabel.setText("Http header:");
-
+			
+			
+			
+			headersTable.setRowHeight(25);
 	        headersTable.setModel(new javax.swing.table.DefaultTableModel(
-	            new Object [][] {
-
+	            new Object [][] {{"HTTP version"," click and select"},{"HTTP method"},{"URI"},{"Content-Type"}
+	            		
 	            },
 	            new String [] {
 	                "Header", "Value"
 	            }
+	            
+	            
 	        ) {
 	            /**
 				 * 
 				 */
 				private static final long serialVersionUID = 3376163326142594714L;
 				boolean[] canEdit = new boolean [] {
-	                false, false
+	                true, true,true
 	            };
 
 	            public boolean isCellEditable(int rowIndex, int columnIndex) {
 	                return canEdit [columnIndex];
 	            }
+	            	
+	           
+	            
 	        });
+	        TableColumn valueVersion = headersTable.getColumnModel().getColumn(0);
+	        TableColumn valueMethod = headersTable.getColumnModel().getColumn(1);
+	        TableColumn valueContentType = headersTable.getColumnModel().getColumn(3);
+	        //valueColumn.setCellRenderer(new ColumnRenderer());
+	        ColumnRenderer httpMethod= new ColumnRenderer();
+	        ColumnRenderer httpVersion= new ColumnRenderer();
+	        ColumnRenderer httpContentType= new ColumnRenderer();
+	        
+	        httpMethod.addItem("GET");
+			httpMethod.addItem("POST");
+			httpMethod.addItem("PUT");
+			httpMethod.addItem("HEADER");
+			httpMethod.addItem("DELETE");
+			httpVersion.addItem("HTTP 1.0");
+			httpVersion.addItem("HTTP 1.1");
+			httpContentType.addItem("text/xml");
+			httpContentType.addItem("application/json");
+			
+			valueVersion.setCellEditor(new DefaultCellEditor(httpVersion));
+			valueMethod.setCellEditor(new DefaultCellEditor(httpMethod));
+			
+			
+			
+			
 	        headersTableModel = (DefaultTableModel) headersTable.getModel();
+
 	        //conditionTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
 	        headersScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 			
@@ -227,8 +269,30 @@ public class HttpRequestEditor extends JPanel {
     }
     
     
+    private class ColumnRenderer extends JComboBox implements TableCellRenderer
+    {  
+          
+        public void updateUI(){  
+            super.updateUI();  
+        }  
+        
+        public void revalidate() {}  
+        public Component getTableCellRendererComponent(  
+                     JTable table, Object value,  
+                     boolean isSelected, boolean hasFocus,  
+                     int row, int column)  
+        {  
+            if (value != null) {  
+                //System.out.println(value.toString());  
+                removeAllItems();  
+                addItem(value);  
+                
+            }  
+            return this;  
+        }  
+    }  
     
-    
+  
     
     
 }

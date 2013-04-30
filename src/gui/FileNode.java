@@ -1,6 +1,5 @@
 package gui;
 
-import logging.ConsoleLog;
 
 
 public class FileNode extends java.io.File {

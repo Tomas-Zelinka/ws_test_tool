@@ -53,16 +53,9 @@ public class MyTreeModel implements TreeModel {
 	 */
 	public int getChildCount(Object parent) {
 		FileNode fileSystemMember = (FileNode) parent;
-	    int count = 0;
-		
-		
+	  
 		if (fileSystemMember.isDirectory()) {
-	    	for (File member: fileSystemMember.listFiles()){
-	    			count++;
-	    		
-	    	}
-			
-	    	return count;
+	    	return (int)fileSystemMember.length();
 	    
 		}else {
 			return 0;

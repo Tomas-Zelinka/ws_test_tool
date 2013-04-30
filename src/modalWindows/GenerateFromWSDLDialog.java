@@ -2,16 +2,12 @@ package modalWindows;
 
 import gui.MainWindow;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 
@@ -23,7 +19,7 @@ import org.reficio.ws.builder.core.Wsdl;
  * Dialog pro pridani nove poruchy do prislusneho pravidla.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
  */
-public class GenerateFromWSDLDialog extends JDialog {
+public class GenerateFromWSDLDialog extends InputModalWindow {
 	
 	  private javax.swing.JButton addButton;
 	    private javax.swing.JButton cancelButton;
@@ -49,21 +45,7 @@ public class GenerateFromWSDLDialog extends JDialog {
 	
 	/** Creates new form AddFaultDialog */
 	public GenerateFromWSDLDialog() {
-		
-		
-		this.setTitle("Generate Content");
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		 
-		int x = (dim.width-(640))/2;
-		int y = (dim.height-(530))/2;
-		 
-		
-		this.setLayout(new BorderLayout());
-		this.setBounds(x, y, 640, 530);
-		this.setMinimumSize(new Dimension(640,530));
-		this.setModal(true);
-		
-		
+		super("Generate Content",640, 530);
 		
 		//zobrazit dialog nad hlavnim oknem
 		
@@ -74,7 +56,6 @@ public class GenerateFromWSDLDialog extends JDialog {
 		
 		//ovladaci prvky v karte WSDL poruchy jsou znepristupneny, dokud neni popis stahnut
 		operationComboBox.setEnabled(false);
-		contentEditorPane.setEnabled(false);
 		putContent();
 	}
 	
@@ -112,7 +93,6 @@ public class GenerateFromWSDLDialog extends JDialog {
 	 */
 	public class WsdlDownloadThread extends Thread {
 		
-		
 		@Override
 		public void run() {
 			
@@ -136,10 +116,6 @@ public class GenerateFromWSDLDialog extends JDialog {
 		}
 	}
 	
-	
-	
-
-	
 	/**
 	 * Metoda pro zobrazeni dialogu, ze se nepodarilo ziskat WSDL ze zadane adresy.
 	 */
@@ -154,22 +130,14 @@ public class GenerateFromWSDLDialog extends JDialog {
 	 * @return true, pokud bylo stisknuto
 	 */
 	public boolean isAddButtonClicked() {
-		
 		return addButtonClicked;
-		
-		
 	}
-
 	
 	/**
 	 * Metoda pro stahnuti a ziskani seznamu WSDL operaci nad sluzbou.
 	 * @param wsdlUri 
 	 */
 	private List<String> parseWSDL(String wsdlUri) throws Exception {
-		
-		
-		
-		
 		Wsdl wsdl = Wsdl.parse(wsdlUri);
 					
 		List<QName> bindings = wsdl.getBindings();
@@ -180,149 +148,133 @@ public class GenerateFromWSDLDialog extends JDialog {
 		List<String> operationList= new ArrayList<String>();
 		List<SoapOperation> operations = builder.getOperations();	
 		for (SoapOperation operation : operations) {
-				//ziskani nazvu operace + odstraneni prefixu jmenneho prostoru
-				operationList.add(operation.getOperationName());
+			//ziskani nazvu operace + odstraneni prefixu jmenneho prostoru
+			operationList.add(operation.getOperationName());
 			
 		}
 		return operationList;
 	}
 
-		
-	
-	
-
-	
-
-	
-	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-		
-		this.setVisible(false);
-	}//GEN-LAST:event_cancelButtonActionPerformed
-
-	private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-		
-	
-	
-		
-	}//GEN-LAST:event_addButtonActionPerformed
-
-	private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-		
-		downloadThread= new WsdlDownloadThread();
-		downloadThread.start();
-		
-	}//GEN-LAST:event_downloadButtonActionPerformed
-	
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-  
-   
-
-
 	
 	public void putContent() {
-		  uriLabel.setText("WSDL URI:");
-		  	
-		  	operationComboBox.addActionListener(new GenerateListner());
-	        downloadButton.setText("Download");
-	        downloadButton.addActionListener(new java.awt.event.ActionListener() {
-	            public void actionPerformed(java.awt.event.ActionEvent evt) {
-	                downloadButtonActionPerformed(evt);
-	            }
-	        });
-
-	        operationLabel.setText("WSDL operation:");
-
-	        contentScrollPane.setViewportView(contentEditorPane);
-	        MainWindow.initEditorPane(contentEditorPane, contentScrollPane); 
-
-	        contentLabel.setText("Content:");
-
-	        downloadLabel.setFont(new java.awt.Font("Dialog", 0, 12));
-
-	        javax.swing.GroupLayout wsdlOperationPanelLayout = new javax.swing.GroupLayout(wsdlOperationPanel);
-	        wsdlOperationPanel.setLayout(wsdlOperationPanelLayout);
-	        wsdlOperationPanelLayout.setHorizontalGroup(
-	            wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addGroup(wsdlOperationPanelLayout.createSequentialGroup()
-	                .addContainerGap()
-	                .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
-	                    .addGroup(wsdlOperationPanelLayout.createSequentialGroup()
-	                        .addComponent(operationLabel)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                        .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                    .addGroup(wsdlOperationPanelLayout.createSequentialGroup()
-	                        .addComponent(uriLabel)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                        .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, wsdlOperationPanelLayout.createSequentialGroup()
-	                                .addComponent(downloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
-	                                .addComponent(downloadButton))
-	                            .addComponent(uriTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)))
-	                    .addComponent(contentLabel)
-	                    .addComponent(contentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE))
-	                .addContainerGap())
-	        );
-	        wsdlOperationPanelLayout.setVerticalGroup(
-	            wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addGroup(wsdlOperationPanelLayout.createSequentialGroup()
-	                .addContainerGap()
-	                .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(uriLabel)
-	                    .addComponent(uriTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(downloadButton)
-	                    .addComponent(downloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addGap(18, 18, 18)
-	                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(operationLabel)
-	                    .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                .addComponent(contentLabel)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                .addComponent(contentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
-	                .addContainerGap())
-	        );
-
-	       
-
-	        cancelButton.setText("Cancel");
-	        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-	            public void actionPerformed(java.awt.event.ActionEvent evt) {
-	                cancelButtonActionPerformed(evt);
-	            }
-	        });
-
-	        addButton.setText("Add");
-	        addButton.addActionListener(new java.awt.event.ActionListener() {
-	            public void actionPerformed(java.awt.event.ActionEvent evt) {
-	                addButtonActionPerformed(evt);
-	            }
-	        });
-
-	       add(wsdlOperationPanel);
-	     //  add(addButton);
-	       // add(cancelButton);
-
-	        pack();
+		uriLabel.setText("WSDL URI:");
+		
+		operationComboBox.addActionListener(new GenerateListner());
+		downloadButton.setText("Download");
+		downloadButton.addActionListener(new java.awt.event.ActionListener() {
+		    public void actionPerformed(java.awt.event.ActionEvent evt) {
+		
+				downloadThread= new WsdlDownloadThread();
+				downloadThread.start();
+		    }
+		});
+		
+		operationLabel.setText("WSDL operation:");
+		contentEditorPane.setEditable(true);
+		contentScrollPane.setViewportView(contentEditorPane);
+		MainWindow.initEditorPane(contentEditorPane, contentScrollPane); 
+		
+		contentLabel.setText("Content:");
+		
+		downloadLabel.setFont(new java.awt.Font("Dialog", 0, 12));
+		
+		javax.swing.GroupLayout wsdlOperationPanelLayout = new javax.swing.GroupLayout(wsdlOperationPanel);
+		wsdlOperationPanel.setLayout(wsdlOperationPanelLayout);
+		wsdlOperationPanelLayout.setHorizontalGroup(
+		    wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		    .addGroup(wsdlOperationPanelLayout.createSequentialGroup()
+		        .addContainerGap()
+		        .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
+		            .addGroup(wsdlOperationPanelLayout.createSequentialGroup()
+		                .addComponent(operationLabel)
+		                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+		                .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+		            .addGroup(wsdlOperationPanelLayout.createSequentialGroup()
+		                .addComponent(uriLabel)
+		                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+		                .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, wsdlOperationPanelLayout.createSequentialGroup()
+		                        .addComponent(downloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+		                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+		                        .addComponent(downloadButton))
+		                    .addComponent(uriTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)))
+		            .addComponent(contentLabel)
+		            .addComponent(contentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE))
+		        .addContainerGap())
+		);
+		wsdlOperationPanelLayout.setVerticalGroup(
+		    wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		    .addGroup(wsdlOperationPanelLayout.createSequentialGroup()
+		        .addContainerGap()
+		        .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+		            .addComponent(uriLabel)
+		            .addComponent(uriTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+		        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+		        .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+		            .addComponent(downloadButton)
+		            .addComponent(downloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+		        .addGap(18, 18, 18)
+		        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+		        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+		        .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+		            .addComponent(operationLabel)
+		            .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+		        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+		        .addComponent(contentLabel)
+		        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+		        .addComponent(contentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+		        .addContainerGap())
+		);
+		
+		cancelButton.setText("Cancel");
+		cancelButton.addActionListener(new java.awt.event.ActionListener() {
+		    public void actionPerformed(java.awt.event.ActionEvent evt) {
+		    	setVisible(false);
+		    }
+		});
+		
+		addButton.setText("Add");
+	    addButton.addActionListener(new java.awt.event.ActionListener() {
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	        	addButtonClicked = true;
+	    		setVisible(false);
+	        }
+	    });
+		
+	   getSecondPanel().add(wsdlOperationPanel);
+	   pack();
 		
 	}
 
 	private class GenerateListner implements ActionListener{
+		@SuppressWarnings("unchecked")
 		public void actionPerformed(ActionEvent e){
 			JComboBox<String> box =(JComboBox<String>) e.getSource();
 			String method = (String)box.getSelectedItem();
 			
 			SoapOperation operation = builder.operation().name(method).find();
 			String request = builder.buildInputMessage(operation);
-			
-			
 			contentEditorPane.setText(request);
 		}
+	}
+
+
+
+	public String getGeneratedContent(){
+		return contentEditorPane.getText();
+	}
+
+	@Override
+	protected String testEmptyInput() {
+		return null;
+	}
+
+
+	@Override
+	protected void initButtons() {
+		addButton(addButton);
+	       addButton(cancelButton);
 	}
 	
 }

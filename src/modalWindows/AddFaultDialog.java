@@ -622,7 +622,6 @@ public class AddFaultDialog extends javax.swing.JDialog {
 		
 		//WSDL OPERATION FAULT
 		if (selectedItem.equals(WSDL_OPERATION_PANEL)) {
-			String nevim= StringEscapeUtils.unescapeXml(contentEditorPane.getText());
 			newFault= new WsdlOperationFault(uriTextField.getText(), 
 					(String) operationComboBox.getSelectedItem(),
 					StringEscapeUtils.unescapeXml(contentEditorPane.getText()));
@@ -639,37 +638,7 @@ public class AddFaultDialog extends javax.swing.JDialog {
 		
 	}//GEN-LAST:event_downloadButtonActionPerformed
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String args[]) {
-		
-		/* Create and display the dialog */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-
-			public void run() {
-				AddFaultDialog dialog = new AddFaultDialog(new javax.swing.JFrame(), true);
-				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-					@Override
-					public void windowClosing(java.awt.event.WindowEvent e) {
-						System.exit(0);
-					}
-				});
-				dialog.setVisible(true);
-			}
-		});
-		
-		
-		
-		
-		  
-		
-		
-		
-		
-		
-	}
+	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JButton cancelButton;

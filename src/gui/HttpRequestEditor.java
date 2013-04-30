@@ -2,11 +2,9 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.EventObject;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
-import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,12 +14,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
-import modalWindows.AddWsdlToTestSuite;
 import data.DataProvider;
 import data.HttpMessageData;
  
@@ -41,7 +38,6 @@ public class HttpRequestEditor extends JPanel {
     private JScrollPane headersScrollPane;
     private JButton addHeaderButton;
     private JButton removeHeaderButton;
-    private JButton addWsdlButton;
     private  JPanel headersPanel;
     private JEditorPane httpBodyEditorPane;
     private DefaultTableModel  headersTableModel;
@@ -49,7 +45,6 @@ public class HttpRequestEditor extends JPanel {
     private HttpMessageData requestData;
     private JSplitPane contentPane;
     private JPanel httpBodyPanel;
-    private AddWsdlToTestSuite wsdlWindow;
     
     
     public HttpRequestEditor() {
@@ -69,16 +64,8 @@ public class HttpRequestEditor extends JPanel {
     	return this.requestData;
     }
     
-    public void readData(){
-    	
-    }
-    
-    public void saveData(){
-    	
-    }
-    
-    public void openFile(){    	
-    
+    public void setHttpRequestData(HttpMessageData data){
+    	this.requestData = data;
     }
  
    /**
@@ -94,7 +81,6 @@ public class HttpRequestEditor extends JPanel {
     	httpBodyScrollPane = new JScrollPane();
     	addHeaderButton = new JButton();
     	removeHeaderButton = new JButton(); 
-    	addWsdlButton = new JButton();
     	httpBodyEditorPane = new JEditorPane();
     	contentPane = new JSplitPane();
     	
@@ -104,11 +90,11 @@ public class HttpRequestEditor extends JPanel {
     
     private void initHeaderPane(){
 		 
-    		addWsdlButton.addActionListener(new AddWsdlListener());
-			headersLabel.setText("Http header:");
+    		headersLabel.setText("Http header:");
 			
 			
-			
+			headersTable.setDefaultEditor(Object.class, new MyCellEditor());
+			headersTable.createDefaultColumnsFromModel();
 			headersTable.setRowHeight(25);
 	        headersTable.setModel(new javax.swing.table.DefaultTableModel(
 	            new Object [][] {{"HTTP version"," click and select"},{"HTTP method"},{"URI"},{"Content-Type"}
@@ -120,44 +106,13 @@ public class HttpRequestEditor extends JPanel {
 	            
 	            
 	        ) {
-	            /**
+
+				/**
 				 * 
 				 */
-				private static final long serialVersionUID = 3376163326142594714L;
-				boolean[] canEdit = new boolean [] {
-	                true, true,true
-	            };
-
-	            public boolean isCellEditable(int rowIndex, int columnIndex) {
-	                return canEdit [columnIndex];
-	            }
-	            	
-	           
-	            
-	        });
-	        TableColumn valueVersion = headersTable.getColumnModel().getColumn(0);
-	        TableColumn valueMethod = headersTable.getColumnModel().getColumn(1);
-	        TableColumn valueContentType = headersTable.getColumnModel().getColumn(3);
-	        //valueColumn.setCellRenderer(new ColumnRenderer());
-	        ColumnRenderer httpMethod= new ColumnRenderer();
-	        ColumnRenderer httpVersion= new ColumnRenderer();
-	        ColumnRenderer httpContentType= new ColumnRenderer();
-	        
-	        httpMethod.addItem("GET");
-			httpMethod.addItem("POST");
-			httpMethod.addItem("PUT");
-			httpMethod.addItem("HEADER");
-			httpMethod.addItem("DELETE");
-			httpVersion.addItem("HTTP 1.0");
-			httpVersion.addItem("HTTP 1.1");
-			httpContentType.addItem("text/xml");
-			httpContentType.addItem("application/json");
-			
-			valueVersion.setCellEditor(new DefaultCellEditor(httpVersion));
-			valueMethod.setCellEditor(new DefaultCellEditor(httpMethod));
-			
-			
-			
+				private static final long serialVersionUID = 7491637677918342777L;
+	       });
+	
 			
 	        headersTableModel = (DefaultTableModel) headersTable.getModel();
 
@@ -189,14 +144,6 @@ public class HttpRequestEditor extends JPanel {
 	            }
 	        });
 	        
-	        addWsdlButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"add_small.png"))); // NOI18N
-	        addWsdlButton.setText("Get WSDL");
-	        addWsdlButton.addActionListener(new java.awt.event.ActionListener() {
-	            public void actionPerformed(java.awt.event.ActionEvent evt) {
-	            	 System.out.println("haoj");
-	            }
-	        });
-
 	        javax.swing.GroupLayout conditionPanelLayout = new javax.swing.GroupLayout(headersPanel);
 	        headersPanel.setLayout(conditionPanelLayout);
 	        conditionPanelLayout.setHorizontalGroup(
@@ -259,40 +206,128 @@ public class HttpRequestEditor extends JPanel {
     }
     
     
-    
-    private class AddWsdlListener implements ActionListener{
-    	public void actionPerformed(ActionEvent e){
-    		wsdlWindow = new AddWsdlToTestSuite();
-    		wsdlWindow.setVisible(true);
-    		
-    	}
+    public void setEditorContent(String content){
+    	this.httpBodyEditorPane.setText(content);
     }
-    
-    
-    private class ColumnRenderer extends JComboBox implements TableCellRenderer
-    {  
-          
-        public void updateUI(){  
-            super.updateUI();  
-        }  
-        
-        public void revalidate() {}  
-        public Component getTableCellRendererComponent(  
-                     JTable table, Object value,  
-                     boolean isSelected, boolean hasFocus,  
-                     int row, int column)  
-        {  
-            if (value != null) {  
-                //System.out.println(value.toString());  
-                removeAllItems();  
-                addItem(value);  
-                
-            }  
-            return this;  
-        }  
-    }  
-    
   
     
+//    private class ColumnRenderer extends JComboBox implements TableCellRenderer
+//    {  
+//          
+//        /**
+//		 * 
+//		 */
+//		private static final long serialVersionUID = -5869802814644340167L;
+//		
+//		public void updateUI(){  
+//            super.updateUI();  
+//        }  
+//        
+//        public void revalidate() {}  
+//        @SuppressWarnings("unchecked")
+//		public Component getTableCellRendererComponent(  
+//                     JTable table, Object value,  
+//                     boolean isSelected, boolean hasFocus,  
+//                     int row, int column)  
+//        {  
+//            if (value != null) {  
+//                //System.out.println(value.toString());  
+//                removeAllItems();  
+//                addItem(value);  
+//                this.setEditable(true);
+//            }  
+//            return this;  
+//        }  
+//    } 
     
+    
+    private class MyCellEditor extends DefaultCellEditor{
+    	
+    	/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6297110427296558124L;
+		private JComboBox<String> editedBox;
+    	
+    	public MyCellEditor() {
+			super(new JTextField());
+			super.setClickCountToStart(1);
+		}
+		
+		@Override
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
+			      int row, int column) {
+			if(row==0 && column ==1){ // comBoBox for First row
+				String[] objectArray = {"HTTP 1.0","HTTP 1.1"};
+				this.editedBox = new JComboBox<String>(objectArray);
+				setupBox(this.editedBox,table,row);
+				this.editedBox.setSelectedItem(value);
+				return this.editedBox;
+			}
+			
+			if(row==1 && column ==1){ // comBoBox for First row
+				String[] objectArray = {"GET","POST","PUT","HEAD","DELETE"};
+				this.editedBox = new JComboBox<String>(objectArray);
+				setupBox(this.editedBox,table,row);
+				this.editedBox.setSelectedItem(value);
+				return this.editedBox;
+			}
+			  
+			if(column == 0 && row < 4){
+			    JTextField textField = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
+		        textField.setEditable(false);
+			    return textField;
+			}
+			 
+			JTextField textField = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
+			textField.setEditable(true);
+			return textField;
+		}
+    
+		@Override
+		public Object getCellEditorValue(){
+			
+			return super.getCellEditorValue();
+		}
+		
+		private JComboBox<String> setupBox(JComboBox<String> box, JTable table, int row){
+			final JTable myTable = table;
+			 final int myRow = row; 
+			
+			box.setEditable(true);
+			     
+            ItemListener itemListener = new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    if(e.getStateChange() == ItemEvent.SELECTED) {
+                        if(null != myTable.getCellEditor()){ 
+                        	myTable.getCellEditor().stopCellEditing();
+                        }
+
+                        myTable.setValueAt(e.getItem(), myRow, 1);
+                    }
+                }
+            };
+            box.addItemListener(itemListener);
+            PopupMenuListener popMenuEvent = new PopupMenuListener() {
+
+                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                }
+
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                    String sValue = (String)myTable.getValueAt(myRow, 1);
+                    if(null != myTable.getCellEditor()){ 
+                        myTable.getCellEditor().stopCellEditing();
+                    }
+                    myTable.setValueAt(sValue, myRow, 1);
+                }
+
+                public void popupMenuCanceled(PopupMenuEvent e) {   
+                }
+
+            };
+            box.addPopupMenuListener(popMenuEvent);
+            return box;
+		}
+    
+    }
 }

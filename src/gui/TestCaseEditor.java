@@ -87,6 +87,9 @@ public class TestCaseEditor extends JPanel {
 		return this.testCasePath;
 	}
 	
+	public void setHttpBody(String body){
+		httpEditor.setEditorContent(body);
+	}
 	
 	public void saveTestCase(){
 		
@@ -134,13 +137,13 @@ public class TestCaseEditor extends JPanel {
 		}else{
 			loadedSettings = (TestCaseSettingsData) dataProvider.readObject(settingsFilePath);
 			settingsEditor.setSettingsData(loadedSettings);
-			ConsoleLog.Print(loadedSettings.toString());
 		}
 		
 		if(!httpDataFile.exists()){
 			ConsoleLog.Print("Http Data file not found !!!");
 		}else{
 			loadedHttpData = (HttpMessageData) dataProvider.readObject(httpFilePath);
+			httpEditor.setHttpRequestData(loadedHttpData);
 		}
 		
 		

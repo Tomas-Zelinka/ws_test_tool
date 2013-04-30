@@ -341,6 +341,7 @@ public class MainWindow extends JFrame{
 		//rowHeader.add(new XMLFoldingMargin(reqOriginalEditorPane), BorderLayout.EAST);
 		rowHeader.add(new LineNumberMargin(currentEditorPane), BorderLayout.WEST);
 		currentScrollPane.setRowHeaderView(rowHeader);
+		
 	}
 	
 	/**
@@ -564,8 +565,13 @@ public class MainWindow extends JFrame{
 	
 	private class GenerateRequestListner implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			GenerateFromWSDLDialog window = new GenerateFromWSDLDialog();  
+			GenerateFromWSDLDialog window = new GenerateFromWSDLDialog(); 
+			editor.setHttpBody(window.getGeneratedContent());
 			window.setVisible(true);
+			
+			if(window.isAddButtonClicked()){
+				editor.setHttpBody(window.getGeneratedContent());
+			}
 		}
 	}
 	

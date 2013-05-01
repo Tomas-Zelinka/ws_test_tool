@@ -18,6 +18,7 @@ import data.DataProvider;
 import data.HttpMessageData;
 import data.TestCaseSettingsData;
 import data.TestList;
+import data.XMLFormat;
 
 public class UnitPanel extends JPanel implements NewResponseListener {
 
@@ -91,6 +92,8 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 		for(HttpMessageData data : dataArray){
 			Object[] newRow = new Object[] {data.getName(),null,null,null,null,null};
 			responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
+			
+			responseEditorPane.setText(XMLFormat.format(data.getBody())); 
 			//responseEditorPane.setText(data.getBody()); 
 		}
 		ConsoleLog.Print("[UnitPanel] vracim se");

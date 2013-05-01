@@ -11,6 +11,8 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 
+import logging.ConsoleLog;
+
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;
@@ -27,9 +29,8 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 	    private javax.swing.JLabel contentLabel;
 	    private javax.swing.JScrollPane contentScrollPane;
 	    private javax.swing.JButton downloadButton;
-	    private javax.swing.JLabel downloadLabel;
 	    private javax.swing.JSeparator jSeparator1;
-	    private javax.swing.JComboBox<String> operationComboBox;
+	    private javax.swing.JComboBox operationComboBox;
 	    private javax.swing.JLabel operationLabel;
 	    private javax.swing.JLabel uriLabel;
 	    private javax.swing.JTextField uriTextField;
@@ -74,11 +75,10 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
         downloadButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         operationLabel = new javax.swing.JLabel();
-        operationComboBox = new javax.swing.JComboBox<String>();
+        operationComboBox = new javax.swing.JComboBox();
         contentScrollPane = new javax.swing.JScrollPane();
         contentEditorPane = new AntiAliasedEditorPane();
         contentLabel = new javax.swing.JLabel();
-        downloadLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
     
@@ -97,7 +97,6 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 		public void run() {
 			
 			try {
-				downloadLabel.setText("Downloading WSDL..");
 				System.out.println("Downloading WSDL.."+uriTextField.getText());
 			
 		   		
@@ -105,13 +104,12 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 				for (String operation : operationList)
 					operationComboBox.addItem(operation);
 				
-				downloadLabel.setText("");
 				operationComboBox.setEnabled(true);
 				contentEditorPane.setEnabled(true);
 			}
 			catch (Exception ex) {
 				showWsdlNotFound();
-				downloadLabel.setText("");
+				//ex.printStackTrace();
 			}
 		}
 	}
@@ -138,8 +136,9 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 	 * @param wsdlUri 
 	 */
 	private List<String> parseWSDL(String wsdlUri) throws Exception {
+		
 		Wsdl wsdl = Wsdl.parse(wsdlUri);
-					
+		//ConsoleLog.Print("preparsovano"); 
 		List<QName> bindings = wsdl.getBindings();
 		QName binding = bindings.get(0);
 		builder = wsdl.binding().localPart(binding.getLocalPart()).find();
@@ -176,7 +175,6 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 		
 		contentLabel.setText("Content:");
 		
-		downloadLabel.setFont(new java.awt.Font("Dialog", 0, 12));
 		
 		javax.swing.GroupLayout wsdlOperationPanelLayout = new javax.swing.GroupLayout(wsdlOperationPanel);
 		wsdlOperationPanel.setLayout(wsdlOperationPanelLayout);
@@ -195,7 +193,6 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 		                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
 		                .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 		                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, wsdlOperationPanelLayout.createSequentialGroup()
-		                        .addComponent(downloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
 		                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
 		                        .addComponent(downloadButton))
 		                    .addComponent(uriTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)))
@@ -212,9 +209,8 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 		            .addComponent(uriTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
 		        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
 		        .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-		            .addComponent(downloadButton)
-		            .addComponent(downloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-		        .addGap(18, 18, 18)
+		            .addComponent(downloadButton))
+		            .addGap(18, 18, 18)
 		        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
 		        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 		        .addGroup(wsdlOperationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -250,7 +246,7 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 	private class GenerateListner implements ActionListener{
 		@SuppressWarnings("unchecked")
 		public void actionPerformed(ActionEvent e){
-			JComboBox<String> box =(JComboBox<String>) e.getSource();
+			JComboBox box =(JComboBox) e.getSource();
 			String method = (String)box.getSelectedItem();
 			
 			SoapOperation operation = builder.operation().name(method).find();

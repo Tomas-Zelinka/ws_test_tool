@@ -6,21 +6,16 @@
  */
 package data;
 
-import com.thoughtworks.xstream.XStream;
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import logging.ConsoleLog;
 
-import proxyUnit.Settings;
+import com.thoughtworks.xstream.XStream;
 
 /**
  * Trida slouzi jako handler pro ziskavani/ukladani testu a nastsaveni z/do XML souboru pomoci knihovny XStream.

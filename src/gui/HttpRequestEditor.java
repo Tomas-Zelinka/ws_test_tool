@@ -19,6 +19,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
+import logging.ConsoleLog;
 import data.DataProvider;
 import data.HttpMessageData;
  
@@ -29,8 +30,8 @@ public class HttpRequestEditor extends JPanel {
 	 */
 	private static final long serialVersionUID = 4286324537862142268L;
 	
-//	private boolean DEBUG = false;
- 
+	
+	
     private  JTable headersTable;
     
     private JLabel headersLabel;
@@ -58,14 +59,28 @@ public class HttpRequestEditor extends JPanel {
         contentPane.setTopComponent(headersPanel);
         contentPane.setBottomComponent(httpBodyPanel);
         contentPane.setResizeWeight(0.4);
+        
     }
     
     public HttpMessageData getHttpRequestData(){
+    	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_VERSION,(String) headersTable.getValueAt(0, 1));
+    	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_METHOD,(String) headersTable.getValueAt(1, 1));
+    	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_URI,(String) headersTable.getValueAt(2, 1));
+    	ConsoleLog.Print((String)headersTable.getValueAt(2, 1));
+    	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_CONTENTTYPE,(String) headersTable.getValueAt(3, 1));
+    	this.requestData.setBody(httpBodyEditorPane.getText());
+    	
     	return this.requestData;
     }
     
     public void setHttpRequestData(HttpMessageData data){
     	this.requestData = data;
+    	
+    	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_VERSION), 0, 1);
+    	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_METHOD), 1, 1);
+    	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_URI), 2, 1);
+    	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_CONTENTTYPE), 3, 1);
+    	setEditorContent(this.requestData.getBody());
     }
  
    /**
@@ -247,7 +262,7 @@ public class HttpRequestEditor extends JPanel {
 		 * 
 		 */
 		private static final long serialVersionUID = -6297110427296558124L;
-		private JComboBox<String> editedBox;
+		private JComboBox editedBox;
     	
     	public MyCellEditor() {
 			super(new JTextField());
@@ -259,7 +274,7 @@ public class HttpRequestEditor extends JPanel {
 			      int row, int column) {
 			if(row==0 && column ==1){ // comBoBox for First row
 				String[] objectArray = {"HTTP 1.0","HTTP 1.1"};
-				this.editedBox = new JComboBox<String>(objectArray);
+				this.editedBox = new JComboBox(objectArray);
 				setupBox(this.editedBox,table,row);
 				this.editedBox.setSelectedItem(value);
 				return this.editedBox;
@@ -267,7 +282,7 @@ public class HttpRequestEditor extends JPanel {
 			
 			if(row==1 && column ==1){ // comBoBox for First row
 				String[] objectArray = {"GET","POST","PUT","HEAD","DELETE"};
-				this.editedBox = new JComboBox<String>(objectArray);
+				this.editedBox = new JComboBox(objectArray);
 				setupBox(this.editedBox,table,row);
 				this.editedBox.setSelectedItem(value);
 				return this.editedBox;
@@ -275,12 +290,14 @@ public class HttpRequestEditor extends JPanel {
 			  
 			if(column == 0 && row < 4){
 			    JTextField textField = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
+			    table.setValueAt(value, row, column);
 		        textField.setEditable(false);
 			    return textField;
 			}
 			 
 			JTextField textField = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
 			textField.setEditable(true);
+			table.setValueAt(value, row, column);
 			return textField;
 		}
     
@@ -290,7 +307,7 @@ public class HttpRequestEditor extends JPanel {
 			return super.getCellEditorValue();
 		}
 		
-		private JComboBox<String> setupBox(JComboBox<String> box, JTable table, int row){
+		private JComboBox setupBox(JComboBox box, JTable table, int row){
 			final JTable myTable = table;
 			 final int myRow = row; 
 			

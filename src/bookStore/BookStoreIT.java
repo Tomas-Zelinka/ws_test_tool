@@ -15,7 +15,7 @@ public interface BookStoreIT {
 	
 	@WebMethod(operationName = "removeBook")
 	
-	public String removeBook();
+	public int removeBook();
 	
 	@WebMethod(operationName = "showAllBooks")
 	public String showAllBooks();

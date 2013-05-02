@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="webservices" default="default" basedir=".">
+    <description>webservices</description>
+    <property name="src.dir" value="src" />
+   	<property name="build.dir" value="build" />
+	<property name="lib.dir" value="lib" />
+	<property name="class.dir" value="${build.dir}/classes" />
+	<property name="web.dir" value="WebContent" />
+	<property name="war.dir" value="${build.dir}/war" />
+	<property name="war.file" value="${war.dir}/${ant.project.name}.war" />
+		
+	<property name="dep_cp" value="${toString:dep.runtime}" />
+
+	<path id="dep.runtime">
+		    <fileset dir="./lib">
+		        <include name="**/*.jar" />
+		    </fileset>
+	</path>
+		
+	<target name="clean">
+		<delete dir="build" />
+	</target>
+	
+	<target name="init" depends="clean">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${lib.dir}" />
+		<mkdir dir="${class.dir}" />
+		<mkdir dir="${war.dir}" />
+		
+		<copy todir="${lib.dir}">
+			<fileset dir="${lib.dir}"/>
+		</copy>
+		
+    </target>
+	
+	<target name="compile" depends="clean,init" description="compile the source"  >
+	    <echo>Compile from ${src.dir} to ${build.dir}</echo>
+	
+	    <javac destdir="${class.dir}" srcdir="${src.dir}" includeantruntime="false">
+	    	<classpath refid="dep.runtime"/>
+	    </javac>
+    </target>
+	
+	<target name="war" depends="compile">
+		
+		<war destfile="${war.file}" webxml="${web.dir}/WEB-INF/web.xml">
+			<fileset dir="${web.dir}">
+      			<include name="**/*.*"/>
+   			</fileset>
+  			 <lib dir="${lib.dir}">
+      			<exclude name="portlet.jar"/>
+   			</lib>
+   			<classes dir="${class.dir}"/>
+		</war>
+	</target>
+	
+	
+	<target name="default" depends="war" />
+	   
+	 
+	
+</project>

@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.HashMap;
 
@@ -53,6 +55,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	private TestList testListData;
 	private JLabel requestTableLabel;
 	private JLabel responsesTableLabel;
+	private HashMap<String,HttpMessageData[]> responses;
 		
 	public UnitPanel (int type){
 		initComponents();
@@ -65,7 +68,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	 */
 	public void openTestList(String path){
 		
-		clearTestCasesTable();
+		clearTable(testCasesTableModel);
 		File testListFile= new File(path);
 		if(testListFile.exists()){
 			testListData =(TestList) ioProvider.readObject(path);
@@ -87,17 +90,22 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	public void onNewResponseEvent(HttpMessageData[] dataArray) {
 		ConsoleLog.Print("[UnitPanel] dostal jsem data, delka:" + dataArray.length);
 		
+		String key = dataArray[0].getName();
+		responses.put(key, dataArray);
 		
 		
-		for(HttpMessageData data : dataArray){
-			Object[] newRow = new Object[] {data.getName(),null,null,null,null,null};
-			responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
-			
-			responseEditorPane.setText(XMLFormat.format(data.getBody())); 
-			//responseEditorPane.setText(data.getBody()); 
-		}
+		
 		ConsoleLog.Print("[UnitPanel] vracim se");
 	}
+	
+	
+	public void clearUnitPanel(){
+		responses.clear();
+		clearTable(responsesTableModel);
+		responseEditorPane.setText("");
+		
+	}
+	
 	/**
 	 * 
 	 * @param path
@@ -187,9 +195,9 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	/**
 	 * 
 	 */
-	public void clearResponsesTable(){
-		for(int i = 0; i < responsesTableModel.getRowCount(); i++){
-			removeResponseAt(i);
+	public void clearTable(DefaultTableModel table){
+		for(int i = 0; i < table.getRowCount(); i++){
+			table.removeRow(i);
 		}
 	}
 	
@@ -247,16 +255,48 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 		return false;
 	}
 	
-	/**
-	 * 
-	 */
-	private void clearTestCasesTable(){
+	
+	
+	
+	private class RequestSelectionAdapter extends MouseAdapter{
+		public void mouseClicked(MouseEvent e) {
+			clearTable(responsesTableModel);
+			responseEditorPane.setText("");
+			requestEditorPane.setText("");
+			//responsesTableModel.
+			int row = testCasesTable.getSelectedRow();
+			String key = (String) testCasesTableModel.getValueAt(row,1);
+			
+			HttpMessageData[] caseResponses = responses.get(key);
+				if(caseResponses != null){
+					for(HttpMessageData data : caseResponses){
+						
+						Object[] newRow = new Object[] {data.getName(),data.getLoopNumber(),data.getThreadNumber(),null,data.getMethod(),data.getUri()};
+						responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
+						//responseEditorPane.setText(XMLFormat.format(data.getBody())); 
+						//responseEditorPane.setText(data.getBody()); 
+				}
+			}else{
+				ConsoleLog.Message("Response not present!");
+			}
 		
-		ConsoleLog.Print(""+testCasesTableModel.getRowCount());
-		for(int i = 0; i < testCasesTableModel.getRowCount(); i++){
-			removeTestCaseAt(i);
 		}
 	}
+	
+	private class ResponseSelectionAdapter extends MouseAdapter{
+		public void mouseClicked(MouseEvent e) {
+			int row = testCasesTable.getSelectedRow();
+			String key = (String) testCasesTableModel.getValueAt(row,1);
+			
+			HttpMessageData[] caseResponses = responses.get(key);
+			
+			requestEditorPane.setText(XMLFormat.format(caseResponses[0].getRequestBody()));
+			
+			responseEditorPane.setText(XMLFormat.format(caseResponses[0].getResponseBody()));
+		
+		}
+	}
+	
 	/**
 	 * 
 	 */
@@ -281,6 +321,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 		ioProvider = new DataProvider();
 		requestTableLabel = new JLabel("Requests");
 		responsesTableLabel = new JLabel("Responses");
+		responses = new HashMap<String,HttpMessageData[]>();
 	}
 	
 	/**
@@ -309,6 +350,9 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 		
 		testCasesTable.setOpaque(false);
 		responsesTable.setOpaque(false);
+		testCasesTable.addMouseListener(new RequestSelectionAdapter());
+		responsesTable.addMouseListener(new ResponseSelectionAdapter());
+		
 		testCasesTable.setModel(new javax.swing.table.DefaultTableModel(
 	            
 				

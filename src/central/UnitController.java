@@ -161,26 +161,28 @@ public class UnitController {
 			HashMap<Integer,String> testCases = list.getTestCases();
 			Object[] keys = testCases.keySet().toArray();
 			
-			String casePath = testCases.get(keys[0]);
-			
-			TestCaseSettingsData settings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
-			if(settings != null)
-			{
-				if(settings.getUseProxy()){
-					FaultInjectionData fault = (FaultInjectionData) ioProvider.readObject(casePath+FaultInjectionData.filename);
-					ProxyUnitWorker proxyUnit = new ProxyUnitWorker(fault,settings,unitId);
-					proxyUnit.execute();
+			for(int i =0; i < keys.length; i++){
+				String casePath = testCases.get(keys[i]);
+				
+				TestCaseSettingsData settings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
+				if(settings != null)
+				{
+					if(settings.getUseProxy()){
+						FaultInjectionData fault = (FaultInjectionData) ioProvider.readObject(casePath+FaultInjectionData.filename);
+						ProxyUnitWorker proxyUnit = new ProxyUnitWorker(fault,settings,unitId);
+						proxyUnit.execute();
+						
+					}
 					
+					
+					if(settings.getRun()){
+						HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.filename);
+						TestUnitWorker testUnit = new TestUnitWorker(request,settings,unitId);
+						testUnit.execute();
+					}
+				}else{
+					ConsoleLog.Message("Test case settings file not found!");
 				}
-				
-				
-				if(settings.getRun()){
-					HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.filename);
-					TestUnitWorker testUnit = new TestUnitWorker(request,settings,unitId);
-					testUnit.execute();
-				}
-			}else{
-				ConsoleLog.Message("Test case settings file not found!");
 			}
 		}else{
 			ConsoleLog.Message("Testlist not found!");
@@ -215,13 +217,9 @@ public class UnitController {
 		
 		public String doInBackground(){
 			if(id == 0){
-				
-				
 				localTestUnit.setTest(data,settings);
 				localTestUnit.run();
 				localProxyUnit.stopProxy();
-				
-				
 			}else{
 				
 			}

@@ -205,6 +205,7 @@ public class TestingMonitor extends JPanel  {
 //	
 	public void runUnit(String path){
 		getSelectedPanel().saveTestList(path); 
+		getSelectedPanel().clearUnitPanel();
 		controller.runTest(path,getUnitKey());
 		
 		 

@@ -54,7 +54,12 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 				 
 				try{
 					responseBody = client.execute(clientMethod,responseHandler);
-					clientResponseData[i].setBody(responseBody);
+					clientResponseData[i].setResponseBody(responseBody);
+					clientResponseData[i].setRequestBody(data.getRequestBody());
+					clientResponseData[i].setMethod("GET");
+					clientResponseData[i].setLoopNumber(i);
+					clientResponseData[i].setThreadNumber(this.threadId);
+					clientResponseData[i].setUri(uri);
 				}catch(Exception ex){
 					ex.printStackTrace();
 					
@@ -70,7 +75,7 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 			StringEntity entity;
 			
 			try{
-				entity = new StringEntity(data.getBody());
+				entity = new StringEntity(data.getRequestBody());
 			} catch(Exception ex){
 				ex.printStackTrace();
 				return clientResponseData;
@@ -83,7 +88,12 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 					 
 					try{
 						responseBody = client.execute(clientMethod,responseHandler);
-						clientResponseData[i].setBody(responseBody);
+						clientResponseData[i].setResponseBody(responseBody);
+						clientResponseData[i].setRequestBody(data.getRequestBody());
+						clientResponseData[i].setMethod("POST");
+						clientResponseData[i].setLoopNumber(i);
+						clientResponseData[i].setThreadNumber(this.threadId);
+						clientResponseData[i].setUri(uri);
 					}catch(Exception ex){
 						ex.printStackTrace();
 						

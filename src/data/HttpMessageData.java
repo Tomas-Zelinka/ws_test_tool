@@ -21,6 +21,10 @@ public class HttpMessageData {
 	private String responseBody;
 	private float elapsedRemoteTime;
 	private int responseCode;
+	private int threadNumber;
+	private int loopNumber;
+	private String method;
+	private String uri;
 	
 	private String name;
 	
@@ -42,6 +46,65 @@ public class HttpMessageData {
 		this.requestBody = "";
 	}
 	
+	public int getThreadNumber() {
+		return threadNumber;
+	}
+
+	public void setThreadNumber(int threadNumber) {
+		this.threadNumber = threadNumber;
+	}
+
+	public int getLoopNumber() {
+		return loopNumber;
+	}
+
+	public void setLoopNumber(int loopNumber) {
+		this.loopNumber = loopNumber;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+	
+	
+	public String getResponseBody() {
+		return responseBody;
+	}
+
+	public void setResponseBody(String responseBody) {
+		this.responseBody = responseBody;
+	}
+
+	public float getElapsedRemoteTime() {
+		return elapsedRemoteTime;
+	}
+
+	public void setElapsedRemoteTime(float elapsedRemoteTime) {
+		this.elapsedRemoteTime = elapsedRemoteTime;
+	}
+
+	public int getResponseCode() {
+		return responseCode;
+	}
+
+	public void setResponseCode(int responseCode) {
+		this.responseCode = responseCode;
+	}
+	
+	
+	
 	public String getName() {
 		return name;
 	}
@@ -50,11 +113,11 @@ public class HttpMessageData {
 		this.name = name;
 	}
 	
-	public void setBody(String inputBody){
+	public void setRequestBody(String inputBody){
 		this.requestBody = inputBody;
 	}
 	
-	public String getBody (){
+	public String getRequestBody (){
 		return this.requestBody;
 	}
 	

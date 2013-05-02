@@ -68,7 +68,7 @@ public class HttpRequestEditor extends JPanel {
     	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_URI,(String) headersTable.getValueAt(2, 1));
     	ConsoleLog.Print((String)headersTable.getValueAt(2, 1));
     	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_CONTENTTYPE,(String) headersTable.getValueAt(3, 1));
-    	this.requestData.setBody(httpBodyEditorPane.getText());
+    	this.requestData.setRequestBody(httpBodyEditorPane.getText());
     	
     	return this.requestData;
     }
@@ -80,7 +80,7 @@ public class HttpRequestEditor extends JPanel {
     	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_METHOD), 1, 1);
     	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_URI), 2, 1);
     	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_CONTENTTYPE), 3, 1);
-    	setEditorContent(this.requestData.getBody());
+    	setEditorContent(this.requestData.getRequestBody());
     }
  
    /**
@@ -118,9 +118,7 @@ public class HttpRequestEditor extends JPanel {
 	            new String [] {
 	                "Header", "Value"
 	            }
-	            
-	            
-	        ) {
+	       ) {
 
 				/**
 				 * 

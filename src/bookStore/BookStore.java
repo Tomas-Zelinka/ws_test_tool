@@ -16,21 +16,24 @@ public class BookStore {
 	//private List<List<String>> books;
 	//private final String dataStore = "data/data.txt";
 	
-	/*public BookStore()
+	private int books;
+	public BookStore()
 	{
-		try{
-			books =  CSVIO.readTXTFile(dataStore);
-		}catch(IOException ex){
-			ex.printStackTrace();
-		}
+		this.books = 0;
+		//try{
+		//	books =  CSVIO.readTXTFile(dataStore);
+		//}catch(IOException ex){
+		//	ex.printStackTrace();
+		//}
 		
-		showAllBooks();
+		///showAllBooks();
 		
-	}*/
+	}
 	
-	public String addBook()
+	public int addBook()
 	{
-		return "addBook()";
+		this.books++;
+		return this.books;
 	}
 	/*public void addBook(String authorName, String publishYear, String bookName)
 	{
@@ -60,7 +63,7 @@ public class BookStore {
 	}
 	
 	
-	public String showAllBooks()
+	public int showAllBooks()
 	{
 			
 		/*for ( List<String> book : books){
@@ -69,7 +72,7 @@ public class BookStore {
 			}
 		}*/
 		
-		return "showAllBooks";
+		return this.books;
 	}
 	
 	

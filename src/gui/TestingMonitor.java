@@ -22,12 +22,9 @@ public class TestingMonitor extends JPanel  {
 	 * 
 	 */
 	private static final long serialVersionUID = -6401376001409493032L;
-
-	
 	private JTabbedPane tabbedPane;
 	private UnitController controller;
 	private int testUnitCounter;
-	
 	
 	
 	/**
@@ -39,31 +36,6 @@ public class TestingMonitor extends JPanel  {
 		testUnitCounter = 0;
 		initComponents();
 		setupComponents();
-		
-	}
-	
-	/**
-	 * 
-	 */
-	private void initComponents(){
-	
-		tabbedPane = new JTabbedPane();
-		tabbedPane.addChangeListener(new ChangeListener() {
-	        public void stateChanged(ChangeEvent e) {
-	            ConsoleLog.Print("Tab: " + tabbedPane.getSelectedIndex());
-	        }
-	    });
-		this.setLayout(new BorderLayout());
-		this.add(tabbedPane,BorderLayout.CENTER);
-	}
-	
-	/**
-	 * 
-	 */
-	private void setupComponents(){
-		controller.addLocalTestUnit();
-		addLocalTestUnit();
-		
 		
 	}
 	
@@ -118,36 +90,9 @@ public class TestingMonitor extends JPanel  {
 			tabbedPane.revalidate();
 			
 		}else{
-			ConsoleLog.Print("You cannot close local testing unit");
+			ConsoleLog.Print("[TestMonitor] You cannot close local testing unit");
 		}
 	
-	}
-	
-	/**
-	 * 
-	 * @return int - return unit key, the key is used in tab titles
-	 * 				 and like an id for testing units
-	 */
-	private int getUnitKey(){
-		
-		int panelIndex = tabbedPane.getSelectedIndex();
-		
-		String keyString = tabbedPane.getTitleAt(panelIndex);
-		
-		if(panelIndex == 0)// local unit selected
-			return 0;
-		else
-			return Integer.parseInt(keyString.substring("Remote Unit ".length()));
-	}
-	
-	/**
-	 * 
-	 * @return JPanel - returns the selected unit panel
-	 */
-	private UnitPanel getSelectedPanel(){
-		UnitPanel selectedPanel = (UnitPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
-		ConsoleLog.Print("returned Unit: " + getUnitKey());
-		return selectedPanel;
 	}
 	
 	/**
@@ -174,7 +119,7 @@ public class TestingMonitor extends JPanel  {
 	public void insertTestCase(String path){
 		
 		if(MainWindow.getCasePath().isEmpty()){
-			ConsoleLog.Message("Test case not selected"); 
+			ConsoleLog.Message("[TestMonitor] Test case not selected"); 
 		}else{
 			getSelectedPanel().insertTestCaseToTable(path);
 		}
@@ -195,19 +140,61 @@ public class TestingMonitor extends JPanel  {
 	}
 
 	
-//	private LocalTestUnit getLocalTestUnit(){
-//		return controller.getLocalTestUnit();
-//	}
-//	
-//	private RemoteTestUnit getRemoteTestUnit(Integer id){
-//		return controller.getRemoteTestUnit(id);
-//	}
-//	
 	public void runUnit(String path){
 		getSelectedPanel().saveTestList(path); 
 		getSelectedPanel().clearUnitPanel();
 		controller.runTest(path,getUnitKey());
 		
 		 
+	}
+	
+	/**
+	 * 
+	 * @return int - return unit key, the key is used in tab titles
+	 * 				 and like an id for testing units
+	 */
+	private int getUnitKey(){
+		
+		int panelIndex = tabbedPane.getSelectedIndex();
+		
+		String keyString = tabbedPane.getTitleAt(panelIndex);
+		
+		if(panelIndex == 0)// local unit selected
+			return 0;
+		else
+			return Integer.parseInt(keyString.substring("Remote Unit ".length()));
+	}
+	
+	/**
+	 * 
+	 * @return JPanel - returns the selected unit panel
+	 */
+	private UnitPanel getSelectedPanel(){
+		UnitPanel selectedPanel = (UnitPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
+		ConsoleLog.Print("[TestMonitor] returned Unit: " + getUnitKey());
+		return selectedPanel;
+	}
+	
+	/**
+	 * 
+	 */
+	private void initComponents(){
+	
+		tabbedPane = new JTabbedPane();
+		tabbedPane.addChangeListener(new ChangeListener() {
+	        public void stateChanged(ChangeEvent e) {
+	            ConsoleLog.Print("[TestMonitor] Tab: " + tabbedPane.getSelectedIndex());
+	        }
+	    });
+		this.setLayout(new BorderLayout());
+		this.add(tabbedPane,BorderLayout.CENTER);
+	}
+	
+	/**
+	 * 
+	 */
+	private void setupComponents(){
+		controller.addLocalTestUnit();
+		addLocalTestUnit();
 	}
 }

@@ -3,7 +3,6 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -55,13 +54,38 @@ public class TestCaseSettings extends JPanel {
 	private JPanel httpFieldsBox;
 	private JPanel proxyFieldBox;
 	private JSeparator separator;
-	
+	private boolean dataLoaded;
 	private TestCaseSettingsData settingsData;
 	
 	public TestCaseSettings(){
 		initComponents();
 		setupComponents();	
+		setDataLoaded(false);
 	}
+	
+	public void setData(TestCaseSettingsData data){
+		this.settingsData = data;
+		loadData();
+		setDataLoaded(true);
+	}
+	
+	public TestCaseSettingsData getData(){
+		saveData();
+		return this.settingsData;
+	}
+	
+	public void setEnablePanel(boolean enable){
+		useProxyBox.setEnabled(enable);
+		runButton.setEnabled(enable);
+	}
+	 public boolean isDataLoaded() {
+			return dataLoaded;
+		 }
+
+
+		public void setDataLoaded(boolean dataLoaded) {
+			this.dataLoaded = dataLoaded;
+		}
 		
 	private void initComponents(){
 		
@@ -165,11 +189,7 @@ public class TestCaseSettings extends JPanel {
 		setEnableHttpPanel(false);
 		setEnableProxyPanel(false);
 	}
-	
-	
-	
-	
-	
+
 	private String getEditorProxyHostName(){
 		return proxyHostField.getText();
 	}
@@ -177,8 +197,6 @@ public class TestCaseSettings extends JPanel {
 	private void setEditorProxyHostName(String str){
 		this.proxyHostField.setText(str);
 	}
-	
-	
 	
 	private Integer getEditorProxyPort(){
 		return Integer.parseInt(proxyPortField.getText());
@@ -261,15 +279,7 @@ public class TestCaseSettings extends JPanel {
 		setEnableHttpPanel(this.settingsData.getRun());
 	}
 	
-	public void setSettingsData(TestCaseSettingsData data){
-		this.settingsData = data;
-		loadData();
-	}
 	
-	public TestCaseSettingsData getSettingsData(){
-		saveData();
-		return this.settingsData;
-	}
 	
 	private void setEnableProxyPanel(boolean use){
 		Component[] fields = proxyFields.getComponents(); 
@@ -296,7 +306,7 @@ public class TestCaseSettings extends JPanel {
 	
 	
 	
-	public class UseProxyListener implements ActionListener{
+	private class UseProxyListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			AbstractButton abstractButton = (AbstractButton)e.getSource();
 	        boolean selected = abstractButton.getModel().isSelected();
@@ -308,7 +318,7 @@ public class TestCaseSettings extends JPanel {
 		}
 	}
 	
-	public class UseHttpListener implements ActionListener{
+	private class UseHttpListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			AbstractButton abstractButton = (AbstractButton)e.getSource();
 	        boolean selected = abstractButton.getModel().isSelected();

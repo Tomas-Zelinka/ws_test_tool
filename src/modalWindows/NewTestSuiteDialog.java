@@ -1,7 +1,7 @@
 package modalWindows;
 
 import gui.MainWindow;
-import gui.ProjectNavigator;
+import gui.Navigator;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -117,8 +117,8 @@ public class NewTestSuiteDialog extends InputModalWindow {
             	 }catch(Exception b){
             		 b.printStackTrace();
             	 }
-            	 ProjectNavigator.refreshTree();
-            	 ConsoleLog.Print("New test suite created,name: "+newTestSuite.getPath());
+            	 Navigator.refreshTree();
+            	 ConsoleLog.Print("[ModalWindow] New test suite created,name: "+newTestSuite.getPath());
             	 setVisible(false);
             	 dispose();
             	 

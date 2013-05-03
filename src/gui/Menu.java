@@ -230,7 +230,7 @@ public class Menu extends JMenuBar {
 	 */
 	class ExitListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			ConsoleLog.Print("file exit clicked");
+			ConsoleLog.Print("[HeadMenu] File exit clicked");
 			System.exit(0);
 		}
 	} 
@@ -302,7 +302,7 @@ public class Menu extends JMenuBar {
 	class TestListListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 					
-			ConsoleLog.Print("new Test List clicked");
+			ConsoleLog.Print("[HeadMenu]  New Test List clicked");
 		}
 	}
 	
@@ -328,7 +328,7 @@ public class Menu extends JMenuBar {
 	class ViewTestEditorListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
-				ConsoleLog.Print("Test Editor clicked");
+				ConsoleLog.Print("[HeadMenu] Test Editor clicked");
 		}
 	} 
 	
@@ -340,7 +340,7 @@ public class Menu extends JMenuBar {
 	class ViewTestUnitListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			getMainWindowInstance().setContent(MainWindow.TESTING_UNIT);
-				ConsoleLog.Print("Test Unit clicked");
+				ConsoleLog.Print("[HeadMenu] Test Unit clicked");
 		}
 	}
 	
@@ -352,7 +352,7 @@ public class Menu extends JMenuBar {
 	class ViewProxyMonitorListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			getMainWindowInstance().setContent(MainWindow.PROXY_MONITOR);
-			ConsoleLog.Print("Proxy Monitor clicked");
+			ConsoleLog.Print("[HeadMenu] Proxy Monitor clicked");
 			}
 	}
 	
@@ -376,7 +376,7 @@ public class Menu extends JMenuBar {
 	class ViewStatisticsListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			getMainWindowInstance().setContent(MainWindow.STATISTICS);
-			ConsoleLog.Print("Statistics clicked");
+			ConsoleLog.Print("[HeadMenu] Statistics clicked");
 			}
 	}
 	
@@ -387,7 +387,7 @@ public class Menu extends JMenuBar {
 	 */
 	class ProjectSettingsListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			ConsoleLog.Print("Project settings clicked");
+			ConsoleLog.Print("[HeadMenu] Project settings clicked");
 			}
 		} 
 
@@ -398,7 +398,7 @@ public class Menu extends JMenuBar {
 	 */
 	class RunningOptionsListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			ConsoleLog.Print("Running Options clicked");
+			ConsoleLog.Print("[HeadMenu] Running Options clicked");
 		}
 	} 
 		
@@ -410,7 +410,7 @@ public class Menu extends JMenuBar {
 	 */	
 	class ProjectRunListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			ConsoleLog.Print("Project Run clicked");
+			ConsoleLog.Print("[HeadMenu] Project Run clicked");
 		}
 	} 
 
@@ -423,7 +423,7 @@ public class Menu extends JMenuBar {
 	class ProxySettingsListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 					
-			ConsoleLog.Print("Proxy Settings clicked");
+			ConsoleLog.Print("[HeadMenu] Proxy Settings clicked");
 		}
 	} 
 	
@@ -435,7 +435,7 @@ public class Menu extends JMenuBar {
 	class ProxyLogListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 					
-			ConsoleLog.Print("Proxy Log clicked");
+			ConsoleLog.Print("[HeadMenu] Proxy Log clicked");
 		}
 	} 
 
@@ -447,7 +447,7 @@ public class Menu extends JMenuBar {
 	class ProxyRunListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 					
-			ConsoleLog.Print("Proxy Run clicked");
+			ConsoleLog.Print("[HeadMenu] Proxy Run clicked");
 		}
 	} 
 	
@@ -459,7 +459,7 @@ public class Menu extends JMenuBar {
 	class ProxyMonitorListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 					
-			ConsoleLog.Print("Proxy Monitor clicked");
+			ConsoleLog.Print("[HeadMenu] Proxy Monitor clicked");
 		}
 	} 
 	
@@ -472,7 +472,7 @@ public class Menu extends JMenuBar {
 	class RemoteControlListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 					
-			ConsoleLog.Print("Remote Control clicked");
+			ConsoleLog.Print("[HeadMenu] Remote Control clicked");
 		}
 	} 
 	
@@ -486,8 +486,7 @@ public class Menu extends JMenuBar {
 		public void actionPerformed(ActionEvent ae) {
 			newTestCaseWindow = new NewTestCaseDialog();
 			newTestCaseWindow.setVisible(true);
-			
-			ConsoleLog.Print("new Test Case clicked");
+			ConsoleLog.Print("[HeadMenu] New Test Case clicked");
 		}
 	}
 
@@ -500,7 +499,7 @@ public class Menu extends JMenuBar {
 		public void actionPerformed(ActionEvent ae) {
 			newTestSuiteWindow = new NewTestSuiteDialog();
 			newTestSuiteWindow.setVisible(true);
-			ConsoleLog.Print("new Test Suite clicked");
+			ConsoleLog.Print("[HeadMenu] New Test Suite clicked");
 		}
 	}
 	
@@ -524,7 +523,7 @@ public class Menu extends JMenuBar {
 	            
 	            
 				if (newHttpCase.exists()){
-					ConsoleLog.Print("You can set only 1 http test to this case");
+					ConsoleLog.Print("[HeadMenu] You can set only 1 http test to this case");
 	             }else{
 	            	 
 	            	 newHttpCase.mkdir();
@@ -536,14 +535,14 @@ public class Menu extends JMenuBar {
 		             	 }catch(Exception b){
 		             		 b.printStackTrace();
 		             	 }
-	            	 ProjectNavigator.refreshTree();
+	            	 Navigator.refreshTree();
 	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
-	            	 ConsoleLog.Print("New project name: "+ MainWindow.getCasePath());
+	            	 ConsoleLog.Print("[HeadMenu] New project name: "+ MainWindow.getCasePath());
 	            }
 			}else{
-				ConsoleLog.Print("Test case not selected ");
+				ConsoleLog.Print("[HeadMenu] Test case not selected ");
 			}
-			ConsoleLog.Print("new HttpTest clicked");
+			ConsoleLog.Print("[HeadMenu] New HttpTest clicked");
 		}
 	}
 	
@@ -567,7 +566,7 @@ public class Menu extends JMenuBar {
 	           
 	           
 				if (newHttpCase.exists()){
-					ConsoleLog.Print("You can set only 1 fault injection test to this case");
+					ConsoleLog.Print("[HeadMenu] You can set only 1 fault injection test to this case");
 	             }else{
 	            	 
 	            	 newHttpCase.mkdir();
@@ -580,15 +579,15 @@ public class Menu extends JMenuBar {
 	            		 b.printStackTrace();
 	            	 }
 	            	
-	            	 ProjectNavigator.refreshTree();
+	            	 Navigator.refreshTree();
 	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
 	            	 
-	            	 ConsoleLog.Print("New project name: "+ MainWindow.getCasePath());
+	            	 ConsoleLog.Print("[HeadMenu] New project name: "+ MainWindow.getCasePath());
 	            }
 			}else{
-				ConsoleLog.Print("Test case not selected ");
+				ConsoleLog.Print("[HeadMenu] Test case not selected ");
 			}
-			ConsoleLog.Print("new Fault Injection clicked");
+			ConsoleLog.Print("[HeadMenu] New Fault Injection clicked");
 		}
 	}		
 	
@@ -600,13 +599,13 @@ public class Menu extends JMenuBar {
 	public class OpenListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			int panelType = getMainWindowInstance().getPanelType();
-			if(panelType == ProjectNavigator.CASE_EDITOR_FAULT || panelType == ProjectNavigator.CASE_EDITOR_SETTINGS
-				||	panelType == ProjectNavigator.CASE_EDITOR_HTTP	){
+			if(panelType == Navigator.CASE_EDITOR_FAULT || panelType == Navigator.CASE_EDITOR_SETTINGS
+				||	panelType == Navigator.CASE_EDITOR_HTTP	){
 				
 				getMainWindowInstance().openTestCaseEditor();
 				ConsoleLog.Print("file edit clicked");
 			
-			}else if(panelType == ProjectNavigator.TEST_UNIT){
+			}else if(panelType == Navigator.TEST_UNIT){
 				getMainWindowInstance().openTestList();
 			}
 		}
@@ -650,7 +649,7 @@ public class Menu extends JMenuBar {
 		  }
 		  
 		  if(!f.delete()){
-			  ConsoleLog.Print("Not deleted");
+			  ConsoleLog.Print("[HeadMenu] Not deleted");
 		  }
 		    
 		}

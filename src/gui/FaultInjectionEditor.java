@@ -34,14 +34,17 @@ public class FaultInjectionEditor extends JSplitPane {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private FaultInjectionData editedTest;
-   
+    private boolean dataLoaded;
     
-    public FaultInjectionEditor(){
+   
+
+
+	public FaultInjectionEditor(){
 		
 		initComponents();
 		setConditionPane();
 		setFaultPane();
-		setEnableButtons(false);
+		setDataLoaded(false);
 		
 		this.setDividerLocation(250);
 		this.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -55,21 +58,34 @@ public class FaultInjectionEditor extends JSplitPane {
 	}
 	
 	
-	public FaultInjectionData getTest(){
+	public FaultInjectionData getData(){
 		return this.editedTest;
 	}
 	
 	
 	
-	public void setTest(FaultInjectionData data){
-		
+	public void setData(FaultInjectionData data){
 		this.editedTest = data;
 		refreshFaultPanel();
 		refreshConditionPanel();
+		setDataLoaded(true);
 	}
 	
+	public void setEnablePanel(boolean enable){
+		addFaultButton.setEnabled(enable);
+		addConditionButton.setEnabled(enable);
+		removeFaultButton.setEnabled(enable);
+		removeConditionButton.setEnabled(enable);
+	}
 	
-	
+	 public boolean isDataLoaded() {
+		return dataLoaded;
+	 }
+
+
+	public void setDataLoaded(boolean dataLoaded) {
+		this.dataLoaded = dataLoaded;
+	}
 	
 	private void initComponents(){
 		conditionPanel = new javax.swing.JPanel();
@@ -92,12 +108,6 @@ public class FaultInjectionEditor extends JSplitPane {
         
 	}
 	
-	private void setEnableButtons(boolean enable){
-		addFaultButton.setEnabled(enable);
-		addConditionButton.setEnabled(enable);
-		removeFaultButton.setEnabled(enable);
-		removeConditionButton.setEnabled(enable);
-	}
 	
 	
 	/**
@@ -273,7 +283,7 @@ public class FaultInjectionEditor extends JSplitPane {
 		conditionTable.setEnabled(true);
 		addConditionButton.setEnabled(true);
 		removeConditionButton.setEnabled(true);
-		FaultInjectionData selectedTest= getTest();
+		FaultInjectionData selectedTest= getData();
 		for (Condition currentCondition : selectedTest.getConditionSet()) {
 			//vlozeni noveho radku do tabulky podminek
 			Object[] newRow= new Object[] {currentCondition, currentCondition.getDescription()};
@@ -296,7 +306,7 @@ public class FaultInjectionEditor extends JSplitPane {
 		faultTable.setEnabled(true);
 		addFaultButton.setEnabled(true);
 		removeFaultButton.setEnabled(true);
-		FaultInjectionData selectedTest= getTest();
+		FaultInjectionData selectedTest= getData();
 		for (Fault currentFault : selectedTest.getFaultList()) {
 			//vlozeni noveho radku do tabulky poruch
 			Object[] newRow= new Object[] {currentFault, currentFault.getDescription()};
@@ -314,7 +324,7 @@ public class FaultInjectionEditor extends JSplitPane {
 			Condition newCondition= addConditionDialog.getNewCondition();
 			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou podminku
 			//DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-			FaultInjectionData selectedTest= getTest();
+			FaultInjectionData selectedTest= getData();
 			selectedTest.addToConditionSet(newCondition);
 			//refresh tabulky podminek
 			refreshConditionPanel();
@@ -330,7 +340,7 @@ public class FaultInjectionEditor extends JSplitPane {
 			Fault newFault= addFaultDialog.getNewFault();
 			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou poruchu
 			//DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
-			FaultInjectionData selectedTest=  getTest();
+			FaultInjectionData selectedTest=  getData();
 			selectedTest.addToFaultList(newFault);
 			//refresh tabulky poruch
 			refreshFaultPanel();
@@ -343,7 +353,7 @@ public class FaultInjectionEditor extends JSplitPane {
 		if (selectedRow == -1)
 			return;
 		Condition selectedCondition= (Condition) conditionTableModel.getValueAt(selectedRow, 0);
-		FaultInjectionData selectedTest=  getTest();
+		FaultInjectionData selectedTest=  getData();
 		
 //		//odstranime podminku jak z tabulky, tak z kolekce
 		selectedTest.removeFromConditionSet(selectedCondition);
@@ -358,7 +368,7 @@ public class FaultInjectionEditor extends JSplitPane {
 		Fault selectedFault= (Fault) faultTableModel.getValueAt(selectedRow, 0);
 		
 //		//zjistime, ktera porucha ve stromu je oznacena
-		FaultInjectionData selectedTest= getTest();
+		FaultInjectionData selectedTest= getData();
 //		
 //		//odstranime poruchu jak z tabulky, tak z kolekce
 		selectedTest.removeFromFaultList(selectedFault);

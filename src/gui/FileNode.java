@@ -42,12 +42,12 @@ public class FileNode extends java.io.File {
 
     public boolean isWSDL(){
     		
-    	String filename = this.getName().substring(this.getName().length()-4,this.getName().length());
     	
-    	if (this.isFile() && (filename.compareTo("wsdl") == 0)){
-    		    		
+    	if (this.isFile() ){
+    		String filename = this.getName().substring(this.getName().length()-4,this.getName().length());
+    	   	if(filename.compareTo("wsdl") == 0)
+    			return true;
     		//ConsoleLog.Print("wsdl test case clicked");
-    		return true;
     	}
     	return false;
     }

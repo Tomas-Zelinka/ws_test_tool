@@ -20,9 +20,6 @@ public class TestCaseEditor extends JPanel {
 	public static final String settingsFileName = "settings.xml";
 	public static final String httpRequestFileName = "Http" + File.separator +"input" + File.separator + "httpRequest.xml";
 	public static final String faultInjectionFileName = "FaultInjection" + File.separator + "input" + File.separator + "faultInjection.xml";
-	/**
-	 * ID for serialization
-	 */
 	private static final long serialVersionUID = -2860238189144324557L;
 
 	/**
@@ -31,7 +28,6 @@ public class TestCaseEditor extends JPanel {
 	public static final int FAULT_TAB = 2;
 	public static final int HTTP_TAB = 1;
 	public static final int SETTINGS_TAB = 0;
-	
 	private TestCaseSettings settingsEditor;
 	private JTabbedPane mainTabbedPane;
 	private FaultInjectionEditor faultInjectionEditor;
@@ -39,6 +35,9 @@ public class TestCaseEditor extends JPanel {
 	private DataProvider dataProvider;
 	private String testCasePath;
 	
+	/**
+	 * 			
+	 */
 	public TestCaseEditor(){
 		
 		initComponents();
@@ -49,18 +48,25 @@ public class TestCaseEditor extends JPanel {
 	    
 		setLayout(new BorderLayout());
 		add(mainTabbedPane,BorderLayout.CENTER);
+		disablePanels();
 	}
 	
-	
+	/**
+	 * 
+	 * @param tab
+	 */
 	public void setTab(int tab){
-		ConsoleLog.Print("tab:"+tab);
+		ConsoleLog.Print("[TestCaseEditor] Opened tab index: "+tab);
 		mainTabbedPane.setSelectedIndex(tab);
 		mainTabbedPane.revalidate();
 		mainTabbedPane.repaint();
 		setTestCasePath();
 		loadTestCase();
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getTab(){
 		return mainTabbedPane.getSelectedIndex();
 	}
@@ -75,12 +81,11 @@ public class TestCaseEditor extends JPanel {
 		httpEditor = new HttpRequestEditor();
 		faultInjectionEditor = new FaultInjectionEditor();
 		mainTabbedPane = new JTabbedPane();
-		
 	}
 	
 	public void setTestCasePath(){
-		this.testCasePath = MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+ File.separator+ MainWindow.getCasePath();
-		ConsoleLog.Print(this.testCasePath);
+		this.testCasePath =  MainWindow.getCasePath();
+		ConsoleLog.Print("[TestCaseEditor] Case path set to: "+this.testCasePath);
 	}
 	
 	public String getTestCasePath(){
@@ -91,71 +96,105 @@ public class TestCaseEditor extends JPanel {
 		httpEditor.setEditorContent(body);
 	}
 	
+	/**
+	 * 
+	 */
 	public void saveTestCase(){
 		
-		ConsoleLog.Print("saving");
-		FaultInjectionData faultData = faultInjectionEditor.getTest();
-		HttpMessageData requestData = httpEditor.getHttpRequestData();
-		TestCaseSettingsData settingsData = settingsEditor.getSettingsData();
+		ConsoleLog.Print("[TestCaseEditor] Started saving");
 		
-		String settingsFilePath = getTestCasePath() + File.separator + TestCaseEditor.settingsFileName;
-		String httpFilePath = getTestCasePath() + File.separator + TestCaseEditor.httpRequestFileName;
-		String faultFilePath = getTestCasePath() + File.separator + TestCaseEditor.faultInjectionFileName;
+		if(faultInjectionEditor.isDataLoaded()){
+			FaultInjectionData faultData = faultInjectionEditor.getData();
+			String faultFilePath = getTestCasePath() + File.separator + TestCaseEditor.faultInjectionFileName;
+			if(faultData != null)
+				dataProvider.writeObject(faultFilePath,faultData );
+		}else{
+			ConsoleLog.Print("[TestCaseEditor] FaultInjection not loaded ");
+		}
 		
-		if(settingsData != null)
-			dataProvider.writeObject(settingsFilePath, settingsData);
+		if(httpEditor.isDataLoaded()){
+			HttpMessageData requestData = httpEditor.getData();
+			String httpFilePath = getTestCasePath() + File.separator + TestCaseEditor.httpRequestFileName;
+			if(requestData != null)
+				dataProvider.writeObject(httpFilePath, requestData);
+		}else{
+			ConsoleLog.Print("[TestCaseEditor] Http not loaded ");
+		}
 		
-		if(requestData != null)
-			dataProvider.writeObject(httpFilePath, requestData);
+		if(settingsEditor.isDataLoaded()){
+			TestCaseSettingsData settingsData = settingsEditor.getData();
+			String settingsFilePath = getTestCasePath() + File.separator + TestCaseEditor.settingsFileName;
+			if(settingsData != null)
+				dataProvider.writeObject(settingsFilePath, settingsData);
+		}else{
+			ConsoleLog.Print("[TestCaseEditor] Settings not loaded ");
+		}
 		
-		if(faultData != null)
-			dataProvider.writeObject(faultFilePath,faultData );
+		
+		
+		
+		
+		
 				
-		ConsoleLog.Print("saved");
+		ConsoleLog.Print("[TestCaseEditor] Saved");
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public void loadTestCase(){
 		
-		ConsoleLog.Print("loading");
+		ConsoleLog.Print("[TestCaseEditor] Started loading");
 		TestCaseSettingsData loadedSettings = null;
 		FaultInjectionData loadedFault = null;
 		HttpMessageData loadedHttpData = null;
 		
+		
 		String settingsFilePath = getTestCasePath() + File.separator + TestCaseEditor.settingsFileName;
 		String httpFilePath = getTestCasePath() + File.separator + TestCaseEditor.httpRequestFileName;
 		String faultFilePath = getTestCasePath() + File.separator + TestCaseEditor.faultInjectionFileName;
-		
+		ConsoleLog.Print("[TestCaseEditor] Settings file :" +settingsFilePath);
 		File settingsFile = new File(settingsFilePath);
 		File httpDataFile = new File(httpFilePath);
 		File faultDataFile = new File(faultFilePath);
 		
 		
-		ConsoleLog.Print("httpFile:"+ httpDataFile.getPath());
 		if(!settingsFile.exists()){
-			ConsoleLog.Print("Settings file not found !!!");
+			ConsoleLog.Print("[TestCaseEditor] Settings file not found !!!");
 		}else{
 			loadedSettings = (TestCaseSettingsData) dataProvider.readObject(settingsFilePath);
-			settingsEditor.setSettingsData(loadedSettings);
+			settingsEditor.setData(loadedSettings);
+			settingsEditor.setEnablePanel(true);
 		}
 		
 		if(!httpDataFile.exists()){
-			ConsoleLog.Print("Http Data file not found !!!");
+			ConsoleLog.Print("[TestCaseEditor] Http Data file not found !!!");
 		}else{
 			loadedHttpData = (HttpMessageData) dataProvider.readObject(httpFilePath);
-			httpEditor.setHttpRequestData(loadedHttpData);
+			httpEditor.setData(loadedHttpData);
+			httpEditor.setEnablePanel(true);
 		}
 		
 		
 		
 		if(!faultDataFile.exists()){
-			ConsoleLog.Print("Fault Injection file not found !!!");
+			ConsoleLog.Print("[TestCaseEditor] Fault Injection file not found !!!");
 		}else{
 			loadedFault = (FaultInjectionData) dataProvider.readObject(faultFilePath);
-			faultInjectionEditor.setTest(loadedFault);
+			faultInjectionEditor.setData(loadedFault);
+			faultInjectionEditor.setEnablePanel(true);
 		}
 		
-		ConsoleLog.Print("loaded");
+		ConsoleLog.Print("[TestCaseEditor] Case loaded");
 		
+	}
+	
+	/**
+	 * 
+	 */
+	public void disablePanels(){
+		faultInjectionEditor.setEnablePanel(false);
+		httpEditor.setEnablePanel(false);
+		settingsEditor.setEnablePanel(false);
 	}
 }

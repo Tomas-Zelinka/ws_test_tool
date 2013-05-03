@@ -1,7 +1,7 @@
 package modalWindows;
 
 import gui.MainWindow;
-import gui.ProjectNavigator;
+import gui.Navigator;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -147,7 +147,7 @@ public class AddHttpTestDialog extends InputModalWindow {
             	 }catch(Exception b){
             		 b.printStackTrace();
             	 }
-            	 ProjectNavigator.refreshTree();
+            	 Navigator.refreshTree();
 			
             	 System.out.println("New project name: "+ getCaseName());
             	 setVisible(false);

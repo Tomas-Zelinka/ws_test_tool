@@ -106,7 +106,7 @@ public class MainWindow extends JFrame{
 	//private RemoteControl remoteControlPanel;
 	private ProxyMonitor proxyPanel;
 	private  TestingMonitor testUnitPanel;
-	private ProjectNavigator navigator;
+	private Navigator navigator;
 	
 	private Component toolBox;
 	private JToolBar testCaseToolBox; 
@@ -243,7 +243,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void refreshTree(){
-		ProjectNavigator.refreshTree();
+		Navigator.refreshTree();
 	}
 	
 	public void insertTestCase(){
@@ -312,11 +312,11 @@ public class MainWindow extends JFrame{
 		
 		int panelType = this.navigator.getPanelType();
 		
-		if (panelType == ProjectNavigator.CASE_EDITOR_SETTINGS){
+		if (panelType == Navigator.CASE_EDITOR_SETTINGS){
 			this.editor.setTab(TestCaseEditor.SETTINGS_TAB);
-		}else if(panelType == ProjectNavigator.CASE_EDITOR_HTTP){
+		}else if(panelType == Navigator.CASE_EDITOR_HTTP){
 			this.editor.setTab(TestCaseEditor.HTTP_TAB);
-		}else if(panelType == ProjectNavigator.CASE_EDITOR_FAULT){
+		}else if(panelType == Navigator.CASE_EDITOR_FAULT){
 			this.editor.setTab(TestCaseEditor.FAULT_TAB);
 		}
 		setContent(MainWindow.TESTCASE_EDITOR);
@@ -405,7 +405,7 @@ public class MainWindow extends JFrame{
 		    	ConsoleLog.Print("Direcoty Created");
 		}
 		
-		this.navigator = new ProjectNavigator(root);
+		this.navigator = new Navigator(root);
 		this.centerPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,this.navigator,this.centerComponent);
 		this.centerPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
 	}
@@ -534,7 +534,7 @@ public class MainWindow extends JFrame{
 		public void actionPerformed (ActionEvent e){
 			testUnitPanel.saveTestList(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
 			
-			ConsoleLog.Print("Save Test Case clicked");
+			ConsoleLog.Print("Save Test List clicked");
 			
 		}
 	}

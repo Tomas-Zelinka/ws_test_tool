@@ -61,7 +61,7 @@ public class Console extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 	    scrollPane.getViewport().add(console);
 	    add(BorderLayout.CENTER, scrollPane);
-	    ConsoleLog.Print("Testing tool ready");
+	    ConsoleLog.Print("[Console] Testing tool ready");
 	    
 	}
 	

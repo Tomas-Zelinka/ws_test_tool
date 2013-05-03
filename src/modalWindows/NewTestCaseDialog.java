@@ -1,7 +1,7 @@
 package modalWindows;
 
 import gui.MainWindow;
-import gui.ProjectNavigator;
+import gui.Navigator;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -163,9 +163,9 @@ public class NewTestCaseDialog extends InputModalWindow {
             	 }catch(Exception b){
             		 b.printStackTrace();
             	 }
-            	 ProjectNavigator.refreshTree();
-			
-            	 ConsoleLog.Print("New case suite created,name: "+ getCaseName());
+            	 Navigator.refreshTree();
+            	 MainWindow.setCasePath(newTestCase.getPath());
+            	 ConsoleLog.Print("[ModalWindow] New case suite created,name: "+ getCaseName());
             	 setVisible(false);
             	 dispose();
              }

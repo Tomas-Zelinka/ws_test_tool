@@ -46,7 +46,7 @@ public class HttpRequestEditor extends JPanel {
     private HttpMessageData requestData;
     private JSplitPane contentPane;
     private JPanel httpBodyPanel;
-    
+    private boolean dataLoaded;
     
     public HttpRequestEditor() {
         super(new BorderLayout());
@@ -59,30 +59,58 @@ public class HttpRequestEditor extends JPanel {
         contentPane.setTopComponent(headersPanel);
         contentPane.setBottomComponent(httpBodyPanel);
         contentPane.setResizeWeight(0.4);
-        
+        setDataLoaded(false);
     }
     
-    public HttpMessageData getHttpRequestData(){
+   
+    public void setEnablePanel(boolean enable){
+    	headersTable.setEnabled(enable);
+    	httpBodyEditorPane.setEnabled(enable);
+    	addHeaderButton.setEnabled(enable);
+    	removeHeaderButton.setEnabled(enable);
+    }
+    
+    public HttpMessageData getData(){
+    	saveData();    	
+    	return this.requestData;
+    }
+    
+    public void setData(HttpMessageData data){
+    	this.requestData = data;
+    	loadData();
+    	setDataLoaded(true);
+    }
+    
+    
+    public boolean isDataLoaded() {
+		return dataLoaded;
+	 }
+
+
+	public void setDataLoaded(boolean dataLoaded) {
+		this.dataLoaded = dataLoaded;
+	}
+ 
+    private void saveData(){
     	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_VERSION,(String) headersTable.getValueAt(0, 1));
     	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_METHOD,(String) headersTable.getValueAt(1, 1));
     	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_URI,(String) headersTable.getValueAt(2, 1));
     	ConsoleLog.Print((String)headersTable.getValueAt(2, 1));
     	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_CONTENTTYPE,(String) headersTable.getValueAt(3, 1));
     	this.requestData.setRequestBody(httpBodyEditorPane.getText());
-    	
-    	return this.requestData;
     }
     
-    public void setHttpRequestData(HttpMessageData data){
-    	this.requestData = data;
-    	
+    private void  loadData(){
     	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_VERSION), 0, 1);
     	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_METHOD), 1, 1);
     	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_URI), 2, 1);
     	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_CONTENTTYPE), 3, 1);
     	setEditorContent(this.requestData.getRequestBody());
     }
- 
+    
+    public void setEditorContent(String content){
+    	this.httpBodyEditorPane.setText(content);
+    }
    /**
      * 
      */
@@ -98,11 +126,10 @@ public class HttpRequestEditor extends JPanel {
     	removeHeaderButton = new JButton(); 
     	httpBodyEditorPane = new JEditorPane();
     	contentPane = new JSplitPane();
-    	
-    	
     }
+   
     
-    
+   
     private void initHeaderPane(){
 		 
     		headersLabel.setText("Http header:");
@@ -219,9 +246,7 @@ public class HttpRequestEditor extends JPanel {
     }
     
     
-    public void setEditorContent(String content){
-    	this.httpBodyEditorPane.setText(content);
-    }
+    
   
     
 //    private class ColumnRenderer extends JComboBox implements TableCellRenderer

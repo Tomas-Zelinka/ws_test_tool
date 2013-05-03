@@ -33,7 +33,7 @@ import data.HttpMessageData;
 import data.TestCaseSettingsData;
 
 
-public class ProjectNavigator extends JPanel {
+public class Navigator extends JPanel {
 	
 	/**
 	 * ID for serialization
@@ -72,7 +72,7 @@ public class ProjectNavigator extends JPanel {
 	/**
 	 * 
 	 */
-	public ProjectNavigator(File dir) {
+	public Navigator(File dir) {
 		 
 		 // Make a tree list with all the nodes, and make it a JTree
 	     initTree(dir);
@@ -111,7 +111,7 @@ public class ProjectNavigator extends JPanel {
 		
 		SwingUtilities.updateComponentTreeUI(tree);
 		tree.treeDidChange();
-		ConsoleLog.Print("tree refreshed");
+		ConsoleLog.Print("[Navigator] Tree refreshed");
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public class ProjectNavigator extends JPanel {
 		  }
 		  
 		  if(!f.delete()){
-			  ConsoleLog.Print("Not deleted");
+			  ConsoleLog.Print("[Navigator] Not deleted");
 		  }
 		    
 		}
@@ -197,6 +197,7 @@ public class ProjectNavigator extends JPanel {
 		addMenuItem(treeMenu,"Insert to Unit", new InsertTestCaseListener());
 		treeMenu.addSeparator();
 		addMenuItem(treeMenu,"Open", new OpenListener());
+		addMenuItem(treeMenu,"Close", new CloseListener());
 		addMenuItem(treeMenu,"Delete", new DeleteListener());
 		treeMenu.addSeparator();
 		addMenuItem(treeMenu,"Refresh", new RefreshTree());
@@ -211,8 +212,9 @@ public class ProjectNavigator extends JPanel {
 		public void actionPerformed(ActionEvent ae) {
 			newTestCaseWindow = new NewTestCaseDialog();
 			newTestCaseWindow.setVisible(true);
-			
-			ConsoleLog.Print("new Test Case clicked");
+			panelType = Navigator.CASE_EDITOR_SETTINGS;
+			getMainWindowInstance().openTestCaseEditor();
+			ConsoleLog.Print("[Navigator] New Test Case clicked");
 		}
 	}
 
@@ -225,7 +227,7 @@ public class ProjectNavigator extends JPanel {
 		public void actionPerformed(ActionEvent ae) {
 			newTestSuiteWindow = new NewTestSuiteDialog();
 			newTestSuiteWindow.setVisible(true);
-			ConsoleLog.Print("new Test Suite clicked");
+			ConsoleLog.Print("[Navigator] Test Suite clicked");
 		}
 	}
 	
@@ -247,7 +249,7 @@ public class ProjectNavigator extends JPanel {
 	            
 	            
 				if (newHttpCase.exists()){
-					ConsoleLog.Print("You can set only 1 http test to this case");
+					ConsoleLog.Print("[Navigator] You can set only 1 http test to this case");
 	             }else{
 	            	 
 	            	 newHttpCase.mkdir();
@@ -259,14 +261,14 @@ public class ProjectNavigator extends JPanel {
 		             	 }catch(Exception b){
 		             		 b.printStackTrace();
 		             	 }
-	            	 ProjectNavigator.refreshTree();
+	            	 Navigator.refreshTree();
 	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
-	            	 ConsoleLog.Print("New project name: "+ MainWindow.getCasePath());
+	            	 ConsoleLog.Print("[Navigator] New project name: "+ MainWindow.getCasePath());
 	            }
 			}else{
-				ConsoleLog.Print("Test case not selected ");
+				ConsoleLog.Print("[Navigator] Test case not selected ");
 			}
-			ConsoleLog.Print("new HttpTest clicked");
+			ConsoleLog.Print("[Navigator] new HttpTest clicked");
 		}
 	}
 	
@@ -289,7 +291,7 @@ public class ProjectNavigator extends JPanel {
 
 	           
 				if (newHttpCase.exists()){
-					ConsoleLog.Print("You can set only 1 fault injection test to this case");
+					ConsoleLog.Print("[Navigator] You can set only 1 fault injection test to this case");
 	             }else{
 	            	 
 	            	 newHttpCase.mkdir();
@@ -302,15 +304,15 @@ public class ProjectNavigator extends JPanel {
 	            		 b.printStackTrace();
 	            	 }
 	            	
-	            	 ProjectNavigator.refreshTree();
+	            	 Navigator.refreshTree();
 	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
 	            	 
-	            	 ConsoleLog.Print("New project name: "+ MainWindow.getCasePath());
+	            	 ConsoleLog.Print("[Navigator] New project name: "+ MainWindow.getCasePath());
 	            }
 			}else{
-				ConsoleLog.Print("Test case not selected ");
+				ConsoleLog.Print("[Navigator] Test case not selected ");
 			}
-			ConsoleLog.Print("new Fault Injection clicked");
+			ConsoleLog.Print("[Navigator] new Fault Injection clicked");
 		}
 	}		
 	
@@ -321,17 +323,31 @@ public class ProjectNavigator extends JPanel {
 	 */
 	public class OpenListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			if(panelType == ProjectNavigator.CASE_EDITOR_FAULT || panelType == ProjectNavigator.CASE_EDITOR_SETTINGS
-				||	panelType == ProjectNavigator.CASE_EDITOR_HTTP	){
+			if(panelType == Navigator.CASE_EDITOR_FAULT || panelType == Navigator.CASE_EDITOR_SETTINGS
+				||	panelType == Navigator.CASE_EDITOR_HTTP	){
 				
 				getMainWindowInstance().openTestCaseEditor();
-				ConsoleLog.Print("file edit clicked");
+				ConsoleLog.Print("[Navigator] File edit clicked");
 			
-			}else if(panelType == ProjectNavigator.TEST_UNIT){
+			}else if(panelType == Navigator.TEST_UNIT){
 				getMainWindowInstance().openTestList();
 			}
 		}
 	} 	
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	public class CloseListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+				getMainWindowInstance().openTestCaseEditor();
+				ConsoleLog.Print("[Navigator] Close case clicked");
+			
+		}
+	} 	
+	
 	
 	/**
 	 * 
@@ -354,7 +370,7 @@ public class ProjectNavigator extends JPanel {
 	private class InsertTestCaseListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			getMainWindowInstance().insertTestCase();
-			ConsoleLog.Print("Insert Test Case clicked");
+			ConsoleLog.Print("[Navigator] Insert Test Case clicked");
 			
 		}
 	}
@@ -413,6 +429,7 @@ public class ProjectNavigator extends JPanel {
 		 */
 		public void mousePressed(MouseEvent e) {
     		JTree myTree = (JTree)e.getSource();
+    		FileNode node = null;
     		MyTreeModel model = (MyTreeModel) myTree.getModel();
 			int selRow = myTree.getClosestRowForLocation( e.getX(), e.getY());
 			TreePath path = myTree.getPathForLocation( e.getX(),e.getY());
@@ -420,26 +437,47 @@ public class ProjectNavigator extends JPanel {
 				Rectangle bounds = myTree.getRowBounds( selRow);
 				boolean outside = e.getX() < bounds.x || e.getX() > bounds.x + bounds.width || e.getY() < bounds.y || e.getY() >= bounds.y + bounds.height;
 				if( !outside) {
-					ConsoleLog.Print( "Project Selected: " + path.getPathCount());
+					ConsoleLog.Print( "[Navigator] TestSuite Selected: " + path.getPathCount());
 					
 					MainWindow.setSuitePath(path.getPathComponent(1).toString());
 					
 									
 					if (path.getPathCount() <= SUITE_PATH_LENGTH){
 						panelType = TEST_UNIT;
+						
+						
 						MainWindow.setCasePath("");
 					}
 					
+					if(path.getPathCount() == SUITE_PATH_LENGTH){
+						node = (FileNode) path.getPathComponent(SUITE_PATH_LENGTH-1); 
+						
+						if(node.isHttpTestCase()){
+							panelType = CASE_EDITOR_SETTINGS;
+						}
+					}
+					
 					if(path.getPathCount() == CASE_PATH_LENGTH){
-						panelType = CASE_EDITOR_SETTINGS;
-						MainWindow.setCasePath(path.getPathComponent(2).toString());
+						node = (FileNode) path.getPathComponent(CASE_PATH_LENGTH-1); 
+						if(node.isTestList()){
+							panelType = TEST_UNIT;
+							MainWindow.setCasePath("");
+						}else{
+							panelType = CASE_EDITOR_SETTINGS;
+							MainWindow.setCasePath(path.getPathComponent(2).toString());
+						}
 					}
 					
 					if (path.getPathCount() == CASE_DETAIL_PATH_LENGTH){
-						if(((FileNode)path.getLastPathComponent()).isFaultInjectionTestCase())
+						node = (FileNode) path.getPathComponent(CASE_DETAIL_PATH_LENGTH-1); 
+						
+						if(node.isFaultInjectionTestCase())
 							panelType = CASE_EDITOR_FAULT;
-						else
+						else if(node.isHttpTestCase())
 							panelType = CASE_EDITOR_HTTP;
+						else
+							panelType = CASE_EDITOR_SETTINGS;
+						
 						MainWindow.setCasePath(path.getPathComponent(2).toString());
 						
 					}
@@ -453,7 +491,7 @@ public class ProjectNavigator extends JPanel {
 				        
 				     
 				       if(model.isLeaf(path.getLastPathComponent())){
-				    	  ConsoleLog.Print( "Project Selected: ahoj");
+				    	  ConsoleLog.Print( "[Navigator] TestSuite Selected");
 				       }
 				        	
 				   }

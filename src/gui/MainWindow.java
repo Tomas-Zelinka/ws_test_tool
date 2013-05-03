@@ -100,7 +100,7 @@ public class MainWindow extends JFrame{
 	 */
 	private Console console;
 	
-	
+	private int panelType;
 	protected TestCaseEditor editor;
 	private Statistics statsPanel;
 	//private RemoteControl remoteControlPanel;
@@ -112,7 +112,6 @@ public class MainWindow extends JFrame{
 	private JToolBar testCaseToolBox; 
 	private JToolBar testUnitToolBox;
 	private JToolBar proxyToolBox;
-	
 	
 	private JButton saveTestCase;
 	private JButton generateRequest;
@@ -127,9 +126,13 @@ public class MainWindow extends JFrame{
 	
 	public static final int TESTCASE_EDITOR = 0;
 	public static final int PROXY_MONITOR = 1;
-	public static final int REMOTE_CONTROL = 2;
-	public static final int STATISTICS = 3;
-	public static final int TESTING_UNIT = 4;
+	public static final int STATISTICS = 2;
+	public static final int TESTING_UNIT = 3;
+	public static final int PLAIN_PANEL = 3;
+	
+	public static final int CASE_EDITOR_SETTINGS = 5;
+	public static final int CASE_EDITOR_HTTP = 6;
+	public static final int CASE_EDITOR_FAULT = 7;
 	
 	public static final int TESTUNIT_TOOLBOX = 5;
 	public static final int TESTCASE_TOOLBOX = 6;
@@ -147,7 +150,6 @@ public class MainWindow extends JFrame{
 	public MainWindow(UnitController testUnitController){
 		initMainWindow(testUnitController);
 		this.pack();
-	
 	}
 	
 	/**
@@ -155,7 +157,6 @@ public class MainWindow extends JFrame{
 	 * @param box
 	 */
 	public void setToolBox(int box){
-		
 		
 		if(toolBox != null){
 			getContentPane().remove(this.toolBox);
@@ -175,8 +176,7 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	public static String getEndpointPath()
-	{
+	public static String getEndpointPath(){
 		return MainWindow.endpointPath;
 	}
 	
@@ -185,7 +185,6 @@ public class MainWindow extends JFrame{
 	 * @param path
 	 */
 	public static void setEndpointPath(String path){
-		
 		MainWindow.endpointPath = path;
 	}
 	
@@ -203,7 +202,9 @@ public class MainWindow extends JFrame{
 	 */
 	public static void setCasePath(String path){
 		
-		MainWindow.casePath = path;
+		if(!path.isEmpty())
+			MainWindow.casePath = getSuitePath()+File.separator+path;
+		ConsoleLog.Print("[MainWindow] Case path set to: " + MainWindow.casePath);
 	}
 		
 	/**
@@ -218,8 +219,8 @@ public class MainWindow extends JFrame{
 	 * @param path
 	 */
 	public static void setSuitePath(String path){
-		
-		MainWindow.suitePath = path;
+		MainWindow.suitePath = getDataRoot()+File.separator+path;
+		ConsoleLog.Print("[MainWindow] Suite path set to: " + MainWindow.suitePath);
 	}
 		
 	/**
@@ -234,12 +235,18 @@ public class MainWindow extends JFrame{
 	 * @param path
 	 */
 	public static void setDataRoot(String root){
-		
 		MainWindow.dataRoot = root;
 	}
 	
 	public int getPanelType(){
-		return this.navigator.getPanelType();
+		return this.panelType;
+	}
+	public void setPanelType(int type){
+		this.panelType = type;
+	}
+	
+	public void closeTestCase(){
+		this.editor.closeTestCase(getPanelType()); 
 	}
 	
 	public void refreshTree(){
@@ -247,8 +254,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void insertTestCase(){
-		testUnitPanel.insertTestCase(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"settings.xml");
-		
+		testUnitPanel.insertTestCase(MainWindow.getCasePath()+File.separator+"settings.xml");
 	}
 	
 	/**
@@ -261,7 +267,6 @@ public class MainWindow extends JFrame{
 		}else{
 			return this.centerComponent;
 		}
-		
 	}
 	
 	public void setContent(int component) {
@@ -277,9 +282,6 @@ public class MainWindow extends JFrame{
 				setToolBox(MainWindow.PROXYMON_TOOLBOX);
 				this.centerComponent = this.proxyPanel;
 				break;
-//			case REMOTE_CONTROL: 
-//				this.centerComponent = this.remoteControlPanel;
-//				break;
 			case STATISTICS: 
 				this.centerComponent = this.statsPanel;
 				break;
@@ -288,35 +290,31 @@ public class MainWindow extends JFrame{
 				this.centerComponent = this.testUnitPanel;
 				break;	
 			default:
-				ConsoleLog.Print("MainWindow.setContent() - something is wrong in switch statement");
+				ConsoleLog.Print("[MainWindow] - something is wrong in switch statement");
 				break;
-				
 		}
-		
 		
 		//this.panelPane =  this.centerComponent;
 		this.centerPane.setRightComponent(this.centerComponent);
-		
 		getCenterPane().revalidate();
 		getCenterPane().repaint();
 		this.pack();
 	}
 
 	public void openTestList(){
-		this.testUnitPanel.openTestList(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
-		
+		this.testUnitPanel.openTestList(MainWindow.getSuitePath()+File.separator+"testlist.xml");
 		setContent(MainWindow.TESTING_UNIT);
 	}
 	
 	public void openTestCaseEditor(){
 		
-		int panelType = this.navigator.getPanelType();
+		int panelType = getPanelType();
 		
-		if (panelType == Navigator.CASE_EDITOR_SETTINGS){
+		if (panelType == MainWindow.CASE_EDITOR_SETTINGS){
 			this.editor.setTab(TestCaseEditor.SETTINGS_TAB);
-		}else if(panelType == Navigator.CASE_EDITOR_HTTP){
+		}else if(panelType == MainWindow.CASE_EDITOR_HTTP){
 			this.editor.setTab(TestCaseEditor.HTTP_TAB);
-		}else if(panelType == Navigator.CASE_EDITOR_FAULT){
+		}else if(panelType == MainWindow.CASE_EDITOR_FAULT){
 			this.editor.setTab(TestCaseEditor.FAULT_TAB);
 		}
 		setContent(MainWindow.TESTCASE_EDITOR);
@@ -382,14 +380,13 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	private void initContentPane(UnitController testUnitController){
-		
-	
 		this.editor = new TestCaseEditor();
 		this.proxyPanel = new ProxyMonitor(testUnitController);
 		//this.remoteControlPanel = new RemoteControl();
 		this.statsPanel = new Statistics();
 		this.testUnitPanel = new TestingMonitor(testUnitController);
 		this.centerComponent = new JPanel();
+		this.panelType = 0;
 		//this.panelPane = (JPanel)this.centerComponent;
 	}
 	
@@ -402,7 +399,7 @@ public class MainWindow extends JFrame{
 		if(!root.exists()){
 			boolean wasDirectoryMade = root.mkdirs();
 		    if(wasDirectoryMade)
-		    	ConsoleLog.Print("Direcoty Created");
+		    	ConsoleLog.Print("[MainWindow] Direcoty Created");
 		}
 		
 		this.navigator = new Navigator(root);
@@ -422,12 +419,10 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	private void initBottomPane(){
-		
 		this.console = new Console();
 		this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
 		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
 		this.bottomPane.setResizeWeight(0.90);
-		
 	}
 	
 	/**
@@ -470,10 +465,8 @@ public class MainWindow extends JFrame{
 		exportConfiguration =  new JButton("Export Unit Configuration");
 		exportConfiguration.addActionListener(new ExportConfigurationListener());
 		
-	
 		generateRequest = new JButton("Generate content");
 		generateRequest.addActionListener(new GenerateRequestListner());
-		
 		
 		testCaseToolBox.add(saveTestCase);
 		testCaseToolBox.add(generateRequest);
@@ -486,64 +479,53 @@ public class MainWindow extends JFrame{
 		testUnitToolBox.add(addUnit);
 		testUnitToolBox.add(removeUnit);
 		testUnitToolBox.add(exportConfiguration);
-		
-		
 	}
 	private class SaveTestCaseListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			ConsoleLog.Print("Save testcase clicked");
+			ConsoleLog.Print("[MainWindow] Save testcase clicked");
 			editor.saveTestCase();
 		}
 	}
 	
 	private class AddUnitListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-			ConsoleLog.Print("Add Unit clicked");
+			ConsoleLog.Print("[MainWindow] Add Unit clicked");
 			testUnitPanel.addRemoteUnit();
 		}
 	}
 	private class RemoveUnitListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-			ConsoleLog.Print("Remove Unit clicked");
+			ConsoleLog.Print("[MainWindow] Remove Unit clicked");
 			testUnitPanel.removeUnit();
 		}
 	}
 	
 	private class RunUnitListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-			
 			//final String path = testListPath;
 			testUnitPanel.runUnit(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
-			
-			
-			
 			//testUnitPanel.runUnit(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
-			ConsoleLog.Print("Run Unit clicked");
-			
+			ConsoleLog.Print("[MainWindow] Run Unit clicked");
 		}
 	}
 	
 	private class RunAllUnitsListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-			ConsoleLog.Print("Run All Units clicked");
-			
+			ConsoleLog.Print("[MainWindow] Run All Units clicked");
 		}
 	}
 	
 	private class SaveTestListListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			testUnitPanel.saveTestList(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
-			
-			ConsoleLog.Print("Save Test List clicked");
-			
+			ConsoleLog.Print("[MainWindow] Save Test List clicked");
 		}
 	}
 	
 	private class InsertTestCaseListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			insertTestCase();
-			ConsoleLog.Print("Insert Test Case clicked");
-			
+			ConsoleLog.Print("[MainWindow] Insert Test Case clicked");
 		}
 	}
 	
@@ -551,15 +533,13 @@ public class MainWindow extends JFrame{
 	private class RemoveTestCaseListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			testUnitPanel.removeTestCase();
-			ConsoleLog.Print("Remove Test Case clicked");
-			
+			ConsoleLog.Print("[MainWindow] Remove Test Case clicked");
 		}
 	}
 	
 	private class ExportConfigurationListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-			ConsoleLog.Print("Export Configuration clicked");
-			
+			ConsoleLog.Print("[MainWindow] Export Configuration clicked");
 		}
 	}
 	
@@ -568,12 +548,9 @@ public class MainWindow extends JFrame{
 			GenerateFromWSDLDialog window = new GenerateFromWSDLDialog(); 
 			editor.setHttpBody(window.getGeneratedContent());
 			window.setVisible(true);
-			
 			if(window.isAddButtonClicked()){
 				editor.setHttpBody(window.getGeneratedContent());
 			}
 		}
 	}
-	
-	
 }

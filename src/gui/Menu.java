@@ -511,12 +511,12 @@ public class Menu extends JMenuBar {
 	public class HttpTestListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			if(!MainWindow.getCasePath().isEmpty()){
-				File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"Http");
+				File newHttpCase = new File(MainWindow.getCasePath()+File.separator+"Http");
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
 	            File httpDataFile = new File(inputDir.getPath() + File.separator + "httpRequest.xml");
 	            DataProvider ioProvider = new DataProvider();
-	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath() + TestCaseSettingsData.filename );
+	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getCasePath() + TestCaseSettingsData.filename );
 	            HttpMessageData httpData = new HttpMessageData(settings.getName());
 	            
 	           
@@ -536,7 +536,8 @@ public class Menu extends JMenuBar {
 		             		 b.printStackTrace();
 		             	 }
 	            	 Navigator.refreshTree();
-	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
+	            	 getMainWindowInstance().setPanelType(MainWindow.CASE_EDITOR_HTTP);
+	            	 getMainWindowInstance().openTestCaseEditor();
 	            	 ConsoleLog.Print("[HeadMenu] New project name: "+ MainWindow.getCasePath());
 	            }
 			}else{
@@ -555,12 +556,12 @@ public class Menu extends JMenuBar {
 		public void actionPerformed(ActionEvent ae) {
 			
 			if(!MainWindow.getCasePath().isEmpty()){
-				File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"FaultInjection");
+				File newHttpCase = new File(MainWindow.getCasePath()+File.separator+"FaultInjection");
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
 	            File faultInjectionDataFile = new File(inputDir.getPath() + File.separator + "faultInjection.xml");
 	            DataProvider ioProvider = new DataProvider();
-	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath() + TestCaseSettingsData.filename );
+	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getCasePath() + TestCaseSettingsData.filename );
 	            FaultInjectionData faultData = new FaultInjectionData(settings.getName());
           
 	           
@@ -580,7 +581,9 @@ public class Menu extends JMenuBar {
 	            	 }
 	            	
 	            	 Navigator.refreshTree();
-	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
+	            	 getMainWindowInstance().setPanelType(MainWindow.CASE_EDITOR_FAULT);
+	            	 getMainWindowInstance().openTestCaseEditor();
+	            	 
 	            	 
 	            	 ConsoleLog.Print("[HeadMenu] New project name: "+ MainWindow.getCasePath());
 	            }
@@ -599,13 +602,13 @@ public class Menu extends JMenuBar {
 	public class OpenListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			int panelType = getMainWindowInstance().getPanelType();
-			if(panelType == Navigator.CASE_EDITOR_FAULT || panelType == Navigator.CASE_EDITOR_SETTINGS
-				||	panelType == Navigator.CASE_EDITOR_HTTP	){
+			if(panelType == MainWindow.CASE_EDITOR_FAULT || panelType == MainWindow.CASE_EDITOR_SETTINGS
+				||	panelType == MainWindow.CASE_EDITOR_HTTP	){
 				
 				getMainWindowInstance().openTestCaseEditor();
 				ConsoleLog.Print("file edit clicked");
 			
-			}else if(panelType == Navigator.TEST_UNIT){
+			}else if(panelType == MainWindow.TESTING_UNIT){
 				getMainWindowInstance().openTestList();
 			}
 		}

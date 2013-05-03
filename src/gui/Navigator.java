@@ -60,11 +60,8 @@ public class Navigator extends JPanel {
 	private final int CASE_PATH_LENGTH = 3;
 	private final int CASE_DETAIL_PATH_LENGTH = 4;
 	
-	public static final int TEST_UNIT = 2;
-	public static final int CASE_EDITOR_SETTINGS = 3;
-	public static final int CASE_EDITOR_HTTP = 4;
-	public static final int CASE_EDITOR_FAULT = 5;
-	private int panelType;
+	
+	
 	
  	private NewTestSuiteDialog newTestSuiteWindow;
  	private NewTestCaseDialog newTestCaseWindow;
@@ -83,17 +80,10 @@ public class Navigator extends JPanel {
 		 this.scrollPane.getViewport().add(tree);
 		 this.scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		 this.add(BorderLayout.CENTER, scrollPane); 
-		 this.panelType = 0;
+		 
 	}
 	
-	public int getPanelType() {
-		return panelType;
-	}
-
-	public void setPanelType(int panelType) {
-		this.panelType = panelType;
-	}
-
+	
 	public Dimension getMinimumSize() {
 	    return new Dimension(200, 400);
 	}
@@ -212,7 +202,7 @@ public class Navigator extends JPanel {
 		public void actionPerformed(ActionEvent ae) {
 			newTestCaseWindow = new NewTestCaseDialog();
 			newTestCaseWindow.setVisible(true);
-			panelType = Navigator.CASE_EDITOR_SETTINGS;
+			getMainWindowInstance().setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
 			getMainWindowInstance().openTestCaseEditor();
 			ConsoleLog.Print("[Navigator] New Test Case clicked");
 		}
@@ -239,12 +229,12 @@ public class Navigator extends JPanel {
 	public class HttpTestListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
 			if(!MainWindow.getCasePath().isEmpty()){
-				File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"Http");
+				File newHttpCase = new File(MainWindow.getCasePath()+File.separator+"Http");
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
 	            File httpDataFile = new File(inputDir.getPath() + File.separator + "httpRequest.xml");
 	            DataProvider ioProvider = new DataProvider();
-	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath() + TestCaseSettingsData.filename );
+	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getCasePath() + TestCaseSettingsData.filename );
 	            HttpMessageData httpData = new HttpMessageData(settings.getName());
 	            
 	            
@@ -262,7 +252,8 @@ public class Navigator extends JPanel {
 		             		 b.printStackTrace();
 		             	 }
 	            	 Navigator.refreshTree();
-	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
+	            	 getMainWindowInstance().setPanelType(MainWindow.CASE_EDITOR_HTTP); 
+	            	 getMainWindowInstance().openTestCaseEditor();
 	            	 ConsoleLog.Print("[Navigator] New project name: "+ MainWindow.getCasePath());
 	            }
 			}else{
@@ -281,12 +272,12 @@ public class Navigator extends JPanel {
 		public void actionPerformed(ActionEvent ae) {
 			
 			if(!MainWindow.getCasePath().isEmpty()){
-				File newHttpCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath()+File.separator+"FaultInjection");
+				File newHttpCase = new File(MainWindow.getCasePath()+File.separator+"FaultInjection");
 				File inputDir = new File(newHttpCase.getPath() + File.separator + "input");
 	            File outputDir = new File(newHttpCase.getPath() + File.separator + "output");
 	            File faultInjectionDataFile = new File(inputDir.getPath() + File.separator + "faultInjection.xml");
 	            DataProvider ioProvider = new DataProvider();
-	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+MainWindow.getCasePath() + TestCaseSettingsData.filename );
+	            TestCaseSettingsData settings =(TestCaseSettingsData) ioProvider.readObject(MainWindow.getCasePath() + TestCaseSettingsData.filename );
 	            FaultInjectionData faultData = new FaultInjectionData(settings.getName());
 
 	           
@@ -305,7 +296,8 @@ public class Navigator extends JPanel {
 	            	 }
 	            	
 	            	 Navigator.refreshTree();
-	            	 getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
+	            	 getMainWindowInstance().setPanelType(MainWindow.CASE_EDITOR_FAULT);
+	            	 getMainWindowInstance().openTestCaseEditor();
 	            	 
 	            	 ConsoleLog.Print("[Navigator] New project name: "+ MainWindow.getCasePath());
 	            }
@@ -323,13 +315,15 @@ public class Navigator extends JPanel {
 	 */
 	public class OpenListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-			if(panelType == Navigator.CASE_EDITOR_FAULT || panelType == Navigator.CASE_EDITOR_SETTINGS
-				||	panelType == Navigator.CASE_EDITOR_HTTP	){
+			int panelType = getMainWindowInstance().getPanelType();
+			
+			if(panelType == MainWindow.CASE_EDITOR_FAULT || panelType == MainWindow.CASE_EDITOR_SETTINGS
+				||	panelType == MainWindow.CASE_EDITOR_HTTP	){
 				
 				getMainWindowInstance().openTestCaseEditor();
 				ConsoleLog.Print("[Navigator] File edit clicked");
 			
-			}else if(panelType == Navigator.TEST_UNIT){
+			}else if(panelType == MainWindow.TESTING_UNIT){
 				getMainWindowInstance().openTestList();
 			}
 		}
@@ -342,7 +336,7 @@ public class Navigator extends JPanel {
 	 */
 	public class CloseListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-				getMainWindowInstance().openTestCaseEditor();
+				getMainWindowInstance().closeTestCase();
 				ConsoleLog.Print("[Navigator] Close case clicked");
 			
 		}
@@ -357,7 +351,7 @@ public class Navigator extends JPanel {
 	public class DeleteListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			File node = new File(MainWindow.getEndpointPath());
-			ConsoleLog.Print(MainWindow.getEndpointPath());
+			ConsoleLog.Print("[Navigator] " + MainWindow.getEndpointPath());
 			if(node.exists()){
 				delete(node);
 				refreshTree();
@@ -441,9 +435,10 @@ public class Navigator extends JPanel {
 					
 					MainWindow.setSuitePath(path.getPathComponent(1).toString());
 					
+					MainWindow frameInstance = getMainWindowInstance();
 									
 					if (path.getPathCount() <= SUITE_PATH_LENGTH){
-						panelType = TEST_UNIT;
+						frameInstance.setPanelType(MainWindow.TESTING_UNIT);
 						
 						
 						MainWindow.setCasePath("");
@@ -453,17 +448,17 @@ public class Navigator extends JPanel {
 						node = (FileNode) path.getPathComponent(SUITE_PATH_LENGTH-1); 
 						
 						if(node.isHttpTestCase()){
-							panelType = CASE_EDITOR_SETTINGS;
+							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
 						}
 					}
 					
 					if(path.getPathCount() == CASE_PATH_LENGTH){
 						node = (FileNode) path.getPathComponent(CASE_PATH_LENGTH-1); 
 						if(node.isTestList()){
-							panelType = TEST_UNIT;
+							frameInstance.setPanelType(MainWindow.TESTING_UNIT);
 							MainWindow.setCasePath("");
 						}else{
-							panelType = CASE_EDITOR_SETTINGS;
+							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
 							MainWindow.setCasePath(path.getPathComponent(2).toString());
 						}
 					}
@@ -472,11 +467,11 @@ public class Navigator extends JPanel {
 						node = (FileNode) path.getPathComponent(CASE_DETAIL_PATH_LENGTH-1); 
 						
 						if(node.isFaultInjectionTestCase())
-							panelType = CASE_EDITOR_FAULT;
+							frameInstance.setPanelType(MainWindow.CASE_EDITOR_FAULT);
 						else if(node.isHttpTestCase())
-							panelType = CASE_EDITOR_HTTP;
+							frameInstance.setPanelType(MainWindow.CASE_EDITOR_HTTP);
 						else
-							panelType = CASE_EDITOR_SETTINGS;
+							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
 						
 						MainWindow.setCasePath(path.getPathComponent(2).toString());
 						

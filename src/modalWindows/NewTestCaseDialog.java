@@ -144,7 +144,7 @@ public class NewTestCaseDialog extends InputModalWindow {
 		
 		public void actionPerformed(ActionEvent e) {
              
-			File newTestCase = new File(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+getCaseName());
+			File newTestCase = new File(MainWindow.getSuitePath()+File.separator+getCaseName());
 			File settings = new File(newTestCase.getPath() + File.separator + "settings.xml");
             DataProvider writer = new DataProvider();
             TestCaseSettingsData testCase = new TestCaseSettingsData();

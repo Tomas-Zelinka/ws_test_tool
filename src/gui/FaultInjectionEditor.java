@@ -87,6 +87,20 @@ public class FaultInjectionEditor extends JSplitPane {
 		this.dataLoaded = dataLoaded;
 	}
 	
+	public void clearData(){
+		clearTable(conditionTableModel);
+		clearTable(faultTableModel);
+	}
+	
+	/**
+	 * 
+	 */
+	private void clearTable(DefaultTableModel table){
+		for(int i = 0; i < table.getRowCount(); i++){
+			table.removeRow(i);
+		}
+	}
+	
 	private void initComponents(){
 		conditionPanel = new javax.swing.JPanel();
         conditionLabel = new javax.swing.JLabel();

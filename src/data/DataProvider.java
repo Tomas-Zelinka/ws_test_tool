@@ -64,11 +64,13 @@ public class DataProvider {
 		Object obj = null;
 		
 		try {
-			obj= stream.fromXML(new FileInputStream(new File(path)));
+			FileInputStream inStream = new FileInputStream(new File(path));
+			obj= stream.fromXML(inStream);
+			inStream.close();
 		}
 		catch (FileNotFoundException ex) {
 			ConsoleLog.Print("File " +path+ " not found");
-			ConsoleLog.Print(ex.getMessage());
+			//ConsoleLog.Print(ex.getMessage());
 			//System.exit(-1);
 		}
 		catch(Exception ex)	{

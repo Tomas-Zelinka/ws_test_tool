@@ -71,18 +71,6 @@ public class TestCaseEditor extends JPanel {
 		return mainTabbedPane.getSelectedIndex();
 	}
 	
-	
-	/**
-	 * 
-	 */
-	private void initComponents(){
-		dataProvider = new DataProvider();
-		settingsEditor = new TestCaseSettings();
-		httpEditor = new HttpRequestEditor();
-		faultInjectionEditor = new FaultInjectionEditor();
-		mainTabbedPane = new JTabbedPane();
-	}
-	
 	public void setTestCasePath(){
 		this.testCasePath =  MainWindow.getCasePath();
 		ConsoleLog.Print("[TestCaseEditor] Case path set to: "+this.testCasePath);
@@ -130,12 +118,6 @@ public class TestCaseEditor extends JPanel {
 			ConsoleLog.Print("[TestCaseEditor] Settings not loaded ");
 		}
 		
-		
-		
-		
-		
-		
-				
 		ConsoleLog.Print("[TestCaseEditor] Saved");
 	}
 	
@@ -161,6 +143,9 @@ public class TestCaseEditor extends JPanel {
 		
 		if(!settingsFile.exists()){
 			ConsoleLog.Print("[TestCaseEditor] Settings file not found !!!");
+			settingsEditor.setEnablePanel(false);
+			settingsEditor.setDataLoaded(false);
+			settingsEditor.clearData();
 		}else{
 			loadedSettings = (TestCaseSettingsData) dataProvider.readObject(settingsFilePath);
 			settingsEditor.setData(loadedSettings);
@@ -169,16 +154,20 @@ public class TestCaseEditor extends JPanel {
 		
 		if(!httpDataFile.exists()){
 			ConsoleLog.Print("[TestCaseEditor] Http Data file not found !!!");
+			httpEditor.setEnablePanel(false);
+			httpEditor.setDataLoaded(false);
+			httpEditor.clearData();
 		}else{
 			loadedHttpData = (HttpMessageData) dataProvider.readObject(httpFilePath);
 			httpEditor.setData(loadedHttpData);
 			httpEditor.setEnablePanel(true);
 		}
 		
-		
-		
 		if(!faultDataFile.exists()){
 			ConsoleLog.Print("[TestCaseEditor] Fault Injection file not found !!!");
+			faultInjectionEditor.setEnablePanel(false);
+			faultInjectionEditor.setDataLoaded(false);
+			faultInjectionEditor.clearData();
 		}else{
 			loadedFault = (FaultInjectionData) dataProvider.readObject(faultFilePath);
 			faultInjectionEditor.setData(loadedFault);
@@ -188,13 +177,39 @@ public class TestCaseEditor extends JPanel {
 		ConsoleLog.Print("[TestCaseEditor] Case loaded");
 		
 	}
-	
+		
+	public void closeTestCase(int type){
+		settingsEditor.setEnablePanel(false);
+		settingsEditor.clearData();
+		
+		httpEditor.setEnablePanel(false);
+		httpEditor.clearData();
+		
+		faultInjectionEditor.setEnablePanel(false);
+		faultInjectionEditor.clearData();
+	}
 	/**
 	 * 
 	 */
 	public void disablePanels(){
 		faultInjectionEditor.setEnablePanel(false);
+		faultInjectionEditor.clearData();
+		
 		httpEditor.setEnablePanel(false);
+		httpEditor.clearData();
+		
 		settingsEditor.setEnablePanel(false);
+		settingsEditor.clearData();
+	}
+	
+	/**
+	 * 
+	 */
+	private void initComponents(){
+		dataProvider = new DataProvider();
+		settingsEditor = new TestCaseSettings();
+		httpEditor = new HttpRequestEditor();
+		faultInjectionEditor = new FaultInjectionEditor();
+		mainTabbedPane = new JTabbedPane();
 	}
 }

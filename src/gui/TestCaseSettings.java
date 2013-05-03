@@ -78,14 +78,25 @@ public class TestCaseSettings extends JPanel {
 		useProxyBox.setEnabled(enable);
 		runButton.setEnabled(enable);
 	}
-	 public boolean isDataLoaded() {
+	
+	public boolean isDataLoaded() {
 			return dataLoaded;
-		 }
+	}
 
-
-		public void setDataLoaded(boolean dataLoaded) {
-			this.dataLoaded = dataLoaded;
-		}
+	public void setDataLoaded(boolean dataLoaded) {
+		this.dataLoaded = dataLoaded;
+	}
+	
+	public void clearData(){
+		runButton.setSelected(false);
+		loopNumberField.setText("");
+		threadsNumberField.setText("");
+		
+		useProxyBox.setSelected(false);
+		proxyHostField.setText("");
+		proxyTestedPortField.setText("");
+		proxyPortField.setText("");
+	} 
 		
 	private void initComponents(){
 		

@@ -86,11 +86,26 @@ public class HttpRequestEditor extends JPanel {
 		return dataLoaded;
 	 }
 
-
 	public void setDataLoaded(boolean dataLoaded) {
 		this.dataLoaded = dataLoaded;
 	}
+	
+	public void clearData(){
+		clearTable(headersTableModel);
+		httpBodyEditorPane.setText("");
+		
+	}
  
+	/**
+	 * 
+	 */
+	private void clearTable(DefaultTableModel table){
+		for(int i = 0; i < table.getRowCount(); i++){
+			table.setValueAt("",i,1);
+		}
+	}
+	
+	
     private void saveData(){
     	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_VERSION,(String) headersTable.getValueAt(0, 1));
     	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_METHOD,(String) headersTable.getValueAt(1, 1));

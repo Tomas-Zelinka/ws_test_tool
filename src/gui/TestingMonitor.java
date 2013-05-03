@@ -11,7 +11,7 @@ import logging.ConsoleLog;
 import central.UnitController;
 
 /**
- *  Testing monitor is swing kontejner holding all testing unit
+ *  Testing monitor is swing container holding all testing units
  *  
  * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
  *
@@ -36,7 +36,6 @@ public class TestingMonitor extends JPanel  {
 		testUnitCounter = 0;
 		initComponents();
 		setupComponents();
-		
 	}
 	
 	/**
@@ -65,15 +64,13 @@ public class TestingMonitor extends JPanel  {
 	public void addRemoteUnit(){
 		
 		UnitPanel panel = new UnitPanel(testUnitCounter);
+		int selectedPanel = tabbedPane.indexOfTab("Remote Unit " +testUnitCounter);
 		
 		tabbedPane.addTab("Remote Unit "  + testUnitCounter,panel);
-		int selectedPanel = tabbedPane.indexOfTab("Remote Unit " +testUnitCounter);
-		ConsoleLog.Print("panel index:" + selectedPanel);
 		tabbedPane.setSelectedIndex(selectedPanel);
-		
 		controller.addRemoteTestUnit(testUnitCounter);
 		//panel.setTestUnit(getRemoteTestUnit(unitCounter));
-		
+		ConsoleLog.Print("panel index:" + selectedPanel);
 		testUnitCounter++;
 	}
 	
@@ -84,11 +81,10 @@ public class TestingMonitor extends JPanel  {
 		
 		int panelIndex = tabbedPane.getSelectedIndex();
 		if (panelIndex != 0){
-			ConsoleLog.Print("Removed Unit: " + getUnitKey());
 			controller.removeRemoteTestUnit(getUnitKey());
 			tabbedPane.remove(panelIndex);
 			tabbedPane.revalidate();
-			
+			ConsoleLog.Print("Removed Unit: " + getUnitKey());
 		}else{
 			ConsoleLog.Print("[TestMonitor] You cannot close local testing unit");
 		}
@@ -107,8 +103,8 @@ public class TestingMonitor extends JPanel  {
 			tabbedPane.setTitleAt(panelIndex,"Local Unit "+" - "+MainWindow.getSuitePath() );
 		}else{
 			tabbedPane.setTitleAt(panelIndex,"Remote Unit "+ getUnitKey() +" - "+MainWindow.getSuitePath() );
-			
 		}
+		
 		getSelectedPanel().openTestList(path);
 	} 
 	
@@ -119,7 +115,7 @@ public class TestingMonitor extends JPanel  {
 	public void insertTestCase(String path){
 		
 		if(MainWindow.getCasePath().isEmpty()){
-			ConsoleLog.Message("[TestMonitor] Test case not selected"); 
+			ConsoleLog.Message("Test case not selected"); 
 		}else{
 			getSelectedPanel().insertTestCaseToTable(path);
 		}
@@ -144,8 +140,6 @@ public class TestingMonitor extends JPanel  {
 		getSelectedPanel().saveTestList(path); 
 		getSelectedPanel().clearUnitPanel();
 		controller.runTest(path,getUnitKey());
-		
-		 
 	}
 	
 	/**
@@ -156,7 +150,6 @@ public class TestingMonitor extends JPanel  {
 	private int getUnitKey(){
 		
 		int panelIndex = tabbedPane.getSelectedIndex();
-		
 		String keyString = tabbedPane.getTitleAt(panelIndex);
 		
 		if(panelIndex == 0)// local unit selected
@@ -179,7 +172,6 @@ public class TestingMonitor extends JPanel  {
 	 * 
 	 */
 	private void initComponents(){
-	
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addChangeListener(new ChangeListener() {
 	        public void stateChanged(ChangeEvent e) {

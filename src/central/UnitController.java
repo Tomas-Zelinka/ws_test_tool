@@ -1,5 +1,10 @@
 package central;
 
+
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,9 +16,9 @@ import proxyUnit.NewMessageListener;
 import proxyUnit.ProxyMonitoringUnit;
 import proxyUnit.RemoteProxyUnit;
 import proxyUnit.UnknownHostListener;
-import testingUnit.LocalTestUnit;
 import testingUnit.NewResponseListener;
-import testingUnit.RemoteTestUnit;
+import testingUnit.TestingUnit;
+import testingUnit.TestingUnitImpl;
 import data.DataProvider;
 import data.FaultInjectionData;
 import data.HttpMessageData;
@@ -23,59 +28,44 @@ import data.TestList;
 public class UnitController {
 
 	
-	private Map<Integer,RemoteTestUnit> testUnitsStorage;
+	private Map<Integer,TestingUnit> testUnitsStorage;
 	private Map<Integer,RemoteProxyUnit> proxyUnitsStorage;
-	private LocalTestUnit localTestUnit;
 	private ProxyMonitoringUnit localProxyUnit; 
-	private DataProvider ioProvider;
+	private DataProvider ioProvider; 
 	
-	
+	 
 	/**
 	 * 
 	 */
 	public UnitController(){
-		this.testUnitsStorage = new HashMap<Integer,RemoteTestUnit>();
+		this.testUnitsStorage = new HashMap<Integer,TestingUnit>();
 		this.proxyUnitsStorage = new HashMap<Integer,RemoteProxyUnit>();
 		this.ioProvider = new DataProvider();
+			
 	}
 	
 
-	/**
-	 * 
-	 * @param key
-	 */
-	public void addRemoteTestUnit(Integer key){
-		RemoteTestUnit newRemoteUnit = new RemoteTestUnit(); 
-		testUnitsStorage.put(key, newRemoteUnit);
-	}
 	
-	/**
-	 * 
-	 * @param key
-	 */
-	public void addRemoteProxyUnit(Integer key){
-		RemoteProxyUnit newRemoteUnit = new RemoteProxyUnit(); 
-		proxyUnitsStorage.put(key, newRemoteUnit);
-	}
 	
-	/**
-	 * 
-	 */
-	public void addLocalTestUnit(){
-		this.localTestUnit = new LocalTestUnit(); 
+	public void addTestUnit(Integer key) throws RemoteException, NotBoundException{
+		TestingUnit newUnit = null;
+		if(key == 0){
+			newUnit = new TestingUnitImpl();
+		}else{
+			Registry registry = LocateRegistry.getRegistry("192.168.1.3",1099);
+			newUnit = (TestingUnit) registry.lookup("TestingUnit");
+			ConsoleLog.Message(newUnit.testConnection());
+		}
+		testUnitsStorage.put(key, newUnit);
+	}
+
+	
+	
+	
+	public void setResponseListener(NewResponseListener listener, int unitId) throws RemoteException{
 		
-	}
-	
-	/**
-	 * 
-	 */
-	public void addLocalProxyUnit(){
-		this.localProxyUnit = new ProxyMonitoringUnit(); 
-		
-	}
-	
-	public void setResponseListener(NewResponseListener listener){
-		this.localTestUnit.addResponseListener(listener);
+		TestingUnit unit = getTestUnit(unitId);
+		unit.addResponseListener(listener); 
 	}
 	
 	public void setNewMessageListener(NewMessageListener listener){
@@ -87,41 +77,49 @@ public class UnitController {
 	}
 	
 	
-	public FaultInjectionData getProxyActiveTest(){
-		return this.localProxyUnit.getActiveTest();
-	}
-	
-	public Map<Integer, HttpInteraction> getInteractionMap(){
-		return this.localProxyUnit.getInteractionMap();
-	}
 	/**
 	 * 
 	 * @param key
 	 */
-	public void removeRemoteTestUnit(Integer key){
+	public void removeTestUnit(Integer key){
 		this.testUnitsStorage.remove(key);
 	
 	}
-	
+
 	/**
 	 * 
-	 * @param key
-	 */
-	public void removeRemoteProxyUnit(Integer key){
-		this.proxyUnitsStorage.remove(key);
-	
-	}
-	
-	/**
-	 * 
-	 * @param key
 	 * @return
 	 */
-	public RemoteTestUnit getRemoteTestUnit(Integer key){
-		
+	public TestingUnit getTestUnit(int key){
 		return this.testUnitsStorage.get(key);
 	}
 	
+	/**
+	 * 
+	 * @param key
+	 */
+	public void addRemoteProxyUnit(Integer key){
+		
+	
+		RemoteProxyUnit newRemoteUnit = new RemoteProxyUnit(); 
+		proxyUnitsStorage.put(key, newRemoteUnit);
+	}
+	
+	/**
+	 * 
+	 */
+	public void addLocalProxyUnit(){
+		this.localProxyUnit = new ProxyMonitoringUnit(); 
+		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public ProxyMonitoringUnit getLocalProxyUnit(){
+		return this.localProxyUnit;
+	}
 	/**
 	 * 
 	 * @param key
@@ -132,22 +130,23 @@ public class UnitController {
 		return this.proxyUnitsStorage.get(key);
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public LocalTestUnit getLocalTestUnit(){
-		return this.localTestUnit;
-	}
 	
 	/**
 	 * 
-	 * @return
+	 * @param key
 	 */
-	public ProxyMonitoringUnit getLocalProxyUnit(){
-		return this.localProxyUnit;
+	public void removeRemoteProxyUnit(Integer key){
+		this.proxyUnitsStorage.remove(key);
+	
+	}
+
+	public FaultInjectionData getProxyActiveTest(){
+		return this.localProxyUnit.getActiveTest();
 	}
 	
+	public Map<Integer, HttpInteraction> getInteractionMap(){
+		return this.localProxyUnit.getInteractionMap();
+	}
 	/**
 	 * 
 	 * @param path
@@ -209,6 +208,7 @@ public class UnitController {
 		private int id;
 		
 		
+		
 		TestUnitWorker(HttpMessageData data,TestCaseSettingsData settings, int unitId){
 			this.data = data;
 			this.settings = settings;
@@ -216,13 +216,20 @@ public class UnitController {
 		}
 		
 		public String doInBackground(){
-			if(id == 0){
-				localTestUnit.setTest(data,settings);
-				localTestUnit.run();
-				localProxyUnit.stopProxy();
-			}else{
+			
+			
+			TestingUnit unit = getTestUnit(this.id);
+			try{
 				
+				ConsoleLog.Message (unit.testConnection());
+				unit.setTest(data,settings);
+				unit.run();
+			}catch(RemoteException ex){
+				ConsoleLog.Message(ex.getMessage());
 			}
+			
+			//unit.stopProxy();
+			
 			return "";
 		}
 	}
@@ -255,7 +262,7 @@ public class UnitController {
 				localProxyUnit.run();
 				
 			}else{
-				ConsoleLog.Print("Remote jednotka");
+				ConsoleLog.Print("[Controller] Remote jednotka");
 			}
 			return "";
 		}

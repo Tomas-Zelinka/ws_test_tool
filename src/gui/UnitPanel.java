@@ -56,10 +56,12 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	private JLabel requestTableLabel;
 	private JLabel responsesTableLabel;
 	private HashMap<String,HttpMessageData[]> responses;
+	
 		
 	public UnitPanel (int type){
 		initComponents();
 		setupComponents();
+		
 	}
 	
 	 /**
@@ -76,30 +78,63 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 					
 			if(!testCases.isEmpty()){
 				for(Integer testCaseId : testCases.keySet()){
-					putTestCaseToTable(testCaseId);
+					loadTestCaseToTable(testCaseId);
 				}
 			}
 			
-			ConsoleLog.Print("Opened Test List: "+path);
+			ConsoleLog.Print("[UnitPanel] Opened Test List: "+path);
 		}else{
-			ConsoleLog.Print("Test list not found: "+path);
+			ConsoleLog.Print("[UnitPanel] Test list not found: "+path);
 		}
 	}
 	
+	/**
+	 * 
+	 * @param casePath
+	 */
+	private void loadTestCaseToTable(Integer id){
+		
+		String casePath = this.testListData.getTestCases().get(id);
+		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
+				
+		if(testCaseSettings == null){
+			ConsoleLog.Message("Test case file from list not found.");
+		}else{
+			insertToTable(testCaseSettings);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param casePath
+	 */
+	public void insertTestCaseToTable(String casePath){
+		
+		
+		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
+		if(this.testListData != null){
+			if(detectDuplicityInTable(testCaseSettings.getName())){
+				ConsoleLog.Message("Test case already in test list");
+			}else{
+				this.testListData.addTestCase(casePath.substring(0, casePath.length()));
+				insertToTable(testCaseSettings);
+			}
+		}else{
+			ConsoleLog.Message("Any opened test suite");
+		}
+	}
+
 	@Override
 	public void onNewResponseEvent(HttpMessageData[] dataArray) {
 		ConsoleLog.Print("[UnitPanel] dostal jsem data, delka:" + dataArray.length);
-		
-		String key = dataArray[0].getName();
-		responses.put(key, dataArray);
-		
-		
-		
-		ConsoleLog.Print("[UnitPanel] vracim se");
+		String  adrress = dataArray[0].getName() + dataArray[0].getThreadNumber();
+		responses.put(adrress, dataArray);
+		//ConsoleLog.Print("[UnitPanel] dalsi data od vlakna :"+ adrress);	
+		//ConsoleLog.Print("[UnitPanel] vracim se");
 	}
 	
-	
-	public void clearUnitPanel(){
+	public void clearResults(){
+		ConsoleLog.Print("[UnitPanel] clearing");
 		responses.clear();
 		clearTable(responsesTableModel);
 		responseEditorPane.setText("");
@@ -118,7 +153,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 			
 			if(this.testListData.getTestCases().size() == testCasesTableModel.getRowCount()){
 			
-				ConsoleLog.Print(""+testCases.size());
+				ConsoleLog.Print("[UnitPanel] Testcase size: "+testCases.size());
 				for(int id = 0; id <testCasesTableModel.getRowCount(); id++){
 					
 					String casePath = testCases.get((Integer)testCasesTableModel.getValueAt(id,0));
@@ -135,7 +170,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 				}
 				ioProvider.writeObject(suitePath, this.testListData);
 			}else{
-				ConsoleLog.Print("neshode pri poctu testu v tabulce a objektu");
+				ConsoleLog.Print("[UnitPanel] neshode pri poctu testu v tabulce a objektu");
 			}
 		}else{
 			ConsoleLog.Message("Any opened test suite");
@@ -144,26 +179,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	
 	
 	
-	/**
-	 * 
-	 * @param casePath
-	 */
-	public void insertTestCaseToTable(String casePath){
-		
-		
-		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath);
-		if(this.testListData != null){
-			if(detectDuplicityInTable(testCaseSettings.getName())){
-				ConsoleLog.Message("Test case already in test list");
-			}else{
-				this.testListData.addTestCase(casePath.substring(0, casePath.length() - "settings.xml".length() ));
-				Object[] newRow = new Object[] {this.testListData.getLastId(),testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun()),new Boolean(testCaseSettings.getUseProxy())};
-				testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
-			}
-		}else{
-			ConsoleLog.Message("Any opened test suite");
-		}
-	}
+	
 	
 	/**
 	 * 
@@ -171,7 +187,7 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 	public void removeSelectedTestCase(){
 		
 		int row = testCasesTable.getSelectedRow();
-		ConsoleLog.Print("row: "+row);
+		ConsoleLog.Print("[UnitPanel] row: "+row);
 		
 		if(row >= 0){
 			Integer id = (Integer)testCasesTableModel.getValueAt(row, 0);
@@ -179,64 +195,17 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 			testCasesTableModel.removeRow(row);
 		}
 	}
-	
+
 	/**
 	 * 
-	 * @param row
 	 */
-	public void removeTestCaseAt(int row){
-		if(row >= 0){
-			Integer id = (Integer)testCasesTableModel.getValueAt(row, 0);
-			this.testListData.removeTestCase(id);
-			testCasesTableModel.removeRow(row);
-		}
+	private void clearTable(DefaultTableModel table){
+		table.setRowCount(0);
 	}
 	
-	/**
-	 * 
-	 */
-	public void clearTable(DefaultTableModel table){
-		for(int i = 0; i < table.getRowCount(); i++){
-			table.removeRow(i);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param row
-	 */
-	public void removeResponseAt(int row){
-		if(row >= 0){
-			//Integer id = (Integer)responsesTableModel.getValueAt(row, 0);
-			//this.testListData.removeTestCase(id);
-			responsesTableModel.removeRow(row);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param id
-	 */
-	public void insertResponse(int id ){
-		Object[] newRow = new Object[] {id};
+	private void insertToTable(TestCaseSettingsData data){
+		Object[] newRow = new Object[] {this.testListData.getLastId(),data.getName(),data.getThreadsNumber(),data.getLoopNumber(),new Boolean(data.getRun()),new Boolean(data.getUseProxy())};
 		testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
-	}
-	
-	/**
-	 * 
-	 * @param casePath
-	 */
-	private void putTestCaseToTable(Integer id){
-		
-		String casePath = this.testListData.getTestCases().get(id);
-		TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
-		
-		if(testCaseSettings == null){
-			ConsoleLog.Message("Test case file from list not found.");
-		}else{
-			Object[] newRow = new Object[] {id,testCaseSettings.getName(),testCaseSettings.getThreadsNumber(),testCaseSettings.getLoopNumber(),new Boolean(testCaseSettings.getRun()),new Boolean(testCaseSettings.getUseProxy())};
-			testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
-		}
 	}
 	
 	/**
@@ -263,37 +232,39 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 			clearTable(responsesTableModel);
 			responseEditorPane.setText("");
 			requestEditorPane.setText("");
-			//responsesTableModel.
 			int row = testCasesTable.getSelectedRow();
-			String key = (String) testCasesTableModel.getValueAt(row,1);
+			String name = (String) testCasesTableModel.getValueAt(row,1);
+			Integer threadNumber = (Integer) testCasesTableModel.getValueAt(row,2);
+			ConsoleLog.Print("[UnitPanel] case to find in table:" + responses.keySet().size());
 			
-			HttpMessageData[] caseResponses = responses.get(key);
-				if(caseResponses != null){
-					for(HttpMessageData data : caseResponses){
-						
-						Object[] newRow = new Object[] {data.getName(),data.getLoopNumber(),data.getThreadNumber(),null,data.getMethod(),data.getUri()};
-						responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
-						//responseEditorPane.setText(XMLFormat.format(data.getBody())); 
-						//responseEditorPane.setText(data.getBody()); 
-				}
-			}else{
-				ConsoleLog.Message("Response not present!");
+			for(int i = 0; i < threadNumber; i++){
+				String key = name + i;
+				HttpMessageData[] caseResponses = responses.get(key);
+					if(caseResponses != null){
+						for(HttpMessageData data : caseResponses){
+							Object[] newRow = new Object[] {data.getName(),data.getLoopNumber(),data.getThreadNumber(),null,data.getMethod(),data.getUri()};
+							responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
+						}
+					}else{
+						ConsoleLog.Message("Response not present!");
+					}
 			}
-		
 		}
 	}
 	
 	private class ResponseSelectionAdapter extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
-			int row = testCasesTable.getSelectedRow();
-			String key = (String) testCasesTableModel.getValueAt(row,1);
+			int row = responsesTable.getSelectedRow();
 			
-			HttpMessageData[] caseResponses = responses.get(key);
+			String name = (String) responsesTableModel.getValueAt(row,0);
+			Integer threadNumber = (Integer) responsesTableModel.getValueAt(row,2);
+			Integer loopNumber = (Integer) responsesTableModel.getValueAt(row,1);
+			String key = name + threadNumber;
 			
-			requestEditorPane.setText(XMLFormat.format(caseResponses[0].getRequestBody()));
-			
-			responseEditorPane.setText(XMLFormat.format(caseResponses[0].getResponseBody()));
-		
+	//		ConsoleLog.Print("[UnitPanel] " + key +" "+loopNumber );
+			HttpMessageData caseResponse =(responses.get(key))[loopNumber];
+			requestEditorPane.setText(XMLFormat.format(caseResponse.getRequestBody()));
+			responseEditorPane.setText(XMLFormat.format(caseResponse.getResponseBody()));
 		}
 	}
 	
@@ -515,4 +486,8 @@ public class UnitPanel extends JPanel implements NewResponseListener {
 
         outputDetails.setRightComponent(responsePanel);
 	}
+	
+	
+	
+	
 }

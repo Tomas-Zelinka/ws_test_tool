@@ -1,10 +1,17 @@
 package data;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 
-public class TestCaseSettingsData {
+public class TestCaseSettingsData implements Serializable{
 	 
 	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1877094164580318557L;
 	private int threadsNumber;
 	private int loopNumber;
 	private String name;
@@ -119,5 +126,17 @@ public class TestCaseSettingsData {
 	public void setPath(String path) {
 		this.path = path;
 	}
+	
+	
+//	private void writeObject(java.io.ObjectOutputStream out)
+//		     throws IOException{
+//		out.defaultWriteObject();
+//		
+//	}
+//    
+//    private void readObject(java.io.ObjectInputStream in)
+//		     throws IOException, ClassNotFoundException{
+//    	in.defaultReadObject();
+//    }
 	 
 }

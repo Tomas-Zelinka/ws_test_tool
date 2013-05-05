@@ -14,6 +14,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import rmi.Server;
+
 /**
  * Main class for starting the application
  * 
@@ -30,15 +32,17 @@ public class Main extends Options{
 	private UnitController unitController;
 	private Option help;
 	private Option gui;
+	private Option rmiServer;
 	private Options options;
 	private CommandLineParser parser;
+	private Server server;
 	
 	/**
 	 * The main of the application
 	 */
 	public Main(){
 		initOptions();
-		initApplication();
+		
 	}
 	
 	/**
@@ -70,10 +74,11 @@ public class Main extends Options{
 		
 		this.help = new Option("h", "Napoveda");
 		this.gui = new Option("g","gui");
-		
+		this.rmiServer = new Option("r","server");
 		this.options = new Options();
 		this.options.addOption(this.gui);
 		this.options.addOption(this.help);
+		this.options.addOption(this.rmiServer);
 		
 		this.parser = new BasicParser();
 	}
@@ -108,6 +113,7 @@ public class Main extends Options{
 		}
 		
 		if(line.hasOption("g")){
+			initApplication();
 			System.out.println("gui");
 			try{
 				SwingUtilities.invokeAndWait(new Runnable() {
@@ -119,6 +125,13 @@ public class Main extends Options{
 			}catch (Exception e){
 				e.printStackTrace();
 			}
+		}
+		
+		if(line.hasOption( "r" ) ){
+			initApplication();
+			ConsoleLog.Print("server");
+			this.server = new Server();
+			server.run();
 		}
 		
 	}

@@ -24,7 +24,7 @@ import com.thoughtworks.xstream.XStream;
 public class DataProvider {
 	
 	private XStream stream;
-	private static final String resourcePath = ".."+File.separator+"resources" + File.separator;
+	private static final String resourcePath = File.separator+"resources" + File.separator;
 	
 	public DataProvider(){
 		
@@ -45,12 +45,16 @@ public class DataProvider {
 	 * @param obj
 	 */
 	public void writeObject(String path, Object obj){
+		PrintWriter writer = null;
 		try{
-			PrintWriter writer = new PrintWriter(new FileWriter(path));
+			writer = new PrintWriter(new FileWriter(path));
 			writer.print(stream.toXML(obj));
-			writer.close();
+			
 		}catch(IOException e){
 			e.printStackTrace();
+		}finally{
+			if(writer != null)
+				writer.close();
 		}
 	}
 	
@@ -62,9 +66,9 @@ public class DataProvider {
 	public Object readObject(String path){
 		
 		Object obj = null;
-		
+		FileInputStream inStream = null;
 		try {
-			FileInputStream inStream = new FileInputStream(new File(path));
+			inStream = new FileInputStream(new File(path));
 			obj= stream.fromXML(inStream);
 			inStream.close();
 		}
@@ -72,6 +76,8 @@ public class DataProvider {
 			ConsoleLog.Print("File " +path+ " not found");
 			//ConsoleLog.Print(ex.getMessage());
 			//System.exit(-1);
+		}catch(IOException ex){
+			ex.printStackTrace();
 		}
 		catch(Exception ex)	{
 			ex.printStackTrace();

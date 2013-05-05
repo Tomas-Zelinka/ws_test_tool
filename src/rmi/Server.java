@@ -1,16 +1,24 @@
 package rmi;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.net.MalformedURLException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+import testingUnit.TestingUnitImpl;
  
 public class Server {
  
-    public static void main(String[] args) throws RemoteException, MalformedURLException {
-        LocateRegistry.createRegistry(1099);
-        Hello hello = new HelloImpl();
-        Naming.rebind("server.Hello", hello);
-        System.out.println("server.RMI Server is ready.");
+   public void run()  {
+        
+    	
+    	try{
+    		Registry registry = LocateRegistry.createRegistry(1099);
+    		TestingUnitImpl testUnit = new TestingUnitImpl();
+	        registry.rebind("TestingUnit", testUnit);
+	        System.out.println("server.RMI Server is ready.");
+    	}catch(RemoteException e){
+    		e.printStackTrace();
+    	}
+    	
     }
 }

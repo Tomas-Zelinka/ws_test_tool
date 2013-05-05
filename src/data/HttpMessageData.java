@@ -1,11 +1,19 @@
 package data;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class HttpMessageData {
+public class HttpMessageData implements Serializable {
 
 	
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3769765519967458600L;
 	public static final String HEADER_HTTP_VERSION = "Version";
 	public static final String HEADER_HTTP_METHOD = "Method";
 	public static final String HEADER_HTTP_URI = "URI";
@@ -156,6 +164,15 @@ public class HttpMessageData {
 		optionalHeaders.remove(name);
 	}
 	
-	
+	private void writeObject(java.io.ObjectOutputStream out)
+		     throws IOException{
+		out.defaultWriteObject();
+		
+	}
+   
+   private void readObject(java.io.ObjectInputStream in)
+		     throws IOException, ClassNotFoundException{
+   	in.defaultReadObject();
+   }
 	
 }

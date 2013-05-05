@@ -1,6 +1,9 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.io.File;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -8,6 +11,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import logging.ConsoleLog;
+import testingUnit.NewResponseListener;
+import testingUnit.PanelListener;
 import central.UnitController;
 
 /**
@@ -35,7 +40,7 @@ public class TestingMonitor extends JPanel  {
 		controller = testUnitController;
 		testUnitCounter = 0;
 		initComponents();
-		setupComponents();
+		addTestUnit();
 	}
 	
 	/**
@@ -45,32 +50,44 @@ public class TestingMonitor extends JPanel  {
 		
 	}
 	
-	/**
-	 * 
-	 */
-	public void addLocalTestUnit(){
-		
-		UnitPanel panel = new UnitPanel(testUnitCounter);
-		//panel.setTestUnit(getLocalTestUnit());
-		tabbedPane.addTab("Local Unit",panel);
-		controller.setResponseListener(panel);
-		testUnitCounter++;
-	}
 	
 	/**
 	 * This method inserts remote unit tab to the tabbed pane
 	 * and initialize new remote unit in unit controller
 	 */
-	public void addRemoteUnit(){
+	public void addTestUnit(){
+		int selectedPanel = 0;
 		
-		UnitPanel panel = new UnitPanel(testUnitCounter);
-		int selectedPanel = tabbedPane.indexOfTab("Remote Unit " +testUnitCounter);
+		try{
+			controller.addTestUnit(testUnitCounter);
+			
+			UnitPanel panel = new UnitPanel(testUnitCounter);
+			NewResponseListener listner = new PanelListener(panel);
+			
+			if(testUnitCounter == 0){
+				tabbedPane.addTab("Local Unit",panel);
+				controller.setResponseListener(listner,testUnitCounter);
+				
+			}else{
+				
+				controller.setResponseListener(listner,testUnitCounter);
+				tabbedPane.addTab("Remote Unit "  + testUnitCounter,panel);
+				selectedPanel = tabbedPane.indexOfTab("Remote Unit " +testUnitCounter);
+			}
+		}catch(RemoteException ex){
+			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());
+			return;
+		}catch(NotBoundException ex){
+			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
+			return;
+		}catch(Exception ex){
+			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
+			ex.printStackTrace();
+			return;
+		}
 		
-		tabbedPane.addTab("Remote Unit "  + testUnitCounter,panel);
 		tabbedPane.setSelectedIndex(selectedPanel);
-		controller.addRemoteTestUnit(testUnitCounter);
-		//panel.setTestUnit(getRemoteTestUnit(unitCounter));
-		ConsoleLog.Print("panel index:" + selectedPanel);
+		ConsoleLog.Print("[TestMonitor] panel index:" + selectedPanel);
 		testUnitCounter++;
 	}
 	
@@ -81,10 +98,10 @@ public class TestingMonitor extends JPanel  {
 		
 		int panelIndex = tabbedPane.getSelectedIndex();
 		if (panelIndex != 0){
-			controller.removeRemoteTestUnit(getUnitKey());
+			controller.removeTestUnit(getUnitKey());
 			tabbedPane.remove(panelIndex);
 			tabbedPane.revalidate();
-			ConsoleLog.Print("Removed Unit: " + getUnitKey());
+			ConsoleLog.Print("[TestMonitor] Removed Unit: " + getUnitKey());
 		}else{
 			ConsoleLog.Print("[TestMonitor] You cannot close local testing unit");
 		}
@@ -97,15 +114,21 @@ public class TestingMonitor extends JPanel  {
 	 */
 	public void openTestList(String path){
 		
-		int panelIndex = tabbedPane.getSelectedIndex();
+		int tabCount = tabbedPane.getTabCount();
+		for (int i =0; i < tabCount; i++){
 		
-		if(panelIndex == 0){
-			tabbedPane.setTitleAt(panelIndex,"Local Unit "+" - "+MainWindow.getSuitePath() );
-		}else{
-			tabbedPane.setTitleAt(panelIndex,"Remote Unit "+ getUnitKey() +" - "+MainWindow.getSuitePath() );
+			int panelIndex = i;
+			String splitedPath = (MainWindow.getSuitePath().split(File.separator))[2];
+			if(panelIndex == 0){
+				tabbedPane.setTitleAt(panelIndex,"Local Unit"+" - "+splitedPath );
+			}else{
+				String keyString = tabbedPane.getTitleAt(panelIndex);
+				int key = Integer.parseInt(keyString.split(" ")[2]);
+				tabbedPane.setTitleAt(panelIndex,"Remote Unit "+ key +" - "+splitedPath );
+			}
+			((UnitPanel)tabbedPane.getComponentAt(panelIndex)).openTestList(path);
+			
 		}
-		
-		getSelectedPanel().openTestList(path);
 	} 
 	
 	/** 
@@ -138,7 +161,7 @@ public class TestingMonitor extends JPanel  {
 	
 	public void runUnit(String path){
 		getSelectedPanel().saveTestList(path); 
-		getSelectedPanel().clearUnitPanel();
+		getSelectedPanel().clearResults();
 		controller.runTest(path,getUnitKey());
 	}
 	
@@ -154,8 +177,10 @@ public class TestingMonitor extends JPanel  {
 		
 		if(panelIndex == 0)// local unit selected
 			return 0;
-		else
-			return Integer.parseInt(keyString.substring("Remote Unit ".length()));
+		else{
+			int key = Integer.parseInt(keyString.split(" ")[2]);
+			return key;
+		}
 	}
 	
 	/**
@@ -182,11 +207,5 @@ public class TestingMonitor extends JPanel  {
 		this.add(tabbedPane,BorderLayout.CENTER);
 	}
 	
-	/**
-	 * 
-	 */
-	private void setupComponents(){
-		controller.addLocalTestUnit();
-		addLocalTestUnit();
-	}
+	
 }

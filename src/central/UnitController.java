@@ -258,7 +258,8 @@ public class UnitController {
 				localProxyUnit.setProxyHost(settings.getProxyHost());
 				localProxyUnit.setProxyPort(settings.getProxyPort());
 				localProxyUnit.setTestedWsPort(settings.getProxyTestedPort());
-				localProxyUnit.setActiveTest(activeTest);		
+				localProxyUnit.setActiveTest(activeTest);
+				ConsoleLog.Print("[Controller] Proxy start");
 				localProxyUnit.run();
 				
 			}else{

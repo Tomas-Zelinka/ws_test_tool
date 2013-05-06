@@ -69,7 +69,7 @@ public class ProxyThread extends Thread {
 				if (bytesRead == -1) {
 					incomingSocket.close();
 					outgoingSocket.close();
-					bytesToBeRead= -2;
+					//bytesToBeRead= -2;
 					break;
 				}
 
@@ -96,6 +96,7 @@ public class ProxyThread extends Thread {
 				int contentLength= -1;
 				String transferEncoding;
 				if (bytesToBeRead == -1) {
+					System.out.println("nova zprava");
 					httpMessage= HttpMessageParser.parseHttpHeader(rawMessage, incomingSocket);
 					contentLength= httpMessage.getContentLength();
 					transferEncoding= httpMessage.getTransferEncoding();

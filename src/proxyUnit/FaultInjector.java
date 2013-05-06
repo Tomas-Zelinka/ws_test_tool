@@ -6,14 +6,7 @@
  */
 package proxyUnit;
 
-import java.util.List;
-import org.jdom2.JDOMException;
-
-import data.Fault;
-import data.MultiplicationFault;
 import data.FaultInjectionData;
-import data.FaultInjectionData;
-import data.XPathCorruptionFault;
 
 /**
  * Hlavni trida zajistujici pozmeneni dane HTTP zpravy za ucelem vlozeni nakonfigurovanych poruch.

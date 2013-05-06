@@ -9,9 +9,7 @@ import testingUnit.TestingUnitImpl;
 public class Server {
  
    public void run()  {
-        
-    	
-    	try{
+	   try{
     		Registry registry = LocateRegistry.createRegistry(1099);
     		TestingUnitImpl testUnit = new TestingUnitImpl();
 	        registry.rebind("TestingUnit", testUnit);

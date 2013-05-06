@@ -47,12 +47,12 @@ public class UnitController {
 
 	
 	
-	public void addTestUnit(Integer key) throws RemoteException, NotBoundException{
+	public void addTestUnit(Integer key,String host, int port) throws RemoteException, NotBoundException{
 		TestingUnit newUnit = null;
 		if(key == 0){
 			newUnit = new TestingUnitImpl();
 		}else{
-			Registry registry = LocateRegistry.getRegistry("192.168.1.3",1099);
+			Registry registry = LocateRegistry.getRegistry(host,port);
 			newUnit = (TestingUnit) registry.lookup("TestingUnit");
 			ConsoleLog.Message(newUnit.testConnection());
 		}

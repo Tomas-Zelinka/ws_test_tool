@@ -40,7 +40,7 @@ public class TestingMonitor extends JPanel  {
 		controller = testUnitController;
 		testUnitCounter = 0;
 		initComponents();
-		addTestUnit();
+		addTestUnit("",0);
 	}
 	
 	/**
@@ -55,11 +55,11 @@ public class TestingMonitor extends JPanel  {
 	 * This method inserts remote unit tab to the tabbed pane
 	 * and initialize new remote unit in unit controller
 	 */
-	public void addTestUnit(){
+	public void addTestUnit(String host, int port){
 		int selectedPanel = 0;
 		
 		try{
-			controller.addTestUnit(testUnitCounter);
+			controller.addTestUnit(testUnitCounter,host,port);
 			
 			UnitPanel panel = new UnitPanel(testUnitCounter);
 			NewResponseListener listner = new PanelListener(panel);
@@ -118,7 +118,7 @@ public class TestingMonitor extends JPanel  {
 		for (int i =0; i < tabCount; i++){
 		
 			int panelIndex = i;
-			String splitedPath = (MainWindow.getSuitePath().split(File.separator))[2];
+			String splitedPath = (MainWindow.getSuitePath().split("\\"+File.separator))[2];
 			if(panelIndex == 0){
 				tabbedPane.setTitleAt(panelIndex,"Local Unit"+" - "+splitedPath );
 			}else{
@@ -159,18 +159,31 @@ public class TestingMonitor extends JPanel  {
 	}
 
 	
-	public void runUnit(String path){
+	public void runUnit(String path,int key){
 		getSelectedPanel().saveTestList(path); 
 		getSelectedPanel().clearResults();
-		controller.runTest(path,getUnitKey());
+		controller.runTest(path,key);
 	}
 	
+	public void runAllUnits(String path){
+		
+		int tabCount = tabbedPane.getTabCount();
+		for (int i =0; i < tabCount; i++){
+			String keyString = tabbedPane.getTitleAt(i);
+			if(i == 0){
+				runUnit(path,i);
+			}else{
+				int key = Integer.parseInt(keyString.split(" ")[2]);
+				runUnit(path,key);
+			}
+		}
+	}
 	/**
 	 * 
 	 * @return int - return unit key, the key is used in tab titles
 	 * 				 and like an id for testing units
-	 */
-	private int getUnitKey(){
+	 */ 
+	public int getUnitKey(){
 		
 		int panelIndex = tabbedPane.getSelectedIndex();
 		String keyString = tabbedPane.getTitleAt(panelIndex);
@@ -206,6 +219,8 @@ public class TestingMonitor extends JPanel  {
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane,BorderLayout.CENTER);
 	}
+	
+	
 	
 	
 }

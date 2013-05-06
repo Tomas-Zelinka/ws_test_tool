@@ -178,7 +178,6 @@ public class HttpRequestEditor extends JPanel {
 	        headersTable.getColumnModel().getColumn(0).setPreferredWidth(200);
 	        headersTable.getColumnModel().getColumn(1).setPreferredWidth(500);
 	        
-	        
 	        addHeaderButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"add_small.png"))); // NOI18N
 	        addHeaderButton.setText("Add");
 	        addHeaderButton.addActionListener(new java.awt.event.ActionListener() {

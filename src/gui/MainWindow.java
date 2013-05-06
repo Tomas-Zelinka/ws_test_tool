@@ -20,6 +20,7 @@ import javax.swing.JToolBar;
 import javax.swing.text.PlainDocument;
 
 import logging.ConsoleLog;
+import modalWindows.AddRemoteUnitDialog;
 import modalWindows.GenerateFromWSDLDialog;
 
 import org.bounce.text.LineNumberMargin;
@@ -490,7 +491,16 @@ public class MainWindow extends JFrame{
 	private class AddUnitListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			ConsoleLog.Print("[MainWindow] Add Unit clicked");
-			testUnitPanel.addTestUnit();
+			int port = 0;
+			String host= "";
+			AddRemoteUnitDialog window = new AddRemoteUnitDialog();
+			window.setVisible(true);
+			
+			if(window.isOkButtonClicked()){
+				port = window.getPort();
+				host = window.getHost();
+				testUnitPanel.addTestUnit(host,port);
+			}
 		}
 	}
 	private class RemoveUnitListener implements ActionListener{
@@ -503,7 +513,7 @@ public class MainWindow extends JFrame{
 	private class RunUnitListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			//final String path = testListPath;
-			testUnitPanel.runUnit(MainWindow.getSuitePath()+File.separator+"testlist.xml");
+			testUnitPanel.runUnit(MainWindow.getSuitePath()+File.separator+"testlist.xml",testUnitPanel.getUnitKey());
 			//testUnitPanel.runUnit(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
 			ConsoleLog.Print("[MainWindow] Run Unit clicked");
 		}
@@ -512,6 +522,7 @@ public class MainWindow extends JFrame{
 	private class RunAllUnitsListener implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			ConsoleLog.Print("[MainWindow] Run All Units clicked");
+			testUnitPanel.runAllUnits(MainWindow.getSuitePath()+File.separator+"testlist.xml");
 		}
 	}
 	

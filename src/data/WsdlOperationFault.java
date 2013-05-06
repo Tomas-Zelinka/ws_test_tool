@@ -31,7 +31,7 @@ import proxyUnit.HttpMessage;
  */
 public class WsdlOperationFault extends Fault {
 
-	private String wsdlUri;
+	//private String wsdlUri;
 	private String operationName;
 	private String operationContent;
 	
@@ -43,7 +43,7 @@ public class WsdlOperationFault extends Fault {
 	public WsdlOperationFault( String wsdlUri, String operationName, String operationContent) {
 		
 		
-		this.wsdlUri= wsdlUri;
+	//	this.wsdlUri= wsdlUri;
 		this.operationName= operationName;
 		this.operationContent= operationContent;
 		

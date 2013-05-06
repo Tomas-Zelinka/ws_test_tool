@@ -8,10 +8,10 @@
 	<property name="jar.dir" value="${build.dir}/jar" />
 	<property name="resources.dir" value="resources" />
 	
-	<property name="jar_resources.dir" value="${class.dir}/gui/resources" />
+	<property name="jar_resources.dir" value="${class.dir}/resources" />
 	<property name="jar_lib.dir" value="${jar.dir}/lib" />
 	<property name="build_data.dir" value="${jar.dir}/data" />
-	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
+	<property name="jar.file" value="./${ant.project.name}.jar" />
 	
 	<property name="dep_cp" value="${toString:dep.runtime}" />
 
@@ -39,10 +39,9 @@
 		</copy>
 	</target>
 	
-	<target name="build" depends="init,clean">
+	<target name="build" depends="">
 		<echo>Compile from ${src.dir} to ${build.dir}</echo>
-			
-	    <javac destdir="${class.dir}" srcdir="${src.dir}" includeantruntime="false">
+		<javac destdir="${class.dir}" srcdir="${src.dir}" includeantruntime="false">
 	    	<classpath refid="dep.runtime"/>
 	    </javac>
 	</target>
@@ -53,7 +52,7 @@
 		</manifestclasspath>
 		<jar destfile="${jar.file}" basedir="${class.dir}">
 			<manifest>
-		    	<attribute name="Main-Class" value="gui.Main"/>
+		    	<attribute name="Main-Class" value="central.Main"/>
 				<attribute name="Class-Path" value="${manifest_cp}" />
 			</manifest>
 		</jar>

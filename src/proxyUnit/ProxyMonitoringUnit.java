@@ -136,7 +136,7 @@ public class ProxyMonitoringUnit {
 		setProxyFlag(true);
 		try {
 			serverSocket= new ServerSocket(this.proxyPort);
-			System.out.println("Proxy server is running at port " + proxyPort);
+			ConsoleLog.Message("Proxy server is running at port " + proxyPort);
 			//int interactionId= 0;
 			while(isProxyFlag()) {
 				ConsoleLog.Print("[ProxyUnit] interakce" + interactionId);
@@ -205,9 +205,7 @@ public class ProxyMonitoringUnit {
 		return interactionMap;
 	}
 	
-	
-	
-	
+
 	/**
 	 * Metoda pro ziskani URI proxy hostu
 	 * @return proxy host URI
@@ -309,24 +307,24 @@ public class ProxyMonitoringUnit {
 	 * @param interactionId id interakce
 	 * @param httpMessage nova zprava
 	 */
-	public synchronized  void newMessageNotifier(int interactionId, HttpMessage httpMessage) {
+	public void newMessageNotifier(int interactionId, HttpMessage httpMessage) {
 		
 		//SITUACE KDY SPOJENI NENI RADNE UKONCENO A PROXY VLAKNA BEZI
 		//je potreba inkrementovat id interakce..jinak se bude v GUI prepisovat porad stejny radek
-//		while (interactionMap.get(interactionId) != null && interactionMap.get(interactionId).getHttpRequest() != null &&
-//				interactionMap.get(interactionId).getHttpResponse() != null) {
-//			
-//			interactionId++;
-//			this.setInteractionId(interactionId);
-//		}
+		while (interactionMap.get(interactionId) != null && interactionMap.get(interactionId).getHttpRequest() != null &&
+				interactionMap.get(interactionId).getHttpResponse() != null) {
+			
+			//interactionId++;
+//			/this.setInteractionId(interactionId);
+		}
 		
-		
-		int port = httpMessage.getInitiatorPort();
+		ConsoleLog.Print("[ProxyUnit] zapisuju interakci" + interactionId);
+		//int port = httpMessage.getInitiatorPort();
 			
 		//ConsoleLog.Print(""+port);
 		HttpInteraction interaction;
 		//pokud v mape dosud neni prislusna http interakce..vytvorime novou
-		if (!interactionMap.containsKey(port) ){
+		if (!interactionMap.containsKey(interactionId) ){
 			interaction= new HttpInteraction();
 			if (httpMessage instanceof HttpRequest)
 				interaction.setHttpRequest((HttpRequest) httpMessage);
@@ -334,11 +332,11 @@ public class ProxyMonitoringUnit {
 				interaction.setHttpResponse((HttpResponse) httpMessage);
 			
 			//vlozeni objektu interakce do mapy
-			interactionMap.put(port, interaction);
+			interactionMap.put(interactionId, interaction);
 		}
 		//pokud v mape jiz existuje tato interakce..pridame k ni prislusny request/response
 		else {
-			interaction= interactionMap.get(port);
+			interaction= interactionMap.get(interactionId);
 			if (httpMessage instanceof HttpRequest)
 				interaction.setHttpRequest((HttpRequest) httpMessage);
 			else
@@ -349,7 +347,7 @@ public class ProxyMonitoringUnit {
 		faultInjector.applyTest(httpMessage);
 		
 		//publikujeme zmeny v mape interakci
-		publishNewMessageEvent(port, interaction);
+		publishNewMessageEvent(interactionId, interaction);
 		
 //		System.out.println("*********************");
 //		System.out.println("changedContent" + httpMessage.getChangedContent());

@@ -25,13 +25,14 @@ public class HttpResponse implements HttpMessage {
 	private String content;
 	private String formattedContent;
 	
+	private boolean changed;
 	private String changedContent;
 	private String changedFormattedContent;
 	
 	
 	
 	public HttpResponse(String httpCode, String initiatorIp, int initiatorPort, String httpCodeDesc, String errorMessage, String httpHeader,
-			int contentLength, String transferEncoding, String contentEncoding) {
+			int contentLength, String transferEncoding, String contentEncoding, boolean changed) {
 		
 		this.initiatorIp = initiatorIp;
 		this.initiatorPort= initiatorPort;
@@ -244,7 +245,21 @@ public class HttpResponse implements HttpMessage {
 		this.changedFormattedContent= changedFormattedContent;
 	}
 	
-	
+	/**
+	 * Get the boolean changed-flag
+	 * @return flag showing the change of the message
+	 */
+	public boolean isChanged() {
+		return changed;
+	}
+
+	/**
+	 * Method for set the changed flag
+	 * @param boolean status
+	 */
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
 	
 	
 	

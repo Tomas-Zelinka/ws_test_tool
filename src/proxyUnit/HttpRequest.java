@@ -21,6 +21,7 @@ public class HttpRequest implements HttpMessage {
 	private int contentLength;
 	private String transferEncoding;
 	private String contentEncoding;
+	private boolean changed;
 	
 	private String content;
 	private String formattedContent;
@@ -30,7 +31,7 @@ public class HttpRequest implements HttpMessage {
 
 	
 	public HttpRequest(String httpMethod, String initiatorIp, int initiatorPort, String uri, String httpHeader,
-			int contentLength, String transferEncoding, String contentEncoding) {
+			int contentLength, String transferEncoding, String contentEncoding, boolean changed) {
 		
 		this.httpMethod = httpMethod;
 		this.initiatorIp = initiatorIp;
@@ -231,7 +232,21 @@ public class HttpRequest implements HttpMessage {
 		this.changedFormattedContent= changedFormattedContent;
 	}
 	
-	
+	/**
+	 * Get the boolean changed-flag
+	 * @return flag showing the change of the message
+	 */
+	public boolean isChanged() {
+		return changed;
+	}
+
+	/**
+	 * Method for set the changed flag
+	 * @param boolean status
+	 */
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
 	
 	
 	

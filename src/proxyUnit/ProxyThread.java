@@ -61,7 +61,7 @@ public class ProxyThread extends Thread {
 			int bytesToBeRead= -1;
 			HttpMessage httpMessage= null;
 			int httpMode= -1;
-			
+			int messageCounter = 0;
 			while(true) {
 				
 				int bytesRead= inputStream.read(buffer, 0, BUFFER_SIZE);
@@ -136,14 +136,22 @@ public class ProxyThread extends Thread {
 							//upozornime controller na tuto udalost
 							
 							
-							proxyUnit.newMessageNotifier(interactionId, httpMessage);
+							proxyUnit.newMessageNotifier(interactionId+messageCounter, httpMessage);
 		
 							//odeslani pozmenene zpravy
+							String changedMessage = null;
+							
+							if(httpMessage.isChanged())
+								changedMessage= httpMessage.getChangedHttpHeader() + httpMessage.getChangedContent();
+							else
+								changedMessage=rawMessage;
+							
+							outputStream.write(changedMessage.getBytes());
+							
+							
 							bytesToBeRead= -1;
 							rawMessage= "";
-							String changedMessage= httpMessage.getChangedHttpHeader() + httpMessage.getChangedContent();
-							outputStream.write(changedMessage.getBytes());
-
+							messageCounter++;	
 							//outputStream.write(rawMessage.getBytes());
 						}
 						break;
@@ -164,15 +172,22 @@ public class ProxyThread extends Thread {
 								//rozparsujeme telo zpravy
 								HttpMessageParser.parseHttpContent(httpMessage, rawMessage, false);
 								//upozornime controller na tuto udalost
-								proxyUnit.newMessageNotifier(interactionId, httpMessage);
+								proxyUnit.newMessageNotifier(interactionId+messageCounter, httpMessage);
 
 								//odeslani pozmenene zpravy
+								
+								String changedMessage = null;
+								if(httpMessage.isChanged())
+									changedMessage= httpMessage.getChangedHttpHeader() + httpMessage.getChangedContent();
+								else
+									changedMessage=rawMessage;
+								
 								bytesToBeRead= -1;
 								rawMessage= "";
-								String changedMessage= httpMessage.getChangedHttpHeader() + httpMessage.getChangedContent();
 								outputStream.write(changedMessage.getBytes());
-
+								messageCounter++;
 							}
+							
 						}
 												
 						
@@ -198,15 +213,24 @@ public class ProxyThread extends Thread {
 								
 								
 								//upozornime controller na tuto udalost
-								proxyUnit.newMessageNotifier(interactionId, httpMessage);
+								proxyUnit.newMessageNotifier(interactionId+messageCounter, httpMessage);
 
 								//odeslani pozmenene zpravy
+								
+								String changedMessage = null;
+								
+								if(httpMessage.isChanged())
+									changedMessage= httpMessage.getChangedHttpHeader() + httpMessage.getChangedContent();
+								else
+									changedMessage=rawMessage;
+								
+								outputStream.write(changedMessage.getBytes());
+								
 								bytesToBeRead= -1;
 								rawMessage= "";
-								String changedMessage= httpMessage.getChangedHttpHeader() + httpMessage.getChangedContent();
-								outputStream.write(changedMessage.getBytes());
-
+								messageCounter++;
 							}
+							
 						}
 						break;
 						
@@ -216,7 +240,7 @@ public class ProxyThread extends Thread {
 				
 				
 				
-					
+				
 				//outputStream.write(buffer, 0, numOfBytes);
 			}
 					

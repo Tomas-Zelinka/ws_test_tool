@@ -117,6 +117,7 @@ public class XPathCorruptionFault extends Fault {
 						
 			outputter= new XMLOutputter(Format.getPrettyFormat());
 			message.setChangedFormattedContent(outputter.outputString(document));
+			message.setChanged(true);
 		}
 		catch (Exception ex) {
 			System.err.println(ex.getMessage());

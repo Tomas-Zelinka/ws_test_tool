@@ -106,6 +106,7 @@ public class MultiplicationFault extends Fault {
 						
 			outputter= new XMLOutputter(Format.getPrettyFormat());
 			message.setChangedFormattedContent(outputter.outputString(document));
+			message.setChanged(true);
 			
 		}
 		

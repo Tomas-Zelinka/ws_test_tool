@@ -97,7 +97,7 @@ public class HttpMessageParser {
 			}
 			
 			return new HttpRequest(httpMethod, initiatorIp, initiatorPort, uri, httpHeader, contentLength, 
-					transferEncoding, contentEncoding);
+					transferEncoding, contentEncoding, false);
 		}
 			
 		//jedna se o http response
@@ -151,7 +151,7 @@ public class HttpMessageParser {
 			}
 			
 			return new HttpResponse(httpCode,initiatorIp,initiatorPort, httpCodeDesc, null, httpHeader, contentLength, transferEncoding,
-					contentEncoding);
+					contentEncoding, false);
 		}
 	}
 	

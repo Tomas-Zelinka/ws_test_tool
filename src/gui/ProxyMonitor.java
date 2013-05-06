@@ -114,19 +114,19 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 	public void onNewMessageEvent(int port, HttpInteraction interaction) {
 		//ConsoleLog.Print("[ProxyUnitPanel] vkladam do tabulky" + port);
 		//hledame v tabulce, zda tam jiz prislusna interakce neni..pokud ano, pridame nove informace
-//		boolean interactionInserted= false;
-//		for (int i= 0; i < interactionTableModel.getRowCount(); i++){
-//			ConsoleLog.Print("[ProxyUnitPanel] hledam"+ port+" nachazim " +interactionTableModel.getValueAt(i, 4));
-//			if (port == (Integer)interactionTableModel.getValueAt(i, 4)) {
-//				ConsoleLog.Print("[ProxyUnitPanel] AGREGUJU" + port);
-//				setValueAtInteractionTable(i,interaction);
-//				interactionInserted= true;
-//				break;
-//			}
-//		}
-//		//pokud interakce nebyla nalezena, vytvorime novy radek
-//		if (!interactionInserted)
-			insertRowInteractionTable(interactionTable.getRowCount(), interaction);
+		boolean interactionInserted= false;
+		for (int i= 0; i < interactionTableModel.getRowCount(); i++){
+			ConsoleLog.Print("[ProxyUnitPanel] hledam"+ port+" nachazim " +interactionTableModel.getValueAt(i, 0));
+			if (port == (Integer)interactionTableModel.getValueAt(i, 0)) {
+				ConsoleLog.Print("[ProxyUnitPanel] AGREGUJU" + port);
+				setValueAtInteractionTable(i,interaction);
+				interactionInserted= true;
+				break;
+			}
+		}
+		//pokud interakce nebyla nalezena, vytvorime novy radek
+		if (!interactionInserted)
+			insertRowInteractionTable(port, interaction);
 		
 	}
 	
@@ -474,37 +474,47 @@ public class ProxyMonitor extends JSplitPane implements NewMessageListener, Unkn
 				//zjistime id interakce, na kterou bylo kliknuto
 				Point point= me.getPoint();
 				int row= interactionTable.rowAtPoint(point);
-				int port= (Integer) interactionTable.getValueAt(row, 4);
+				int port= (Integer) interactionTable.getValueAt(row, 0);
 				
 				//pokud nebylo znovu kliknuto na stejnou interakci..
 				if (port != lastSelectedInteraction) {
 					//zobrazime obsah http zprav do komponent tridy JEditorPane
 					lastSelectedInteraction= port;
 					//ConsoleLog.Print("[ProxyUnitPanel] vkladam interakci");
-					HttpInteraction selectedInteraction= controller.getInteractionMap().get(port);
-					HttpRequest httpRequest= selectedInteraction.getHttpRequest();
-					HttpResponse httpResponse= selectedInteraction.getHttpResponse();
-					if (httpRequest != null) {
-						reqOriginalEditorPane.setText(httpRequest.getHttpHeader() + "\n\n" +
-								httpRequest.getFormattedContent());
-						//nechceme odscrollovat dolu
-						reqOriginalEditorPane.setCaretPosition(0);
-						
-						reqChangedEditorPane.setText(httpRequest.getChangedHttpHeader() + "\n\n" + 
-								httpRequest.getChangedFormattedContent());
-						//nechceme odscrollovat dolu
-						reqChangedEditorPane.setCaretPosition(0);
-					}
-					if (httpResponse != null) {
-						resOriginalEditorPane.setText(httpResponse.getHttpHeader() + "\n\n" +
-								httpResponse.getFormattedContent());
-						//nechceme odscrollovat dolu
-						resOriginalEditorPane.setCaretPosition(0);
-						
-						resChangedEditorPane.setText(httpResponse.getChangedHttpHeader() + "\n\n" +
-								httpResponse.getChangedFormattedContent());
-						//nechceme odscrollovat dolu
-						resChangedEditorPane.setCaretPosition(0);
+					
+					if(controller.getInteractionMap().containsKey(port))
+					{
+						HttpInteraction selectedInteraction= controller.getInteractionMap().get(port);
+					
+						HttpRequest httpRequest= selectedInteraction.getHttpRequest();
+						HttpResponse httpResponse= selectedInteraction.getHttpResponse();
+						if (httpRequest != null) {
+							reqOriginalEditorPane.setText(httpRequest.getHttpHeader() + "\n\n" +
+									httpRequest.getFormattedContent());
+							//nechceme odscrollovat dolu
+							reqOriginalEditorPane.setCaretPosition(0);
+							
+							reqChangedEditorPane.setText(httpRequest.getChangedHttpHeader() + "\n\n" + 
+									httpRequest.getChangedFormattedContent());
+							//nechceme odscrollovat dolu
+							reqChangedEditorPane.setCaretPosition(0);
+						}
+						if (httpResponse != null) {
+							resOriginalEditorPane.setText(httpResponse.getHttpHeader() + "\n\n" +
+									httpResponse.getFormattedContent());
+							//nechceme odscrollovat dolu
+							resOriginalEditorPane.setCaretPosition(0);
+							
+							resChangedEditorPane.setText(httpResponse.getChangedHttpHeader() + "\n\n" +
+									httpResponse.getChangedFormattedContent());
+							//nechceme odscrollovat dolu
+							resChangedEditorPane.setCaretPosition(0);
+						}
+					}else{
+						reqOriginalEditorPane.setText("");
+						reqChangedEditorPane.setText("");
+						resOriginalEditorPane.setText("");
+						resChangedEditorPane.setText("");
 					}
 				}
 				

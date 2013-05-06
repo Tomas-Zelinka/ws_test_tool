@@ -120,5 +120,19 @@ public interface HttpMessage {
 	 */
 	public void setChangedFormattedContent(String changedFormattedContent);
 	
+	/**
+	 * This method allows check wether the message was changed during
+	 * the injection phase
+	 * 
+	 * @return boolean value determining change in the message 
+	 */
+	public boolean isChanged();
+	
+	/**
+	 * Method for set changed flag in the message. The flag is for
+	 * determining whether the message was changed
+	 * @param status
+	 */
+	public void setChanged(boolean status);
 	
 }

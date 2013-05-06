@@ -53,6 +53,7 @@ public class DelayFault extends Fault {
 		
 		try {
 			Thread.sleep(numOfMilis);
+			message.setChanged(true);
 		}
 		catch (InterruptedException ex) {
 			System.err.println(ex.getMessage());

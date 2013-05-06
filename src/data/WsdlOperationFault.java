@@ -134,6 +134,7 @@ public class WsdlOperationFault extends Fault {
 						
 			outputter= new XMLOutputter(Format.getPrettyFormat());
 			message.setChangedFormattedContent(StringEscapeUtils.unescapeXml(outputter.outputString(document)));
+			message.setChanged(true);
 			
 		}
 		

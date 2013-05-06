@@ -86,6 +86,7 @@ public class StringCorruptionFault extends Fault {
 		
 		message.setChangedContent(changedContent);
 		message.setChangedFormattedContent(changedFormattedContent);
+		message.setChanged(true);
 			
 	}
 	

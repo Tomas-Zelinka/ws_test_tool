@@ -46,6 +46,7 @@ public class EmptyingFault extends Fault {
 	@Override
 	public void inject(HttpMessage message) {
 		
+		message.setChanged(true);
 		message.setChangedContent("");
 		message.setChangedFormattedContent("");
 	}

@@ -58,10 +58,11 @@ public class HeaderCorruptionFault extends Fault {
 	@Override
 	public void inject(HttpMessage message) {
 		
+		
 		String changedHeader= new String(message.getHttpHeader());
 		changedHeader= changedHeader.replaceAll(originalSubstring, changedSubstring);
 		message.setChangedHttpHeader(changedHeader);
-		
+		message.setChanged(true);
 		
 	}
 

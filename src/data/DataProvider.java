@@ -24,7 +24,7 @@ import com.thoughtworks.xstream.XStream;
 public class DataProvider {
 	
 	private XStream stream;
-	private static final String resourcePath = File.separator+ "resources" + File.separator;
+	private static final String resourcePath = ".."+File.separator+ "resources" + File.separator;
 	
 	public DataProvider(){
 		stream = new XStream();

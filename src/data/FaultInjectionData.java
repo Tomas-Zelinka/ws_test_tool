@@ -7,6 +7,7 @@
 package data;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +20,12 @@ import proxyUnit.HttpMessage;
  * Trida predstavuje testovaci pravidlo sestavajici z mnoziny podminek a seznamu poruch.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
  */
-public class FaultInjectionData {
+public class FaultInjectionData implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1225218084143065994L;
 	
 	private int testId;
 	private String testName;

@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import logging.ConsoleLog;
+
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -45,6 +48,12 @@ public class HttpMessageParser {
 			matcher= pattern.matcher(rawMessage);
 			String httpMethod= null;
 			String uri= null;
+			String contentType = null;
+			String httpHeader= null;
+			int contentLength= -1;
+			String transferEncoding= null;
+			String contentEncoding= null;
+			
 			if (matcher.find()) {
 				httpMethod= matcher.group(1);
 				uri= matcher.group(2);
@@ -66,15 +75,14 @@ public class HttpMessageParser {
 			//TODO: tohle muze fungovat jen pokud prazdny radek vypada: \r\n\r\n
 			pattern= Pattern.compile("^(.+?\\s\\s\\s\\s)", Pattern.DOTALL);
 			matcher= pattern.matcher(rawMessage);
-			String httpHeader= null;
 			if (matcher.find()) {
+				System.out.println("mam hlavicku");
 				httpHeader= matcher.group(1);
 			}
 			
 			//parsujeme velikost tela http zpravy
 			pattern= Pattern.compile("^Content-Length: ([0-9]+)$", Pattern.MULTILINE);
 			matcher= pattern.matcher(rawMessage);
-			int contentLength= -1;
 			if (matcher.find()) {
 				String result= matcher.group(1);
 				contentLength= Integer.parseInt(result);
@@ -83,7 +91,6 @@ public class HttpMessageParser {
 			//parsujeme prenosove kodovani http zpravy
 			pattern= Pattern.compile("^Transfer-Encoding: ([a-z]+)$", Pattern.MULTILINE);
 			matcher= pattern.matcher(rawMessage);
-			String transferEncoding= null;
 			if (matcher.find()) {
 				transferEncoding= matcher.group(1);
 			}
@@ -91,13 +98,19 @@ public class HttpMessageParser {
 			//parsujeme kodovani obsahu http zpravy
 			pattern= Pattern.compile("^Content-Encoding: ([a-z]+)$", Pattern.MULTILINE);
 			matcher= pattern.matcher(rawMessage);
-			String contentEncoding= null;
 			if (matcher.find()) {
 				contentEncoding= matcher.group(1);
 			}
 			
+			//parsujeme kodovani obsahu http zpravy
+			pattern= Pattern.compile("^Content-Type: (.*)$", Pattern.MULTILINE);
+			matcher= pattern.matcher(rawMessage);
+			if (matcher.find()) {
+				contentType= matcher.group(1);
+			}
+			
 			return new HttpRequest(httpMethod, initiatorIp, initiatorPort, uri, httpHeader, contentLength, 
-					transferEncoding, contentEncoding, false);
+					transferEncoding, contentEncoding, contentType, false);
 		}
 			
 		//jedna se o http response
@@ -106,11 +119,16 @@ public class HttpMessageParser {
 			//HTTP/1.1 200 OK
 			String initiatorIp= incomingSocket.getInetAddress().getHostAddress();
 			int initiatorPort= incomingSocket.getLocalPort();
+			int contentLength= -1;
+			String httpCode = null;
+			String httpCodeDesc = null;
+			String httpHeader = null;
+			String transferEncoding = null;
+			String contentEncoding = null;
+			String contentType = null;
 			
 			pattern= Pattern.compile("^HTTP[^ ]* ([^ ]*) (.*)$", Pattern.MULTILINE);
 			matcher= pattern.matcher(rawMessage);
-			String httpCode= null;
-			String httpCodeDesc= null;
 			if (matcher.find()) {
 				httpCode= matcher.group(1);
 				httpCodeDesc= matcher.group(2);
@@ -120,7 +138,6 @@ public class HttpMessageParser {
 			//TODO: tohle muze fungovat jen pokud prazdny radek vypada: \r\n\r\n
 			pattern= Pattern.compile("^(.+?\\s\\s\\s\\s)", Pattern.DOTALL);
 			matcher= pattern.matcher(rawMessage);
-			String httpHeader= null;
 			if (matcher.find()) {
 				httpHeader= matcher.group(1);
 			}
@@ -128,7 +145,6 @@ public class HttpMessageParser {
 			//parsujeme velikost tela http zpravy
 			pattern= Pattern.compile("^Content-Length: ([0-9]+)$", Pattern.MULTILINE);
 			matcher= pattern.matcher(rawMessage);
-			int contentLength= -1;
 			if (matcher.find()) {
 				String result= matcher.group(1);
 				contentLength= Integer.parseInt(result);
@@ -137,7 +153,6 @@ public class HttpMessageParser {
 			//parsujeme prenosove kodovani http zpravy
 			pattern= Pattern.compile("^Transfer-Encoding: ([a-z]+)$", Pattern.MULTILINE);
 			matcher= pattern.matcher(rawMessage);
-			String transferEncoding= null;
 			if (matcher.find()) {
 				transferEncoding= matcher.group(1);
 			}
@@ -145,13 +160,19 @@ public class HttpMessageParser {
 			//parsujeme kodovani obsahu http zpravy
 			pattern= Pattern.compile("^Content-Encoding: ([a-z]+)$", Pattern.MULTILINE);
 			matcher= pattern.matcher(rawMessage);
-			String contentEncoding= null;
 			if (matcher.find()) {
 				contentEncoding= matcher.group(1);
 			}
 			
+			//parsujeme kodovani obsahu http zpravy
+			pattern= Pattern.compile("^Content-Type: (.*)$", Pattern.MULTILINE);
+			matcher= pattern.matcher(rawMessage);
+			if (matcher.find()) {
+				contentType= matcher.group(1);
+			}
+			
 			return new HttpResponse(httpCode,initiatorIp,initiatorPort, httpCodeDesc, null, httpHeader, contentLength, transferEncoding,
-					contentEncoding, false);
+					contentEncoding,contentType, false);
 		}
 	}
 	
@@ -162,9 +183,9 @@ public class HttpMessageParser {
 	 */
 	public static String formatXmlMessage(String xmlMessage) {
 		
-		System.out.println("++++++++++++++++++++++++++");
-		System.out.println(xmlMessage);
-		System.out.println("++++++++++++++++++++++++++");
+		//ConsoleLog.Print("++++++++++++++++++++++++++");
+		//ConsoleLog.Print(xmlMessage);
+		//ConsoleLog.Print("++++++++++++++++++++++++++");
 		try {
 			SAXBuilder builder= new SAXBuilder();
 			Document document= builder.build(new ByteArrayInputStream(xmlMessage.getBytes()));
@@ -202,26 +223,24 @@ public class HttpMessageParser {
 	public static void parseHttpContent(HttpMessage httpMessage, String rawMessage, boolean chunkedEncoding) {
 		
 		//parsujeme obsah zpravy
-		Pattern pattern= Pattern.compile("<\\?xml.*", Pattern.DOTALL);
-		Matcher matcher= pattern.matcher(rawMessage);
+		String strContentType = httpMessage.getContentType();
 		String content= null;
-		if (matcher.find()) {
-			content= matcher.group(0);
-		}
-			
-
-		//naformatujeme obsah
-		String formattedContent= null;
-		if (content == null) {
-			content= "";
-			formattedContent= "";
-		}
-		else
-			formattedContent= formatXmlMessage(content);
+		Pattern pattern = Pattern.compile("^(.+?\\s\\s\\s\\s)(.*)", Pattern.DOTALL);
+		Matcher matcher = pattern.matcher(rawMessage);
 		
+		if (matcher.find()) {
+			content= matcher.group(2);
+		}else{
+			content= "";
+		}
+		
+		ConsoleLog.Print(strContentType);
+		//pattern= Pattern.compile("<\\?xml.*", Pattern.DOTALL);
+		//matcher= pattern.matcher(rawMessage);
+			
 		//nastaveni nove ziskanych atributu
 		httpMessage.setContent(content);
-		httpMessage.setFormattedContent(formattedContent);
+		
 		
 	}
 	
@@ -240,9 +259,13 @@ public class HttpMessageParser {
 		
 		Pattern pattern= Pattern.compile("^Content-Length: [0-9]+$", Pattern.MULTILINE);
 		Matcher matcher= pattern.matcher(changedHeader);
-		changedHeader= matcher.replaceFirst("Content-Length: " + (httpMessage.getChangedContent().getBytes().length));
+		String content = null;
+		if(httpMessage.isChanged())
+			content = httpMessage.getChangedContent();
+		else
+			content = httpMessage.getContent();
 		//changedHeader= matcher.replaceFirst("Content-Length: 204");
-		
+			changedHeader= matcher.replaceFirst("Content-Length: " + (content.getBytes().length));
 		//nastaveni pozmenene hlavicky
 		httpMessage.setChangedHttpHeader(changedHeader);
 	}

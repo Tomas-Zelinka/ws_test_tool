@@ -135,4 +135,8 @@ public interface HttpMessage {
 	 */
 	public void setChanged(boolean status);
 	
+	
+	public String getContentType();
+	public void setContentType(String contentType);
+	
 }

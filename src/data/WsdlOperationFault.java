@@ -131,9 +131,6 @@ public class WsdlOperationFault extends Fault {
 					
 			//odstranit encoding, ktery XMLOutputter implicitne vytvori
 			message.setChangedContent(xmlResult.replaceFirst("encoding=\"UTF-8\"", ""));
-						
-			outputter= new XMLOutputter(Format.getPrettyFormat());
-			message.setChangedFormattedContent(StringEscapeUtils.unescapeXml(outputter.outputString(document)));
 			message.setChanged(true);
 			
 		}

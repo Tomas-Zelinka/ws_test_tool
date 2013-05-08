@@ -104,26 +104,14 @@ public class MainWindow extends JFrame{
 	private int panelType;
 	protected TestCaseEditor editor;
 	private Statistics statsPanel;
-	//private RemoteControl remoteControlPanel;
-	private ProxyMonitor proxyPanel;
-	private  TestingMonitor testUnitPanel;
+	private ProxyMonitor proxyUnitPanel;
+	private  TestMonitor testUnitPanel;
 	private Navigator navigator;
 	
 	private Component toolBox;
 	private JToolBar testCaseToolBox; 
 	private JToolBar testUnitToolBox;
-	private JToolBar proxyToolBox;
-	
-	private JButton saveTestCase;
-	private JButton generateRequest;
-	private JButton addUnit;
-	private JButton removeUnit;
-	private JButton runUnit;
-	private JButton runAllUnits;
-	private JButton saveTestList;
-	private JButton insertTestCase;
-	private JButton removeTestCase;
-	private JButton exportConfiguration;
+	private JToolBar proxyUnitToolBox;
 	
 	public static final int TESTCASE_EDITOR = 0;
 	public static final int PROXY_MONITOR = 1;
@@ -149,6 +137,7 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	public MainWindow(UnitController testUnitController){
+		
 		initMainWindow(testUnitController);
 		this.pack();
 	}
@@ -168,7 +157,7 @@ public class MainWindow extends JFrame{
 		}else if(box == MainWindow.TESTUNIT_TOOLBOX){
 			this.toolBox = testUnitToolBox;
 		}else if(box == MainWindow.PROXYMON_TOOLBOX){
-			this.toolBox = proxyToolBox;
+			this.toolBox = proxyUnitToolBox;
 		}
 		
 		getContentPane().add(this.toolBox,BorderLayout.NORTH);
@@ -178,6 +167,7 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	public static String getEndpointPath(){
+		
 		return MainWindow.endpointPath;
 	}
 	
@@ -186,6 +176,7 @@ public class MainWindow extends JFrame{
 	 * @param path
 	 */
 	public static void setEndpointPath(String path){
+		
 		MainWindow.endpointPath = path;
 	}
 	
@@ -194,6 +185,7 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	public static String getCasePath(){
+		
 		return MainWindow.casePath;
 	}
 	
@@ -212,6 +204,7 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	public static String getSuitePath(){
+		
 		return MainWindow.suitePath;
 	}
 	
@@ -220,6 +213,7 @@ public class MainWindow extends JFrame{
 	 * @param path
 	 */
 	public static void setSuitePath(String path){
+		
 		MainWindow.suitePath = getDataRoot()+File.separator+path;
 		ConsoleLog.Print("[MainWindow] Suite path set to: " + MainWindow.suitePath);
 	}
@@ -228,6 +222,7 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	public static String getDataRoot(){
+		
 		return MainWindow.dataRoot;
 	}
 	
@@ -236,25 +231,31 @@ public class MainWindow extends JFrame{
 	 * @param path
 	 */
 	public static void setDataRoot(String root){
+		
 		MainWindow.dataRoot = root;
 	}
 	
 	public int getPanelType(){
+		
 		return this.panelType;
 	}
 	public void setPanelType(int type){
+		
 		this.panelType = type;
 	}
 	
 	public void closeTestCase(){
+		
 		this.editor.closeTestCase(getPanelType()); 
 	}
 	
 	public void refreshTree(){
+		
 		Navigator.refreshTree();
 	}
 	
 	public void insertTestCase(){
+		
 		testUnitPanel.insertTestCase(MainWindow.getCasePath());
 	}
 	
@@ -263,6 +264,7 @@ public class MainWindow extends JFrame{
 	 * @return
 	 */
 	public Component getPanel() throws EmptyComponentException{
+		
 		if(this.centerComponent == null){
 			throw new EmptyComponentException();
 		}else{
@@ -270,9 +272,13 @@ public class MainWindow extends JFrame{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param component
+	 */
 	public void setContent(int component) {
 		
-		this.centerPane.remove(this.centerComponent);//this.panelPane = this.centerComponent);
+		this.centerPane.remove(this.centerComponent);
 		
 		switch(component){
 			case TESTCASE_EDITOR:
@@ -281,7 +287,7 @@ public class MainWindow extends JFrame{
 				break;
 			case PROXY_MONITOR: 
 				setToolBox(MainWindow.PROXYMON_TOOLBOX);
-				this.centerComponent = this.proxyPanel;
+				this.centerComponent = this.proxyUnitPanel;
 				break;
 			case STATISTICS: 
 				this.centerComponent = this.statsPanel;
@@ -295,18 +301,24 @@ public class MainWindow extends JFrame{
 				break;
 		}
 		
-		//this.panelPane =  this.centerComponent;
 		this.centerPane.setRightComponent(this.centerComponent);
 		getCenterPane().revalidate();
 		getCenterPane().repaint();
 		this.pack();
 	}
 
+	/**
+	 * 
+	 */
 	public void openTestList(){
+		
 		this.testUnitPanel.openTestList(MainWindow.getSuitePath()+File.separator+"testlist.xml");
 		setContent(MainWindow.TESTING_UNIT);
 	}
 	
+	/**
+	 * 
+	 */
 	public void openTestCaseEditor(){
 		
 		int panelType = getPanelType();
@@ -346,8 +358,8 @@ public class MainWindow extends JFrame{
 	/**
 	 * 
 	 */
-	private void initMainWindow(UnitController testUnitController)
-	{
+	private void initMainWindow(UnitController testUnitController){
+		
 		this.setTitle(this.APP_NAME);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		 
@@ -355,7 +367,6 @@ public class MainWindow extends JFrame{
 		int x = (dim.width-(this.WIDTH))/2;
 		int y = (dim.height-(this.HEIGTH))/2;
 		 
-		//this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBounds(x, y, this.WIDTH, this.HEIGTH);
 		this.setMinimumSize(new Dimension(this.WIDTH,this.HEIGTH));
@@ -374,6 +385,7 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	private void initMenuBar(){
+		
 		this.setJMenuBar(new Menu());
 	}
 	
@@ -381,20 +393,20 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	private void initContentPane(UnitController testUnitController){
+		
 		this.editor = new TestCaseEditor();
-		this.proxyPanel = new ProxyMonitor(testUnitController);
-		//this.remoteControlPanel = new RemoteControl();
+		this.proxyUnitPanel = new ProxyMonitor(testUnitController);
 		this.statsPanel = new Statistics();
-		this.testUnitPanel = new TestingMonitor(testUnitController);
+		this.testUnitPanel = new TestMonitor(testUnitController);
 		this.centerComponent = new JPanel();
 		this.panelType = 0;
-		//this.panelPane = (JPanel)this.centerComponent;
 	}
 	
 	/**
 	 * 
 	 */
 	private void initCenterPane(){
+		
 		File root = new File(MainWindow.getDataRoot());
 		
 		if(!root.exists()){
@@ -412,6 +424,7 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	private JSplitPane getCenterPane(){
+		
 		return this.centerPane;
 	}
 	
@@ -420,75 +433,75 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	private void initBottomPane(){
+		
 		this.console = new Console();
 		this.bottomPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,getCenterPane(),this.console);
 		this.bottomPane.setDividerSize(SPLIT_RESIZERS_WIDTH);
 		this.bottomPane.setResizeWeight(0.90);
 	}
 	
+	
+	/**
+	 * 
+	 * @param menu
+	 * @param label
+	 * @param listener
+	 */
+	private void addToolBarItem(JToolBar menu,String label,ActionListener listener){
+		
+		JButton button = new JButton(label);
+		button.addActionListener(listener);
+		menu.add(button);
+	}
+	
+	
 	/**
 	 * 
 	 */
 	private void initToolBox(){
+		
 		this.toolBox = null;
 		testCaseToolBox = new JToolBar();
 		testUnitToolBox = new JToolBar();
-		proxyToolBox = new JToolBar();
+		proxyUnitToolBox = new JToolBar();
 				
 		testCaseToolBox.setFloatable(false);
 		testUnitToolBox.setFloatable(false);
-		proxyToolBox.setFloatable(false);
+		proxyUnitToolBox.setFloatable(false);
 		
-		saveTestCase = new JButton("Save TestCase");
-		saveTestCase.addActionListener(new SaveTestCaseListener());
+		addToolBarItem(testCaseToolBox,"Save TestCase",new SaveTestCaseListener());
+		addToolBarItem(testCaseToolBox,"Generate content",new GenerateRequestListener());
 		
-		addUnit = new JButton("Add Remote Unit");
-		addUnit.addActionListener(new AddUnitListener());
+		addToolBarItem(testUnitToolBox,"Insert Test Case",new InsertTestCaseListener());
+		addToolBarItem(testUnitToolBox,"Remove Test Case",new RemoveTestCaseListener());
+		addToolBarItem(testUnitToolBox,"Run Tests",new RunTestUnitListener());
+		addToolBarItem(testUnitToolBox,"Run All Units",new RunAllTestUnitsListener());
+		addToolBarItem(testUnitToolBox,"Save Test List",new SaveTestListListener());
+		addToolBarItem(testUnitToolBox,"Add Remote Unit",new AddTestUnitListener());
+		addToolBarItem(testUnitToolBox,"Remove Test Unit",new RemoveTestUnitListener());
 		
-		removeUnit = new JButton("Remove Remote Unit");
-		removeUnit.addActionListener(new RemoveUnitListener());
-		
-		runUnit = new JButton("Run Tests");
-		runUnit.addActionListener(new RunUnitListener());
-		
-		runAllUnits = new JButton("Run All Units");
-		runAllUnits.addActionListener(new RunAllUnitsListener());
-		
-		saveTestList =  new JButton("Save Test List");
-		saveTestList.addActionListener(new SaveTestListListener());
-		
-		insertTestCase =  new JButton("Insert Test Case");
-		insertTestCase.addActionListener(new InsertTestCaseListener());
-		
-		removeTestCase =  new JButton("Remove Test Case");
-		removeTestCase.addActionListener(new RemoveTestCaseListener());
-		
-		exportConfiguration =  new JButton("Export Unit Configuration");
-		exportConfiguration.addActionListener(new ExportConfigurationListener());
-		
-		generateRequest = new JButton("Generate content");
-		generateRequest.addActionListener(new GenerateRequestListner());
-		
-		testCaseToolBox.add(saveTestCase);
-		testCaseToolBox.add(generateRequest);
-		
-		testUnitToolBox.add(runUnit);
-		testUnitToolBox.add(runAllUnits);
-		testUnitToolBox.add(insertTestCase);
-		testUnitToolBox.add(removeTestCase);
-		testUnitToolBox.add(saveTestList);
-		testUnitToolBox.add(addUnit);
-		testUnitToolBox.add(removeUnit);
-		testUnitToolBox.add(exportConfiguration);
+		addToolBarItem(proxyUnitToolBox,"Run Unit",new RunProxyListener());
+		addToolBarItem(proxyUnitToolBox,"Stop Unit",new StopProxyListener());
+		addToolBarItem(proxyUnitToolBox,"Add Remote Unit",new AddProxyUnitListener());
+		addToolBarItem(proxyUnitToolBox,"Remove Remote Unit",new RemoveProxyUnitListener());
 	}
+	
+	
+	
+	/********************************************* BUTTON LISTENERS **********************************************************/
+	
+	
 	private class SaveTestCaseListener implements ActionListener{
+		
 		public void actionPerformed(ActionEvent e){
 			ConsoleLog.Print("[MainWindow] Save testcase clicked");
 			editor.saveTestCase();
 		}
 	}
 	
-	private class AddUnitListener implements ActionListener{
+	
+	private class AddTestUnitListener implements ActionListener{
+		
 		public void actionPerformed (ActionEvent e){
 			ConsoleLog.Print("[MainWindow] Add Unit clicked");
 			int port = 0;
@@ -503,37 +516,46 @@ public class MainWindow extends JFrame{
 			}
 		}
 	}
-	private class RemoveUnitListener implements ActionListener{
+	
+	private class RemoveTestUnitListener implements ActionListener{
+		
 		public void actionPerformed (ActionEvent e){
 			ConsoleLog.Print("[MainWindow] Remove Unit clicked");
 			testUnitPanel.removeUnit();
 		}
 	}
 	
-	private class RunUnitListener implements ActionListener{
+	
+	private class RunTestUnitListener implements ActionListener{
+		
 		public void actionPerformed (ActionEvent e){
 			//final String path = testListPath;
-			testUnitPanel.runUnit(MainWindow.getSuitePath()+File.separator+"testlist.xml",testUnitPanel.getUnitKey());
-			//testUnitPanel.runUnit(MainWindow.getDataRoot()+File.separator+MainWindow.getSuitePath()+File.separator+"testlist.xml");
+			testUnitPanel.runUnit(MainWindow.getSuitePath()+File.separator+"testlist.xml");
 			ConsoleLog.Print("[MainWindow] Run Unit clicked");
 		}
 	}
 	
-	private class RunAllUnitsListener implements ActionListener{
+	
+	private class RunAllTestUnitsListener implements ActionListener{
+		
 		public void actionPerformed (ActionEvent e){
 			ConsoleLog.Print("[MainWindow] Run All Units clicked");
 			testUnitPanel.runAllUnits(MainWindow.getSuitePath()+File.separator+"testlist.xml");
 		}
 	}
 	
+	
 	private class SaveTestListListener implements ActionListener{
+		
 		public void actionPerformed (ActionEvent e){
 			testUnitPanel.saveTestList(MainWindow.getSuitePath()+File.separator+"testlist.xml");
 			ConsoleLog.Print("[MainWindow] Save Test List clicked");
 		}
 	}
 	
+	
 	private class InsertTestCaseListener implements ActionListener{
+		
 		public void actionPerformed (ActionEvent e){
 			insertTestCase();
 			ConsoleLog.Print("[MainWindow] Insert Test Case clicked");
@@ -542,19 +564,16 @@ public class MainWindow extends JFrame{
 	
 	
 	private class RemoveTestCaseListener implements ActionListener{
+		
 		public void actionPerformed (ActionEvent e){
 			testUnitPanel.removeTestCase();
 			ConsoleLog.Print("[MainWindow] Remove Test Case clicked");
 		}
 	}
 	
-	private class ExportConfigurationListener implements ActionListener{
-		public void actionPerformed (ActionEvent e){
-			ConsoleLog.Print("[MainWindow] Export Configuration clicked");
-		}
-	}
 	
-	private class GenerateRequestListner implements ActionListener{
+	private class GenerateRequestListener implements ActionListener{
+		
 		public void actionPerformed(ActionEvent e){
 			GenerateFromWSDLDialog window = new GenerateFromWSDLDialog(); 
 			editor.setHttpBody(window.getGeneratedContent());
@@ -564,4 +583,55 @@ public class MainWindow extends JFrame{
 			}
 		}
 	}
+	
+	
+	private class RemoveProxyUnitListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			proxyUnitPanel.removeUnit();
+			ConsoleLog.Print("[MainWindow] Remove Proxy Unit clicked");
+		}
+	}
+	
+	
+	private class AddProxyUnitListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			ConsoleLog.Print("[MainWindow] Add Proxy Unit clicked");
+			
+			int port = 0;
+			String host= "";
+			AddRemoteUnitDialog window = new AddRemoteUnitDialog();
+			window.setVisible(true);
+			
+			if(window.isOkButtonClicked()){
+				port = window.getPort();
+				host = window.getHost();
+				proxyUnitPanel.addUnit(host,port);
+			}
+			
+			
+		}
+	}
+	
+	
+	private class RunProxyListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			proxyUnitPanel.runUnit(MainWindow.getCasePath());
+			ConsoleLog.Print("[MainWindow] Run Proxy Unit clicked");
+		}
+	}
+	
+	
+	private class StopProxyListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			proxyUnitPanel.stopUnit();
+			ConsoleLog.Print("[MainWindow] Stop Proxy Unit clicked");
+		}
+	}
+	
+	
+	
 }

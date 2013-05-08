@@ -79,13 +79,9 @@ public class StringCorruptionFault extends Fault {
 	public void inject(HttpMessage message) {
 		
 		String changedContent= message.getChangedContent();
-		String changedFormattedContent= message.getChangedFormattedContent();
-				
 		changedContent= changedContent.replaceAll(originalSubstring, changedSubstring);
-		changedFormattedContent= changedFormattedContent.replaceAll(originalSubstring, changedSubstring);
 		
 		message.setChangedContent(changedContent);
-		message.setChangedFormattedContent(changedFormattedContent);
 		message.setChanged(true);
 			
 	}

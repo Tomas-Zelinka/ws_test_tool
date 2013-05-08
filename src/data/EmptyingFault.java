@@ -48,7 +48,6 @@ public class EmptyingFault extends Fault {
 		
 		message.setChanged(true);
 		message.setChangedContent("");
-		message.setChangedFormattedContent("");
 	}
 
 	

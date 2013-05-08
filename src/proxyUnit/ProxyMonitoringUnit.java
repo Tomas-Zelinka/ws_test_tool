@@ -7,19 +7,17 @@
 package proxyUnit;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import logging.ConsoleLog;
+import rmi.ProxyUnit;
 import data.FaultInjectionData;
 
 /**
@@ -28,9 +26,13 @@ import data.FaultInjectionData;
  * k analyze jednotce pro vkladani poruch.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
  */
-public class ProxyMonitoringUnit {
+public class ProxyMonitoringUnit extends UnicastRemoteObject implements ProxyUnit {
 	
-		
+		 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6233462980730094861L;
 	private int proxyPort= 55555;
 	private int testedWsPort= 80;
 	private String proxyHost= "localhost";
@@ -45,11 +47,10 @@ public class ProxyMonitoringUnit {
 	private Integer interactionId= 0;
 	private Map<Integer, HttpInteraction> interactionMap= new ConcurrentHashMap<Integer, HttpInteraction>();
 	
-	private List<NewMessageListener> newMessageListenerList= new ArrayList<NewMessageListener>();
-	private List<UnknownHostListener> unknownHostListenerList= new ArrayList<UnknownHostListener>();
+	private ProxyListener panelListener;
 	
 	
-	public ProxyMonitoringUnit() {
+	public ProxyMonitoringUnit() throws RemoteException{
 		
 		proxyFlag= false;
 		faultInjector= new FaultInjector();
@@ -88,7 +89,7 @@ public class ProxyMonitoringUnit {
 	 * Metoda pro nastaveni aktivniho testu.
 	 * @param activeTest aktivni test
 	 */
-	public void setActiveTest(FaultInjectionData activeTest) {
+	public void setActiveTest(FaultInjectionData activeTest) throws RemoteException {
 		
 		faultInjector.setActiveTest(activeTest);
 	}
@@ -102,9 +103,6 @@ public class ProxyMonitoringUnit {
 		return faultInjector.getActiveTest();
 	}
 	
-	
-	
-	
 	/**
 	 * Metoda pro nastaveni id interakce.
 	 * @param interactionId id interakce
@@ -113,25 +111,25 @@ public class ProxyMonitoringUnit {
 		
 		this.interactionId = interactionId;
 	}
-		
 
-	
-	
-	private synchronized boolean isProxyFlag() {
+	private boolean isProxyFlag() {
 		
 		return proxyFlag;
 	}
 
-	private synchronized void setProxyFlag(boolean proxyFlag) {
+	private void setProxyFlag(boolean proxyFlag) {
 		
 		this.proxyFlag= proxyFlag;
 	}
-			
+	
+	public  String testConnection() throws RemoteException{
+		return "Connected";
+	}
 	
 	/**
 	 * Metoda pro spusteni proxy serveru.
 	 */ 
-	public void run() {
+	public void run() throws RemoteException{
 		
 		setProxyFlag(true);
 		try {
@@ -179,7 +177,7 @@ public class ProxyMonitoringUnit {
 	/**
 	 * Metoda pro zavreni soketu a tim i zastaveni proxy serveru.
 	 */
-	public void stopProxy() {
+	public void stopProxy() throws RemoteException{
 		
 		setProxyFlag(false);
 		try {
@@ -196,49 +194,12 @@ public class ProxyMonitoringUnit {
 	}
 	
 	
-	/**
-	 * Metoda k ziskani seznamu interakci.
-	 * @return seznam interakci
-	 */
-	public Map<Integer, HttpInteraction> getInteractionMap() {
-		
-		return interactionMap;
-	}
-	
 
-	/**
-	 * Metoda pro ziskani URI proxy hostu
-	 * @return proxy host URI
-	 */
-	public String getProxyHost() {
-		
-		return this.getProxyHost();
-	}
-
-	/**
-	 * Metoda pro ziskani portu, na kterem nasloucha proxy server.
-	 * @return port proxy serveru
-	 */
-	public int getProxyPort() {
-		
-		return this.getProxyPort();
-	}
-
-	/**
-	 * Metoda pro ziskani portu, na kterem bezi testovana sluzba.
-	 * @return port testovane sluzby
-	 */
-	public int getTestedWsPort() {
-		
-		return this.getTestedWsPort();
-	}
-	
-	
 	/**
 	 * Metoda pro nastaveni portu, na kterem nasloucha testovana webova sluzba.
 	 * @param proxyHost port testovane webove sluzby
 	 */
-	public void setProxyHost(String host) {
+	public void setProxyHost(String host) throws RemoteException {
 		
 		this.proxyHost = host ;
 	}
@@ -247,7 +208,7 @@ public class ProxyMonitoringUnit {
 	 * Metoda pro nastaveni portu, na kterem nasloucha proxy server.
 	 * @param proxyPort port proxy serveru
 	 */
-	public void setProxyPort(int port) {
+	public void setProxyPort(int port) throws RemoteException {
 		
 		this.proxyPort = port;
 	}
@@ -256,7 +217,7 @@ public class ProxyMonitoringUnit {
 	 * Metoda pro nastaveni URI proxy hostu.
 	 * @param testedWsPort URI proxy hostu
 	 */
-	public void setTestedWsPort(int port) {
+	public void setTestedWsPort(int port) throws RemoteException {
 		
 		this.testedWsPort =port;
 	}
@@ -266,38 +227,27 @@ public class ProxyMonitoringUnit {
 	 * Metoda pro zaregistrovani odberatele udalosti o nove zprave (soucast navrhoveho vzoru Observer).
 	 * @param listener odberatel
 	 */
-	public void addNewMessageListener(NewMessageListener listener) {
+	public void setPanelListener(ProxyListener listener) throws RemoteException{
 		
-		newMessageListenerList.add(listener);
+		this.panelListener = listener;
 	}
 	
 	/**
 	 * Metoda pro upozorneni vsech odberatelu o udalosti prichodu nove zpravy (soucast navrhoveho vzoru
 	 * Observer).
 	 */
-	private void publishNewMessageEvent(int interactionId, HttpInteraction interaction) {
+	private void publishNewMessageEvent(int interactionId, HttpInteraction interaction) throws RemoteException {
 		
-		for (NewMessageListener currentListener : newMessageListenerList)
-			currentListener.onNewMessageEvent(interactionId, interaction);
+		this.panelListener.onNewMessageEvent(interactionId, interaction);
 	}
-	
-	/**
-	 * Metoda pro zaregistrovani odberatele udalosti o nove zpravy (soucast navrhoveho vzoru Observer).
-	 * @param listener odberatel
-	 */
-	public void addUnknownHostListener(UnknownHostListener listener) {
 		
-		unknownHostListenerList.add(listener);
-	}
-	
 	/**
 	 * Metoda pro upozorneni vsech odberatelu o udalosti prichodu nove zpravy (soucast navrhoveho vzoru
 	 * Observer). Protected...je volano z ProxyMonitoringUnit.
 	 */
-	public void publishUnknownMessageEvent() {
+	public void publishUnknownMessageEvent() throws RemoteException{
 		
-		for (UnknownHostListener currentListener : unknownHostListenerList)
-			currentListener.onUnknownHostEvent();
+		this.panelListener.onUnknownHostEvent();
 	}
 	
 	/**
@@ -308,15 +258,6 @@ public class ProxyMonitoringUnit {
 	 * @param httpMessage nova zprava
 	 */
 	public void newMessageNotifier(int interactionId, HttpMessage httpMessage) {
-		
-		//SITUACE KDY SPOJENI NENI RADNE UKONCENO A PROXY VLAKNA BEZI
-		//je potreba inkrementovat id interakce..jinak se bude v GUI prepisovat porad stejny radek
-		while (interactionMap.get(interactionId) != null && interactionMap.get(interactionId).getHttpRequest() != null &&
-				interactionMap.get(interactionId).getHttpResponse() != null) {
-			
-			//interactionId++;
-//			/this.setInteractionId(interactionId);
-		}
 		
 		ConsoleLog.Print("[ProxyUnit] zapisuju interakci" + interactionId);
 		//int port = httpMessage.getInitiatorPort();
@@ -330,6 +271,8 @@ public class ProxyMonitoringUnit {
 				interaction.setHttpRequest((HttpRequest) httpMessage);
 			else
 				interaction.setHttpResponse((HttpResponse) httpMessage);
+			
+			interaction.setName(getActiveTest().getTestName());
 			
 			//vlozeni objektu interakce do mapy
 			interactionMap.put(interactionId, interaction);
@@ -346,9 +289,13 @@ public class ProxyMonitoringUnit {
 		//aplikujeme pripadne poruchy do zpravy
 		faultInjector.applyTest(httpMessage);
 		
-		//publikujeme zmeny v mape interakci
-		publishNewMessageEvent(interactionId, interaction);
 		
+		//publikujeme zmeny v mape interakci
+		try{
+			publishNewMessageEvent(interactionId, interaction);
+		}catch(RemoteException ex){
+			ConsoleLog.Print(ex.getMessage());
+		}
 //		System.out.println("*********************");
 //		System.out.println("changedContent" + httpMessage.getChangedContent());
 //		System.out.println("*********************");

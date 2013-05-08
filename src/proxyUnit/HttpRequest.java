@@ -22,6 +22,7 @@ public class HttpRequest implements HttpMessage {
 	private String transferEncoding;
 	private String contentEncoding;
 	private boolean changed;
+	private String contentType;
 	
 	private String content;
 	private String formattedContent;
@@ -31,7 +32,7 @@ public class HttpRequest implements HttpMessage {
 
 	
 	public HttpRequest(String httpMethod, String initiatorIp, int initiatorPort, String uri, String httpHeader,
-			int contentLength, String transferEncoding, String contentEncoding, boolean changed) {
+			int contentLength, String transferEncoding, String contentEncoding, String contentType, boolean changed) {
 		
 		this.httpMethod = httpMethod;
 		this.initiatorIp = initiatorIp;
@@ -41,7 +42,7 @@ public class HttpRequest implements HttpMessage {
 		this.contentLength= contentLength;
 		this.transferEncoding= transferEncoding;
 		this.contentEncoding= contentEncoding;
-		
+		this.contentType = contentType;
 		
 	}
 
@@ -246,6 +247,18 @@ public class HttpRequest implements HttpMessage {
 	 */
 	public void setChanged(boolean changed) {
 		this.changed = changed;
+	}
+
+	@Override
+	public String getContentType() {
+		
+		return null;
+	}
+
+	@Override
+	public void setContentType(String contentType) {
+		
+		
 	}
 	
 	

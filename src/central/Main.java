@@ -51,7 +51,7 @@ public class Main extends Options{
 	public static void main(String[] args) {
 		
 		Main main = new Main();
-		ConsoleLog.setConsoleLog(true);
+		ConsoleLog.setConsoleLog(false);
 		main.parseOptions(args);
 	}
 	
@@ -109,12 +109,12 @@ public class Main extends Options{
 		}
 		
 		if(line.hasOption( "h" ) ){
-			ConsoleLog.Print("Napoveda");
+			ConsoleLog.Print("[Main] Napoveda");
 		}
 		
 		if(line.hasOption("g")){
 			initApplication();
-			System.out.println("gui");
+			System.out.println("[Main] GUI option ");
 			try{
 				SwingUtilities.invokeAndWait(new Runnable() {
 					public void run() {
@@ -129,7 +129,7 @@ public class Main extends Options{
 		
 		if(line.hasOption( "r" ) ){
 			initApplication();
-			ConsoleLog.Print("server");
+			ConsoleLog.Print("[Main] Server");
 			this.server = new Server();
 			server.run();
 		}

@@ -129,11 +129,9 @@ public class FaultInjector {
 		
 		//nejprve zkopirujeme puvodni obsah do pozmeneneho
 		String content= message.getContent();
-		String formattedContent= message.getFormattedContent();
 		
 		//(new String())...chceme kopii retezcu..ne odkaz
 		message.setChangedContent(new String(content));
-		message.setChangedFormattedContent(new String(formattedContent));
 				
 		
 		//pokud byl vybran nektery test..aplikujeme jej

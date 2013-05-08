@@ -24,7 +24,10 @@ public class HttpResponse implements HttpMessage {
 	private int initiatorPort;
 	private String content;
 	private String formattedContent;
+	private String contentType;
 	
+	
+
 	private boolean changed;
 	private String changedContent;
 	private String changedFormattedContent;
@@ -32,7 +35,7 @@ public class HttpResponse implements HttpMessage {
 	
 	
 	public HttpResponse(String httpCode, String initiatorIp, int initiatorPort, String httpCodeDesc, String errorMessage, String httpHeader,
-			int contentLength, String transferEncoding, String contentEncoding, boolean changed) {
+			int contentLength, String transferEncoding, String contentEncoding, String contentType, boolean changed) {
 		
 		this.initiatorIp = initiatorIp;
 		this.initiatorPort= initiatorPort;
@@ -43,9 +46,18 @@ public class HttpResponse implements HttpMessage {
 		this.contentLength= contentLength;
 		this.transferEncoding= transferEncoding;
 		this.contentEncoding= contentEncoding;
+		this.contentType = contentType;
 		
 	}
 
+	public String getContentType() {
+		return contentType;
+	}
+
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
 	
 	/**
 	 * Metoda pro ziskani iniciatora spojeni.

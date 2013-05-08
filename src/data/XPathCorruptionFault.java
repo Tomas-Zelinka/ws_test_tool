@@ -114,9 +114,6 @@ public class XPathCorruptionFault extends Fault {
 			
 			//odstranit encoding, ktery XMLOutputter implicitne vytvori
 			message.setChangedContent(xmlResult.replaceFirst("encoding=\"UTF-8\"", ""));
-						
-			outputter= new XMLOutputter(Format.getPrettyFormat());
-			message.setChangedFormattedContent(outputter.outputString(document));
 			message.setChanged(true);
 		}
 		catch (Exception ex) {

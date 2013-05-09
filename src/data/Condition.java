@@ -15,23 +15,6 @@ import proxyUnit.HttpMessage;
 public abstract class Condition {
 	
 	
-	//private int conditionId;
-	
-	
-	//public Condition(int conditionId) {
-		
-	//	this.conditionId = conditionId;
-		
-	//}
-
-		
-	//public int getConditionId() {
-		
-	//	return conditionId;
-	///}
-	
-	
-		
 	/**
 	 * Abstraktni metoda pro ziskani popisu podminky
 	 * @return 

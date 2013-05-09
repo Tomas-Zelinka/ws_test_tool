@@ -14,6 +14,7 @@ public class TestList {
 	 * 
 	 */
 	public TestList(){
+		
 		testList = new HashMap<Integer,String>();
 		caseCounter = new Integer(0);
 	}
@@ -22,6 +23,7 @@ public class TestList {
 	 * 
 	 */
 	public void addTestCase(String path){
+		
 		ConsoleLog.Print(caseCounter.toString());
 		this.testList.put(caseCounter++,path);
 		
@@ -31,7 +33,8 @@ public class TestList {
 	 * 
 	 */
 	public void removeTestCase(Integer id){
-		ConsoleLog.Print("removing: "+id);
+		
+		ConsoleLog.Print("[TestList] Removing case: "+id);
 		this.testList.remove(id);
 		if(this.testList.isEmpty()){
 			caseCounter = 0;
@@ -42,6 +45,7 @@ public class TestList {
 	 * 
 	 */
 	public HashMap<Integer,String> getTestCases(){
+		
 		return this.testList;
 	}
 	
@@ -49,6 +53,7 @@ public class TestList {
 	 * 
 	 */
 	public Integer getLastId(){
+		
 		return caseCounter-1;
 	}
 	

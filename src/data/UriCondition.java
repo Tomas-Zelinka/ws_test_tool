@@ -20,17 +20,13 @@ public class UriCondition extends Condition {
 	private String typeName;
 	private String description;
 
-	
 	public UriCondition( String uriPart) {
 		
-		//super(conditionId);
 		this.uriPart= uriPart;
 		typeName= "UriCondition";
 		description= "Occurrance of \"" + uriPart + "\" in URI";
 	}
-	
 		
-	
 	/**
 	 * Metoda pro ziskani popisu podminky.
 	 * @return popis podminky

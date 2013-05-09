@@ -25,9 +25,19 @@ import data.TestList;
 
 public class UnitController {
 
-	
+	/**
+	 * 
+	 */
 	private Map<Integer,TestUnit> testUnitsStorage;
+	
+	/**
+	 * 
+	 */
 	private Map<Integer,ProxyUnit> proxyUnitsStorage;
+	
+	/**
+	 * 
+	 */
 	private DataProvider ioProvider; 
 	
 	 
@@ -35,11 +45,12 @@ public class UnitController {
 	 * 
 	 */
 	public UnitController(){
+		
 		this.testUnitsStorage = new HashMap<Integer,TestUnit>();
 		this.proxyUnitsStorage = new HashMap<Integer,ProxyUnit>();
 		this.ioProvider = new DataProvider();
-			
 	}
+	
 	/**
 	 * 	
 	 * @param key
@@ -49,7 +60,9 @@ public class UnitController {
 	 * @throws NotBoundException
 	 */
 	public void addTestUnit(Integer key,String host, int port) throws RemoteException, NotBoundException{
+		
 		TestUnit newUnit = null;
+		
 		if(key == 0){
 			newUnit = new TestUnitImpl();
 		}else{
@@ -57,6 +70,7 @@ public class UnitController {
 			newUnit = (TestUnit) registry.lookup("TestingUnit");
 			ConsoleLog.Message(newUnit.testConnection());
 		}
+		
 		testUnitsStorage.put(key, newUnit);
 	}
 
@@ -77,8 +91,8 @@ public class UnitController {
 	 * @param key
 	 */
 	public void removeTestUnit(Integer key){
+		
 		this.testUnitsStorage.remove(key);
-	
 	}
 
 	/**
@@ -86,6 +100,7 @@ public class UnitController {
 	 * @return
 	 */
 	public TestUnit getTestUnit(int key){
+	
 		return this.testUnitsStorage.get(key);
 	}
 	
@@ -118,9 +133,9 @@ public class UnitController {
 	 * @throws RemoteException
 	 */
 	public void setPanelListener(ProxyPanelListener listener,int unitId) throws RemoteException{
+		
 		ProxyUnit unit = getProxyUnit(unitId);
 		unit.setPanelListener(listener); 
-		
 	}
 	
 	/**
@@ -128,8 +143,8 @@ public class UnitController {
 	 * @param key
 	 */
 	public void removeProxyUnit(Integer key){
+		
 		this.proxyUnitsStorage.remove(key);
-	
 	}
 	
 	/**
@@ -192,10 +207,10 @@ public class UnitController {
 	public void runProxy(String path, int unitId){
 		
 		String casePath = path;
-		
 		TestCaseSettingsData settings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
-		if(settings != null)
-		{
+		
+		if(settings != null){
+			
 			if(settings.getUseProxy()){
 				FaultInjectionData fault = (FaultInjectionData) ioProvider.readObject(casePath+FaultInjectionData.filename);
 				ProxyUnitWorker proxyUnit = new ProxyUnitWorker(fault,settings,unitId);
@@ -206,8 +221,13 @@ public class UnitController {
 		}
 	}
 	
-	
+		
+	/**
+	 * 
+	 * @param unitId
+	 */
 	public void stopProxy(int unitId){
+		
 		ProxyUnit unit = getProxyUnit(unitId);
 		
 		try{
@@ -217,6 +237,70 @@ public class UnitController {
 		}
 	}
 	
+	
+	
+	/**
+	 * 
+	 * @param casePath
+	 * @return
+	 */
+	public TestCaseSettingsData readSettingsData(String casePath){
+		
+		TestCaseSettingsData data = (TestCaseSettingsData) this.ioProvider.readObject(casePath + TestCaseSettingsData.filename);
+		return data;
+	}
+	
+	/**
+	 * 
+	 * @param casePath
+	 * @return
+	 */
+	public HttpMessageData readRequestData(String casePath){
+		
+		HttpMessageData data = (HttpMessageData) this.ioProvider.readObject(casePath + HttpMessageData.filename);
+		return data;
+	}
+	
+	/**
+	 * 
+	 * @param casePath
+	 * @return
+	 */
+	public FaultInjectionData readFaultData(String casePath){
+		
+		FaultInjectionData data = (FaultInjectionData) this.ioProvider.readObject(casePath + FaultInjectionData.filename);
+		return data;
+	}
+	
+	/**
+	 * 
+	 * @param casePath
+	 * @param data
+	 */
+	public void writeSettingsData(String casePath, TestCaseSettingsData data){
+		
+		this.ioProvider.writeObject(casePath + TestCaseSettingsData.filename,data);
+	}
+	
+	/**
+	 * 
+	 * @param casePath
+	 * @param data
+	 */
+	public void writeRequestData(String casePath, HttpMessageData data){
+		
+		this.ioProvider.writeObject(casePath + HttpMessageData.filename,data);
+	}
+	
+	/**
+	 * 
+	 * @param casePath
+	 * @param data
+	 */
+	public void writeFaultData(String casePath, FaultInjectionData data){
+		
+		this.ioProvider.writeObject(casePath + FaultInjectionData.filename,data);
+	}
 	
 	/**
 	 * 
@@ -229,8 +313,6 @@ public class UnitController {
 		private TestCaseSettingsData settings;
 		private int id;
 		
-		
-		
 		TestUnitWorker(HttpMessageData data,TestCaseSettingsData settings, int unitId){
 			this.data = data;
 			this.settings = settings;
@@ -238,7 +320,6 @@ public class UnitController {
 		}
 		
 		public String doInBackground(){
-			
 			
 			TestUnit unit = getTestUnit(this.id);
 			ProxyUnit proxyUnit = getProxyUnit(this.id);
@@ -251,9 +332,7 @@ public class UnitController {
 			}catch(RemoteException ex){
 				ConsoleLog.Message(ex.getMessage());
 			}
-			
-			
-			
+		
 			return "";
 		}
 	}
@@ -265,7 +344,6 @@ public class UnitController {
 	 *
 	 */
 	private class ProxyUnitWorker extends SwingWorker<String,Void>{
-		
 		
 		private int id;
 		private FaultInjectionData activeTest;
@@ -281,18 +359,19 @@ public class UnitController {
 			
 			ProxyUnit unit = getProxyUnit(this.id);
 			try{
+				
 				unit.setProxyHost(settings.getProxyHost());
 				unit.setProxyPort(settings.getProxyPort());
 				unit.setTestedWsPort(settings.getProxyTestedPort());
 				unit.setActiveTest(activeTest);
 				ConsoleLog.Print("[Controller] Proxy start");
 				unit.run();
-				
 			}catch(RemoteException ex){
+				
 				ConsoleLog.Message(ex.getMessage());
 			}
 			return "";
 		}
 	}
-		
+	
 }

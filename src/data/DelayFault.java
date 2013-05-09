@@ -24,16 +24,12 @@ public class DelayFault extends Fault {
 	
 	public DelayFault(int numOfMilis) {
 		
-		//super(faultId);
 		this.numOfMilis= numOfMilis;
 				
 		typeName= "DelayFault";
 		description= "The message is delayed for " + numOfMilis + " miliseconds.";
-		
-		
 	}
-
-		
+	
 	/**
 	 * Ziskani popisu poruchy.
 	 * @return popis poruchy

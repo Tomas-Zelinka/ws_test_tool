@@ -74,6 +74,9 @@ public class ProxyThread extends Thread {
 			int bytesRead = -1;
 			String changedMessage = "";
 			String header = "";
+			String strChunkSize = "";
+			char[] chunk = null;
+			int offset = 0;
 			while(true) {
 				
 				
@@ -101,6 +104,7 @@ public class ProxyThread extends Thread {
 							//pokud obsahuje chunkove kodovani
 							if (transferEncoding != null && transferEncoding.equals("chunked")){
 								httpMode= HTTP_CHUNKED_ENCODING;
+								readMode = READ_CHUNK_SIZE;
 							//pokud neobsahuje chunkove kodovani
 							}
 						//hlavicka obsahuje pole Content-Length
@@ -166,6 +170,8 @@ public class ProxyThread extends Thread {
 						}else if (bytesToBeRead > 0){
 								bytesToBeRead-= bytesRead;
 						}
+						
+						
 						//pokud jiz byla cela http zprava nactena..
 						if (bytesToBeRead == 0) {
 							//rozparsujeme telo zpravy
@@ -186,23 +192,50 @@ public class ProxyThread extends Thread {
 					case HTTP_CHUNKED_ENCODING:
 						
 						if(readMode == READ_CHUNK_CONTENT){
-							char[] chunkBuffer= new char[chunkSize];
-							bytesRead= reader.read(chunkBuffer, 0, chunkSize);
 							
+							bytesRead= reader.read(buffer, 0, BUFFER_SIZE);
+														
+							if (bytesRead == -1) {
+								incomingSocket.close();
+								outgoingSocket.close();
+								break;
+							}
+							
+							offset = chunkSize - bytesToBeRead;
+							bytesToBeRead -= bytesRead;
+													
 							for (int i= 0; i < bytesRead; i++)
-								rawMessage+= buffer[i];
+								chunk[offset+i]= buffer[i];
+								
+							
+							if(bytesToBeRead == 0){
+								byte[] message = processChunk( interactionId , httpMessage, strChunkSize,  chunk);
+								outputStream.write( message);
+								readMode = READ_CHUNK_SIZE;
+							}
+							
+							
 						}else{
-							chunkSize = Integer.parseInt(reader.readLine(),16);
+							
+							strChunkSize = reader.readLine();
+							chunkSize = Integer.parseInt(strChunkSize,16);
+							chunk= new char[chunkSize];
+							bytesToBeRead = chunkSize;
+							readMode = READ_CHUNK_CONTENT;
+							outputStream.write(httpMessage.getHttpHeader().getBytes());
+							
+							if( chunkSize == 0){
+								
+								readMode = READ_HEADERS;
+								outputStream.write("0\r\n\r\n".getBytes());
+								bytesToBeRead= -1;
+								rawMessage= "";
+								messageCounter++;
+							}
 						}
 						
-							//rozparsujeme telo zpravy
-						changedMessage =  processContent( interactionId + messageCounter, httpMessage, rawMessage);
-					
-						outputStream.write(changedMessage.getBytes());
 						
-						bytesToBeRead= -1;
-						rawMessage= "";
-						messageCounter++;
+						
 						
 					break;
 					
@@ -265,7 +298,12 @@ public class ProxyThread extends Thread {
 		
 	}
 	
-	
+	private byte[] processChunk( int interactionId ,HttpMessage httpMessage,String chunkSize, char[] chunk){
+		
+		String message = chunkSize +"\r\n" + new String(chunk) + "\r\n\r\n";
+		
+		return message.getBytes();
+	}
 	
 	
 }

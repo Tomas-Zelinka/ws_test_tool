@@ -18,12 +18,8 @@ public class EmptyingFault extends Fault {
 	private String typeName;
 	private String description;
 
-	
-	
-	
 	public EmptyingFault() {
-		
-		
+	
 		typeName= "EmptyingFault";
 		description= "The body of the message is removed, just the header is forwarded.";
 	}

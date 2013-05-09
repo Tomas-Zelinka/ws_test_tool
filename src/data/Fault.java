@@ -19,20 +19,10 @@ import proxyUnit.HttpMessage;
 public abstract class Fault {
 	
 	
-	//private int faultId;
-
 	
 	public Fault() {
-		
-		//this.faultId = faultId;
+	
 	}
-		
-	
-	//public int getFaultId() {
-		
-		//return faultId;
-	//}
-	
 		
 	/**
 	 * Abstraktni metoda pro ziskani popisu poruchy.

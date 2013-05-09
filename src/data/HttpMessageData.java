@@ -1,15 +1,11 @@
 package data;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class HttpMessageData implements Serializable {
 
-	
-	
-	
 	/**
 	 * 
 	 */
@@ -55,18 +51,22 @@ public class HttpMessageData implements Serializable {
 	}
 	
 	public int getThreadNumber() {
+		
 		return threadNumber;
 	}
 
 	public void setThreadNumber(int threadNumber) {
+		
 		this.threadNumber = threadNumber;
 	}
 
 	public int getLoopNumber() {
+		
 		return loopNumber;
 	}
 
 	public void setLoopNumber(int loopNumber) {
+		
 		this.loopNumber = loopNumber;
 	}
 
@@ -75,104 +75,108 @@ public class HttpMessageData implements Serializable {
 	}
 
 	public void setMethod(String method) {
+		
 		this.method = method;
 	}
 
 	public String getUri() {
+		
 		return uri;
 	}
 
 	public void setUri(String uri) {
+		
 		this.uri = uri;
 	}
 	
-	
 	public String getResponseBody() {
+		
 		return responseBody;
 	}
 
 	public void setResponseBody(String responseBody) {
+		
 		this.responseBody = responseBody;
 	}
 
 	public float getElapsedRemoteTime() {
+		
 		return elapsedRemoteTime;
 	}
 
 	public void setElapsedRemoteTime(float elapsedRemoteTime) {
+		
 		this.elapsedRemoteTime = elapsedRemoteTime;
 	}
 
 	public int getResponseCode() {
+		
 		return responseCode;
 	}
 
 	public void setResponseCode(int responseCode) {
+		
 		this.responseCode = responseCode;
 	}
 	
-	
-	
 	public String getName() {
+		
 		return name;
 	}
 
 	public void setName(String name) {
+		
 		this.name = name;
 	}
 	
 	public void setRequestBody(String inputBody){
+		
 		this.requestBody = inputBody;
 	}
 	
 	public String getRequestBody (){
+		
 		return this.requestBody;
 	}
 	
 	public String getRequestPath(){
+		
 		return this.requestPath;
 	}
 	
 	public void setRequestPath(String str){
+		
 		this.requestPath = str;
 	}
 	
 	
 	public String getMandatoryHeaderValue(String name){
+		
 		return mandatoryHeaders.get(name);
 	}
 	
 	public void addMandatoryHeader(String name, String value){
+		
 		mandatoryHeaders.put(name,value);
 	}
 	
 	public void removeMandatoryHeader(String name){
+		
 		mandatoryHeaders.remove(name);
 	}
 	
-	
-	
 	public String getOptionalHeaderValue(String name){
+		
 		return optionalHeaders.get(name);
 	}
 	
 	public void addOptionalyHeader(String name, String value){
+		
 		optionalHeaders.put(name,value);
 	}
 	
 	public void removeOptionalHeader(String name){
+		
 		optionalHeaders.remove(name);
 	}
-	
-	private void writeObject(java.io.ObjectOutputStream out)
-		     throws IOException{
-		out.defaultWriteObject();
-		
-	}
-   
-   private void readObject(java.io.ObjectInputStream in)
-		     throws IOException, ClassNotFoundException{
-   	in.defaultReadObject();
-   }
-	
 }

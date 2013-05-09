@@ -18,15 +18,10 @@ public class HeaderCorruptionFault extends Fault {
 	
 	private String originalSubstring;
 	private String changedSubstring;
-	
-	
 	private String typeName;
 	private String description;
 
-	
-	
 	public HeaderCorruptionFault( String originalSubstring, String changedSubstring) {
-		
 		
 		this.originalSubstring = originalSubstring;
 		this.changedSubstring = changedSubstring;
@@ -57,7 +52,6 @@ public class HeaderCorruptionFault extends Fault {
 	 */
 	@Override
 	public void inject(HttpMessage message) {
-		
 		
 		String changedHeader= new String(message.getHttpHeader());
 		changedHeader= changedHeader.replaceAll(originalSubstring, changedSubstring);

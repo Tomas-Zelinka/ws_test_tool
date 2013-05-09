@@ -27,7 +27,6 @@ import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
 
 import central.UnitController;
-import exceptions.EmptyComponentException;
 
 
 public class MainWindow extends JFrame{
@@ -257,19 +256,6 @@ public class MainWindow extends JFrame{
 	public void insertTestCase(){
 		
 		testUnitPanel.insertTestCase(MainWindow.getCasePath());
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public Component getPanel() throws EmptyComponentException{
-		
-		if(this.centerComponent == null){
-			throw new EmptyComponentException();
-		}else{
-			return this.centerComponent;
-		}
 	}
 	
 	/**

@@ -24,7 +24,6 @@ public class DestinationCondition extends Condition {
 	
 	public DestinationCondition( boolean applyOnRequest) {
 		
-		//super(conditionId);
 		this.applyOnRequest = applyOnRequest;
 		typeName= "DestinationCondition";
 		if (applyOnRequest)

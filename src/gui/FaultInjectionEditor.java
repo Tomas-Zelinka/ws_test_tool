@@ -59,12 +59,14 @@ public class FaultInjectionEditor extends JSplitPane {
 	
 	
 	public FaultInjectionData getData(){
+		
 		return this.editedTest;
 	}
 	
 	
 	
 	public void setData(FaultInjectionData data){
+		
 		this.editedTest = data;
 		refreshFaultPanel();
 		refreshConditionPanel();
@@ -72,6 +74,7 @@ public class FaultInjectionEditor extends JSplitPane {
 	}
 	
 	public void setEnablePanel(boolean enable){
+		
 		addFaultButton.setEnabled(enable);
 		addConditionButton.setEnabled(enable);
 		removeFaultButton.setEnabled(enable);
@@ -79,15 +82,18 @@ public class FaultInjectionEditor extends JSplitPane {
 	}
 	
 	 public boolean isDataLoaded() {
-		return dataLoaded;
+		
+		 return dataLoaded;
 	 }
 
 
 	public void setDataLoaded(boolean dataLoaded) {
+		
 		this.dataLoaded = dataLoaded;
 	}
 	
 	public void clearData(){
+		
 		clearTable(conditionTableModel);
 		clearTable(faultTableModel);
 	}
@@ -96,12 +102,14 @@ public class FaultInjectionEditor extends JSplitPane {
 	 * 
 	 */
 	private void clearTable(DefaultTableModel table){
+		
 		for(int i = 0; i < table.getRowCount(); i++){
 			table.removeRow(i);
 		}
 	}
 	
 	private void initComponents(){
+		
 		conditionPanel = new javax.swing.JPanel();
         conditionLabel = new javax.swing.JLabel();
         
@@ -151,7 +159,7 @@ public class FaultInjectionEditor extends JSplitPane {
                 return canEdit [columnIndex];
             }
         });
-        //conditionTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+       
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		
         jScrollPane3.setViewportView(conditionTable);
@@ -208,12 +216,9 @@ public class FaultInjectionEditor extends JSplitPane {
 	 */
 	private void setFaultPane(){
 		
-		
 		faultLabel.setText("Faults:");
-
 		jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		
-        faultTable.setModel(new javax.swing.table.DefaultTableModel(
+		faultTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -233,8 +238,8 @@ public class FaultInjectionEditor extends JSplitPane {
                 return canEdit [columnIndex];
             }
         });
-        //faultTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        jScrollPane4.setViewportView(faultTable);
+       
+		jScrollPane4.setViewportView(faultTable);
         faultTable.getColumnModel().getColumn(0).setPreferredWidth(200);
         faultTable.getColumnModel().getColumn(1).setPreferredWidth(500);
 
@@ -293,11 +298,11 @@ public class FaultInjectionEditor extends JSplitPane {
 	private void refreshConditionPanel() {
 		
 		conditionTableModel.setRowCount(0);
-		
 		conditionTable.setEnabled(true);
 		addConditionButton.setEnabled(true);
 		removeConditionButton.setEnabled(true);
 		FaultInjectionData selectedTest= getData();
+		
 		for (Condition currentCondition : selectedTest.getConditionSet()) {
 			//vlozeni noveho radku do tabulky podminek
 			Object[] newRow= new Object[] {currentCondition, currentCondition.getDescription()};
@@ -316,11 +321,11 @@ public class FaultInjectionEditor extends JSplitPane {
 		
 		//vymazeme vsechny radky tabulky
 		faultTableModel.setRowCount(0);
-		
 		faultTable.setEnabled(true);
 		addFaultButton.setEnabled(true);
 		removeFaultButton.setEnabled(true);
 		FaultInjectionData selectedTest= getData();
+		
 		for (Fault currentFault : selectedTest.getFaultList()) {
 			//vlozeni noveho radku do tabulky poruch
 			Object[] newRow= new Object[] {currentFault, currentFault.getDescription()};
@@ -334,12 +339,15 @@ public class FaultInjectionEditor extends JSplitPane {
 	
 		AddConditionDialog addConditionDialog= new AddConditionDialog((JFrame)this.getTopLevelAncestor(), true);
 		addConditionDialog.setVisible(true);
+		
 		if (addConditionDialog.isAddButtonClicked()) {
+			
 			Condition newCondition= addConditionDialog.getNewCondition();
 			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou podminku
-			//DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
+			
 			FaultInjectionData selectedTest= getData();
 			selectedTest.addToConditionSet(newCondition);
+			
 			//refresh tabulky podminek
 			refreshConditionPanel();
 					
@@ -350,12 +358,15 @@ public class FaultInjectionEditor extends JSplitPane {
 		
 		AddFaultDialog addFaultDialog= new AddFaultDialog((JFrame)this.getTopLevelAncestor(), true);
 		addFaultDialog.setVisible(true);
+		
 		if (addFaultDialog.isAddButtonClicked()) {
+			
 			Fault newFault= addFaultDialog.getNewFault();
+			
 			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou poruchu
-			//DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode) testTree.getLastSelectedPathComponent();
 			FaultInjectionData selectedTest=  getData();
 			selectedTest.addToFaultList(newFault);
+			
 			//refresh tabulky poruch
 			refreshFaultPanel();
 		}
@@ -366,10 +377,11 @@ public class FaultInjectionEditor extends JSplitPane {
 		int selectedRow= conditionTable.getSelectedRow();
 		if (selectedRow == -1)
 			return;
+		
 		Condition selectedCondition= (Condition) conditionTableModel.getValueAt(selectedRow, 0);
 		FaultInjectionData selectedTest=  getData();
 		
-//		//odstranime podminku jak z tabulky, tak z kolekce
+		//odstranime podminku jak z tabulky, tak z kolekce
 		selectedTest.removeFromConditionSet(selectedCondition);
 		conditionTableModel.removeRow(selectedRow);
 	
@@ -379,12 +391,13 @@ public class FaultInjectionEditor extends JSplitPane {
 		int selectedRow= faultTable.getSelectedRow();
 		if (selectedRow == -1)
 			return;
+		
 		Fault selectedFault= (Fault) faultTableModel.getValueAt(selectedRow, 0);
 		
-//		//zjistime, ktera porucha ve stromu je oznacena
+		//zjistime, ktera porucha ve stromu je oznacena
 		FaultInjectionData selectedTest= getData();
-//		
-//		//odstranime poruchu jak z tabulky, tak z kolekce
+		
+		//odstranime poruchu jak z tabulky, tak z kolekce
 		selectedTest.removeFromFaultList(selectedFault);
 		faultTableModel.removeRow(selectedRow);
 	}

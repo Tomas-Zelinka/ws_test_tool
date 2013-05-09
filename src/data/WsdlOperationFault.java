@@ -31,7 +31,6 @@ import proxyUnit.HttpMessage;
  */
 public class WsdlOperationFault extends Fault {
 
-	//private String wsdlUri;
 	private String operationName;
 	private String operationContent;
 	
@@ -42,14 +41,11 @@ public class WsdlOperationFault extends Fault {
 	
 	public WsdlOperationFault( String wsdlUri, String operationName, String operationContent) {
 		
-		
-	//	this.wsdlUri= wsdlUri;
 		this.operationName= operationName;
 		this.operationContent= operationContent;
 		
 		typeName= "WsdlParamFault";
 		description= "The body of operation " + operationName + " will be changed.";
-		
 	}
 	
 		
@@ -118,10 +114,6 @@ public class WsdlOperationFault extends Fault {
 				}
 			}
 			
-			
-			
-			
-			
 			//zapiseme zmeny do HttpMessage
 			XMLOutputter outputter= new XMLOutputter(Format.getRawFormat());
 			String xmlResult= outputter.outputString(document);
@@ -140,8 +132,6 @@ public class WsdlOperationFault extends Fault {
 			ex.printStackTrace();
 			System.exit(-1);
 		}
-			
-		
 	}
 
 	/**

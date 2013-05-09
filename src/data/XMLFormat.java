@@ -18,14 +18,14 @@ public class XMLFormat {
 
 		 try{ 
 		 
-		 StringReader reader = new StringReader(unformattedXml);
-		    StringWriter writer = new StringWriter();
-		    TransformerFactory tFactory = TransformerFactory.newInstance();
-		    Transformer transformer = tFactory.newTransformer();
-		    transformer .setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer .setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			 StringReader reader = new StringReader(unformattedXml);
+			 StringWriter writer = new StringWriter();
+			 TransformerFactory tFactory = TransformerFactory.newInstance();
+			 Transformer transformer = tFactory.newTransformer();
+			 transformer .setOutputProperty(OutputKeys.INDENT, "yes");
+			 transformer .setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		   
-		    transformer.transform(
+			 transformer.transform(
 		            new javax.xml.transform.stream.StreamSource(reader), 
 		            new javax.xml.transform.stream.StreamResult(writer));
 

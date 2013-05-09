@@ -18,27 +18,16 @@ import proxyUnit.HttpMessage;
  */
 public class Test {
 	
-	//private int testId;
 	private String testName;
 	private String filePath;
-	
 	private List<TestStatement> statementList= new ArrayList<TestStatement>();
 
 	
 	public Test(String testName) {
 		
-		//this.testId= testId;
 		this.testName= testName;
 	}
 
-	/**
-	 * Ziskani id testu.
-	 * @return id testu
-	 */
-	//public int getTestId() {
-		
-	//	return testId;
-	//}
 
 	/**
 	 * Metoda pro ziskani nazvu testu.
@@ -48,8 +37,6 @@ public class Test {
 		
 		return testName;
 	}
-	
-	
 
 	/**
 	 * Metoda pro nastaveni nazvu testu.
@@ -66,6 +53,7 @@ public class Test {
 	 * @return cesta k souboru
 	 */
 	public String getFilePath() {
+		
 		return filePath;
 	}
 
@@ -74,14 +62,10 @@ public class Test {
 	 * @param filePath cesta k souboru
 	 */
 	public void setFilePath(String filePath) {
+		
 		this.filePath = filePath;
 	}
-	
-	
-	
-	
-		
-	
+
 	/**
 	 * Ziskani seznamu pravidel pro dany test.
 	 * @return seznam pravidel

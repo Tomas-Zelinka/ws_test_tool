@@ -32,7 +32,6 @@ import proxyUnit.HttpMessage;
  */
 public class XPathCorruptionFault extends Fault {
 	
-	//private XPath xPath;
 	private String xpath;
 	private String changedSubstring;
 	
@@ -41,7 +40,6 @@ public class XPathCorruptionFault extends Fault {
 
 	
 	public XPathCorruptionFault( String xpath, String changedSubstring) throws JDOMException {
-		
 		
 		this.xpath= xpath;
 		//TODO: tohle mozna oddelat...pouze testuje, zda zadany cesta odpovida XPath vyrazu
@@ -124,9 +122,6 @@ public class XPathCorruptionFault extends Fault {
 		
 	}
 	
-
-
-
 	/**
 	 * Metoda pro ziskani typu poruchy.
 	 * @return typ poruchy

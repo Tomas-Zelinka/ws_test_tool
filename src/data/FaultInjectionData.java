@@ -29,7 +29,6 @@ public class FaultInjectionData implements Serializable {
 	
 	private int testId;
 	private String testName;
-	
 	private Set<Condition> conditionSet= new HashSet<Condition>();
 	private List<Fault> faultList= new ArrayList<Fault>();
 
@@ -37,7 +36,6 @@ public class FaultInjectionData implements Serializable {
 	
 	public FaultInjectionData( String name) {
 		
-		//this.testId = id;
 		this.testName = name;
 	}
 

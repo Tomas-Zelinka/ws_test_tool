@@ -110,27 +110,29 @@ public class ProxyUnitPanel extends JSplitPane  {
 		//pokud v mape dosud neni prislusna http interakce..vytvorime novou
 		if (!interactionMap.containsKey(interactionId) ){
 			interactionMap.put(interactionId, interaction);
+			insertRowInteractionTable(interactionId, interaction);
+			
 		}
 		//pokud v mape jiz existuje tato interakce..pridame k ni prislusny request/response
 		else {
 			interactionMap.remove(interactionId);
 			interactionMap.put(interactionId, interaction);
-		}
-		
-		
-		boolean interactionInserted= false;
-		for (int i= 0; i < interactionTableModel.getRowCount(); i++){
-			ConsoleLog.Print("[ProxyUnitPanel] hledam"+ interactionId+" nachazim " +interactionTableModel.getValueAt(i, 0));
-			if (interactionId == (Integer)interactionTableModel.getValueAt(i, 0)) {
-				ConsoleLog.Print("[ProxyUnitPanel] AGREGUJU" + interactionId);
-				setValueAtInteractionTable(i,interaction);
-				interactionInserted= true;
-				break;
+			
+			for (int i= 0; i < interactionTableModel.getRowCount(); i++){
+				ConsoleLog.Print("[ProxyUnitPanel] hledam"+ interactionId+" nachazim " +interactionTableModel.getValueAt(i, 0));
+				if (interactionId == (Integer)interactionTableModel.getValueAt(i, 0)) {
+					ConsoleLog.Print("[ProxyUnitPanel] AGREGUJU" + interactionId);
+					setValueAtInteractionTable(i,interaction);
+					break;
+				}
 			}
+			
 		}
-		//pokud interakce nebyla nalezena, vytvorime novy radek
-		if (!interactionInserted)
-			insertRowInteractionTable(interactionId, interaction);
+		
+		
+		
+		
+		
 		
 	}
 	
@@ -277,32 +279,32 @@ public class ProxyUnitPanel extends JSplitPane  {
 					
 					if(interactionMap.containsKey(interactionId))
 					{
-						HttpInteraction selectedInteraction= interactionMap.get(interactionId);
-					
-						HttpRequest httpRequest= selectedInteraction.getHttpRequest();
-						HttpResponse httpResponse= selectedInteraction.getHttpResponse();
-						if (httpRequest != null) {
-							reqOriginalEditorPane.setText(httpRequest.getHttpHeader() + 
-									HttpMessageParser.formatXmlMessage(httpRequest.getContent()));
-							//nechceme odscrollovat dolu
-							reqOriginalEditorPane.setCaretPosition(0);
-							
-							reqChangedEditorPane.setText(httpRequest.getChangedHttpHeader() +   
-									HttpMessageParser.formatXmlMessage(httpRequest.getChangedContent()));
-							//nechceme odscrollovat dolu
-							reqChangedEditorPane.setCaretPosition(0);
-						}
-						if (httpResponse != null) {
-							resOriginalEditorPane.setText(httpResponse.getHttpHeader() +  
-									HttpMessageParser.formatXmlMessage(httpResponse.getContent()));
-							//nechceme odscrollovat dolu
-							resOriginalEditorPane.setCaretPosition(0);
-							
-							resChangedEditorPane.setText(httpResponse.getChangedHttpHeader() + 
-									HttpMessageParser.formatXmlMessage(httpResponse.getChangedContent()));
-							//nechceme odscrollovat dolu
-							resChangedEditorPane.setCaretPosition(0);
-						}
+//						HttpInteraction selectedInteraction= interactionMap.get(interactionId);
+//					
+//						HttpRequest httpRequest= selectedInteraction.getHttpRequest();
+//						HttpResponse httpResponse= selectedInteraction.getHttpResponse();
+//						if (httpRequest != null) {
+//							reqOriginalEditorPane.setText(httpRequest.getHttpHeader() + 
+//									HttpMessageParser.formatXmlMessage(httpRequest.getContent()));
+//							//nechceme odscrollovat dolu
+//							reqOriginalEditorPane.setCaretPosition(0);
+//							
+//							reqChangedEditorPane.setText(httpRequest.getChangedHttpHeader() +   
+//									HttpMessageParser.formatXmlMessage(httpRequest.getChangedContent()));
+//							//nechceme odscrollovat dolu
+//							reqChangedEditorPane.setCaretPosition(0);
+//						}
+//						if (httpResponse != null) {
+//							resOriginalEditorPane.setText(httpResponse.getHttpHeader() +  
+//									HttpMessageParser.formatXmlMessage(httpResponse.getContent()));
+//							//nechceme odscrollovat dolu
+//							resOriginalEditorPane.setCaretPosition(0);
+//							
+//							resChangedEditorPane.setText(httpResponse.getChangedHttpHeader() + 
+//									HttpMessageParser.formatXmlMessage(httpResponse.getChangedContent()));
+//							//nechceme odscrollovat dolu
+//							resChangedEditorPane.setCaretPosition(0);
+//						}
 					}else{ 
 						reqOriginalEditorPane.setText("");
 						reqChangedEditorPane.setText("");

@@ -1,8 +1,6 @@
 package central;
 
 
-import gui.MainWindow;
-
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -167,7 +165,7 @@ public class UnitController {
 	 */
 	public void runTest(String path, int unitId){
 		
-		TestList list = (TestList) ioProvider.readObject(path);
+		TestList list = (TestList) ioProvider.readObject(path + TestList.filename);
 		if( list != null){
 		
 			ArrayList<String> testCases = list.getTestCases();
@@ -179,16 +177,27 @@ public class UnitController {
 				if(settings != null)
 				{
 					if(settings.getUseProxy()){
+						
 						FaultInjectionData fault = (FaultInjectionData) ioProvider.readObject(casePath+FaultInjectionData.filename);
-						ProxyUnitWorker proxyUnit = new ProxyUnitWorker(fault,settings,unitId);
-						proxyUnit.execute();
+						if(fault != null){
+							
+							ProxyUnitWorker proxyUnit = new ProxyUnitWorker(fault,settings,unitId);
+							proxyUnit.execute();
+						}else{
+							ConsoleLog.Message("Fault Injeciton file not found!");
+						}
 					}
 					
 					
 					if(settings.getRun()){
 						HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.filename);
-						TestUnitWorker testUnit = new TestUnitWorker(request,settings,unitId);
-						testUnit.execute();
+						
+						if(request != null){
+							TestUnitWorker testUnit = new TestUnitWorker(request,settings,unitId);
+							testUnit.execute();
+						}else{
+							ConsoleLog.Message("Http request file not found!");
+						}
 					}
 				}else{
 					ConsoleLog.Message("Test case settings file not found!");
@@ -215,8 +224,13 @@ public class UnitController {
 			
 			if(settings.getUseProxy()){
 				FaultInjectionData fault = (FaultInjectionData) ioProvider.readObject(casePath+FaultInjectionData.filename);
-				ProxyUnitWorker proxyUnit = new ProxyUnitWorker(fault,settings,unitId);
-				proxyUnit.execute();
+				
+				if(fault != null){
+					ProxyUnitWorker proxyUnit = new ProxyUnitWorker(fault,settings,unitId);
+					proxyUnit.execute();
+				}else{
+					ConsoleLog.Message("Fault Injeciton file not found!");
+				}
 			}
 		}else{
 			ConsoleLog.Message("Test case settings file not found!");

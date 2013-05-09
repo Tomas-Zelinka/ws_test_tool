@@ -303,7 +303,7 @@ public class ProxyUnitPanel extends JSplitPane  {
 							//nechceme odscrollovat dolu
 							resChangedEditorPane.setCaretPosition(0);
 						}
-					}else{
+					}else{ 
 						reqOriginalEditorPane.setText("");
 						reqChangedEditorPane.setText("");
 						resOriginalEditorPane.setText("");

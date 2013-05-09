@@ -1,10 +1,13 @@
 package central;
 
 
+import gui.MainWindow;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -167,11 +170,10 @@ public class UnitController {
 		TestList list = (TestList) ioProvider.readObject(path);
 		if( list != null){
 		
-			HashMap<Integer,String> testCases = list.getTestCases();
-			Object[] keys = testCases.keySet().toArray();
+			ArrayList<String> testCases = list.getTestCases();
 			
-			for(int i =0; i < keys.length; i++){
-				String casePath = testCases.get(keys[i]);
+			
+			for(String casePath: testCases){
 				
 				TestCaseSettingsData settings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
 				if(settings != null)
@@ -300,6 +302,28 @@ public class UnitController {
 	public void writeFaultData(String casePath, FaultInjectionData data){
 		
 		this.ioProvider.writeObject(casePath + FaultInjectionData.filename,data);
+	}
+	
+	
+	/**
+	 * 
+	 * @param casePath
+	 * @param data
+	 */
+	public void writeTestList(String suitePath, TestList data){
+		
+		this.ioProvider.writeObject(suitePath + TestList.filename,data);
+	}
+	
+	/**
+	 * 
+	 * @param casePath
+	 * @return
+	 */
+	public TestList readTestList(String listPath){
+		
+		TestList data = (TestList) this.ioProvider.readObject(listPath + TestList.filename);
+		return data;
 	}
 	
 	/**

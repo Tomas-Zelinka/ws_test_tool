@@ -1,13 +1,14 @@
 package data;
 
-import java.util.HashMap;
+import java.io.File;
+import java.util.ArrayList;
 
 import logging.ConsoleLog;
 
 public class TestList {
 	
-	private HashMap<Integer,String> testList; 
-	private Integer caseCounter;	
+	private ArrayList<String> testList; 
+	public static final String filename = File.separator+"testlist.xml";
 	
 	
 	/**
@@ -15,8 +16,8 @@ public class TestList {
 	 */
 	public TestList(){
 		
-		testList = new HashMap<Integer,String>();
-		caseCounter = new Integer(0);
+		testList = new ArrayList<String>();
+		
 	}
 	
 	/**
@@ -24,8 +25,7 @@ public class TestList {
 	 */
 	public void addTestCase(String path){
 		
-		ConsoleLog.Print(caseCounter.toString());
-		this.testList.put(caseCounter++,path);
+		this.testList.add(path);
 		
 	}
 		
@@ -36,25 +36,20 @@ public class TestList {
 		
 		ConsoleLog.Print("[TestList] Removing case: "+id);
 		this.testList.remove(id);
-		if(this.testList.isEmpty()){
-			caseCounter = 0;
-		}
+		
 	}
 	
 	/**
 	 * 
 	 */
-	public HashMap<Integer,String> getTestCases(){
+	public ArrayList<String> getTestCases(){
 		
 		return this.testList;
 	}
 	
-	/**
-	 * 
-	 */
-	public Integer getLastId(){
+	public void setTestCases(ArrayList<String> data){
 		
-		return caseCounter-1;
+		this.testList = data;
 	}
 	
 	

@@ -163,7 +163,7 @@ public class NewTestCaseDialog extends InputModalWindow {
             		 b.printStackTrace();
             	 }
             	 Navigator.refreshTree();
-            	 MainWindow.setCasePath(newTestCase.getPath());
+            	 MainWindow.setCasePath(newTestCase.getName());
             	 ConsoleLog.Print("[ModalWindow] New case suite created,name: "+ getCaseName());
             	 setVisible(false);
             	 dispose();

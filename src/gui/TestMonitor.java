@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -14,6 +15,8 @@ import logging.ConsoleLog;
 import testingUnit.NewResponseListener;
 import testingUnit.TestPanelListener;
 import central.UnitController;
+import data.TestCaseSettingsData;
+import data.TestList;
 
 /**
  *  Testing monitor is swing container holding all testing units
@@ -37,6 +40,7 @@ public class TestMonitor extends JPanel  {
 	 * @param testUnitController
 	 */
 	public TestMonitor(UnitController testUnitController){
+		
 		controller = testUnitController;
 		testUnitCounter = 0;
 		initComponents();
@@ -126,7 +130,18 @@ public class TestMonitor extends JPanel  {
 				int key = Integer.parseInt(keyString.split(" ")[2]);
 				tabbedPane.setTitleAt(panelIndex,"Remote Unit "+ key +" - "+splitedPath );
 			}
-			((TestUnitPanel)tabbedPane.getComponentAt(panelIndex)).openTestList(path);
+			 
+			TestList list = controller.readTestList(path);
+			ArrayList<TestCaseSettingsData> settingsData = new ArrayList<TestCaseSettingsData>();
+			
+			ArrayList<String> paths = list.getTestCases();
+			for(int id = 0; id < paths.size(); id++){
+				
+				TestCaseSettingsData data = controller.readSettingsData(paths.get(id));
+				settingsData.add(data);
+			} 
+			
+			((TestUnitPanel)tabbedPane.getComponentAt(panelIndex)).openTestList(settingsData);
 			
 		}
 	} 
@@ -140,7 +155,8 @@ public class TestMonitor extends JPanel  {
 		if(MainWindow.getCasePath().isEmpty()){
 			ConsoleLog.Message("Test case not selected"); 
 		}else{
-			getSelectedPanel().insertTestCaseToTable(path);
+			TestCaseSettingsData data = controller.readSettingsData(path);
+			getSelectedPanel().insertTestCaseToTable(data);
 		}
 	}
 	
@@ -154,8 +170,23 @@ public class TestMonitor extends JPanel  {
 	/**
 	 * 
 	 */
-	public void saveTestList(String path){
-		getSelectedPanel().saveTestList(path); 
+	public void saveTestList(String suitePath){
+		
+		ArrayList<TestCaseSettingsData> data = getSelectedPanel().getTestListData(); 
+		TestList list = new TestList();
+		
+		for(int i =0; i < data.size(); i++){
+			TestCaseSettingsData tmpData = controller.readSettingsData(data.get(i).getPath());
+			tmpData.setRun(data.get(i).getRun());
+			tmpData.setLoopNumber(data.get(i).getLoopNumber());
+			tmpData.setThreadsNumber(data.get(i).getThreadsNumber());
+			
+			controller.writeSettingsData(data.get(i).getPath(), data.get(i));
+			list.addTestCase(data.get(i).getPath());
+		}
+			
+		controller.writeTestList(suitePath, list);
+		
 	}
 
 	
@@ -203,6 +234,7 @@ public class TestMonitor extends JPanel  {
 	 * @return JPanel - returns the selected unit panel
 	 */
 	private TestUnitPanel getSelectedPanel(){
+		
 		TestUnitPanel selectedPanel = (TestUnitPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
 		ConsoleLog.Print("[TestMonitor] returned Unit: " + getUnitKey());
 		return selectedPanel;
@@ -212,18 +244,21 @@ public class TestMonitor extends JPanel  {
 	 * 
 	 */
 	private void initComponents(){
+		
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addChangeListener(new ChangeListener() {
 	        public void stateChanged(ChangeEvent e) {
 	            ConsoleLog.Print("[TestMonitor] Tab: " + tabbedPane.getSelectedIndex());
 	        }
 	    });
+		
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane,BorderLayout.CENTER);
 	}
 	
 	private void runTest(String path, int key){
-		getSelectedPanel().saveTestList(path); 
+		
+		saveTestList(path); 
 		getSelectedPanel().clearResults();
 		controller.runTest(path,getUnitKey());
 	}

@@ -108,6 +108,123 @@ public class FaultInjectionEditor extends JSplitPane {
 		}
 	}
 	
+	
+	
+	
+	
+	
+	/**
+	 * Metoda pro aktualizaci tabulky a tlacitek v sekci podminek v zavislosti na oznacene polozce
+	 * v testTree.
+	 * @param selectedNode oznacena polozka v testTree
+	 */
+	private void refreshConditionPanel() {
+		
+		conditionTableModel.setRowCount(0);
+		//conditionTable.setEnabled(true);
+		//addConditionButton.setEnabled(true);
+		//removeConditionButton.setEnabled(true);
+		FaultInjectionData selectedTest= getData();
+		
+		for (Condition currentCondition : selectedTest.getConditionSet()) {
+			//vlozeni noveho radku do tabulky podminek
+			Object[] newRow= new Object[] {currentCondition, currentCondition.getDescription()};
+			conditionTableModel.insertRow(conditionTable.getRowCount(), newRow);
+		}
+	}
+	
+	
+	
+	/**
+	 * Metoda pro aktualizaci tabulky a tlacitek v sekci poruch v zavislosti na oznacene polozce v
+	 * testTree.
+	 * @param selectedNode oznacena polozka v testTree
+	 */
+	private void refreshFaultPanel() {
+		
+		//vymazeme vsechny radky tabulky
+		faultTableModel.setRowCount(0);
+		//faultTable.setEnabled(true);
+		//addFaultButton.setEnabled(true);
+		//removeFaultButton.setEnabled(true);
+		FaultInjectionData selectedTest= getData();
+		
+		for (Fault currentFault : selectedTest.getFaultList()) {
+			//vlozeni noveho radku do tabulky poruch
+			Object[] newRow= new Object[] {currentFault, currentFault.getDescription()};
+			faultTableModel.insertRow(faultTable.getRowCount(), newRow);
+		}
+	}
+	
+
+	private void addConditionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addConditionButtonActionPerformed
+		
+	
+		AddConditionDialog addConditionDialog= new AddConditionDialog((JFrame)this.getTopLevelAncestor(), true);
+		addConditionDialog.setVisible(true);
+		
+		if (addConditionDialog.isAddButtonClicked()) {
+			
+			Condition newCondition= addConditionDialog.getNewCondition();
+			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou podminku
+			
+			FaultInjectionData selectedTest= getData();
+			selectedTest.addToConditionSet(newCondition);
+			
+			//refresh tabulky podminek
+			refreshConditionPanel();
+					
+		}
+	}//GEN-LAST:event_addConditionButtonActionPerformed
+
+	private void addFaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFaultButtonActionPerformed
+		
+		AddFaultDialog addFaultDialog= new AddFaultDialog((JFrame)this.getTopLevelAncestor(), true);
+		addFaultDialog.setVisible(true);
+		
+		if (addFaultDialog.isAddButtonClicked()) {
+			
+			Fault newFault= addFaultDialog.getNewFault();
+			
+			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou poruchu
+			FaultInjectionData selectedTest=  getData();
+			selectedTest.addToFaultList(newFault);
+			
+			//refresh tabulky poruch
+			refreshFaultPanel();
+		}
+	}//GEN-LAST:event_addFaultButtonActionPerformed
+
+	private void removeConditionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeConditionButtonActionPerformed
+		
+		int selectedRow= conditionTable.getSelectedRow();
+		if (selectedRow == -1)
+			return;
+		
+		Condition selectedCondition= (Condition) conditionTableModel.getValueAt(selectedRow, 0);
+		FaultInjectionData selectedTest=  getData();
+		
+		//odstranime podminku jak z tabulky, tak z kolekce
+		selectedTest.removeFromConditionSet(selectedCondition);
+		conditionTableModel.removeRow(selectedRow);
+	
+	}
+	private void removeFaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFaultButtonActionPerformed
+		
+		int selectedRow= faultTable.getSelectedRow();
+		if (selectedRow == -1)
+			return;
+		
+		Fault selectedFault= (Fault) faultTableModel.getValueAt(selectedRow, 0);
+		
+		//zjistime, ktera porucha ve stromu je oznacena
+		FaultInjectionData selectedTest= getData();
+		
+		//odstranime poruchu jak z tabulky, tak z kolekce
+		selectedTest.removeFromFaultList(selectedFault);
+		faultTableModel.removeRow(selectedRow);
+	}
+
 	private void initComponents(){
 		
 		conditionPanel = new javax.swing.JPanel();
@@ -129,9 +246,7 @@ public class FaultInjectionEditor extends JSplitPane {
         jScrollPane4 = new javax.swing.JScrollPane();
         
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 */
@@ -289,118 +404,5 @@ public class FaultInjectionEditor extends JSplitPane {
         );
 
 	}
-	
-	/**
-	 * Metoda pro aktualizaci tabulky a tlacitek v sekci podminek v zavislosti na oznacene polozce
-	 * v testTree.
-	 * @param selectedNode oznacena polozka v testTree
-	 */
-	private void refreshConditionPanel() {
-		
-		conditionTableModel.setRowCount(0);
-		conditionTable.setEnabled(true);
-		addConditionButton.setEnabled(true);
-		removeConditionButton.setEnabled(true);
-		FaultInjectionData selectedTest= getData();
-		
-		for (Condition currentCondition : selectedTest.getConditionSet()) {
-			//vlozeni noveho radku do tabulky podminek
-			Object[] newRow= new Object[] {currentCondition, currentCondition.getDescription()};
-			conditionTableModel.insertRow(conditionTable.getRowCount(), newRow);
-		}
-	}
-	
-	
-	
-	/**
-	 * Metoda pro aktualizaci tabulky a tlacitek v sekci poruch v zavislosti na oznacene polozce v
-	 * testTree.
-	 * @param selectedNode oznacena polozka v testTree
-	 */
-	private void refreshFaultPanel() {
-		
-		//vymazeme vsechny radky tabulky
-		faultTableModel.setRowCount(0);
-		faultTable.setEnabled(true);
-		addFaultButton.setEnabled(true);
-		removeFaultButton.setEnabled(true);
-		FaultInjectionData selectedTest= getData();
-		
-		for (Fault currentFault : selectedTest.getFaultList()) {
-			//vlozeni noveho radku do tabulky poruch
-			Object[] newRow= new Object[] {currentFault, currentFault.getDescription()};
-			faultTableModel.insertRow(faultTable.getRowCount(), newRow);
-		}
-	}
-	
-
-	private void addConditionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addConditionButtonActionPerformed
-		
-	
-		AddConditionDialog addConditionDialog= new AddConditionDialog((JFrame)this.getTopLevelAncestor(), true);
-		addConditionDialog.setVisible(true);
-		
-		if (addConditionDialog.isAddButtonClicked()) {
-			
-			Condition newCondition= addConditionDialog.getNewCondition();
-			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou podminku
-			
-			FaultInjectionData selectedTest= getData();
-			selectedTest.addToConditionSet(newCondition);
-			
-			//refresh tabulky podminek
-			refreshConditionPanel();
-					
-		}
-	}//GEN-LAST:event_addConditionButtonActionPerformed
-
-	private void addFaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFaultButtonActionPerformed
-		
-		AddFaultDialog addFaultDialog= new AddFaultDialog((JFrame)this.getTopLevelAncestor(), true);
-		addFaultDialog.setVisible(true);
-		
-		if (addFaultDialog.isAddButtonClicked()) {
-			
-			Fault newFault= addFaultDialog.getNewFault();
-			
-			//zjistime oznacene pravidlo ve stromu a pridame do jeho kolekce novou poruchu
-			FaultInjectionData selectedTest=  getData();
-			selectedTest.addToFaultList(newFault);
-			
-			//refresh tabulky poruch
-			refreshFaultPanel();
-		}
-	}//GEN-LAST:event_addFaultButtonActionPerformed
-
-	private void removeConditionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeConditionButtonActionPerformed
-		
-		int selectedRow= conditionTable.getSelectedRow();
-		if (selectedRow == -1)
-			return;
-		
-		Condition selectedCondition= (Condition) conditionTableModel.getValueAt(selectedRow, 0);
-		FaultInjectionData selectedTest=  getData();
-		
-		//odstranime podminku jak z tabulky, tak z kolekce
-		selectedTest.removeFromConditionSet(selectedCondition);
-		conditionTableModel.removeRow(selectedRow);
-	
-	}
-	private void removeFaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFaultButtonActionPerformed
-		
-		int selectedRow= faultTable.getSelectedRow();
-		if (selectedRow == -1)
-			return;
-		
-		Fault selectedFault= (Fault) faultTableModel.getValueAt(selectedRow, 0);
-		
-		//zjistime, ktera porucha ve stromu je oznacena
-		FaultInjectionData selectedTest= getData();
-		
-		//odstranime poruchu jak z tabulky, tak z kolekce
-		selectedTest.removeFromFaultList(selectedFault);
-		faultTableModel.removeRow(selectedRow);
-	}
-
 
 }

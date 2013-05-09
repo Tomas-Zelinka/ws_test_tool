@@ -58,36 +58,45 @@ public class TestCaseSettings extends JPanel {
 	private TestCaseSettingsData settingsData;
 	
 	public TestCaseSettings(){
+		
 		initComponents();
 		setupComponents();	
 		setDataLoaded(false);
 	}
 	
 	public void setData(TestCaseSettingsData data){
+		
 		this.settingsData = data;
 		loadData();
 		setDataLoaded(true);
 	}
 	
 	public TestCaseSettingsData getData(){
+		
 		saveData();
 		return this.settingsData;
 	}
 	
 	public void setEnablePanel(boolean enable){
+		
+		setEnableProxyPanel(enable);
+		setEnableHttpPanel(enable);
 		useProxyBox.setEnabled(enable);
 		runButton.setEnabled(enable);
 	}
 	
 	public boolean isDataLoaded() {
-			return dataLoaded;
+			
+		return dataLoaded;
 	}
 
 	public void setDataLoaded(boolean dataLoaded) {
+		
 		this.dataLoaded = dataLoaded;
 	}
 	
 	public void clearData(){
+		
 		runButton.setSelected(false);
 		loopNumberField.setText("");
 		threadsNumberField.setText("");
@@ -202,73 +211,90 @@ public class TestCaseSettings extends JPanel {
 	}
 
 	private String getEditorProxyHostName(){
+		
 		return proxyHostField.getText();
 	}
 	
 	private void setEditorProxyHostName(String str){
+		
 		this.proxyHostField.setText(str);
 	}
 	
 	private Integer getEditorProxyPort(){
+		
 		return Integer.parseInt(proxyPortField.getText());
 	}
 	
 	private void setEditorProxyPort(Integer port){
+		
 		this.proxyPortField.setText(port.toString());
 	}
 	
 	private Integer getEditorProxyTestedPort(){
+		
 		return Integer.parseInt(proxyTestedPortField.getText());
 	}
 	
 	private void setEditorProxyTestedPort(Integer port){
+		
 		this.proxyTestedPortField.setText(port.toString());
 	}
 	
 	private Integer getEditorThreadsNumber(){
+		
 		return Integer.parseInt(threadsNumberField.getText());
 	}
 	
 	private void setEditorThreadsNumber(Integer number){
+		
 		this.threadsNumberField.setText(number.toString());
 	}
 	
 	private Integer getEditorLoopCount(){
+		
 		return Integer.parseInt(loopNumberField.getText());
 	}
 	
 	private void setEditorLoopNumber(Integer number){
+		
 		this.loopNumberField.setText(number.toString());
 	}
 	
 	private boolean getEditorRun(){
+		
 		return runButton.isSelected();
 	}
 	
 	private void setEditorRun(boolean run){
+		
 		this.runButton.setSelected(run);
 	}
 	
 	
 	private boolean getEditorUseProxy(){
+		
 		return useProxyBox.isSelected();
 	}
 	
 	private void setEditorUseProxy(boolean use){
+		
 		this.useProxyBox.setSelected(use);
 	}
 	
 	
 	private void saveData(){
+		
 		this.settingsData.setRun(getEditorRun());
 		this.settingsData.setUseProxy(getEditorUseProxy());
 		
 		if(getEditorRun()){
+			
 			this.settingsData.setName(MainWindow.getCasePath());
 			this.settingsData.setThreadsNumber(getEditorThreadsNumber());
 			this.settingsData.setLoopNumber(getEditorLoopCount());
 		}
 		if(getEditorUseProxy()){
+			
 			this.settingsData.setProxyTestedPort(getEditorProxyTestedPort());
 			this.settingsData.setProxyPort(getEditorProxyPort());
 			this.settingsData.setProxyHost(getEditorProxyHostName());
@@ -277,22 +303,25 @@ public class TestCaseSettings extends JPanel {
 	
 	
 	private void loadData(){
-		setEnableHttpPanel(true);
+		
+		setEnableHttpPanel(this.settingsData.getRun());
+		setEnableProxyPanel(this.settingsData.getUseProxy());
+		
+		setEditorRun(this.settingsData.getRun());
 		setEditorProxyPort(this.settingsData.getProxyPort());
 		setEditorProxyHostName(this.settingsData.getProxyHost());
 		setEditorThreadsNumber(this.settingsData.getThreadsNumber());
 		setEditorLoopNumber(this.settingsData.getLoopNumber());
 		setEditorProxyTestedPort(this.settingsData.getProxyTestedPort());
-		setEditorRun(this.settingsData.getRun());
 		setEditorUseProxy(this.settingsData.getUseProxy());
 		
-		setEnableProxyPanel(this.settingsData.getUseProxy());
-		setEnableHttpPanel(this.settingsData.getRun());
+		
 	}
 	
 	
 	
 	private void setEnableProxyPanel(boolean use){
+		
 		Component[] fields = proxyFields.getComponents(); 
         Component[] labels = proxyLabels.getComponents();
 		
@@ -305,6 +334,7 @@ public class TestCaseSettings extends JPanel {
 	
 	
 	private void setEnableHttpPanel(boolean use){
+		
 		Component[] fields = httpFields.getComponents(); 
         Component[] labels = httpLabels.getComponents();
 		
@@ -318,6 +348,7 @@ public class TestCaseSettings extends JPanel {
 	
 	
 	private class UseProxyListener implements ActionListener{
+		
 		public void actionPerformed(ActionEvent e){
 			AbstractButton abstractButton = (AbstractButton)e.getSource();
 	        boolean selected = abstractButton.getModel().isSelected();
@@ -330,6 +361,7 @@ public class TestCaseSettings extends JPanel {
 	}
 	
 	private class UseHttpListener implements ActionListener{
+		
 		public void actionPerformed(ActionEvent e){
 			AbstractButton abstractButton = (AbstractButton)e.getSource();
 	        boolean selected = abstractButton.getModel().isSelected();

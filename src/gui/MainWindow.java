@@ -243,10 +243,7 @@ public class MainWindow extends JFrame{
 		this.panelType = type;
 	}
 	
-	public void closeTestCase(){
-		
-		this.editor.closeTestCase(getPanelType()); 
-	}
+	
 	
 	public void refreshTree(){
 		
@@ -298,9 +295,16 @@ public class MainWindow extends JFrame{
 	 */
 	public void openTestList(){
 		
-		this.testUnitPanel.openTestList(MainWindow.getSuitePath()+File.separator+"testlist.xml");
+		this.testUnitPanel.openTestList(MainWindow.getSuitePath());
 		setContent(MainWindow.TESTING_UNIT);
 	}
+	
+	
+	public void closeTestCase(){
+		
+		this.editor.closeTestCase(); 
+	}
+	
 	
 	/**
 	 * 
@@ -311,11 +315,17 @@ public class MainWindow extends JFrame{
 		
 		if (panelType == MainWindow.CASE_EDITOR_SETTINGS){
 			this.editor.setTab(TestCaseEditor.SETTINGS_TAB);
+			
 		}else if(panelType == MainWindow.CASE_EDITOR_HTTP){
 			this.editor.setTab(TestCaseEditor.HTTP_TAB);
+			
 		}else if(panelType == MainWindow.CASE_EDITOR_FAULT){
 			this.editor.setTab(TestCaseEditor.FAULT_TAB);
 		}
+		
+		this.editor.loadSettings();
+		this.editor.loadRequest();
+		this.editor.loadFaultInjection();
 		setContent(MainWindow.TESTCASE_EDITOR);
 	}
 	
@@ -380,7 +390,7 @@ public class MainWindow extends JFrame{
 	 */
 	private void initContentPane(UnitController testUnitController){
 		
-		this.editor = new TestCaseEditor();
+		this.editor = new TestCaseEditor(testUnitController);
 		this.proxyUnitPanel = new ProxyMonitor(testUnitController);
 		this.statsPanel = new Statistics();
 		this.testUnitPanel = new TestMonitor(testUnitController);
@@ -481,7 +491,9 @@ public class MainWindow extends JFrame{
 		
 		public void actionPerformed(ActionEvent e){
 			ConsoleLog.Print("[MainWindow] Save testcase clicked");
-			editor.saveTestCase();
+			editor.saveRequest();
+			editor.saveSettings();
+			editor.saveFaultInjection(); 
 		}
 	}
 	
@@ -516,7 +528,7 @@ public class MainWindow extends JFrame{
 		
 		public void actionPerformed (ActionEvent e){
 			//final String path = testListPath;
-			testUnitPanel.runUnit(MainWindow.getSuitePath()+File.separator+"testlist.xml");
+			testUnitPanel.runUnit(MainWindow.getSuitePath());
 			ConsoleLog.Print("[MainWindow] Run Unit clicked");
 		}
 	}
@@ -526,7 +538,7 @@ public class MainWindow extends JFrame{
 		
 		public void actionPerformed (ActionEvent e){
 			ConsoleLog.Print("[MainWindow] Run All Units clicked");
-			testUnitPanel.runAllUnits(MainWindow.getSuitePath()+File.separator+"testlist.xml");
+			testUnitPanel.runAllUnits(MainWindow.getSuitePath());
 		}
 	}
 	
@@ -534,7 +546,7 @@ public class MainWindow extends JFrame{
 	private class SaveTestListListener implements ActionListener{
 		
 		public void actionPerformed (ActionEvent e){
-			testUnitPanel.saveTestList(MainWindow.getSuitePath()+File.separator+"testlist.xml");
+			testUnitPanel.saveTestList(MainWindow.getSuitePath());
 			ConsoleLog.Print("[MainWindow] Save Test List clicked");
 		}
 	}
@@ -543,7 +555,7 @@ public class MainWindow extends JFrame{
 	private class InsertTestCaseListener implements ActionListener{
 		
 		public void actionPerformed (ActionEvent e){
-			insertTestCase();
+			testUnitPanel.insertTestCase(MainWindow.getCasePath());
 			ConsoleLog.Print("[MainWindow] Insert Test Case clicked");
 		}
 	}

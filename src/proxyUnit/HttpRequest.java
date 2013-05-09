@@ -252,12 +252,12 @@ public class HttpRequest implements HttpMessage {
 	@Override
 	public String getContentType() {
 		
-		return null;
+		return this.contentType;
 	}
 
 	@Override
 	public void setContentType(String contentType) {
-		
+		this.contentType = contentType;
 		
 	}
 	

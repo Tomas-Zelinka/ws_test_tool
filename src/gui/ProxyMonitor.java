@@ -22,8 +22,9 @@ public class ProxyMonitor extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 5479720929723166064L;
-	private static final String LOCAL_NAME = "Local Proxy ";
-	private static final String REMOTE_NAME = "Remote Proxy ";
+	private final String LOCAL_NAME = "Local Proxy ";
+	private final String REMOTE_NAME = "Remote Proxy ";
+	private final int LOCAL_UNIT = 0;
 	private int proxyUnitCounter;
 	private UnitController controller;
 	private JTabbedPane tabbedPane;
@@ -32,7 +33,7 @@ public class ProxyMonitor extends JPanel {
 		this.proxyUnitCounter = 0;
 		this.controller = controller;
 		initComponents();
-		addUnit("none",0);
+		addUnit("none",LOCAL_UNIT);
 	}
 	
 	/**
@@ -75,7 +76,7 @@ public class ProxyMonitor extends JPanel {
 			ProxyUnitPanel panel = new ProxyUnitPanel();
 			ProxyPanelListener listner = new ProxyPanelListener(panel);
 			
-			if(proxyUnitCounter == 0){
+			if(port == 0){
 				panelName = LOCAL_NAME;
 				tabbedPane.addTab(panelName,panel);
 				controller.addProxyUnit(proxyUnitCounter,host,port,panelName);
@@ -114,7 +115,7 @@ public class ProxyMonitor extends JPanel {
 	
 	public void removeUnit(int panelIndex){
 		
-		if (panelIndex != 0){
+		if (panelIndex != LOCAL_UNIT){
 			controller.removeTestUnit(getUnitKey());
 			tabbedPane.remove(panelIndex);
 			tabbedPane.revalidate();
@@ -136,7 +137,7 @@ public class ProxyMonitor extends JPanel {
 			
 			String caseName = splittedPath[3];
 			
-			if(panelIndex == 0){
+			if(panelIndex == LOCAL_UNIT){
 				tabbedPane.setTitleAt(panelIndex,LOCAL_NAME +" - "+caseName );
 			}else{
 				tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey() +" - "+caseName );
@@ -153,7 +154,7 @@ public class ProxyMonitor extends JPanel {
 		controller.stopProxy(getUnitKey());
 		
 		int panelIndex = tabbedPane.getSelectedIndex();
-		if(panelIndex == 0 ){
+		if(panelIndex == LOCAL_UNIT ){
 			tabbedPane.setTitleAt(panelIndex, LOCAL_NAME);
 		}else{
 			tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey());
@@ -183,8 +184,8 @@ public class ProxyMonitor extends JPanel {
 		int panelIndex = tabbedPane.getSelectedIndex();
 		String keyString = tabbedPane.getTitleAt(panelIndex);
 		
-		if(panelIndex == 0)// local unit selected
-			return 0;
+		if(panelIndex == LOCAL_UNIT)// local unit selected
+			return LOCAL_UNIT;
 		else{
 			int key = Integer.parseInt(keyString.split(" ")[2]);
 			return key;

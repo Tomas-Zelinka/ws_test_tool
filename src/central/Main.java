@@ -17,6 +17,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import rmi.Server;
+import cli.TextMonitor;
 
 /**
  * Main class for starting the application
@@ -36,11 +37,12 @@ public class Main extends Options{
 	private Option help;
 	private Option gui;
 	private Option rmiServer;
-	private Option runTest;
 	private Option runTestList;
 	private Option runProxy;
+	private Option configuration;
 	private CommandLineParser parser;
 	private Server server;
+	private TextMonitor textMonitor;
 	
 	public static final String DEFAULT_ROOT_DIR = "data";
 	public static final String DEFAULT_CONFIG_DIR =  "config";
@@ -50,6 +52,8 @@ public class Main extends Options{
 	public Main(){
 		
 		initOptions();
+		initApplication();
+		
 	}
 	
 	/**
@@ -84,28 +88,28 @@ public class Main extends Options{
 		this.gui = new Option("g","Run tool with graphic user interfaces");
 		this.rmiServer = new Option("r","Run RMI server and starts RMI registry on default port 1099");
 		this.options = new Options();
-		this.runTest = OptionBuilder.withArgName("runtest")
-									.hasArg()
-									.withDescription("Run test case from given path")
-									.create("test");
-		
-		this.runTestList = OptionBuilder.withArgName("runtestList")
+		this.runTestList = OptionBuilder.withArgName("suitepath")
 										.hasArg()
 										.withDescription("Run test list from given path")
 										.create("testlist");
 		
-		this.runProxy = OptionBuilder.withArgName("runproxy")
+		this.runProxy = OptionBuilder.withArgName("casepath")
 									 .hasArg()
 									 .withDescription("Run proxy with settings from given path")
-									 .create("runproxy");
+									 .create("proxy");
+		
+		this.configuration = OptionBuilder.withArgName("configFile")
+				 .hasArg()
+				 .create("config");
 		
 		
-		this.options.addOption(this.gui);
 		this.options.addOption(this.help);
+		this.options.addOption(this.gui);
 		this.options.addOption(this.rmiServer);
-		this.options.addOption(this.runTest);
+		//this.options.addOption(this.runTest);
 		this.options.addOption(this.runTestList);
 		this.options.addOption(this.runProxy);
+		this.options.addOption(this.configuration);
 		
 		
 		this.parser = new BasicParser();
@@ -116,7 +120,8 @@ public class Main extends Options{
 	 */
 	private void initApplication(){
 		
-		unitController = new UnitController();
+		this.unitController = new UnitController();
+		this.textMonitor = new TextMonitor(this.unitController);
 	}
 	
 	
@@ -129,22 +134,42 @@ public class Main extends Options{
 		
 		CommandLine line = null;
 		
+		boolean hasConfiguration = false;
+		String configFilePath = "";
+		
 		try{ 
+			
 			line = parser.parse(this.options,args);
 		}catch(ParseException e){
-			ConsoleLog.Print( "Parsing failed.  Reason: " + e.getMessage());
+			
+			ConsoleLog.Message( "Parsing failed. \nReason: " + e.getMessage());
+			System.exit(-1);
 		}catch(Exception e){
-			e.printStackTrace();
+			
+			ConsoleLog.Message(e.getMessage());
+			System.exit(-1);
 		}
+		
+		
+		if(line.hasOption("config")){
+			
+			hasConfiguration = true;
+			configFilePath = line.getOptionValue("config");
+			ConsoleLog.Print("[Main] configFile: "+ configFilePath);
+		}
+		
 		
 		if(line.hasOption( "h" ) ){
+			
 			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp( "ant", this.options );
+			formatter.printHelp( "run.sh [rgh]", this.options );
+			System.exit(0);
+			
 		}
 		
-		if(line.hasOption("g")){
-			initApplication();
-			System.out.println("[Main] GUI option ");
+		else if(line.hasOption("g")){
+			
+			ConsoleLog.Print("[Main] GUI option ");
 			try{
 				SwingUtilities.invokeAndWait(new Runnable() {
 					public void run() {
@@ -157,13 +182,46 @@ public class Main extends Options{
 			}
 		}
 		
-		if(line.hasOption( "r" ) ){
-			initApplication();
+		else if(line.hasOption( "r" ) ){
+			
 			ConsoleLog.Print("[Main] Server");
 			this.server = new Server();
 			server.run();
+		}	
+
+		else if(line.hasOption("testlist")){
+			
+			String casePath = line.getOptionValue("testlist");
+			
+			if(hasConfiguration){
+				this.textMonitor.runTestList(casePath,configFilePath);
+				ConsoleLog.Print("[Main] Run remote testlist: "+ casePath);
+			}else{
+				this.textMonitor.runTestList(casePath);
+				ConsoleLog.Print("[Main] Run local testlist: "+ casePath);
+			}
+			System.exit(0);
 		}
 		
+		else if(line.hasOption("proxy")){
+			
+			String casePath = line.getOptionValue("proxy");
+			
+			if(hasConfiguration){
+				this.textMonitor.runProxy(casePath,configFilePath);
+				ConsoleLog.Print("[Main] Run remote proxies: "+ casePath);
+			}else{
+				this.textMonitor.runProxy(casePath);
+				ConsoleLog.Print("[Main] Run local proxy: "+ casePath);
+			}
+		}else{
+		
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp( "run.sh [rgh]", this.options );
+			System.exit(0);
+		}
+		
+		//
 	}
 
 	
@@ -172,6 +230,7 @@ public class Main extends Options{
 	 * @return TestUnitController
 	 */
 	public UnitController getTestUnitController() {
+		
 		return unitController;
 	}
 	
@@ -180,6 +239,7 @@ public class Main extends Options{
 	 * @param testUnitController
 	 */
 	public void setTestUnitController(UnitController testUnitController) {
+		
 		this.unitController = testUnitController;
 	}
 }

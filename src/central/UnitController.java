@@ -23,8 +23,8 @@ import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Profile.Section;
 import org.ini4j.Wini;
 
+import proxyUnit.ProxyListener;
 import proxyUnit.ProxyMonitoringUnit;
-import proxyUnit.ProxyPanelListener;
 import rmi.ProxyUnit;
 import rmi.TestUnit;
 import testingUnit.NewResponseListener;
@@ -326,7 +326,7 @@ public class UnitController {
 	 * @param unitId
 	 * @throws RemoteException
 	 */
-	public void setPanelListener(ProxyPanelListener listener,int unitId) throws RemoteException{
+	public void setPanelListener(ProxyListener listener,int unitId) throws RemoteException{
 		
 		ProxyUnit unit = getProxyUnit(unitId);
 		unit.setPanelListener(listener); 

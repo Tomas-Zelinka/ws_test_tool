@@ -35,9 +35,9 @@ public class TestMonitor extends JPanel  {
 	private UnitController controller;
 	private int testUnitCounter;
 	
-	private static final String LOCAL_NAME = "Local Test ";
-	private static final String REMOTE_NAME = "Remote Test ";
-	
+	private final String LOCAL_NAME = "Local Test ";
+	private final String REMOTE_NAME = "Remote Test ";
+	private final int LOCAL_UNIT = 0;
 	
 	/**
 	 * 
@@ -48,7 +48,7 @@ public class TestMonitor extends JPanel  {
 		controller = testUnitController;
 		testUnitCounter = 0;
 		initComponents();
-		addUnit("none",0);
+		addUnit("none",LOCAL_UNIT);
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public class TestMonitor extends JPanel  {
 			TestUnitPanel panel = new TestUnitPanel();
 			NewResponseListener listner = new TestPanelListener(panel);
 			
-			if(testUnitCounter == 0){
+			if(port == LOCAL_UNIT){
 				panelName = LOCAL_NAME;
 				tabbedPane.addTab(panelName,panel);
 				controller.addTestUnit(testUnitCounter,host,port,panelName);
@@ -134,7 +134,7 @@ public class TestMonitor extends JPanel  {
 	 */
 	public void removeUnit(int panelIndex){
 		
-		if (panelIndex != 0){
+		if (panelIndex != LOCAL_UNIT){
 			controller.removeTestUnit(getUnitKey());
 			tabbedPane.remove(panelIndex);
 			tabbedPane.revalidate();
@@ -156,9 +156,11 @@ public class TestMonitor extends JPanel  {
 		
 			int panelIndex = i;
 			String splitedPath = (MainWindow.getSuitePath().split("\\"+File.separator))[2];
-			if(panelIndex == 0){
+			if(panelIndex == LOCAL_UNIT){
+				
 				tabbedPane.setTitleAt(panelIndex,LOCAL_NAME+" - "+splitedPath );
 			}else{
+				
 				String keyString = tabbedPane.getTitleAt(panelIndex);
 				int key = Integer.parseInt(keyString.split(" ")[2]);
 				tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ key +" - "+splitedPath );
@@ -233,7 +235,7 @@ public class TestMonitor extends JPanel  {
 		int tabCount = tabbedPane.getTabCount();
 		for (int i =0; i < tabCount; i++){
 			String keyString = tabbedPane.getTitleAt(i);
-			if(i == 0){
+			if(i == LOCAL_UNIT){
 				runTest(path,i);
 			}else{
 				int key = Integer.parseInt(keyString.split(" ")[2]);
@@ -254,8 +256,8 @@ public class TestMonitor extends JPanel  {
 		int panelIndex = tabbedPane.getSelectedIndex();
 		String keyString = tabbedPane.getTitleAt(panelIndex);
 		
-		if(panelIndex == 0)// local unit selected
-			return 0;
+		if(panelIndex == LOCAL_UNIT)// local unit selected
+			return LOCAL_UNIT;
 		else{
 			int key = Integer.parseInt(keyString.split(" ")[2]);
 			return key;

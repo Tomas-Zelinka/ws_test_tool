@@ -18,6 +18,8 @@ public class TextMonitor {
 		this.controller = controller;
 		testUnitCounter = 0;
 		proxyUnitCounter = 0;
+		addTestUnit("",0);
+		addProxyUnit("",0);
 	}
 	
 	
@@ -25,42 +27,42 @@ public class TextMonitor {
 		
 	}
 	
-	private void AddTestUnit(String host, int port){
+	private void addTestUnit(String host, int port){
 		
-		try{
-			controller.addTestUnit(testUnitCounter,host,port);
-		
-		}catch(RemoteException ex){
-			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());
-			return;
-		}catch(NotBoundException ex){
-			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
-			return;
-		}catch(Exception ex){
-			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
+//		try{
+//			//controller.addTestUnit(testUnitCounter,host,port);
+//		
+//		}catch(RemoteException ex){
+//			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());
+//			return;
+//		}catch(NotBoundException ex){
+//			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
+//			return;
+//		}catch(Exception ex){
+//			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
+//			ex.printStackTrace();
+//			return;
+//		}
 		
 		testUnitCounter++;
 	}
 	
-	private void AddProxyUnit(String host, int port){
-		try{
-			controller.addProxyUnit(proxyUnitCounter, host, port);
-		
-		}catch(RemoteException ex){
-			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());
-			return;
-		}catch(NotBoundException ex){
-			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
-			return;
-		}catch(Exception ex){
-			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-		proxyUnitCounter++;
+	private void addProxyUnit(String host, int port){
+//		try{
+//			controller.addProxyUnit(proxyUnitCounter, host, port);
+//		
+//		}catch(RemoteException ex){
+//			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());
+//			return;
+//		}catch(NotBoundException ex){
+//			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
+//			return;
+//		}catch(Exception ex){
+//			ConsoleLog.Message(ex.getClass().getName() + ": " +ex.getMessage());
+//			ex.printStackTrace();
+//			return;
+//		}
+//		proxyUnitCounter++;
 	}
 	
 	

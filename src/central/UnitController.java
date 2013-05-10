@@ -1,17 +1,28 @@
 package central;
 
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.SwingWorker;
 
 import logging.ConsoleLog;
+
+import org.ini4j.Ini;
+import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Profile.Section;
+import org.ini4j.Wini;
+
 import proxyUnit.ProxyMonitoringUnit;
 import proxyUnit.ProxyPanelListener;
 import rmi.ProxyUnit;
@@ -23,9 +34,14 @@ import data.FaultInjectionData;
 import data.HttpMessageData;
 import data.TestCaseSettingsData;
 import data.TestList;
+import data.UnitConfiguration;
 
 public class UnitController {
 
+	
+	public static final String PROXIES_CONF_FILE = File.separator +"proxy.ini";
+	public static final String TEST_CONF_FILE = File.separator + "tests.ini";
+	
 	/**
 	 * 
 	 */
@@ -39,9 +55,18 @@ public class UnitController {
 	/**
 	 * 
 	 */
+	private Map <Integer,UnitConfiguration> testUnitConfigurationsStorage;
+	
+	/**
+	 * 
+	 */
+	private Map <Integer,UnitConfiguration> proxyUnitConfigurationsStorage;
+	
+	/**
+	 * 
+	 */
 	private DataProvider ioProvider; 
 	
-	 
 	/**
 	 * 
 	 */
@@ -49,7 +74,167 @@ public class UnitController {
 		
 		this.testUnitsStorage = new HashMap<Integer,TestUnit>();
 		this.proxyUnitsStorage = new HashMap<Integer,ProxyUnit>();
+		this.testUnitConfigurationsStorage = new HashMap<Integer,UnitConfiguration>();
+		this.proxyUnitConfigurationsStorage = new HashMap<Integer,UnitConfiguration>();
 		this.ioProvider = new DataProvider();
+		this.ioProvider.createDir(Main.DEFAULT_CONFIG_DIR);
+		
+	}
+	
+	public void exportTestConfiguration(){
+		
+		Wini confFile = null;
+		try {
+			File iniFile = new File (Main.DEFAULT_CONFIG_DIR + TEST_CONF_FILE);
+			if(!iniFile.exists()){
+				iniFile.createNewFile();
+			}
+			confFile = new Wini(iniFile);
+		
+		} catch (InvalidFileFormatException e) {
+			
+			ConsoleLog.Message(e.getMessage());
+		} catch (IOException e) {
+			
+			ConsoleLog.Message(e.getMessage());
+		}
+		
+		
+		for(int key : testUnitConfigurationsStorage.keySet()){
+			
+			UnitConfiguration unit = testUnitConfigurationsStorage.get(key);
+			String name = unit.getName();
+			String host = unit.getHost();
+			int registryPort = unit.getRegistryPort();
+			confFile.put(name, "id", key); 
+			confFile.put(name, "host", host); 
+			confFile.put(name, "registryPort", registryPort); 
+		}
+		
+		try {
+			confFile.store();
+		} catch (IOException e) {
+			
+			ConsoleLog.Message(e.getMessage());
+		}
+	}
+	
+	public UnitConfiguration[] importTestConfiguration(){
+		UnitConfiguration[] unitArray = null;
+		
+		File iniFile = new File (Main.DEFAULT_CONFIG_DIR + TEST_CONF_FILE);
+		
+		if(iniFile.exists()){
+			Ini ini = new Ini();
+			
+			try {
+				
+				ini.load(new FileReader(iniFile));
+			} catch (IOException e) {
+			
+				ConsoleLog.Message(e.getMessage());
+			}
+			
+			Set<String> unitKeys =  ini.keySet();
+			unitArray = new UnitConfiguration[unitKeys.size()];
+			
+			Iterator<String> it = unitKeys.iterator();
+			int i = 0;
+			while(it.hasNext()){
+				
+				String unitKey = it.next();
+				Section unit = ini.get(unitKey);  
+				String host = unit.get("host");
+				Integer registryPort = Integer.parseInt(unit.get("registryPort"));
+				Integer id = Integer.parseInt(unit.get("id"));
+				UnitConfiguration unitConfig = new UnitConfiguration(id,host,registryPort,unitKey);
+				unitArray[i] = unitConfig;
+				i++;
+			}
+		}else{
+			ConsoleLog.Message("File "+iniFile.getPath() + " not found");
+		}
+		
+		return unitArray;
+	}
+	
+	public void exportProxyConfiguration(){
+		
+		Wini confFile = null;
+		try {
+			File iniFile = new File (Main.DEFAULT_CONFIG_DIR + PROXIES_CONF_FILE);
+			if(!iniFile.exists()){
+				iniFile.createNewFile();
+			}
+			confFile = new Wini(iniFile);
+		
+		} catch (InvalidFileFormatException e) {
+			
+			ConsoleLog.Message(e.getMessage());
+		} catch (IOException e) {
+			
+			ConsoleLog.Message(e.getMessage());
+		}
+			
+		for(int key : proxyUnitConfigurationsStorage.keySet()){
+			
+			UnitConfiguration unit = proxyUnitConfigurationsStorage.get(key);
+			String name = unit.getName();
+			String host = unit.getHost();
+			int registryPort = unit.getRegistryPort();
+			confFile.put(name, "id", key); 
+			confFile.put(name, "host", host); 
+			confFile.put(name, "registryPort", registryPort); 
+			
+		}
+		
+		try {
+			confFile.store();
+		} catch (IOException e) {
+			
+			ConsoleLog.Message(e.getMessage());
+		}
+		
+	}
+	
+	public UnitConfiguration[] importProxyConfiguration(){
+		
+		UnitConfiguration[] unitArray = null;
+		
+		File iniFile = new File (Main.DEFAULT_CONFIG_DIR + PROXIES_CONF_FILE);
+		
+		if(iniFile.exists()){
+			Ini ini = new Ini();
+			
+			try {
+				
+				ini.load(new FileReader(iniFile));
+			} catch (IOException e) {
+			
+				ConsoleLog.Message(e.getMessage());
+			}
+			
+			Set<String> unitKeys =  ini.keySet();
+			unitArray = new UnitConfiguration[unitKeys.size()];
+			
+			Iterator<String> it = unitKeys.iterator();
+			int i = 0;
+			while(it.hasNext()){
+				
+				String unitKey = it.next();
+				Section unit = ini.get(unitKey);  
+				String host = unit.get("host");
+				Integer registryPort = Integer.parseInt(unit.get("registryPort"));
+				Integer id = Integer.parseInt(unit.get("id"));
+				UnitConfiguration unitConfig = new UnitConfiguration(id,host,registryPort,unitKey);
+				unitArray[i] = unitConfig;
+				i++;
+			}
+		}else{
+			ConsoleLog.Message("File "+iniFile.getPath() + " not found");
+		}
+		
+		return unitArray;
 	}
 	
 	/**
@@ -60,7 +245,7 @@ public class UnitController {
 	 * @throws RemoteException
 	 * @throws NotBoundException
 	 */
-	public void addTestUnit(Integer key,String host, int port) throws RemoteException, NotBoundException{
+	public void addTestUnit(Integer key,String host, Integer port,String name) throws RemoteException, NotBoundException{
 		
 		TestUnit newUnit = null;
 		
@@ -69,7 +254,10 @@ public class UnitController {
 		}else{
 			Registry registry = LocateRegistry.getRegistry(host,port);
 			newUnit = (TestUnit) registry.lookup("TestingUnit");
+			UnitConfiguration config = new UnitConfiguration(key, host, port, name);
+			testUnitConfigurationsStorage.put(key,config);
 			ConsoleLog.Message(newUnit.testConnection());
+			
 		}
 		
 		testUnitsStorage.put(key, newUnit);
@@ -93,6 +281,7 @@ public class UnitController {
 	 */
 	public void removeTestUnit(Integer key){
 		
+		testUnitConfigurationsStorage.remove(key);
 		this.testUnitsStorage.remove(key);
 	}
 
@@ -113,7 +302,7 @@ public class UnitController {
 	 * @throws RemoteException
 	 * @throws NotBoundException
 	 */
-	public void addProxyUnit(Integer key,String host, int port) throws RemoteException, NotBoundException{
+	public void addProxyUnit(Integer key,String host, Integer port,String name) throws RemoteException, NotBoundException{
 		
 			ProxyUnit newUnit =null; 
 			if(key == 0){
@@ -122,7 +311,11 @@ public class UnitController {
 				Registry registry = LocateRegistry.getRegistry(host,port);
 				newUnit = (ProxyUnit) registry.lookup("ProxyUnit");
 				ConsoleLog.Message(newUnit.testConnection());
+				UnitConfiguration config = new UnitConfiguration(key, host, port, name);
+				proxyUnitConfigurationsStorage.put(key,config);
 			}
+			
+			
 			proxyUnitsStorage.put(key, newUnit);
 		
 	}
@@ -145,6 +338,7 @@ public class UnitController {
 	 */
 	public void removeProxyUnit(Integer key){
 		
+		proxyUnitConfigurationsStorage.remove(key);
 		this.proxyUnitsStorage.remove(key);
 	}
 	

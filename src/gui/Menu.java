@@ -95,7 +95,7 @@ public class Menu extends JMenuBar {
 		addMenuItem(file,"Delete", new DeleteListener());
 		addMenuItem(file,"Refresh", new RefreshTree());
 		file.addSeparator();
-		addMenuItem(file,"Export Configuration", new ExportListener());
+		addMenuItem(file,"Export All Configurations", new ExportListener());
 		addMenuItem(file,"Exit", new ExitListener());
 	}
 	

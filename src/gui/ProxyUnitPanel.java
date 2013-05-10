@@ -14,7 +14,6 @@ import javax.swing.table.DefaultTableModel;
 import logging.ConsoleLog;
 import modalWindows.AntiAliasedEditorPane;
 import proxyUnit.HttpInteraction;
-import proxyUnit.HttpMessageParser;
 import proxyUnit.HttpRequest;
 import proxyUnit.HttpResponse;
 

@@ -26,6 +26,7 @@ public class DataProvider {
 	private XStream stream;
 	private static final String resourcePath = ".."+File.separator+ "resources" + File.separator;
 	
+	
 	public DataProvider(){
 		stream = new XStream();
 	}
@@ -36,6 +37,16 @@ public class DataProvider {
 	 */
 	public static String getResourcePath(){
 		return DataProvider.resourcePath;
+	}
+	
+	public void createDir(String path){
+		
+		File dir = new File(path);
+		
+		if(!dir.exists()){
+			dir.mkdir();
+		}
+			
 	}
 	
 	/**

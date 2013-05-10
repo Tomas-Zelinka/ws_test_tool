@@ -13,6 +13,7 @@ import javax.swing.event.ChangeListener;
 import logging.ConsoleLog;
 import proxyUnit.ProxyPanelListener;
 import central.UnitController;
+import data.UnitConfiguration;
 
 public class ProxyMonitor extends JPanel {
 	
@@ -21,6 +22,8 @@ public class ProxyMonitor extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 5479720929723166064L;
+	private static final String LOCAL_NAME = "Local Proxy ";
+	private static final String REMOTE_NAME = "Remote Proxy ";
 	private int proxyUnitCounter;
 	private UnitController controller;
 	private JTabbedPane tabbedPane;
@@ -29,34 +32,65 @@ public class ProxyMonitor extends JPanel {
 		this.proxyUnitCounter = 0;
 		this.controller = controller;
 		initComponents();
-		addUnit("",0);
+		addUnit("none",0);
 	}
 	
+	/**
+	 * 
+	 */
+	public void exportConfiguration(){
+		controller.exportProxyConfiguration();
+	}
 	
+	public void importConfiguration(){
+		
+		UnitConfiguration[] configArray = controller.importProxyConfiguration();
+		
+		if(configArray != null){
+			int panelCount = tabbedPane.getTabCount();
+			
+			for(int i = 1; i < panelCount; i++){
+				removeUnit(i);
+				proxyUnitCounter--;
+			}
+			
+			for(UnitConfiguration config : configArray){
+				addUnit(config.getHost(),config.getRegistryPort());
+			}
+		}else{
+			ConsoleLog.Message("Found any configurations");
+		}
+	}
 	/**
 	 * This method inserts remote unit tab to the tabbed pane
 	 * and initialize new remote unit in unit controller
 	 */
 	public void addUnit(String host, int port){
 		int selectedPanel = 0;
-		
+		String panelName = "";
 		
 		try{
-			controller.addProxyUnit(proxyUnitCounter,host,port);
+			
 			
 			ProxyUnitPanel panel = new ProxyUnitPanel();
 			ProxyPanelListener listner = new ProxyPanelListener(panel);
 			
 			if(proxyUnitCounter == 0){
-				tabbedPane.addTab("Local Unit",panel);
+				panelName = LOCAL_NAME;
+				tabbedPane.addTab(panelName,panel);
+				controller.addProxyUnit(proxyUnitCounter,host,port,panelName);
 				controller.setPanelListener(listner,proxyUnitCounter);
 				
 			}else{
-				
+				panelName = REMOTE_NAME  + proxyUnitCounter;
+				controller.addProxyUnit(proxyUnitCounter,host,port,panelName);
 				controller.setPanelListener(listner,proxyUnitCounter);
-				tabbedPane.addTab("Remote Unit "  + proxyUnitCounter,panel);
-				selectedPanel = tabbedPane.indexOfTab("Remote Unit " +proxyUnitCounter);
+				tabbedPane.addTab(panelName,panel);
+				selectedPanel = tabbedPane.indexOfTab(panelName);
 			}
+			
+			
+			
 		}catch(RemoteException ex){
 			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());
 			return;
@@ -74,8 +108,11 @@ public class ProxyMonitor extends JPanel {
 		proxyUnitCounter++;
 	}
 	
-	public void removeUnit(){
-		int panelIndex = tabbedPane.getSelectedIndex();
+	public int getPanelIndex(){
+		return tabbedPane.getSelectedIndex();
+	}
+	
+	public void removeUnit(int panelIndex){
 		
 		if (panelIndex != 0){
 			controller.removeTestUnit(getUnitKey());
@@ -100,9 +137,9 @@ public class ProxyMonitor extends JPanel {
 			String caseName = splittedPath[3];
 			
 			if(panelIndex == 0){
-				tabbedPane.setTitleAt(panelIndex,"Local Unit"+" - "+caseName );
+				tabbedPane.setTitleAt(panelIndex,LOCAL_NAME +" - "+caseName );
 			}else{
-				tabbedPane.setTitleAt(panelIndex,"Remote Unit "+ getUnitKey() +" - "+caseName );
+				tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey() +" - "+caseName );
 			}
 			//getSelectedPanel().clearResults();
 			controller.runProxy(path,getUnitKey());
@@ -117,9 +154,9 @@ public class ProxyMonitor extends JPanel {
 		
 		int panelIndex = tabbedPane.getSelectedIndex();
 		if(panelIndex == 0 ){
-			tabbedPane.setTitleAt(panelIndex, "Local Unit");
+			tabbedPane.setTitleAt(panelIndex, LOCAL_NAME);
 		}else{
-			tabbedPane.setTitleAt(panelIndex,"Remote Unit "+ getUnitKey());
+			tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey());
 		}
 		
 	}
@@ -129,11 +166,11 @@ public class ProxyMonitor extends JPanel {
 	 * 
 	 * @return JPanel - returns the selected unit panel
 	 */
-	private ProxyUnitPanel getSelectedPanel(){
-		ProxyUnitPanel selectedPanel = (ProxyUnitPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
-		ConsoleLog.Print("[ProxyMonitor] returned Unit: " + getUnitKey());
-		return selectedPanel;
-	}
+//	private ProxyUnitPanel getSelectedPanel(){
+//		ProxyUnitPanel selectedPanel = (ProxyUnitPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
+//		ConsoleLog.Print("[ProxyMonitor] returned Unit: " + getUnitKey());
+//		return selectedPanel;
+//	}
 	
 	
 	/**

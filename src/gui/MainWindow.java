@@ -475,11 +475,16 @@ public class MainWindow extends JFrame{
 		addToolBarItem(testUnitToolBox,"Save Test List",new SaveTestListListener());
 		addToolBarItem(testUnitToolBox,"Add Remote Unit",new AddTestUnitListener());
 		addToolBarItem(testUnitToolBox,"Remove Test Unit",new RemoveTestUnitListener());
+		addToolBarItem(testUnitToolBox,"Export Configuration",new ExportTestUnitListener());
+		addToolBarItem(testUnitToolBox,"Import Configuration",new ImportTestUnitListener());
 		
 		addToolBarItem(proxyUnitToolBox,"Run Unit",new RunProxyListener());
 		addToolBarItem(proxyUnitToolBox,"Stop Unit",new StopProxyListener());
 		addToolBarItem(proxyUnitToolBox,"Add Remote Unit",new AddProxyUnitListener());
 		addToolBarItem(proxyUnitToolBox,"Remove Remote Unit",new RemoveProxyUnitListener());
+		addToolBarItem(proxyUnitToolBox,"Export Configuration",new ExportProxyUnitListener());
+		addToolBarItem(proxyUnitToolBox,"Import Configuration",new ImportProxyUnitListener());
+		
 	}
 	
 	
@@ -510,7 +515,7 @@ public class MainWindow extends JFrame{
 			if(window.isOkButtonClicked()){
 				port = window.getPort();
 				host = window.getHost();
-				testUnitPanel.addTestUnit(host,port);
+				testUnitPanel.addUnit(host,port);
 			}
 		}
 	}
@@ -519,7 +524,7 @@ public class MainWindow extends JFrame{
 		
 		public void actionPerformed (ActionEvent e){
 			ConsoleLog.Print("[MainWindow] Remove Unit clicked");
-			testUnitPanel.removeUnit();
+			testUnitPanel.removeUnit(testUnitPanel.getPanelIndex());
 		}
 	}
 	
@@ -542,6 +547,21 @@ public class MainWindow extends JFrame{
 		}
 	}
 	
+	private class ExportTestUnitListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			ConsoleLog.Print("[MainWindow] Export Units clicked");
+			testUnitPanel.exportConfiguration();
+		}
+	}	
+	
+	private class ImportTestUnitListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			ConsoleLog.Print("[MainWindow] Import Units clicked");
+			testUnitPanel.importConfiguration();
+		}
+	}	
 	
 	private class SaveTestListListener implements ActionListener{
 		
@@ -586,7 +606,7 @@ public class MainWindow extends JFrame{
 	private class RemoveProxyUnitListener implements ActionListener{
 		
 		public void actionPerformed (ActionEvent e){
-			proxyUnitPanel.removeUnit();
+			proxyUnitPanel.removeUnit(proxyUnitPanel.getPanelIndex());
 			ConsoleLog.Print("[MainWindow] Remove Proxy Unit clicked");
 		}
 	}
@@ -620,6 +640,22 @@ public class MainWindow extends JFrame{
 			ConsoleLog.Print("[MainWindow] Run Proxy Unit clicked");
 		}
 	}
+	
+	private class ExportProxyUnitListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			ConsoleLog.Print("[MainWindow] Export Units clicked");
+			proxyUnitPanel.exportConfiguration();
+		}
+	}	
+	
+	private class ImportProxyUnitListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			ConsoleLog.Print("[MainWindow] Import Units clicked");
+			proxyUnitPanel.importConfiguration();
+		}
+	}	
 	
 	
 	private class StopProxyListener implements ActionListener{

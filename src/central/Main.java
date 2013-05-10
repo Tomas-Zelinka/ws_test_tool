@@ -32,22 +32,24 @@ public class Main extends Options{
 	 */
 	private static final long serialVersionUID = -6417256415716065905L;
 	private UnitController unitController;
+	private Options options;
 	private Option help;
 	private Option gui;
 	private Option rmiServer;
-	private Options options;
 	private Option runTest;
 	private Option runTestList;
 	private Option runProxy;
 	private CommandLineParser parser;
 	private Server server;
 	
+	public static final String DEFAULT_ROOT_DIR = "data";
+	public static final String DEFAULT_CONFIG_DIR =  "config";
 	/**
 	 * The main of the application
 	 */
 	public Main(){
-		initOptions();
 		
+		initOptions();
 	}
 	
 	/**
@@ -56,7 +58,7 @@ public class Main extends Options{
 	public static void main(String[] args) {
 		
 		Main main = new Main();
-		ConsoleLog.setConsoleLog(false);
+		ConsoleLog.setConsoleLog(true);
 		main.parseOptions(args);
 	}
 	

@@ -50,9 +50,10 @@ public class ProxyMonitor extends JPanel {
 		if(configArray != null){
 			int panelCount = tabbedPane.getTabCount();
 			
+			proxyUnitCounter = 1;
 			for(int i = 1; i < panelCount; i++){
 				removeUnit(i);
-				proxyUnitCounter--;
+				
 			}
 			
 			for(UnitConfiguration config : configArray){
@@ -70,27 +71,23 @@ public class ProxyMonitor extends JPanel {
 		int selectedPanel = 0;
 		String panelName = "";
 		
+		
 		try{
-			
+			if(port == LOCAL_UNIT){
+				
+				panelName = LOCAL_NAME;
+			}else{
+				
+				panelName = REMOTE_NAME  + proxyUnitCounter;
+			}
 			
 			ProxyUnitPanel panel = new ProxyUnitPanel();
 			ProxyPanelListener listner = new ProxyPanelListener(panel);
 			
-			if(port == 0){
-				panelName = LOCAL_NAME;
-				tabbedPane.addTab(panelName,panel);
-				controller.addProxyUnit(proxyUnitCounter,host,port,panelName);
-				controller.setPanelListener(listner,proxyUnitCounter);
-				
-			}else{
-				panelName = REMOTE_NAME  + proxyUnitCounter;
-				controller.addProxyUnit(proxyUnitCounter,host,port,panelName);
-				controller.setPanelListener(listner,proxyUnitCounter);
-				tabbedPane.addTab(panelName,panel);
-				selectedPanel = tabbedPane.indexOfTab(panelName);
-			}
-			
-			
+			controller.addProxyUnit(proxyUnitCounter,host,port,panelName);
+			controller.setPanelListener(listner,proxyUnitCounter);
+			tabbedPane.addTab(panelName,panel);
+			selectedPanel = tabbedPane.indexOfTab(panelName);
 			
 		}catch(RemoteException ex){
 			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());

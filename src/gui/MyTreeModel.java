@@ -93,9 +93,6 @@ public class MyTreeModel implements TreeModel {
 		if(test.isHttpTestCase())
 			return true;
 		
-		if(test.isWSDL())
-			return true;
-		
 		if(test.isTestList())
 			return true;
 		

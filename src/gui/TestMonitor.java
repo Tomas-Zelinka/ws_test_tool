@@ -65,9 +65,10 @@ public class TestMonitor extends JPanel  {
 		if(configArray != null){
 			int panelCount = tabbedPane.getTabCount();
 			
+			testUnitCounter = 1;
 			for(int i = 1; i < panelCount; i++){
 				removeUnit(i);
-				testUnitCounter--;
+				
 			}
 			
 			for(UnitConfiguration config : configArray){
@@ -88,29 +89,27 @@ public class TestMonitor extends JPanel  {
 	 * and initialize new remote unit in unit controller
 	 */
 	public void addUnit(String host, int port){
+		
 		int selectedPanel = 0;
 		String panelName = "";
+		
 		try{
 			
+			if(port == LOCAL_UNIT){
+				
+				panelName = LOCAL_NAME;
+			}else{
+				
+				panelName = REMOTE_NAME+ testUnitCounter;
+			}
 			
 			TestUnitPanel panel = new TestUnitPanel();
 			NewResponseListener listner = new TestPanelListener(panel);
+			controller.addTestUnit(testUnitCounter,host,port,panelName);
+			controller.setResponseListener(listner,testUnitCounter);
 			
-			if(port == LOCAL_UNIT){
-				panelName = LOCAL_NAME;
-				tabbedPane.addTab(panelName,panel);
-				controller.addTestUnit(testUnitCounter,host,port,panelName);
-				controller.setResponseListener(listner,testUnitCounter);
-				
-			}else{
-				panelName = REMOTE_NAME+ testUnitCounter;
-				controller.addTestUnit(testUnitCounter,host,port,panelName);
-				controller.setResponseListener(listner,testUnitCounter);
-				
-				tabbedPane.addTab(panelName,panel);
-				selectedPanel = tabbedPane.indexOfTab(panelName);
-			}
-			
+			tabbedPane.addTab(panelName,panel);
+			selectedPanel = tabbedPane.indexOfTab(panelName);
 			
 		}catch(RemoteException ex){
 			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());
@@ -135,10 +134,10 @@ public class TestMonitor extends JPanel  {
 	public void removeUnit(int panelIndex){
 		
 		if (panelIndex != LOCAL_UNIT){
+			ConsoleLog.Print("[TestMonitor] Removed Unit: " + getUnitKey());
 			controller.removeTestUnit(getUnitKey());
 			tabbedPane.remove(panelIndex);
 			tabbedPane.revalidate();
-			ConsoleLog.Print("[TestMonitor] Removed Unit: " + getUnitKey());
 		}else{
 			ConsoleLog.Print("[TestMonitor] You cannot close local testing unit");
 		}

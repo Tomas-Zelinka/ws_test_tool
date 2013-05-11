@@ -2,6 +2,7 @@ package gui;
 
 
 
+
 public class FileNode extends java.io.File {
 
 	/**
@@ -26,6 +27,15 @@ public class FileNode extends java.io.File {
         super(parent, child);
     }
     
+    public boolean isSuite(){
+    
+    	String node = this.getParent();
+    	if(node.compareTo(MainWindow.getDataRoot()) == 0){
+    		return true;
+    	}
+    	
+    	return false;
+    }
     /**
      * 
      * @return
@@ -40,20 +50,6 @@ public class FileNode extends java.io.File {
     	return false;
     }
 
-    public boolean isWSDL(){
-    		
-    	
-    	if (this.isFile() ){
-    		String filename = this.getName().substring(this.getName().length()-4,this.getName().length());
-    	   	if(filename.compareTo("wsdl") == 0)
-    			return true;
-    		//ConsoleLog.Print("wsdl test case clicked");
-    	}
-    	return false;
-    }
-    
-    
-    
     public boolean isTestList(){
 	    	
     	if (this.isFile() && (this.getName().compareTo("testlist.xml") == 0)){

@@ -227,7 +227,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 				HttpMessageData[] caseResponses = responses.get(key);
 					if(caseResponses != null){
 						for(HttpMessageData data : caseResponses){
-							Object[] newRow = new Object[] {data.getName(),data.getLoopNumber(),data.getThreadNumber(),null,data.getMethod(),data.getUri()};
+							Object[] newRow = new Object[] {data.getName(),null,data.getMethod(),data.getResource(),null,data.getLoopNumber(),data.getThreadNumber()};
 							responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
 						}
 					}else{
@@ -348,7 +348,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 
 	            },
 	            new String [] {
-	            		 "Name", "Loop number","Thread number", "Http Code","Method","URI"
+	            		 "Name","Http Code", "Method","Service","Elapsed Time" ,"Loop number","Thread number", 
 	            }
 	        ) {
 	            /**
@@ -356,7 +356,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 				 */
 				private static final long serialVersionUID = 3376163326142594714L;
 				boolean[] canEdit = new boolean [] {
-	                false, false,false, false,false, false,
+	                false, false,false, false,false, false,false
 	            };
 
 	            public boolean isCellEditable(int rowIndex, int columnIndex) {

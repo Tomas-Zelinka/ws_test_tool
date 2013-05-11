@@ -95,6 +95,10 @@ public class HttpRequestEditor extends JPanel {
 		httpBodyEditorPane.setText("");
 		
 	}
+	
+	public void setEditorContent(String content){
+    	this.httpBodyEditorPane.setText(content);
+    }
  
 	/**
 	 * 
@@ -107,25 +111,60 @@ public class HttpRequestEditor extends JPanel {
 	
 	
     private void saveData(){
-    	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_VERSION,(String) headersTable.getValueAt(0, 1));
-    	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_METHOD,(String) headersTable.getValueAt(1, 1));
-    	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_URI,(String) headersTable.getValueAt(2, 1));
-    	ConsoleLog.Print((String)headersTable.getValueAt(2, 1));
-    	this.requestData.addMandatoryHeader(HttpMessageData.HEADER_HTTP_CONTENTTYPE,(String) headersTable.getValueAt(3, 1));
+    	this.requestData.setMethod((String) headersTable.getValueAt(0, 1));
+    	this.requestData.setContentType((String) headersTable.getValueAt(1, 1));
+    	this.requestData.setHost((String) headersTable.getValueAt(2, 1));
+    	this.requestData.setResource((String) headersTable.getValueAt(3, 1));
+    	this.requestData.setParams(buildParams());
     	this.requestData.setRequestBody(httpBodyEditorPane.getText());
     }
     
     private void  loadData(){
-    	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_VERSION), 0, 1);
-    	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_METHOD), 1, 1);
-    	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_URI), 2, 1);
-    	headersTableModel.setValueAt(this.requestData.getMandatoryHeaderValue(HttpMessageData.HEADER_HTTP_CONTENTTYPE), 3, 1);
+    	headersTableModel.setValueAt(this.requestData.getMethod(), 0, 1);
+    	headersTableModel.setValueAt(this.requestData.getContentType(), 1, 1);
+    	headersTableModel.setValueAt(this.requestData.getHost(), 2, 1);
+    	headersTableModel.setValueAt(this.requestData.getResource(), 3, 1);
+    	restoreParams(this.requestData.getParams());
     	setEditorContent(this.requestData.getRequestBody());
     }
     
-    public void setEditorContent(String content){
-    	this.httpBodyEditorPane.setText(content);
+  
+    private String buildParams(){
+    	String parameters = "";
+    	
+    	for(int i= 4; i< headersTable.getRowCount(); i++){
+    		String param = (String) headersTable.getValueAt(i, 0);
+    		String value = (String) headersTable.getValueAt(i, 1);
+    		
+    		if(param != null && value != null)
+    			parameters += param + "=" + value + "&";
+    	}
+    	
+    	//cut the last &
+    	if(!parameters.isEmpty())
+    		parameters = parameters.substring(0, parameters.length()-2);
+    	
+    	
+    	return parameters;
     }
+    
+    private void restoreParams(String str){
+    	    	
+    	if(!str.isEmpty()){
+    		headersTableModel.setNumRows(4);
+	    	String[] params = str.split("&");
+	    	for(int i =0; i < params.length; i++){
+	    		String [] splittedParam = params[i].split("=");
+	    		String name = splittedParam[0];
+	    		String value = splittedParam[1];
+	    		headersTableModel.insertRow(i+4, new Object[]{name,value});
+	    	}
+    	}
+    }
+    
+    
+    
+    
    /**
      * 
      */
@@ -147,14 +186,14 @@ public class HttpRequestEditor extends JPanel {
    
     private void initHeaderPane(){
 		 
-    		headersLabel.setText("Http header:");
+    		headersLabel.setText("Http parameters:");
 			
 			
 			headersTable.setDefaultEditor(Object.class, new MyCellEditor());
 			headersTable.createDefaultColumnsFromModel();
 			headersTable.setRowHeight(25);
 	        headersTable.setModel(new javax.swing.table.DefaultTableModel(
-	            new Object [][] {{"HTTP version"," click and select"},{"HTTP method"},{"URI"},{"Content-Type"}
+	            new Object [][] {{"METHOD"," click and select"},{"CONTENT-TYPE"," click and select"},{"HOST"},{"RESOURCE/SERVICE"}
 	            		
 	            },
 	            new String [] {
@@ -187,15 +226,23 @@ public class HttpRequestEditor extends JPanel {
 	        });
 
 	        removeHeaderButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"remove_small.png"))); // NOI18N
-	        removeHeaderButton.setText("Remove");
+	        removeHeaderButton.setText("Remove Last");
 	        removeHeaderButton.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
-	            	int[] selectedRows = headersTable.getSelectedRows();
-	         		
-	         		for(int i = selectedRows.length-1; i >= 0; i-- ){
-	         			 headersTableModel.removeRow(selectedRows[i]);
-	         		}
+	            	int rowCount = headersTable.getRowCount();
+	            	
+	            	if(rowCount > 4){
+	         			
+	         			if(!headersTable.isCellSelected(rowCount-1, 0) && !headersTable.isCellSelected(rowCount-1, 0) )
+	         			{
+	         				headersTableModel.removeRow(rowCount-1);
+	         				headersTableModel.fireTableStructureChanged();
+	         			}else{
+	         				ConsoleLog.Message("Please stop editing the cell before you will delete it!");
+	         			}
+	            	}
 	            }
+	            
 	        });
 	        
 	        javax.swing.GroupLayout conditionPanelLayout = new javax.swing.GroupLayout(headersPanel);
@@ -210,8 +257,7 @@ public class HttpRequestEditor extends JPanel {
 	                    .addGroup(conditionPanelLayout.createSequentialGroup()
 	                        .addComponent(addHeaderButton)
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(removeHeaderButton)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+	                        .addComponent(removeHeaderButton)))
 	                .addContainerGap())
 	        );
 	        conditionPanelLayout.setVerticalGroup(
@@ -263,35 +309,7 @@ public class HttpRequestEditor extends JPanel {
     
   
     
-//    private class ColumnRenderer extends JComboBox implements TableCellRenderer
-//    {  
-//          
-//        /**
-//		 * 
-//		 */
-//		private static final long serialVersionUID = -5869802814644340167L;
-//		
-//		public void updateUI(){  
-//            super.updateUI();  
-//        }  
-//        
-//        public void revalidate() {}  
-//        @SuppressWarnings("unchecked")
-//		public Component getTableCellRendererComponent(  
-//                     JTable table, Object value,  
-//                     boolean isSelected, boolean hasFocus,  
-//                     int row, int column)  
-//        {  
-//            if (value != null) {  
-//                //System.out.println(value.toString());  
-//                removeAllItems();  
-//                addItem(value);  
-//                this.setEditable(true);
-//            }  
-//            return this;  
-//        }  
-//    } 
-    
+
     
     private class MyCellEditor extends DefaultCellEditor{
     	
@@ -300,42 +318,53 @@ public class HttpRequestEditor extends JPanel {
 		 */
 		private static final long serialVersionUID = -6297110427296558124L;
 		private JComboBox editedBox;
-    	
+    	private Component result;
+		
     	public MyCellEditor() {
 			super(new JTextField());
 			super.setClickCountToStart(1);
 		}
 		
+    	
+    	
 		@Override
 		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
 			      int row, int column) {
-			if(row==0 && column ==1){ // comBoBox for First row
-				String[] objectArray = {"HTTP 1.0","HTTP 1.1"};
+				
+			if(row==1 && column ==1){
+				
+				String[] objectArray = {"text/plain","text/html","text/xhtml","text/xml","application/json","applicationt/yaml"};
 				this.editedBox = new JComboBox(objectArray);
 				setupBox(this.editedBox,table,row);
 				this.editedBox.setSelectedItem(value);
-				return this.editedBox;
+				this.result =  this.editedBox;
+				
+				
 			}
 			
-			if(row==1 && column ==1){ // comBoBox for First row
-				String[] objectArray = {"GET","POST","PUT","HEAD","DELETE"};
+			else if(row==0 && column ==1){ // comBoBox for First row
+				
+				String[] objectArray = {"GET","POST","PUT","DELETE","HEAD","OPTONS","TRACE","CONNECT"};
 				this.editedBox = new JComboBox(objectArray);
 				setupBox(this.editedBox,table,row);
 				this.editedBox.setSelectedItem(value);
-				return this.editedBox;
+				this.result = this.editedBox;
+				
 			}
-			  
-			if(column == 0 && row < 4){
-			    JTextField textField = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
-			    table.setValueAt(value, row, column);
-		        textField.setEditable(false);
-			    return textField;
+			
+			else{
+			   
+				JTextField textField = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
+				
+				if(row < 4 && column == 0)
+					textField.setEditable(false);
+				else
+					textField.setEditable(true);
+				
+				this.result =  textField;
 			}
-			 
-			JTextField textField = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
-			textField.setEditable(true);
-			table.setValueAt(value, row, column);
-			return textField;
+			
+			return this.result;
 		}
     
 		@Override
@@ -348,7 +377,7 @@ public class HttpRequestEditor extends JPanel {
 			final JTable myTable = table;
 			 final int myRow = row; 
 			
-			box.setEditable(true);
+			//box.setEditable(true);
 			     
             ItemListener itemListener = new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
@@ -356,7 +385,7 @@ public class HttpRequestEditor extends JPanel {
                         if(null != myTable.getCellEditor()){ 
                         	myTable.getCellEditor().stopCellEditing();
                         }
-
+                        ConsoleLog.Print("[RENDERER action]: " + e.getItem()+ " "+myRow);
                         myTable.setValueAt(e.getItem(), myRow, 1);
                     }
                 }
@@ -366,16 +395,19 @@ public class HttpRequestEditor extends JPanel {
 
                 public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 }
-
+                
                 public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                    String sValue = (String)myTable.getValueAt(myRow, 1);
+                	JComboBox sValue = (JComboBox)e.getSource();//(String)myTable.getValueAt(myRow, 1);
                     if(null != myTable.getCellEditor()){ 
                         myTable.getCellEditor().stopCellEditing();
                     }
-                    myTable.setValueAt(sValue, myRow, 1);
+                    ConsoleLog.Print("[RENDERERinvisible]: " + sValue.getSelectedItem()+ " "+myRow);
+                    myTable.setValueAt(sValue.getSelectedItem(), myRow, 1);
                 }
 
                 public void popupMenuCanceled(PopupMenuEvent e) {   
+                	JComboBox sValue = (JComboBox)e.getSource();
+                	myTable.setValueAt(sValue.getSelectedItem(), myRow, 1);
                 }
 
             };

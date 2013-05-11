@@ -174,7 +174,9 @@ public class Main extends Options{
 				SwingUtilities.invokeAndWait(new Runnable() {
 					public void run() {
 						MainWindow  gui = new MainWindow(getTestUnitController());
+						
 						gui.setVisible(true);
+						
 					}
 				});
 			}catch (Exception e){

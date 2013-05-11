@@ -10,9 +10,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
@@ -31,9 +33,13 @@ public class TestCaseSettings extends JPanel {
 	private JTextField proxyHostField;
 	private JTextField proxyPortField;
 	private JTextField proxyTestedPortField;
+	private JTextField schedulePeriodField;
+	private JTextField requestTimeoutField;
 	private JCheckBox runButton;
 	private JCheckBox useProxyBox;
-	
+	private JRadioButton sequentialRunButton;
+	private JRadioButton scheduledRunButton;
+	private ButtonGroup buttonGroup;
 	 
 	private JLabel proxyHostLabel;
 	private JLabel proxyTestedPortLabel;
@@ -44,6 +50,10 @@ public class TestCaseSettings extends JPanel {
 	private JLabel httpSettingsLabel;
 	private JLabel proxySettingsLabel;
 	private JLabel useProxyLabel;
+	private JLabel schedulePeriodLabel;
+	private JLabel requestTimeoutLabel;
+	private JLabel sequentialRunLabel;
+	private JLabel scheduledRunLabel;
 	
 	private JPanel httpRequestSettings;
 	private JPanel proxySettings;
@@ -53,6 +63,7 @@ public class TestCaseSettings extends JPanel {
 	private JPanel httpFields;
 	private JPanel httpFieldsBox;
 	private JPanel proxyFieldBox;
+	
 	private JSeparator separator;
 	private boolean dataLoaded;
 	private TestCaseSettingsData settingsData;
@@ -111,10 +122,10 @@ public class TestCaseSettings extends JPanel {
 		
 		httpRequestSettings = new JPanel();
 		proxySettings = new JPanel();
-		proxyLabels = new JPanel(new GridLayout(4,1,0,5));
-		proxyFields = new JPanel(new GridLayout(4,1,0,5));
-		httpLabels = new JPanel(new GridLayout(4,1,0,5));
-		httpFields = new JPanel(new GridLayout(4,1,0,5));
+		proxyLabels = new JPanel(new GridLayout(8,1,0,5));
+		proxyFields = new JPanel(new GridLayout(8,1,0,5));
+		httpLabels = new JPanel(new GridLayout(8,1,0,5));
+		httpFields = new JPanel(new GridLayout(8,1,0,5));
 		proxyHostField = new JTextField(20);
 		proxyHostLabel = new JLabel("Hostname");
 		httpFieldsBox = new JPanel(new BorderLayout());
@@ -124,6 +135,7 @@ public class TestCaseSettings extends JPanel {
 		proxySettingsLabel = new JLabel("PROXY SETTINGS");
 		separator = new JSeparator();
 		proxyFieldBox = new JPanel(new BorderLayout());
+		buttonGroup = new ButtonGroup();
 		
 		proxyTestedPortField = new JTextField(20);
 		proxyTestedPortLabel = new JLabel("Tested Port");
@@ -134,12 +146,23 @@ public class TestCaseSettings extends JPanel {
 		threadsNumberField = new JTextField(20);
 		threadsNumberLabel = new JLabel("Threads number");
 		
+		schedulePeriodField = new JTextField(20);
+		schedulePeriodLabel = new JLabel("Schedule Period");
+		
+		requestTimeoutField = new JTextField(20);
+		requestTimeoutLabel = new JLabel("Request Timeout");
+		
 		runButton = new JCheckBox();
 		runLabel = new JLabel("Run test case");
 		
 		useProxyBox = new JCheckBox();
 		useProxyLabel = new JLabel("Use Proxy");
 		
+		sequentialRunButton = new JRadioButton();
+		sequentialRunLabel = new JLabel("Sequential Run");
+		
+		scheduledRunButton = new JRadioButton();
+		scheduledRunLabel = new JLabel("Periodic Run");
 		
 		settingsData = new TestCaseSettingsData();
 	}
@@ -154,24 +177,44 @@ public class TestCaseSettings extends JPanel {
 		runButton.addActionListener(new UseHttpListener());
 		
 		httpLabels.add(runLabel);
+		httpLabels.add(requestTimeoutLabel);
+		httpLabels.add(sequentialRunLabel);
 		httpLabels.add(threadsNumberLabel);
 		httpLabels.add(loopNumberLabel);
+		httpLabels.add(scheduledRunLabel);
+		httpLabels.add(schedulePeriodLabel);
+		
 		
 		httpFields.add(runButton);
+		httpFields.add(requestTimeoutField);
+		httpFields.add(sequentialRunButton);
 		httpFields.add(threadsNumberField);
 		httpFields.add(loopNumberField);
+		httpFields.add(scheduledRunButton);
+		httpFields.add(schedulePeriodField);
+		
+		
 		httpFields.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
 		
-		
 		proxyLabels.add(useProxyLabel);
+		
 		proxyLabels.add(proxyHostLabel);
 		proxyLabels.add(proxyPortLabel);
 		proxyLabels.add(proxyTestedPortLabel);
 		
 		proxyFields.add(useProxyBox);
+		
 		proxyFields.add(proxyHostField);
 		proxyFields.add(proxyPortField);
 		proxyFields.add(proxyTestedPortField);
+		
+		buttonGroup.add(scheduledRunButton);
+		buttonGroup.add(sequentialRunButton);
+		
+		
+		sequentialRunButton.setSelected(true);
+		sequentialRunButton.addActionListener(new SequentialRunListener());
+		scheduledRunButton.addActionListener(new ScheduledRunListener());
 		
 		proxyFields.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
 		
@@ -194,18 +237,17 @@ public class TestCaseSettings extends JPanel {
 		httpFieldsBox.add(httpSettingsLabel,BorderLayout.NORTH);
 		httpFieldsBox.add(httpRequestSettings,BorderLayout.LINE_START);
 		httpFieldsBox.add(separator,BorderLayout.SOUTH);
-		
+		 
 		
 		proxyFieldBox.setBorder(BorderFactory.createEmptyBorder(5,10,0,20));
 		proxyFieldBox.add(proxySettingsLabel,BorderLayout.NORTH);
 		proxyFieldBox.add(proxySettings,BorderLayout.LINE_START);
 		
-		JPanel pokus = new JPanel(new GridLayout(2, 1));
+		JPanel box = new JPanel(new GridLayout(2, 1));
 			
-		pokus.add(httpFieldsBox);		
-		pokus.add(proxyFieldBox);
-		
-		add(pokus,BorderLayout.NORTH);
+		box.add(httpFieldsBox);		
+		box.add(proxyFieldBox);
+		add(box,BorderLayout.NORTH);
 		setEnableHttpPanel(false);
 		setEnableProxyPanel(false);
 	}
@@ -281,17 +323,58 @@ public class TestCaseSettings extends JPanel {
 		this.useProxyBox.setSelected(use);
 	}
 	
+	private void setEditorTimeout(Integer time){
+		
+		this.requestTimeoutField.setText(time.toString());
+	}
+
+	private Integer getEditorTimeout(){
+		
+		return Integer.parseInt(requestTimeoutField.getText());
+	}
+	
+	
+	private void setEditorPeriod(Integer period){
+		
+		this.schedulePeriodField.setText(period.toString());
+	}
+
+	private Integer getEditorPeriod(){
+		
+		return Integer.parseInt(schedulePeriodField.getText());
+	}
+	
+	
+	private boolean getEditorSequentialRun(){
+		
+		return sequentialRunButton.isSelected();
+	}
+	
+	private void setEditorSequentialRun(boolean run){
+		
+		this.sequentialRunButton.setSelected(run);
+	}
+	
 	
 	private void saveData(){
 		
 		this.settingsData.setRun(getEditorRun());
 		this.settingsData.setUseProxy(getEditorUseProxy());
+		this.settingsData.setUseSequentialRun(getEditorSequentialRun());
 		
-		if(getEditorRun()){
+		if(getEditorRun() ){
 			
-			this.settingsData.setName(MainWindow.getCasePath());
-			this.settingsData.setThreadsNumber(getEditorThreadsNumber());
-			this.settingsData.setLoopNumber(getEditorLoopCount());
+			if(getEditorSequentialRun()){
+				this.settingsData.setThreadsNumber(getEditorThreadsNumber());
+				this.settingsData.setLoopNumber(getEditorLoopCount());
+				this.settingsData.setPeriod(0);
+			}else{
+				this.settingsData.setThreadsNumber(0);
+				this.settingsData.setLoopNumber(0);
+				this.settingsData.setPeriod(getEditorPeriod());
+			}
+			
+			this.settingsData.setTimeout(getEditorTimeout());
 		}
 		if(getEditorUseProxy()){
 			
@@ -299,10 +382,15 @@ public class TestCaseSettings extends JPanel {
 			this.settingsData.setProxyPort(getEditorProxyPort());
 			this.settingsData.setProxyHost(getEditorProxyHostName());
 		}
+		
+		
+		
 	}
 	
 	
 	private void loadData(){
+		
+		setEditorSequentialRun(this.settingsData.isUseSequentialRun());
 		
 		setEnableHttpPanel(this.settingsData.getRun());
 		setEnableProxyPanel(this.settingsData.getUseProxy());
@@ -314,8 +402,8 @@ public class TestCaseSettings extends JPanel {
 		setEditorLoopNumber(this.settingsData.getLoopNumber());
 		setEditorProxyTestedPort(this.settingsData.getProxyTestedPort());
 		setEditorUseProxy(this.settingsData.getUseProxy());
-		
-		
+		setEditorPeriod(this.settingsData.getPeriod());
+		setEditorTimeout(this.settingsData.getTimeout());
 	}
 	
 	
@@ -339,8 +427,34 @@ public class TestCaseSettings extends JPanel {
         Component[] labels = httpLabels.getComponents();
 		
 		for (int a = 1; a < fields.length; a++) {  
-   	     	fields[a].setEnabled(use);
-   	     	labels[a].setEnabled(use);
+			
+			if((a == 3 || a == 4)){
+				if(use && sequentialRunButton.isSelected() ){
+				
+					fields[a].setEnabled(true);
+	   	     		labels[a].setEnabled(true);
+	   	     		
+				}else{
+					fields[a].setEnabled(false);
+	   	     		labels[a].setEnabled(false);
+				}
+				continue;	
+			}
+			
+			if(a == 6){
+				if(use && scheduledRunButton.isSelected() ){
+					fields[a].setEnabled(true);
+	   	     		labels[a].setEnabled(true);
+	   	     		
+				}else{
+					fields[a].setEnabled(false);
+	   	     		labels[a].setEnabled(false);
+				}
+				continue;
+			}
+					
+			fields[a].setEnabled(use);
+     		labels[a].setEnabled(use);
 		} 
 		
 	}
@@ -369,6 +483,30 @@ public class TestCaseSettings extends JPanel {
 	        	setEnableHttpPanel(true);
 	        }else{
 	        	setEnableHttpPanel(false);
+	        }
+		}
+	}
+	
+	private class SequentialRunListener implements ActionListener{
+		
+		public void actionPerformed(ActionEvent e){
+			JRadioButton button = (JRadioButton)e.getSource();
+	        if(button.isSelected()){
+	        	threadsNumberField.setEnabled(true);
+	        	loopNumberField.setEnabled(true);
+	        	schedulePeriodField.setEnabled(false);
+	        }
+		}
+	}
+	
+	private class ScheduledRunListener implements ActionListener{
+		
+		public void actionPerformed(ActionEvent e){
+			JRadioButton button = (JRadioButton)e.getSource();
+	        if(button.isSelected()){
+	        	threadsNumberField.setEnabled(false);
+	        	loopNumberField.setEnabled(false);
+	        	schedulePeriodField.setEnabled(true);
 	        }
 		}
 	}

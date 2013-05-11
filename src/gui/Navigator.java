@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -400,6 +402,42 @@ public class Navigator extends JPanel {
 		public Color getBackground() {
 			return null;
 		}
+		
+		@Override
+		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, 
+				boolean leaf, int row, boolean hasFocus) {
+			
+			super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+			FileNode node= (FileNode) value;
+			
+			
+			
+					
+			if (node.isHttpTestCase()) {
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"request.png")));
+			}
+			else if (node.isFaultInjectionTestCase()){
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"fault.png")));
+			}
+			else if (node.isSettings()){
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"settings.png")));
+			}
+			else if (node.isTestList()){
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"list.png")));
+			}
+			else if (node.isSuite()){
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"suite.png")));
+			}
+			else
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"case.png")));
+			
+			return this;
+		}
 
 	}
 	
@@ -439,22 +477,19 @@ public class Navigator extends JPanel {
 									
 					if (path.getPathCount() <= SUITE_PATH_LENGTH){
 						frameInstance.setPanelType(MainWindow.TESTING_UNIT);
-						
-						
 						MainWindow.setCasePath("");
 					}
 					
-					if(path.getPathCount() == SUITE_PATH_LENGTH){
-						node = (FileNode) path.getPathComponent(SUITE_PATH_LENGTH-1); 
-						
-						if(node.isHttpTestCase()){
-							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
-						}
-					}
+//					if(path.getPathCount() == SUITE_PATH_LENGTH){
+//						node = (FileNode) path.getPathComponent(SUITE_PATH_LENGTH-1); 
+//						if(node.isHttpTestCase()){
+//							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
+//						}
+//					}
 					
 					if(path.getPathCount() == CASE_PATH_LENGTH){
 						node = (FileNode) path.getPathComponent(CASE_PATH_LENGTH-1); 
-						if(node.isTestList()){
+						if(node.isTestList() || node.isSuite()){
 							frameInstance.setPanelType(MainWindow.TESTING_UNIT);
 							MainWindow.setCasePath("");
 						}else{

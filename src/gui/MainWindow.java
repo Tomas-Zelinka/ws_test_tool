@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -27,6 +28,7 @@ import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
 
 import central.UnitController;
+import data.DataProvider;
 
 
 public class MainWindow extends JFrame{
@@ -138,6 +140,7 @@ public class MainWindow extends JFrame{
 	public MainWindow(UnitController testUnitController){
 		
 		initMainWindow(testUnitController);
+		
 		this.pack();
 	}
 	
@@ -196,6 +199,9 @@ public class MainWindow extends JFrame{
 		
 		if(!path.isEmpty())
 			MainWindow.casePath = getSuitePath()+File.separator+path;
+		else{
+			MainWindow.casePath = "";
+		}
 		ConsoleLog.Print("[MainWindow] Case path set to: " + MainWindow.casePath);
 	}
 		
@@ -374,6 +380,8 @@ public class MainWindow extends JFrame{
 		initCenterPane();
 		initBottomPane();
 		getContentPane().add(this.bottomPane,BorderLayout.CENTER);
+		setContent(TESTCASE_EDITOR);
+		
 	}
 		
 	/**
@@ -394,8 +402,12 @@ public class MainWindow extends JFrame{
 		this.proxyUnitPanel = new ProxyMonitor(testUnitController);
 		this.statsPanel = new Statistics();
 		this.testUnitPanel = new TestMonitor(testUnitController);
-		this.centerComponent = new JPanel();
+		this.centerComponent = this.editor;
 		this.panelType = 0;
+		
+		
+		
+		
 	}
 	
 	/**
@@ -443,12 +455,18 @@ public class MainWindow extends JFrame{
 	 * @param label
 	 * @param listener
 	 */
-	private void addToolBarItem(JToolBar menu,String label,ActionListener listener){
+	private void addToolBarItem(JToolBar menu,String label,ActionListener listener,String icon){
 		
-		JButton button = new JButton(label);
+		JButton button = new JButton();
 		button.addActionListener(listener);
+		button.setToolTipText(label);
+		button.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+		button.setFocusPainted(false);
+		button.setIcon(new javax.swing.ImageIcon(getClass().getResource(DataProvider.getResourcePath()+icon))); // NOI18N
+	       
 		menu.add(button);
 	}
+	
 	
 	
 	/**
@@ -465,25 +483,25 @@ public class MainWindow extends JFrame{
 		testUnitToolBox.setFloatable(false);
 		proxyUnitToolBox.setFloatable(false);
 		
-		addToolBarItem(testCaseToolBox,"Save TestCase",new SaveTestCaseListener());
-		addToolBarItem(testCaseToolBox,"Generate content",new GenerateRequestListener());
+		addToolBarItem(testCaseToolBox,"Save TestCase",new SaveTestCaseListener(),"save.png");
+		addToolBarItem(testCaseToolBox,"Generate content",new GenerateRequestListener(),"synchronize.png");
 		
-		addToolBarItem(testUnitToolBox,"Insert Test Case",new InsertTestCaseListener());
-		addToolBarItem(testUnitToolBox,"Remove Test Case",new RemoveTestCaseListener());
-		addToolBarItem(testUnitToolBox,"Run Tests",new RunTestUnitListener());
-		addToolBarItem(testUnitToolBox,"Run All Units",new RunAllTestUnitsListener());
-		addToolBarItem(testUnitToolBox,"Save Test List",new SaveTestListListener());
-		addToolBarItem(testUnitToolBox,"Add Remote Unit",new AddTestUnitListener());
-		addToolBarItem(testUnitToolBox,"Remove Test Unit",new RemoveTestUnitListener());
-		addToolBarItem(testUnitToolBox,"Export Configuration",new ExportTestUnitListener());
-		addToolBarItem(testUnitToolBox,"Import Configuration",new ImportTestUnitListener());
+		addToolBarItem(testUnitToolBox,"Save Test List",new SaveTestListListener(),"save.png");
+		addToolBarItem(testUnitToolBox,"Insert Test Case",new InsertTestCaseListener(),"add.png");
+		addToolBarItem(testUnitToolBox,"Remove Test Case",new RemoveTestCaseListener(),"delete.png");
+		addToolBarItem(testUnitToolBox,"Run Tests",new RunTestUnitListener(),"play.png");
+		addToolBarItem(testUnitToolBox,"Run All Units",new RunAllTestUnitsListener(),"multiplay.png");
+		addToolBarItem(testUnitToolBox,"Add Remote Unit",new AddTestUnitListener(),"network_idle.png");
+		addToolBarItem(testUnitToolBox,"Remove Test Unit",new RemoveTestUnitListener(),"network_offline.png");
+		addToolBarItem(testUnitToolBox,"Export Configuration",new ExportTestUnitListener(),"upload.png");
+		addToolBarItem(testUnitToolBox,"Import Configuration",new ImportTestUnitListener(),"download.png");
 		
-		addToolBarItem(proxyUnitToolBox,"Run Unit",new RunProxyListener());
-		addToolBarItem(proxyUnitToolBox,"Stop Unit",new StopProxyListener());
-		addToolBarItem(proxyUnitToolBox,"Add Remote Unit",new AddProxyUnitListener());
-		addToolBarItem(proxyUnitToolBox,"Remove Remote Unit",new RemoveProxyUnitListener());
-		addToolBarItem(proxyUnitToolBox,"Export Configuration",new ExportProxyUnitListener());
-		addToolBarItem(proxyUnitToolBox,"Import Configuration",new ImportProxyUnitListener());
+		addToolBarItem(proxyUnitToolBox,"Run Unit",new RunProxyListener(),"play.png");
+		addToolBarItem(proxyUnitToolBox,"Stop Unit",new StopProxyListener(),"stop.png");
+		addToolBarItem(proxyUnitToolBox,"Add Remote Unit",new AddProxyUnitListener(),"network_idle.png");
+		addToolBarItem(proxyUnitToolBox,"Remove Remote Unit",new RemoveProxyUnitListener(),"network_offline.png");
+		addToolBarItem(proxyUnitToolBox,"Export Configuration",new ExportProxyUnitListener(),"upload.png");
+		addToolBarItem(proxyUnitToolBox,"Import Configuration",new ImportProxyUnitListener(),"download.png");
 		
 	}
 	

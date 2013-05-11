@@ -151,8 +151,8 @@ public class TextMonitor {
 			
 			PrintProxyOutput output = new PrintProxyOutput();
 			ProxyListener listner = new ProxyTextListener(output);
-			controller.addTestUnit(testUnitCounter,host,port,name);
-			controller.setPanelListener(listner,testUnitCounter);
+			controller.addProxyUnit(proxyUnitCounter,host,port,name);
+			controller.setPanelListener(listner,proxyUnitCounter);
 		
 		}catch(RemoteException ex){
 			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());

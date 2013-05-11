@@ -2,7 +2,6 @@ package data;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashMap;
 
 public class HttpMessageData implements Serializable {
 
@@ -10,33 +9,25 @@ public class HttpMessageData implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -3769765519967458600L;
-	public static final String HEADER_HTTP_VERSION = "Version";
-	public static final String HEADER_HTTP_METHOD = "Method";
-	public static final String HEADER_HTTP_URI = "URI";
-	public static final String HEADER_HTTP_CONTENTTYPE = "ContentType";
 	
-	public static final int METHOD_POST = 1;
-	public static final int METHOD_GET = 2;
 	public static final String filename = File.separator+"Http"+File.separator+"input"+File.separator+"httpRequest.xml";
 	/**
 	 * 
 	 */
-	private String requestBody;
-	private String responseBody;
-	private float elapsedRemoteTime;
+	
+	private long elapsedRemoteTime;
 	private int responseCode;
 	private int threadNumber;
 	private int loopNumber;
+	private String requestBody;
+	private String responseBody;
 	private String method;
-	private String uri;
-	
+	private String host;
+	private String resource;
+	private String params;
+	private String contentType;
 	private String name;
 	
-	/**
-	 * 
-	 */
-	private HashMap<String,String> mandatoryHeaders;
-	private HashMap<String,String> optionalHeaders;
 	
 	/**
 	 * 
@@ -44,10 +35,27 @@ public class HttpMessageData implements Serializable {
 	private String requestPath;
 	
 	public HttpMessageData(String name){
-		this.mandatoryHeaders = new HashMap<String,String>();
-		this.optionalHeaders = new HashMap<String,String>();
-		this.name = name;
+		this.elapsedRemoteTime = 0;
+		this.responseCode = 0;
+		this.threadNumber = 0;
+		this.loopNumber = 0;
 		this.requestBody = "";
+		this.responseBody = "";
+		this.method = "";
+		this.host= "";
+		this.resource = "";
+		this.params = "";
+		this.contentType = "";
+		this.name = name;
+		
+	}
+	
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 	
 	public int getThreadNumber() {
@@ -79,14 +87,30 @@ public class HttpMessageData implements Serializable {
 		this.method = method;
 	}
 
-	public String getUri() {
-		
-		return uri;
+	public String getHost() {
+		return host;
 	}
 
-	public void setUri(String uri) {
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public String getResource() {
+		return resource;
+	}
+
+	public void setResource(String resource) {
+		this.resource = resource;
+	}
+	
+	public String getParams() {
 		
-		this.uri = uri;
+		return this.params;
+	}
+
+	public void setParams(String par) {
+		
+		this.params = par;
 	}
 	
 	public String getResponseBody() {
@@ -104,7 +128,7 @@ public class HttpMessageData implements Serializable {
 		return elapsedRemoteTime;
 	}
 
-	public void setElapsedRemoteTime(float elapsedRemoteTime) {
+	public void setElapsedRemoteTime(long elapsedRemoteTime) {
 		
 		this.elapsedRemoteTime = elapsedRemoteTime;
 	}
@@ -150,33 +174,4 @@ public class HttpMessageData implements Serializable {
 	}
 	
 	
-	public String getMandatoryHeaderValue(String name){
-		
-		return mandatoryHeaders.get(name);
-	}
-	
-	public void addMandatoryHeader(String name, String value){
-		
-		mandatoryHeaders.put(name,value);
-	}
-	
-	public void removeMandatoryHeader(String name){
-		
-		mandatoryHeaders.remove(name);
-	}
-	
-	public String getOptionalHeaderValue(String name){
-		
-		return optionalHeaders.get(name);
-	}
-	
-	public void addOptionalyHeader(String name, String value){
-		
-		optionalHeaders.put(name,value);
-	}
-	
-	public void removeOptionalHeader(String name){
-		
-		optionalHeaders.remove(name);
-	}
 }

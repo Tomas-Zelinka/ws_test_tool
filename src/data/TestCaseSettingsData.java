@@ -11,38 +11,38 @@ public class TestCaseSettingsData implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -1877094164580318557L;
+	
 	private int threadsNumber;
 	private int loopNumber;
-	private String name;
-	private String path;
-	
-	private boolean run;
-	private String proxyHost;
 	private int proxyPort;
 	private int proxyTestedPort;
+	private int timeout;
+	private int period;
+	private boolean run;
 	private boolean useProxy;
+	private boolean useSequentialRun;
+	private String name;
+	private String path;
+	private String proxyHost;
+	
 	public static final String filename = File.separator+"settings.xml";
-	
-	
-	
-	
 	
 
 	public TestCaseSettingsData(){
-		 
-		initAttributes();
-	 }
-
-	private void initAttributes(){
 		
-		useProxy = false;
-		threadsNumber = 0;
-		loopNumber = 0;
-		proxyHost = "";
-		proxyPort = 0;
-		proxyTestedPort = 0;
-		run = false;
+		this.threadsNumber = 0;
+		this.loopNumber = 0;
+		this.proxyPort = 0;
+		this.proxyTestedPort = 0;
+		this.timeout = 3000;
+		this.useProxy = false;
+		this.run = false;
+		this.useSequentialRun = false;
+		this.path ="";
+		this.name = "";
+		this.proxyHost = "";
 	}
+
 	
 	
 	public boolean getUseProxy() {
@@ -144,4 +144,46 @@ public class TestCaseSettingsData implements Serializable{
 		
 		this.path = path;
 	}
+	
+	
+	public int getTimeout() {
+		return this.timeout;
+	}
+
+
+
+	public void setTimeout(int timeout) {
+		
+		this.timeout = timeout;
+	}
+
+
+
+	public int getPeriod() {
+		
+		return this.period;
+	}
+
+
+
+	public void setPeriod(int period) {
+		
+		this.period = period;
+	}
+
+
+
+	public boolean isUseSequentialRun() {
+		
+		return this.useSequentialRun;
+	}
+
+
+
+	public void setUseSequentialRun(boolean useSequentialRun) {
+		
+		this.useSequentialRun = useSequentialRun;
+	}
+
+	
 }

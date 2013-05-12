@@ -16,8 +16,8 @@ public class TestTextListener extends UnicastRemoteObject implements NewResponse
 		this.output = output;
 	}
 	
-	public void onNewResponseEvent(HttpMessageData[] data){
-		this.output.onNewResponseEvent(data);
+	public void onNewResponseEvent(HttpMessageData[] data,int period){
+		this.output.onNewResponseEvent(data,period);
 	}
 
 	

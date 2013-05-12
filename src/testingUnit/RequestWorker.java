@@ -2,23 +2,31 @@ package testingUnit;
 
 import java.util.concurrent.Callable;
 
+import logging.ConsoleLog;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
-import org.apache.http.client.ResponseHandler;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpTrace;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.util.EntityUtils;
 
 import data.HttpMessageData;
 import data.TestCaseSettingsData;
 
 public class RequestWorker implements Callable<HttpMessageData[]>{
 	
-	private DefaultHttpClient client;
 	private HttpMessageData data;
-	private String responseBody;
 	private TestCaseSettingsData settings;
 	private int threadId;
 	
@@ -28,115 +36,119 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 		this.threadId = id;
 		this.data = data;
 		this.settings = settings;
-		this.client = new DefaultHttpClient();
-		this.responseBody = "";
+		ConsoleLog.Print("[Worker] prijal: " + data.getName() + " " +settings.getName());
 	}
 	
 	
 	
 	public HttpMessageData[] call(){
 		HttpMessageData[] clientResponseData = initResponseData(settings.getLoopNumber());
-		ResponseHandler<String> responseHandler = new BasicResponseHandler();
-		//HttpResponse response = null;
 		String method = data.getMethod();
-		String uri = data.getHost() + data.getResource() + "?" + data.getParams();
+		ConsoleLog.Print("[Worker]pracuju: " + data.getName());
+		DefaultHttpClient client = new DefaultHttpClient();
+		HttpUriRequest request = buildRequest();
+		request.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, settings.getTimeout());
 		
-		//HttpRequest request = new HttpRequest();
-		//request.getParams().s
 		
-		//CoreProtocolPNames.
-
 		if(settings.getUseProxy()){
 			HttpHost proxy = new HttpHost(settings.getProxyHost(),settings.getProxyPort());
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+			request.getParams().setParameter(ExecutionContext.HTTP_PROXY_HOST, proxy);
+			
 		}
 		
-		
-		if(method.compareTo("GET") == 0){
-			HttpGet clientMethod = new HttpGet(uri);
+		try{
+			
 			for(int i = 0; i < settings.getLoopNumber(); i++){ 
-				//ConsoleLog.Print("[Worker]Testcase run" + settings.getName()+" "+ i);
-				 
-				try{
-					long time1= System.nanoTime();
-					responseBody = client.execute(clientMethod,responseHandler);
-					long time2 = System.nanoTime();
-					long timeSpent = time2-time1;
-					clientResponseData[i].setResponseBody(responseBody);
-					clientResponseData[i].setElapsedRemoteTime(timeSpent);
-					clientResponseData[i].setRequestBody(data.getRequestBody());
-					clientResponseData[i].setMethod("GET");
-					clientResponseData[i].setLoopNumber(i);
-					clientResponseData[i].setThreadNumber(this.threadId);
-					clientResponseData[i].setHost(data.getHost());
-					clientResponseData[i].setResource(data.getResource());
-					clientResponseData[i].setParams(data.getParams());
-				}catch(Exception ex){
-					ex.printStackTrace();
-					
-				}finally{
-					clientMethod.releaseConnection();
-				}
-				//ConsoleLog.Print("konec smycky: " + i +" - vlakno: " +this.threadId);
-				//clientResponseData[i].setBody("ahoj");
+				long time1= System.nanoTime();
+				HttpResponse response = client.execute(request);
+				long time2 = System.nanoTime();
+				long timeSpent = time2-time1;
+				HttpEntity responseEntity = response.getEntity();
+				String output = EntityUtils.toString(responseEntity);
+				EntityUtils.consume(responseEntity);
+				
+				clientResponseData[i].setName(data.getName());
+				clientResponseData[i].setResponseBody(output);
+				clientResponseData[i].setRequestBody(data.getRequestBody());
+				clientResponseData[i].setElapsedRemoteTime(timeSpent);
+				clientResponseData[i].setContentType(responseEntity.getContentType().getValue());
+				clientResponseData[i].setResponseCode(response.getStatusLine().getStatusCode());
+				clientResponseData[i].setMethod(method);
+				clientResponseData[i].setLoopNumber(i);
+				clientResponseData[i].setThreadNumber(this.threadId);
+				clientResponseData[i].setHost(data.getHost());
+				clientResponseData[i].setResource(data.getResource());
+				clientResponseData[i].setParams(data.getParams());
+				clientResponseData[i].setExpectedBody(data.getExpectedBody());
+				
 			}
 		
-		}else if(method.compareTo("POST") == 0){
-			HttpPost clientMethod = new HttpPost(uri);
-			StringEntity entity;
+		}catch(Exception ex){
+			ex.printStackTrace();
 			
-			try{
-				entity = new StringEntity(data.getRequestBody());
-			} catch(Exception ex){
-				ex.printStackTrace();
-				return clientResponseData;
-			}
-			
-			 //entity.
-			 ((HttpPost) clientMethod).setEntity(entity);
-			 for(int i = 0; i < settings.getLoopNumber(); i++){ 
-					//ConsoleLog.Print("[Worker]Testcase run" + settings.getName()+" "+ i);
-					 
-					try{
-						long time1= System.nanoTime();
-						responseBody = client.execute(clientMethod,responseHandler);
-						long time2 = System.nanoTime();
-						long timeSpent = time2-time1;
-						
-						clientResponseData[i].setResponseBody(responseBody);
-						clientResponseData[i].setRequestBody(data.getRequestBody());
-						clientResponseData[i].setElapsedRemoteTime(timeSpent);
-						clientResponseData[i].setMethod("POST");
-						clientResponseData[i].setLoopNumber(i);
-						clientResponseData[i].setThreadNumber(this.threadId);
-						clientResponseData[i].setHost(data.getHost());
-						clientResponseData[i].setResource(data.getResource());
-						clientResponseData[i].setParams(data.getParams());
-					}catch(Exception ex){
-						ex.printStackTrace();
-						
-					}finally{
-						clientMethod.releaseConnection();
-					}
-					//ConsoleLog.Print("konec smycky: " + i +" - vlakno: " +this.threadId);
-					//clientResponseData[i].setBody("ahoj");
-				}
 		}
+			
 		
-		
-		
-		
-		
-		//Console
-		
-		
-		
-		//Thread.yield();
-		
-		//ConsoleLog.Print("Odesilam vysledky - vlakno: " +this.threadId);
 		return clientResponseData;
+		
+		
+
 	}
 
+	private HttpUriRequest buildRequest(){
+		
+		HttpUriRequest request = null;
+		String method = data.getMethod();
+		String uri = "";
+		if(!data.getParams().isEmpty()){
+			uri = data.getHost()+data.getResource() +"?" + data.getParams();
+		}else{
+			uri = data.getHost()+data.getResource();
+		}
+		if(method.compareTo("GET") == 0){
+			request = new HttpGet( uri );
+			
+		}
+		else if(method.compareTo("POST") == 0){
+			request = new HttpPost(uri);
+			if(!data.getRequestBody().isEmpty()){
+				
+				try{
+					
+					StringEntity entity = new StringEntity(data.getRequestBody(), "UTF-8");
+					entity.setContentType(data.getContentType());
+					((HttpPost)request).setEntity(entity);
+				}catch(Exception e){
+					ConsoleLog.Message(e.getMessage());
+				}
+			}
+		}
+		else if(method.compareTo("PUT") == 0){
+			request = new HttpPut( uri);
+			try{
+				
+				StringEntity entity = new StringEntity(data.getRequestBody(), "UTF-8");
+				entity.setContentType(data.getContentType());
+				((HttpPut)request).setEntity(entity);
+			}catch(Exception e){
+				ConsoleLog.Message(e.getMessage());
+			}
+		}
+		else if(method.compareTo("DELETE") == 0){
+			request = new HttpDelete( uri);
+		}
+		else if(method.compareTo("HEAD") == 0){
+			request = new HttpHead( uri);
+		}
+		else if(method.compareTo("OPTIONS") == 0){
+			request = new HttpOptions( uri);
+		}
+		else if(method.compareTo("TRACE") == 0){
+			request = new HttpTrace( uri);
+		}
+		
+		return request;
+	}
 	
 	private HttpMessageData[] initResponseData(int count){
 		
@@ -147,4 +159,7 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 		
 		return responseData;
 	}
+	
+	
+	
 }

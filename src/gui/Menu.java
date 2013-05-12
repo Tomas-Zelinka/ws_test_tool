@@ -107,7 +107,6 @@ public class Menu extends JMenuBar {
 		addMenuItem(view,"Test Editor",new ViewTestEditorListener());
 		addMenuItem(view,"Test Unit",new ViewTestUnitListener());
 		addMenuItem(view,"Proxy Monitor",new ViewProxyMonitorListener());
-		addMenuItem(view,"Statistics",new ViewStatisticsListener());
 	}
 
 	/**
@@ -193,32 +192,8 @@ public class Menu extends JMenuBar {
 		}
 	}
 	
-	/**
-	 * 
-	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
-	 */
-	class ViewStatisticsListener implements ActionListener{
 		
-		public void actionPerformed(ActionEvent ae) {
-			
-			getMainWindowInstance().setContent(MainWindow.STATISTICS);
-			ConsoleLog.Print("[HeadMenu] Statistics clicked");
-		}
-	}
 	
-	/**
-	 * 
-	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
-	 */
-	class ProjectSettingsListener implements ActionListener{
-		public void actionPerformed(ActionEvent ae) {
-			
-			ConsoleLog.Print("[HeadMenu] Project settings clicked");
-		}
-	} 
-
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
@@ -230,87 +205,7 @@ public class Menu extends JMenuBar {
 		}
 	} 
 		
-		
-	/**
-	 * 
-	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
-	 */	
-	class ProjectRunListener implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ae) {
-			
-			ConsoleLog.Print("[HeadMenu] Project Run clicked");
-		}
-	} 
 
-
-	/**
-	 * 
-	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
-	 */
-	class ProxySettingsListener implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ae) {
-					
-			ConsoleLog.Print("[HeadMenu] Proxy Settings clicked");
-		}
-	} 
-	
-	/**
-	 * 
-	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
-	 */
-	class ProxyLogListener implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ae) {
-					
-			ConsoleLog.Print("[HeadMenu] Proxy Log clicked");
-		}
-	} 
-
-	/**
-	 * 
-	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
-	 */ 
-	class ProxyRunListener implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ae) {
-					
-			ConsoleLog.Print("[HeadMenu] Proxy Run clicked");
-		}
-	} 
-	
-	/**
-	 * 
-	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
-	 */
-	class ProxyMonitorListener implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ae) {
-					
-			ConsoleLog.Print("[HeadMenu] Proxy Monitor clicked");
-		}
-	} 
-	
-	
-	/**
-	 * 
-	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
-	 *
-	 */
-	class RemoteControlListener implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ae) {
-					
-			ConsoleLog.Print("[HeadMenu] Remote Control clicked");
-		}
-	} 
-	
 	
 	/**
 	 * 

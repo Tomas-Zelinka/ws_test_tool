@@ -39,6 +39,8 @@ public interface TestUnit extends Remote {
 	 */
 	public abstract void addResponseListener(NewResponseListener listener) throws RemoteException;
 	
+	
+	public abstract void stopUnit() throws RemoteException;
 }
 
  

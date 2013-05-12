@@ -8,5 +8,5 @@ import data.HttpMessageData;
 
 
 public interface NewResponseListener extends Remote {
-	public void onNewResponseEvent(HttpMessageData[] data) throws RemoteException;
+	public void onNewResponseEvent(HttpMessageData[] data, int period) throws RemoteException;
 }

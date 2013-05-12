@@ -1,21 +1,29 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import logging.ConsoleLog;
 import testingUnit.NewResponseListener;
+import data.DataProvider;
 import data.HttpMessageData;
 import data.TestCaseSettingsData;
 import data.XMLFormat;
@@ -37,6 +45,11 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 	private JPanel panel;
 	private JPanel topPanel;
 	private JPanel centerPanel;
+	private JPanel expectedResponsePanel;
+	private JScrollPane expectedResponseScrollPane;
+	private JEditorPane expectedEditorPane;
+	private JTabbedPane responseTabbedPane;
+	
 	
 	private JPanel requestPanel;
 	private JPanel responsePanel;
@@ -47,13 +60,17 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 	private JScrollPane responsesTableScrollPane;
 	private JLabel 		responseLabel;
 	private JLabel 		requestLabel;
+	private JLabel		expectedResponseLabel;
 	private JEditorPane requestEditorPane;
 	private JEditorPane responseEditorPane;
 	private ArrayList<TestCaseSettingsData> testListData;
 	private JLabel requestTableLabel;
 	private JLabel responsesTableLabel;
+	private HashMap<String,Integer> testNumbers;
 	private HashMap<String,HttpMessageData[]> responses;
-	 
+	private String firstTest; 
+	private Integer periodNumber;
+	
 		
 	public TestUnitPanel (){
 		initComponents();
@@ -97,11 +114,11 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 	public void insertTestCaseToTable(TestCaseSettingsData testCaseSettings){
 		
 		
-		//TestCaseSettingsData testCaseSettings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
 		if(this.testListData != null){
 			if(detectDuplicityInTable(testCaseSettings.getName())){
 				ConsoleLog.Message("Test case already in test list");
 			}else{
+				
 				this.testListData.add(testCaseSettings);
 				insertToTable(testCaseSettings);
 			}
@@ -111,12 +128,31 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 	}
 
 	@Override
-	public void onNewResponseEvent(HttpMessageData[] dataArray) {
-		ConsoleLog.Print("[UnitPanel] dostal jsem data, delka:" + dataArray.length);
-		String  adrress = dataArray[0].getName() + dataArray[0].getThreadNumber();
+	public synchronized void onNewResponseEvent(HttpMessageData[] dataArray, int period) {
+		
+		this.periodNumber = period;
+		String name = dataArray[0].getName();
+		Integer responseThreadNumber = dataArray[0].getThreadNumber();
+		String  adrress = name + responseThreadNumber + period ;
+		ConsoleLog.Print("[TESTPANEL] vkladam: " +adrress);
 		responses.put(adrress, dataArray);
-		//ConsoleLog.Print("[UnitPanel] dalsi data od vlakna :"+ adrress);	
-		//ConsoleLog.Print("[UnitPanel] vracim se");
+		
+		int caseRow = this.testNumbers.get(name);
+		int requestThreadNumber =(Integer)testCasesTableModel.getValueAt(caseRow,2); 
+		
+		if (requestThreadNumber ==  responseThreadNumber+1){
+			testCasesTableModel.setValueAt(true,caseRow,6);
+		}
+		
+		
+		if(firstTest.compareTo(name)== 0){
+			boolean test = false;
+			for (int i = 0; i < dataArray.length; i++){
+				test = compareResponses(dataArray[i].getResponseBody(),dataArray[i].getExpectedBody(),dataArray[i].getContentType());
+				Object[] newRow = new Object[] {dataArray[i].getName(),dataArray[i].getResponseCode(),dataArray[i].getMethod(),dataArray[i].getResource(),dataArray[i].getElapsedRemoteTime(),dataArray[i].getLoopNumber(),dataArray[i].getThreadNumber(),period,test};
+				responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
+			}
+		}
 	}
 	
 	public void clearResults(){
@@ -124,7 +160,9 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		responses.clear();
 		clearTable(responsesTableModel);
 		responseEditorPane.setText("");
-		
+		requestEditorPane.setText("");
+		firstTest =(String) testCasesTableModel.getValueAt(0,1);
+		this.periodNumber = 0;
 	}
 	
 	/**
@@ -189,8 +227,10 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 	}
 	
 	private void insertToTable(TestCaseSettingsData data){
-		Object[] newRow = new Object[] {testCasesTable.getRowCount(),data.getName(),data.getThreadsNumber(),data.getLoopNumber(),new Boolean(data.getRun()),new Boolean(data.getUseProxy())};
-		testCasesTableModel.insertRow(testCasesTable.getRowCount(), newRow);
+		int rowCount = testCasesTable.getRowCount();
+		Object[] newRow = new Object[] {rowCount,data.getName(),data.getThreadsNumber(),data.getLoopNumber(),new Boolean(data.getRun()),new Boolean(data.getUseProxy()),false};
+		testCasesTableModel.insertRow(rowCount, newRow);
+		this.testNumbers.put(data.getName(),rowCount);
 	}
 	
 	/**
@@ -217,22 +257,29 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 			clearTable(responsesTableModel);
 			responseEditorPane.setText("");
 			requestEditorPane.setText("");
+			expectedEditorPane.setText("");
 			int row = testCasesTable.getSelectedRow();
 			String name = (String) testCasesTableModel.getValueAt(row,1);
 			Integer threadNumber = (Integer) testCasesTableModel.getValueAt(row,2);
+			boolean test = false;
 			ConsoleLog.Print("[UnitPanel] case to find in table:" + responses.keySet().size());
-			
-			for(int i = 0; i < threadNumber; i++){
-				String key = name + i;
-				HttpMessageData[] caseResponses = responses.get(key);
-					if(caseResponses != null){
-						for(HttpMessageData data : caseResponses){
-							Object[] newRow = new Object[] {data.getName(),null,data.getMethod(),data.getResource(),null,data.getLoopNumber(),data.getThreadNumber()};
-							responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
-						}
-					}else{
-						ConsoleLog.Message("Response not present!");
+			if(!firstTest.isEmpty()){
+				for(int a = 0; a <= periodNumber; a++){
+					for(int i = 0; i < threadNumber; i++){
+						String key = name + i + a ;
+						HttpMessageData[] caseResponses = responses.get(key);
+							if(caseResponses != null){
+								for(HttpMessageData data : caseResponses){
+									if(data.getResponseBody().getBytes().equals(data.getExpectedBody().getBytes()))
+										test = true;
+									Object[] newRow = new Object[] {data.getName(),data.getResponseCode(),data.getMethod(),data.getResource(),data.getElapsedRemoteTime(),data.getLoopNumber(),data.getThreadNumber(),a,test};
+									responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
+								}
+							}else{
+								ConsoleLog.Message("Response not present!");
+							}
 					}
+				}
 			}
 		}
 	}
@@ -242,17 +289,44 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 			int row = responsesTable.getSelectedRow();
 			
 			String name = (String) responsesTableModel.getValueAt(row,0);
-			Integer threadNumber = (Integer) responsesTableModel.getValueAt(row,2);
-			Integer loopNumber = (Integer) responsesTableModel.getValueAt(row,1);
-			String key = name + threadNumber;
-			
-	//		ConsoleLog.Print("[UnitPanel] " + key +" "+loopNumber );
+			Integer threadNumber = (Integer) responsesTableModel.getValueAt(row,6);
+			Integer loopNumber = (Integer) responsesTableModel.getValueAt(row,5);
+			Integer period = (Integer) responsesTableModel.getValueAt(row,7);
+			String key = name + threadNumber + period;
 			HttpMessageData caseResponse =(responses.get(key))[loopNumber];
-			requestEditorPane.setText(XMLFormat.format(caseResponse.getRequestBody()));
-			responseEditorPane.setText(XMLFormat.format(caseResponse.getResponseBody()));
+			setEditorContent(requestEditorPane, caseResponse.getContentType(), caseResponse.getRequestBody());
+			setEditorContent(responseEditorPane, caseResponse.getContentType(), caseResponse.getResponseBody());
+			setEditorContent(expectedEditorPane, caseResponse.getContentType(), caseResponse.getExpectedBody());
+			
 		}
 	}
 	
+	
+	private void setEditorContent(JEditorPane editor,String contentType,String content){
+		if(content.isEmpty()){
+			
+			editor.setText("Body is empty");
+		}else if(contentType.contains("text/xml")){
+			
+			editor.setText(XMLFormat.format(content));
+		}else{
+			
+			editor.setText(content);
+		}
+	}
+	
+	
+	private boolean compareResponses(String output, String expected, String contentType){
+		
+		if(contentType.contains("text/xml")){
+			String one = XMLFormat.format(output);
+			String two = XMLFormat.format(expected);
+			
+			return one.contentEquals(two);
+		}
+		
+		return false;
+	}
 	/**
 	 * 
 	 */
@@ -266,18 +340,33 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		panel = new JPanel();
 		requestPanel = new JPanel();
 		responsePanel = new JPanel();
+		expectedResponsePanel = new JPanel();
 		requestScrollPane = new JScrollPane();
 		responseScrollPane = new JScrollPane();
+		expectedResponseScrollPane = new JScrollPane();
 		testCasesTableScrollPane = new JScrollPane();
 		responsesTableScrollPane = new JScrollPane();
 		responseLabel = new JLabel();
 		requestLabel = new JLabel();
 		requestEditorPane = new JEditorPane();
 		responseEditorPane = new JEditorPane();
-		//ioProvider = new DataProvider();
+		expectedEditorPane = new JEditorPane();
 		requestTableLabel = new JLabel("Requests");
 		responsesTableLabel = new JLabel("Responses");
+		expectedResponseLabel = new JLabel();
 		responses = new HashMap<String,HttpMessageData[]>();
+		firstTest = "";
+		responseTabbedPane = new JTabbedPane();
+		testNumbers = new HashMap<String,Integer>();
+	}
+	
+	
+	private void setColumnAligment(JTable table,int alignment, int column){
+		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment( alignment );
+		table.getColumnModel().getColumn(column).setCellRenderer( centerRenderer );
+		
 	}
 	
 	/**
@@ -293,7 +382,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		this.add(outputDetailPanel, BorderLayout.CENTER);
 		
 		outputDetailPanel.setLayout(new BorderLayout());
-		outputDetailPanel.add(outputDetails,BorderLayout.CENTER);
+		outputDetailPanel.add( responseTabbedPane,BorderLayout.CENTER);
 		
 		
 		topPanel.add(testCasesTableScrollPane,BorderLayout.PAGE_START);
@@ -309,6 +398,10 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		testCasesTable.addMouseListener(new RequestSelectionAdapter());
 		responsesTable.addMouseListener(new ResponseSelectionAdapter());
 		
+		
+		
+		
+		
 		testCasesTable.setModel(new javax.swing.table.DefaultTableModel(
 	            
 				
@@ -316,7 +409,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 
 	            },
 	            new Object [] {
-	                "#", "Name","Threads","Count","Http Unit","Proxy Unit"
+	                "#", "Name","Threads","Count","Http Unit","Proxy Unit","Finished"
 	            }
 	        ) {
 				/**
@@ -333,7 +426,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 				}
 				
 				boolean[] canEdit = new boolean [] {
-	                false, false,true,true,true,false
+	                false, false,true,true,true,false,false
 	            };
 
 	            public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -343,12 +436,19 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		}	);
 		
 		testCasesTableModel = (DefaultTableModel) testCasesTable.getModel();
+		
+		TableColumn column = testCasesTable.getColumnModel().getColumn(6);
+		column.setCellRenderer(new IconCellRenderer());
+		
+		for(int i = 0; i < testCasesTable.getColumnCount()-3; i++)
+			setColumnAligment(testCasesTable,JLabel.CENTER, i);
+		
 		responsesTable.setModel(new javax.swing.table.DefaultTableModel(
 	            new Object [][] {
-
+	            		
 	            },
 	            new String [] {
-	            		 "Name","Http Code", "Method","Service","Elapsed Time" ,"Loop number","Thread number", 
+	            		 "Name","Http Code", "Method","Service","Elapsed Time" ,"Loop number","Thread number","Period","Success" 
 	            }
 	        ) {
 	            /**
@@ -356,15 +456,21 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 				 */
 				private static final long serialVersionUID = 3376163326142594714L;
 				boolean[] canEdit = new boolean [] {
-	                false, false,false, false,false, false,false
+	                false,false, false,false, false,false, false,false,false
 	            };
 
 	            public boolean isCellEditable(int rowIndex, int columnIndex) {
 	                return canEdit [columnIndex];
 	            }
 	        });
-		responsesTableModel = (DefaultTableModel) responsesTable.getModel();
+		for(int i = 0; i < responsesTable.getColumnCount()-1; i++)
+			setColumnAligment(responsesTable,JLabel.CENTER, i);
 		
+		
+		
+		responsesTableModel = (DefaultTableModel) responsesTable.getModel();
+		TableColumn columnResponses = responsesTable.getColumnModel().getColumn(8);
+		columnResponses.setCellRenderer(new IconCellRenderer());
 		javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
 		topPanel.setLayout(topPanelLayout);
         topPanelLayout.setHorizontalGroup(
@@ -440,7 +546,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
                 .addContainerGap())
         );
 
-        outputDetails.setLeftComponent(requestPanel);
+        
 
         
         responseLabel.setText("Response");
@@ -469,10 +575,69 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
                 .addContainerGap())
         );
 
-        outputDetails.setRightComponent(responsePanel);
+        outputDetails.setLeftComponent(responsePanel);
+        outputDetails.setRightComponent(expectedResponsePanel);
+        
+        
+        
+        expectedResponseLabel.setText("Expected Response");
+        expectedEditorPane.setEditable(false);
+        expectedResponseScrollPane.setViewportView(expectedEditorPane);
+        MainWindow.initEditorPane(expectedEditorPane, expectedResponseScrollPane);
+
+        javax.swing.GroupLayout expectedResponsePanelLayout = new javax.swing.GroupLayout(expectedResponsePanel);
+        expectedResponsePanel.setLayout(expectedResponsePanelLayout);
+        expectedResponsePanelLayout.setHorizontalGroup(
+            expectedResponsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(expectedResponsePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(expectedResponsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(expectedResponseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                    .addComponent(expectedResponseLabel))
+                .addContainerGap())
+        );
+        expectedResponsePanelLayout.setVerticalGroup(
+            expectedResponsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(expectedResponsePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(expectedResponseLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(expectedResponseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+       
+        
+        
+        responseTabbedPane.addTab("Request",requestPanel);
+        responseTabbedPane.addTab("Response",outputDetails);
+        responseTabbedPane.setSelectedComponent(outputDetails);
+        
 	}
 	
 	
-	
+
+	private class IconCellRenderer extends JLabel implements TableCellRenderer{
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4723842849563229455L;
+
+		public Component getTableCellRendererComponent(JTable table, Object status, boolean isSelected, boolean hasFocus, int row, int column) {
+			
+			
+			this.setBackground(Color.white);
+			this.setForeground(Color.white);
+			setHorizontalAlignment( JLabel.CENTER );
+			this.setOpaque(true);
+			
+			if((Boolean)status)
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"case.png")));
+			else
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"false.png")));
+			
+			return this;
+		}
+	}
 	
 }

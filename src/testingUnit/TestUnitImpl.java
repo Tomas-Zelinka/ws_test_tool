@@ -28,10 +28,10 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	private HttpMessageData httpRequest;
 	private TestCaseSettingsData settingsData;
 	private HttpMessageData[][] messages;
+	private boolean periodic;
 	
 	public TestUnitImpl() throws RemoteException{
-		//reader = new DataProvider();
-		//testConnection();
+		this.periodic = false;
 	}
 	
 	
@@ -39,43 +39,58 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 		/**
 		 * toto bude predmet testovani, jestli pro jeden testcase vice vlaken nebo sekvencne
 		 * zatim sekvencne
-		 */
-		ConsoleLog.Print("runned");
+		 */ 
+		ConsoleLog.Print("[RemoteTestUnit] Runned: " + settingsData.getName());
 		
-		Set<Future<HttpMessageData[]>> outputs = new HashSet<Future<HttpMessageData[]>>();
-		int threadsNumber = settingsData.getThreadsNumber();
-		messages = new HttpMessageData [threadsNumber][settingsData.getLoopNumber()];
-		ConsoleLog.Print("bude se provadet: "+threadsNumber+" vlaken");
 		
-
-		for (int j =0; j  <  threadsNumber; j++){
-			
-			initTestCase(settingsData);
-			RequestWorker test = new RequestWorker(settingsData,httpRequest,j);
-			Future<HttpMessageData[]> workerOutput = executor.submit(test);
-			outputs.add(workerOutput);
-		}
 	
-		int i = 0;
-		for (Future<HttpMessageData[]> output : outputs){
-			try {
-				//ConsoleLog.Print("[TestUnit] Cekam na response");
-				messages[i] = output.get();
-				//ConsoleLog.Print("[TestUnit] Cekam na panel");
-				this.publishNewMessageEvent(messages[i]);
-				ConsoleLog.Print("[RemoteTestUnit] koncim vlakno" + i);
-			} catch (InterruptedException e) {
+		
+		this.periodic = settingsData.isUseSequentialRun();
+		//ConsoleLog.Print("[RemoteTestUnit] periodic" + this.periodic);
+		int period = 0;
+		do{
+			Set<Future<HttpMessageData[]>> outputs = new HashSet<Future<HttpMessageData[]>>();
+			int threadsNumber = settingsData.getThreadsNumber();
+			messages = new HttpMessageData [threadsNumber][settingsData.getLoopNumber()];
+			ConsoleLog.Print("[RemoteTestUnit] bude se provadet: "+threadsNumber+" vlaken");
+			for (int j =0; j  <  threadsNumber; j++){
 				
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				
-				e.printStackTrace();
-			}catch(RemoteException e){
-				
-				e.printStackTrace();
+				initTestCase(settingsData);
+				RequestWorker test = new RequestWorker(settingsData,httpRequest,j);
+				Future<HttpMessageData[]> workerOutput = executor.submit(test);
+				outputs.add(workerOutput);
 			}
-			i++;
-		}
+			executor.shutdown();
+			
+			int i = 0;
+			for (Future<HttpMessageData[]> output : outputs){
+				try {
+					ConsoleLog.Print("[TestUnit] Cekam na response");
+					messages[i] = output.get();
+					//ConsoleLog.Print("[TestUnit] Cekam na panel");
+					this.publishNewMessageEvent(messages[i],period);
+					ConsoleLog.Print("[RemoteTestUnit] koncim vlakno" + i);
+				} catch (InterruptedException e) {
+					ConsoleLog.Message("Unit stopped");
+					
+				} catch (ExecutionException e) {
+					
+					e.printStackTrace();
+				}catch(RemoteException e){
+					
+					e.printStackTrace();
+				}
+				i++;
+			}
+			
+			try{
+				Thread.sleep(settingsData.getPeriod());
+			}catch(Exception e){
+				ConsoleLog.Print(e.getMessage());
+			}
+			period++;
+		}while(this.periodic);
+		ConsoleLog.Print("KONEC");
 	}
 	
 	
@@ -83,7 +98,7 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	public void setTest(HttpMessageData request, TestCaseSettingsData settings) throws RemoteException{
 		this.settingsData = settings;
 		this.httpRequest = request;
-		System.out.println(" [RemoteTestUnit] data recieved" + httpRequest.getName());
+		System.out.println("[RemoteTestUnit] data recieved " + httpRequest.getName());
 	}
 	
 	public void addResponseListener(NewResponseListener listener)throws RemoteException{
@@ -95,14 +110,20 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 		return "Connected";
 	} 
 	
+	public void stopUnit() throws RemoteException{
+		this.periodic = false;
+	}
+	
 	private void initTestCase(TestCaseSettingsData settings){
 		executor = Executors.newFixedThreadPool(settings.getThreadsNumber());
 	}
 	
-	private void publishNewMessageEvent(HttpMessageData[] data) throws RemoteException {
+	private void publishNewMessageEvent(HttpMessageData[] data, int period) throws RemoteException {
 		ConsoleLog.Print("[RemoteTestUnit]posilam data");
-		responseListener.onNewResponseEvent(data);
+		responseListener.onNewResponseEvent(data, period);
 		
 	}
+	
+	
 	
 }

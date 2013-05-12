@@ -36,17 +36,22 @@ public class HttpRequestEditor extends JPanel {
     
     private JLabel headersLabel;
     private JLabel contentLabel;
+    private JLabel responseLabel;
     private JScrollPane headersScrollPane;
     private JButton addHeaderButton;
     private JButton removeHeaderButton;
     private  JPanel headersPanel;
-    private JEditorPane httpBodyEditorPane;
+    private JEditorPane requestEditorPane;
     private DefaultTableModel  headersTableModel;
     private JScrollPane httpBodyScrollPane;
+    private JScrollPane responseScrollPane;
     private HttpMessageData requestData;
-    private JSplitPane contentPane;
+    private JSplitPane requestPane;
     private JPanel httpBodyPanel;
+    private JPanel responsePanel;
     private boolean dataLoaded;
+    private JEditorPane responseEditorPane;
+    private JSplitPane bodiesPane;
     
     public HttpRequestEditor() {
         super(new BorderLayout());
@@ -54,18 +59,24 @@ public class HttpRequestEditor extends JPanel {
         initComponents();
         initHeaderPane();
         initHttpBodyPane();
-        add(contentPane);
-        contentPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  
-        contentPane.setTopComponent(headersPanel);
-        contentPane.setBottomComponent(httpBodyPanel);
-        contentPane.setResizeWeight(0.4);
+        add(requestPane);
+        requestPane.setOrientation(JSplitPane.VERTICAL_SPLIT);  
+        requestPane.setTopComponent(headersPanel);
+        requestPane.setBottomComponent(bodiesPane);
+        requestPane.setResizeWeight(0.4);
+        
+        bodiesPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);  
+        bodiesPane.setLeftComponent(httpBodyPanel);
+        bodiesPane.setRightComponent(responsePanel);
+        bodiesPane.setResizeWeight(0.4);
+        
         setDataLoaded(false);
     }
     
    
     public void setEnablePanel(boolean enable){
     	headersTable.setEnabled(enable);
-    	httpBodyEditorPane.setEnabled(enable);
+    	requestEditorPane.setEnabled(enable);
     	addHeaderButton.setEnabled(enable);
     	removeHeaderButton.setEnabled(enable);
     }
@@ -92,12 +103,12 @@ public class HttpRequestEditor extends JPanel {
 	
 	public void clearData(){
 		clearTable(headersTableModel);
-		httpBodyEditorPane.setText("");
+		requestEditorPane.setText("");
 		
 	}
 	
 	public void setEditorContent(String content){
-    	this.httpBodyEditorPane.setText(content);
+    	this.requestEditorPane.setText(content);
     }
  
 	/**
@@ -116,7 +127,8 @@ public class HttpRequestEditor extends JPanel {
     	this.requestData.setHost((String) headersTable.getValueAt(2, 1));
     	this.requestData.setResource((String) headersTable.getValueAt(3, 1));
     	this.requestData.setParams(buildParams());
-    	this.requestData.setRequestBody(httpBodyEditorPane.getText());
+    	this.requestData.setRequestBody(requestEditorPane.getText());
+    	this.requestData.setExpectedBody(responseEditorPane.getText());
     }
     
     private void  loadData(){
@@ -125,7 +137,8 @@ public class HttpRequestEditor extends JPanel {
     	headersTableModel.setValueAt(this.requestData.getHost(), 2, 1);
     	headersTableModel.setValueAt(this.requestData.getResource(), 3, 1);
     	restoreParams(this.requestData.getParams());
-    	setEditorContent(this.requestData.getRequestBody());
+    	this.requestEditorPane.setText(this.requestData.getRequestBody());
+    	this.responseEditorPane.setText(this.requestData.getExpectedBody());
     }
     
   
@@ -171,15 +184,20 @@ public class HttpRequestEditor extends JPanel {
     private void initComponents(){
     	headersPanel = new JPanel();
     	httpBodyPanel = new JPanel();
+    	responsePanel = new JPanel();
     	contentLabel = new JLabel();
     	headersLabel = new JLabel();
+    	responseLabel = new JLabel();
     	headersTable = new JTable();
     	headersScrollPane = new JScrollPane();
     	httpBodyScrollPane = new JScrollPane();
+    	responseScrollPane = new JScrollPane();
     	addHeaderButton = new JButton();
     	removeHeaderButton = new JButton(); 
-    	httpBodyEditorPane = new JEditorPane();
-    	contentPane = new JSplitPane();
+    	requestEditorPane = new JEditorPane();
+    	responseEditorPane = new JEditorPane();
+    	requestPane = new JSplitPane();
+    	bodiesPane = new JSplitPane();
     }
    
     
@@ -277,31 +295,59 @@ public class HttpRequestEditor extends JPanel {
     
     private void initHttpBodyPane(){
     
-	    contentLabel.setText("Http body");
-	    httpBodyEditorPane.setEditable(true);
-	    httpBodyScrollPane.setViewportView(httpBodyEditorPane);
-	    MainWindow.initEditorPane(httpBodyEditorPane, httpBodyScrollPane);
+	    contentLabel.setText("Http Body");
+	    requestEditorPane.setEditable(true);
+	    httpBodyScrollPane.setViewportView(requestEditorPane);
+	    MainWindow.initEditorPane(requestEditorPane, httpBodyScrollPane);
 	
-	    javax.swing.GroupLayout responsePanelLayout = new javax.swing.GroupLayout(httpBodyPanel);
-	    httpBodyPanel.setLayout(responsePanelLayout);
-	    responsePanelLayout.setHorizontalGroup(
-	        responsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	        .addGroup(responsePanelLayout.createSequentialGroup()
+	    javax.swing.GroupLayout requestPanelLayout = new javax.swing.GroupLayout(httpBodyPanel);
+	    httpBodyPanel.setLayout(requestPanelLayout);
+	    requestPanelLayout.setHorizontalGroup(
+	        requestPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	        .addGroup(requestPanelLayout.createSequentialGroup()
 	            .addContainerGap()
-	            .addGroup(responsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(requestPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	                .addComponent( httpBodyScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
 	                .addComponent(contentLabel))
 	            .addContainerGap())
 	    );
-	    responsePanelLayout.setVerticalGroup(
-	        responsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	        .addGroup(responsePanelLayout.createSequentialGroup()
+	    requestPanelLayout.setVerticalGroup(
+	        requestPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	        .addGroup(requestPanelLayout.createSequentialGroup()
 	            .addContainerGap()
 	            .addComponent(contentLabel)
 	            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	            .addComponent( httpBodyScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
 	            .addContainerGap())
 	    );
+	    
+	    
+	    responseLabel.setText("Expected Response Body");
+	    responseEditorPane.setEditable(true);
+	    responseScrollPane.setViewportView(responseEditorPane);
+	    MainWindow.initEditorPane(responseEditorPane, responseScrollPane);
+	
+	    javax.swing.GroupLayout responsePanelLayout = new javax.swing.GroupLayout(responsePanel);
+	    responsePanel.setLayout(responsePanelLayout);
+	    responsePanelLayout.setHorizontalGroup(
+	        responsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	        .addGroup(responsePanelLayout.createSequentialGroup()
+	            .addContainerGap()
+	            .addGroup(responsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                .addComponent( responseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+	                .addComponent(responseLabel))
+	            .addContainerGap())
+	    );
+	    responsePanelLayout.setVerticalGroup(
+	        responsePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	        .addGroup(responsePanelLayout.createSequentialGroup()
+	            .addContainerGap()
+	            .addComponent(responseLabel)
+	            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	            .addComponent( responseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+	            .addContainerGap())
+	    );
+	    
     
     }
     
@@ -344,7 +390,7 @@ public class HttpRequestEditor extends JPanel {
 			
 			else if(row==0 && column ==1){ // comBoBox for First row
 				
-				String[] objectArray = {"GET","POST","PUT","DELETE","HEAD","OPTONS","TRACE","CONNECT"};
+				String[] objectArray = {"GET","POST","PUT","DELETE","HEAD","OPTIONS","TRACE"};
 				this.editedBox = new JComboBox(objectArray);
 				setupBox(this.editedBox,table,row);
 				this.editedBox.setSelectedItem(value);

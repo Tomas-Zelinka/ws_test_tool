@@ -10,11 +10,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
@@ -37,9 +35,7 @@ public class TestCaseSettings extends JPanel {
 	private JTextField requestTimeoutField;
 	private JCheckBox runButton;
 	private JCheckBox useProxyBox;
-	private JRadioButton sequentialRunButton;
-	private JRadioButton scheduledRunButton;
-	private ButtonGroup buttonGroup;
+	private JCheckBox scheduledRunButton;
 	 
 	private JLabel proxyHostLabel;
 	private JLabel proxyTestedPortLabel;
@@ -52,7 +48,6 @@ public class TestCaseSettings extends JPanel {
 	private JLabel useProxyLabel;
 	private JLabel schedulePeriodLabel;
 	private JLabel requestTimeoutLabel;
-	private JLabel sequentialRunLabel;
 	private JLabel scheduledRunLabel;
 	
 	private JPanel httpRequestSettings;
@@ -135,7 +130,6 @@ public class TestCaseSettings extends JPanel {
 		proxySettingsLabel = new JLabel("PROXY SETTINGS");
 		separator = new JSeparator();
 		proxyFieldBox = new JPanel(new BorderLayout());
-		buttonGroup = new ButtonGroup();
 		
 		proxyTestedPortField = new JTextField(20);
 		proxyTestedPortLabel = new JLabel("Tested Port");
@@ -158,10 +152,7 @@ public class TestCaseSettings extends JPanel {
 		useProxyBox = new JCheckBox();
 		useProxyLabel = new JLabel("Use Proxy");
 		
-		sequentialRunButton = new JRadioButton();
-		sequentialRunLabel = new JLabel("Sequential Run");
-		
-		scheduledRunButton = new JRadioButton();
+		scheduledRunButton = new JCheckBox();
 		scheduledRunLabel = new JLabel("Periodic Run");
 		
 		settingsData = new TestCaseSettingsData();
@@ -178,7 +169,6 @@ public class TestCaseSettings extends JPanel {
 		
 		httpLabels.add(runLabel);
 		httpLabels.add(requestTimeoutLabel);
-		httpLabels.add(sequentialRunLabel);
 		httpLabels.add(threadsNumberLabel);
 		httpLabels.add(loopNumberLabel);
 		httpLabels.add(scheduledRunLabel);
@@ -187,7 +177,6 @@ public class TestCaseSettings extends JPanel {
 		
 		httpFields.add(runButton);
 		httpFields.add(requestTimeoutField);
-		httpFields.add(sequentialRunButton);
 		httpFields.add(threadsNumberField);
 		httpFields.add(loopNumberField);
 		httpFields.add(scheduledRunButton);
@@ -208,12 +197,8 @@ public class TestCaseSettings extends JPanel {
 		proxyFields.add(proxyPortField);
 		proxyFields.add(proxyTestedPortField);
 		
-		buttonGroup.add(scheduledRunButton);
-		buttonGroup.add(sequentialRunButton);
 		
 		
-		sequentialRunButton.setSelected(true);
-		sequentialRunButton.addActionListener(new SequentialRunListener());
 		scheduledRunButton.addActionListener(new ScheduledRunListener());
 		
 		proxyFields.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
@@ -347,12 +332,12 @@ public class TestCaseSettings extends JPanel {
 	
 	private boolean getEditorSequentialRun(){
 		
-		return sequentialRunButton.isSelected();
+		return this.scheduledRunButton.isSelected();
 	}
 	
 	private void setEditorSequentialRun(boolean run){
 		
-		this.sequentialRunButton.setSelected(run);
+		this.scheduledRunButton.setSelected(run);
 	}
 	
 	
@@ -360,20 +345,19 @@ public class TestCaseSettings extends JPanel {
 		
 		this.settingsData.setRun(getEditorRun());
 		this.settingsData.setUseProxy(getEditorUseProxy());
-		this.settingsData.setUseSequentialRun(getEditorSequentialRun());
+		
 		
 		if(getEditorRun() ){
-			
+			this.settingsData.setUseSequentialRun(getEditorSequentialRun());
 			if(getEditorSequentialRun()){
-				this.settingsData.setThreadsNumber(getEditorThreadsNumber());
-				this.settingsData.setLoopNumber(getEditorLoopCount());
-				this.settingsData.setPeriod(0);
-			}else{
-				this.settingsData.setThreadsNumber(0);
-				this.settingsData.setLoopNumber(0);
+				
 				this.settingsData.setPeriod(getEditorPeriod());
+			}else{
+				this.settingsData.setPeriod(0);
 			}
 			
+			this.settingsData.setThreadsNumber(getEditorThreadsNumber());
+			this.settingsData.setLoopNumber(getEditorLoopCount());
 			this.settingsData.setTimeout(getEditorTimeout());
 		}
 		if(getEditorUseProxy()){
@@ -428,20 +412,7 @@ public class TestCaseSettings extends JPanel {
 		
 		for (int a = 1; a < fields.length; a++) {  
 			
-			if((a == 3 || a == 4)){
-				if(use && sequentialRunButton.isSelected() ){
-				
-					fields[a].setEnabled(true);
-	   	     		labels[a].setEnabled(true);
-	   	     		
-				}else{
-					fields[a].setEnabled(false);
-	   	     		labels[a].setEnabled(false);
-				}
-				continue;	
-			}
-			
-			if(a == 6){
+			if(a == 5){
 				if(use && scheduledRunButton.isSelected() ){
 					fields[a].setEnabled(true);
 	   	     		labels[a].setEnabled(true);
@@ -487,27 +458,14 @@ public class TestCaseSettings extends JPanel {
 		}
 	}
 	
-	private class SequentialRunListener implements ActionListener{
-		
-		public void actionPerformed(ActionEvent e){
-			JRadioButton button = (JRadioButton)e.getSource();
-	        if(button.isSelected()){
-	        	threadsNumberField.setEnabled(true);
-	        	loopNumberField.setEnabled(true);
-	        	schedulePeriodField.setEnabled(false);
-	        }
-		}
-	}
+	
 	
 	private class ScheduledRunListener implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e){
-			JRadioButton button = (JRadioButton)e.getSource();
-	        if(button.isSelected()){
-	        	threadsNumberField.setEnabled(false);
-	        	loopNumberField.setEnabled(false);
-	        	schedulePeriodField.setEnabled(true);
-	        }
+			JCheckBox button = (JCheckBox)e.getSource();
+	        schedulePeriodField.setEnabled(button.isSelected());
+	       
 		}
 	}
 	

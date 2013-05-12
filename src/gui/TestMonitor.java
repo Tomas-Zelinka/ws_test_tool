@@ -263,6 +263,23 @@ public class TestMonitor extends JPanel  {
 		}
 	}
 	
+	
+	
+	public void stopAllUnits(){
+		int tabCount = tabbedPane.getTabCount();
+		for (int i =0; i < tabCount; i++){
+			String keyString = tabbedPane.getTitleAt(i);
+			if(i == LOCAL_UNIT){
+				stopTest(i);
+			}else{
+				int key = Integer.parseInt(keyString.split(" ")[2]);
+				stopTest(key);
+			}
+		}
+	}
+	private void stopTest(int key){
+		controller.stopTestUnit(key);
+	}
 	/**
 	 * 
 	 * @return JPanel - returns the selected unit panel

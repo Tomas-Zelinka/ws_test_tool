@@ -389,6 +389,7 @@ public class UnitController {
 						if(request != null){
 							TestUnitWorker testUnit = new TestUnitWorker(request,settings,unitId);
 							testUnit.execute();
+							
 						}else{
 							ConsoleLog.Message("Http request file not found!");
 						}
@@ -442,6 +443,16 @@ public class UnitController {
 		
 		try{
 			unit.stopProxy();
+		}catch(RemoteException ex){
+			ConsoleLog.Message(ex.getMessage());
+		}
+	}
+	
+	public void stopTestUnit(int unitId){
+		TestUnit unit = getTestUnit(unitId);
+		
+		try{
+			unit.stopUnit();
 		}catch(RemoteException ex){
 			ConsoleLog.Message(ex.getMessage());
 		}

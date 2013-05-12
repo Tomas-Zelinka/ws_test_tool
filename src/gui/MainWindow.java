@@ -259,6 +259,7 @@ public class MainWindow extends JFrame{
 	public void insertTestCase(){
 		
 		testUnitPanel.insertTestCase(MainWindow.getCasePath());
+		setContent(TESTING_UNIT);
 	}
 	
 	/**
@@ -490,6 +491,7 @@ public class MainWindow extends JFrame{
 		addToolBarItem(testUnitToolBox,"Insert Test Case",new InsertTestCaseListener(),"add.png");
 		addToolBarItem(testUnitToolBox,"Remove Test Case",new RemoveTestCaseListener(),"delete.png");
 		addToolBarItem(testUnitToolBox,"Run Tests",new RunTestUnitListener(),"play.png");
+		addToolBarItem(testUnitToolBox,"Run Tests",new StopUnitListener(),"stop.png");
 		addToolBarItem(testUnitToolBox,"Run All Units",new RunAllTestUnitsListener(),"multiplay.png");
 		addToolBarItem(testUnitToolBox,"Add Remote Unit",new AddTestUnitListener(),"network_idle.png");
 		addToolBarItem(testUnitToolBox,"Remove Test Unit",new RemoveTestUnitListener(),"network_offline.png");
@@ -555,7 +557,13 @@ public class MainWindow extends JFrame{
 			ConsoleLog.Print("[MainWindow] Run Unit clicked");
 		}
 	}
-	
+	private class StopUnitListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			testUnitPanel.stopAllUnits();
+			ConsoleLog.Print("[MainWindow] Stop Proxy Unit clicked");
+		}
+	}
 	
 	private class RunAllTestUnitsListener implements ActionListener{
 		

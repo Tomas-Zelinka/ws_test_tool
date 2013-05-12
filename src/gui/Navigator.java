@@ -410,8 +410,6 @@ public class Navigator extends JPanel {
 			super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 			FileNode node= (FileNode) value;
 			
-			
-			
 					
 			if (node.isHttpTestCase()) {
 				

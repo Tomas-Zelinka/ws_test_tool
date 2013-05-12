@@ -17,8 +17,8 @@ public class TestPanelListener extends UnicastRemoteObject implements NewRespons
 		this.unitPanel = panel;
 	}
 	
-	public void onNewResponseEvent(HttpMessageData[] data){
-		this.unitPanel.onNewResponseEvent(data);
+	public void onNewResponseEvent(HttpMessageData[] data,int period){
+		this.unitPanel.onNewResponseEvent(data,period);
 	}
 
 	

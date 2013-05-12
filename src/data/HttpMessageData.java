@@ -21,6 +21,7 @@ public class HttpMessageData implements Serializable {
 	private int loopNumber;
 	private String requestBody;
 	private String responseBody;
+	private String expectedBody;
 	private String method;
 	private String host;
 	private String resource;
@@ -171,6 +172,14 @@ public class HttpMessageData implements Serializable {
 	public void setRequestPath(String str){
 		
 		this.requestPath = str;
+	}
+	
+	public String getExpectedBody() {
+		return expectedBody;
+	}
+
+	public void setExpectedBody(String expectedBody) {
+		this.expectedBody = expectedBody;
 	}
 	
 	

@@ -181,7 +181,8 @@ public class ProxyMonitoringUnit extends UnicastRemoteObject implements ProxyUni
 		
 		setProxyFlag(false);
 		try {
-			serverSocket.close();
+			if(serverSocket!= null)
+				serverSocket.close();
 			if (incomingSocket != null)
 				incomingSocket.close();
 			if (outgoingSocket != null)

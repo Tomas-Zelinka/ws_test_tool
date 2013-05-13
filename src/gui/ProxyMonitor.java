@@ -52,7 +52,7 @@ public class ProxyMonitor extends JPanel {
 			
 			proxyUnitCounter = 1;
 			for(int i = 1; i < panelCount; i++){
-				removeUnit(i);
+				removeTest(i);
 				
 			}
 			
@@ -63,6 +63,7 @@ public class ProxyMonitor extends JPanel {
 			ConsoleLog.Message("Found any configurations");
 		}
 	}
+	
 	/**
 	 * This method inserts remote unit tab to the tabbed pane
 	 * and initialize new remote unit in unit controller
@@ -106,79 +107,70 @@ public class ProxyMonitor extends JPanel {
 		proxyUnitCounter++;
 	}
 	
-	public int getPanelIndex(){
-		return tabbedPane.getSelectedIndex();
-	}
-	
-	public void removeUnit(int panelIndex){
-		
-		if (panelIndex != LOCAL_UNIT){
-			controller.removeTestUnit(getUnitKey());
-			tabbedPane.remove(panelIndex);
-			tabbedPane.revalidate();
-			ConsoleLog.Print("[ProxyMonitor] Removed Unit: " + getUnitKey());
-		}else{
-			ConsoleLog.Print("[ProxyMonitor] You cannot close local testing unit");
-		}
-	}
-	
-	
-	public void runUnit(String path){
-		
-
-		int panelIndex = tabbedPane.getSelectedIndex();
-		
-		File casePath = new File(path);
-		
-		if(casePath.toPath().getNameCount() > 2){
-			
-			String caseName = casePath.getName();
-			
-			if(panelIndex == LOCAL_UNIT){
-				tabbedPane.setTitleAt(panelIndex,LOCAL_NAME +" - "+caseName );
-			}else{
-				tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey() +" - "+caseName );
-			}
-			//getSelectedPanel().clearResults();
-			controller.runProxy(path,getUnitKey());
-			
-		}else{
-			ConsoleLog.Message("Any Test case selected.");
-		}
-	}
-	
-	public void stopUnit(){
-		controller.stopProxy(getUnitKey());
-		
-		int panelIndex = tabbedPane.getSelectedIndex();
-		if(panelIndex == LOCAL_UNIT ){
-			tabbedPane.setTitleAt(panelIndex, LOCAL_NAME);
-		}else{
-			tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey());
-		}
-		
-	}
-	
-		
 	/**
 	 * 
-	 * @return JPanel - returns the selected unit panel
+	 * @param panelIndex
 	 */
-//	private ProxyUnitPanel getSelectedPanel(){
-//		ProxyUnitPanel selectedPanel = (ProxyUnitPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
-//		ConsoleLog.Print("[ProxyMonitor] returned Unit: " + getUnitKey());
-//		return selectedPanel;
-//	}
+	public void removeUnit(){
+		int panelIndex = tabbedPane.getSelectedIndex();
+		removeTest( panelIndex);
+	}
 	
+	/**
+	 * 
+	 * @param path
+	 */
+	public void runUnit(String path){
+		
+		int panelIndex = tabbedPane.getSelectedIndex();
+		runTest (path, panelIndex);
+	}
+	
+	/**
+	 * 
+	 */
+	public void stopUnit(){
+		
+		int panelIndex = tabbedPane.getSelectedIndex();
+		stopTest (panelIndex);
+	}
+	
+	/**
+	 * 
+	 * @param path
+	 */
+	public void runAllUnits(String path){
+		
+		for(int i = 0; i < tabbedPane.getTabCount(); i++){
+			runTest (path,i);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void stopAllUnits(){
+		
+		for(int i = 0; i < tabbedPane.getTabCount(); i++){
+			stopTest (i);
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+//	private int getPanelIndex(){
+//		return tabbedPane.getSelectedIndex();
+//	}
 	
 	/**
 	 * 
 	 * @return int - return unit key, the key is used in tab titles
 	 * 				 and like an id for testing units
 	 */ 
-	public int getUnitKey(){
+	private int getUnitKey(int panelIndex){
 		
-		int panelIndex = tabbedPane.getSelectedIndex();
 		String keyString = tabbedPane.getTitleAt(panelIndex);
 		
 		if(panelIndex == LOCAL_UNIT)// local unit selected
@@ -189,6 +181,74 @@ public class ProxyMonitor extends JPanel {
 		}
 	}
 	
+	
+	/**
+	 * 
+	 * @return JPanel - returns the selected unit panel
+	 */
+//	private ProxyUnitPanel getSelectedPanel(){
+//		ProxyUnitPanel selectedPanel = (ProxyUnitPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
+//		ConsoleLog.Print("[ProxyMonitor] returned Unit: " + getUnitKey());
+//		return selectedPanel;
+//	}
+	
+	/**
+	 * 
+	 * @param panelIndex
+	 */
+	private void stopTest(int panelIndex){
+		
+		controller.stopProxy(getUnitKey(panelIndex));
+		if(panelIndex == LOCAL_UNIT ){
+			tabbedPane.setTitleAt(panelIndex, LOCAL_NAME);
+		}else{
+			tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey(panelIndex));
+		}
+	}
+	
+	/**
+	 * 
+	 * @param path
+	 * @param panelIndex
+	 */
+	private void runTest(String path, int panelIndex){
+		
+		File casePath = new File(path);
+		
+		if(casePath.toPath().getNameCount() > 2){
+			
+			String caseName = casePath.getName();
+			
+			if(panelIndex == LOCAL_UNIT){
+				tabbedPane.setTitleAt(panelIndex,LOCAL_NAME +" - "+caseName );
+			}else{
+				tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey(panelIndex) +" - "+caseName );
+			}
+			//getSelectedPanel().clearResults();
+			controller.runProxy(path,getUnitKey(panelIndex));
+			
+		}else{
+			ConsoleLog.Message("Any Test case selected.");
+		}
+	}
+	
+	
+	
+	private void removeTest(int panelIndex){
+		
+		
+		if (panelIndex != LOCAL_UNIT){
+			controller.removeTestUnit(getUnitKey(panelIndex));
+			tabbedPane.remove(panelIndex);
+			tabbedPane.revalidate();
+			ConsoleLog.Print("[ProxyMonitor] Removed Unit: " + getUnitKey(panelIndex));
+		}else{
+			ConsoleLog.Print("[ProxyMonitor] You cannot close local testing unit");
+		}
+	}
+	/**
+	 * 
+	 */
 	private void initComponents(){
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addChangeListener(new ChangeListener() {

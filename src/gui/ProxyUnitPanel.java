@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import logging.ConsoleLog;
 import modalWindows.AntiAliasedEditorPane;
 import proxyUnit.HttpInteraction;
+import proxyUnit.HttpMessageParser;
 import proxyUnit.HttpRequest;
 import proxyUnit.HttpResponse;
 
@@ -278,32 +279,32 @@ public class ProxyUnitPanel extends JSplitPane  {
 					
 					if(interactionMap.containsKey(interactionId))
 					{
-//						HttpInteraction selectedInteraction= interactionMap.get(interactionId);
-//					
-//						HttpRequest httpRequest= selectedInteraction.getHttpRequest();
-//						HttpResponse httpResponse= selectedInteraction.getHttpResponse();
-//						if (httpRequest != null) {
-//							reqOriginalEditorPane.setText(httpRequest.getHttpHeader() + 
-//									HttpMessageParser.formatXmlMessage(httpRequest.getContent()));
-//							//nechceme odscrollovat dolu
-//							reqOriginalEditorPane.setCaretPosition(0);
-//							
-//							reqChangedEditorPane.setText(httpRequest.getChangedHttpHeader() +   
-//									HttpMessageParser.formatXmlMessage(httpRequest.getChangedContent()));
-//							//nechceme odscrollovat dolu
-//							reqChangedEditorPane.setCaretPosition(0);
-//						}
-//						if (httpResponse != null) {
-//							resOriginalEditorPane.setText(httpResponse.getHttpHeader() +  
-//									HttpMessageParser.formatXmlMessage(httpResponse.getContent()));
-//							//nechceme odscrollovat dolu
-//							resOriginalEditorPane.setCaretPosition(0);
-//							
-//							resChangedEditorPane.setText(httpResponse.getChangedHttpHeader() + 
-//									HttpMessageParser.formatXmlMessage(httpResponse.getChangedContent()));
-//							//nechceme odscrollovat dolu
-//							resChangedEditorPane.setCaretPosition(0);
-//						}
+						HttpInteraction selectedInteraction= interactionMap.get(interactionId);
+					
+						HttpRequest httpRequest= selectedInteraction.getHttpRequest();
+						HttpResponse httpResponse= selectedInteraction.getHttpResponse();
+						if (httpRequest != null) {
+							reqOriginalEditorPane.setText(httpRequest.getHttpHeader() + 
+									HttpMessageParser.formatXmlMessage(httpRequest.getContent()));
+							//nechceme odscrollovat dolu
+							reqOriginalEditorPane.setCaretPosition(0);
+							
+							reqChangedEditorPane.setText(httpRequest.getChangedHttpHeader() +   
+									HttpMessageParser.formatXmlMessage(httpRequest.getChangedContent()));
+							//nechceme odscrollovat dolu
+							reqChangedEditorPane.setCaretPosition(0);
+						}
+						if (httpResponse != null) {
+							resOriginalEditorPane.setText(httpResponse.getHttpHeader() +  
+									HttpMessageParser.formatXmlMessage(httpResponse.getContent()));
+							//nechceme odscrollovat dolu
+							resOriginalEditorPane.setCaretPosition(0);
+							
+							resChangedEditorPane.setText(httpResponse.getChangedHttpHeader() + 
+									HttpMessageParser.formatXmlMessage(httpResponse.getChangedContent()));
+							//nechceme odscrollovat dolu
+							resChangedEditorPane.setCaretPosition(0);
+						}
 					}else{ 
 						reqOriginalEditorPane.setText("");
 						reqChangedEditorPane.setText("");
@@ -365,7 +366,7 @@ public class ProxyUnitPanel extends JSplitPane  {
 		                return canEdit [columnIndex];
 		            }
 		        });
-		        interactionTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+		        //interactionTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
 		        interactionTable.setShowHorizontalLines(false);
 		        interactionTable.setShowVerticalLines(false);
 		        interactionTable.addMouseListener(interactionTablePopupListener);

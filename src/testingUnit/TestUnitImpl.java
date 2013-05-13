@@ -98,7 +98,7 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	public void setTest(HttpMessageData request, TestCaseSettingsData settings) throws RemoteException{
 		this.settingsData = settings;
 		this.httpRequest = request;
-		System.out.println("[RemoteTestUnit] data recieved " + httpRequest.getName());
+		ConsoleLog.Print("[RemoteTestUnit] data recieved " + httpRequest.getName());
 	}
 	
 	public void addResponseListener(NewResponseListener listener)throws RemoteException{

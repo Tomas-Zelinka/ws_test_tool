@@ -146,10 +146,12 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		
 		
 		if(firstTest.compareTo(name)== 0){
+			testCasesTable.setRowSelectionInterval(0, 0);
 			boolean test = false;
 			for (int i = 0; i < dataArray.length; i++){
+				Long time = dataArray[i].getElapsedRemoteTime()/1000000; 
 				test = compareResponses(dataArray[i].getResponseBody(),dataArray[i].getExpectedBody(),dataArray[i].getContentType());
-				Object[] newRow = new Object[] {dataArray[i].getName(),dataArray[i].getResponseCode(),dataArray[i].getMethod(),dataArray[i].getResource(),dataArray[i].getElapsedRemoteTime(),dataArray[i].getLoopNumber(),dataArray[i].getThreadNumber(),period,test};
+				Object[] newRow = new Object[] {dataArray[i].getName(),dataArray[i].getResponseCode(),dataArray[i].getMethod(),dataArray[i].getResource(),time,dataArray[i].getLoopNumber(),dataArray[i].getThreadNumber(),period,test};
 				responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
 			}
 		}
@@ -270,9 +272,10 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 						HttpMessageData[] caseResponses = responses.get(key);
 							if(caseResponses != null){
 								for(HttpMessageData data : caseResponses){
-									if(data.getResponseBody().getBytes().equals(data.getExpectedBody().getBytes()))
-										test = true;
-									Object[] newRow = new Object[] {data.getName(),data.getResponseCode(),data.getMethod(),data.getResource(),data.getElapsedRemoteTime(),data.getLoopNumber(),data.getThreadNumber(),a,test};
+									test = compareResponses(data.getResponseBody(),data.getExpectedBody(), data.getContentType());
+														
+									Long time = data.getElapsedRemoteTime()/1000000; 
+									Object[] newRow = new Object[] {data.getName(),data.getResponseCode(),data.getMethod(),data.getResource(), time ,data.getLoopNumber(),data.getThreadNumber(),a,test};
 									responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
 								}
 							}else{
@@ -318,7 +321,9 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 	
 	private boolean compareResponses(String output, String expected, String contentType){
 		
-		if(contentType.contains("text/xml")){
+		
+		
+		if(contentType.contains("text/xml") && !output.isEmpty() && !expected.isEmpty()){
 			String one = XMLFormat.format(output);
 			String two = XMLFormat.format(expected);
 			
@@ -442,6 +447,8 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		
 		for(int i = 0; i < testCasesTable.getColumnCount()-3; i++)
 			setColumnAligment(testCasesTable,JLabel.CENTER, i);
+		
+		
 		
 		responsesTable.setModel(new javax.swing.table.DefaultTableModel(
 	            new Object [][] {

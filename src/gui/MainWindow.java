@@ -491,7 +491,8 @@ public class MainWindow extends JFrame{
 		addToolBarItem(testUnitToolBox,"Insert Test Case",new InsertTestCaseListener(),"add.png");
 		addToolBarItem(testUnitToolBox,"Remove Test Case",new RemoveTestCaseListener(),"delete.png");
 		addToolBarItem(testUnitToolBox,"Run Tests",new RunTestUnitListener(),"play.png");
-		addToolBarItem(testUnitToolBox,"Run Tests",new StopUnitListener(),"stop.png");
+		addToolBarItem(testUnitToolBox,"Stop Tests",new StopUnitListener(),"stop.png");
+		addToolBarItem(testUnitToolBox,"Stop All Unit",new StopAllUnitsListener(),"multistop.png");
 		addToolBarItem(testUnitToolBox,"Run All Units",new RunAllTestUnitsListener(),"multiplay.png");
 		addToolBarItem(testUnitToolBox,"Add Remote Unit",new AddTestUnitListener(),"network_idle.png");
 		addToolBarItem(testUnitToolBox,"Remove Test Unit",new RemoveTestUnitListener(),"network_offline.png");
@@ -500,6 +501,8 @@ public class MainWindow extends JFrame{
 		
 		addToolBarItem(proxyUnitToolBox,"Run Unit",new RunProxyListener(),"play.png");
 		addToolBarItem(proxyUnitToolBox,"Stop Unit",new StopProxyListener(),"stop.png");
+		addToolBarItem(proxyUnitToolBox,"Run All Units",new RunProxyListener(),"multiplay.png");
+		addToolBarItem(proxyUnitToolBox,"Stop All Units",new StopAllProxyListener(),"multistop.png");
 		addToolBarItem(proxyUnitToolBox,"Add Remote Unit",new AddProxyUnitListener(),"network_idle.png");
 		addToolBarItem(proxyUnitToolBox,"Remove Remote Unit",new RemoveProxyUnitListener(),"network_offline.png");
 		addToolBarItem(proxyUnitToolBox,"Export Configuration",new ExportProxyUnitListener(),"upload.png");
@@ -560,7 +563,7 @@ public class MainWindow extends JFrame{
 	private class StopUnitListener implements ActionListener{
 		
 		public void actionPerformed (ActionEvent e){
-			testUnitPanel.stopAllUnits();
+			testUnitPanel.stopUnit();
 			ConsoleLog.Print("[MainWindow] Stop Proxy Unit clicked");
 		}
 	}
@@ -572,6 +575,16 @@ public class MainWindow extends JFrame{
 			testUnitPanel.runAllUnits(MainWindow.getSuitePath());
 		}
 	}
+	
+	
+	private class StopAllUnitsListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			testUnitPanel.stopAllUnits();
+			ConsoleLog.Print("[MainWindow] Stop Proxy Unit clicked");
+		}
+	}
+	
 	
 	private class ExportTestUnitListener implements ActionListener{
 		
@@ -632,7 +645,7 @@ public class MainWindow extends JFrame{
 	private class RemoveProxyUnitListener implements ActionListener{
 		
 		public void actionPerformed (ActionEvent e){
-			proxyUnitPanel.removeUnit(proxyUnitPanel.getPanelIndex());
+			proxyUnitPanel.removeUnit();
 			ConsoleLog.Print("[MainWindow] Remove Proxy Unit clicked");
 		}
 	}
@@ -692,6 +705,12 @@ public class MainWindow extends JFrame{
 		}
 	}
 	
-	
+	private class StopAllProxyListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			proxyUnitPanel.stopAllUnits();
+			ConsoleLog.Print("[MainWindow] Stop Proxy Unit clicked");
+		}
+	}
 	
 }

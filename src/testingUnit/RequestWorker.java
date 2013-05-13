@@ -15,10 +15,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.util.EntityUtils;
 
 import data.HttpMessageData;
@@ -47,12 +47,12 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 		ConsoleLog.Print("[Worker]pracuju: " + data.getName());
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpUriRequest request = buildRequest();
-		request.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, settings.getTimeout());
+		client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, settings.getTimeout());
 		
 		
 		if(settings.getUseProxy()){
 			HttpHost proxy = new HttpHost(settings.getProxyHost(),settings.getProxyPort());
-			request.getParams().setParameter(ExecutionContext.HTTP_PROXY_HOST, proxy);
+			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 			
 		}
 		

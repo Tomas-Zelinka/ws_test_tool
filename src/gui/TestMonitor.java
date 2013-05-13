@@ -80,9 +80,6 @@ public class TestMonitor extends JPanel  {
 	}
 	
 	
-	public int getPanelIndex(){
-		return tabbedPane.getSelectedIndex();
-	}
 	
 	/**
 	 * This method inserts remote unit tab to the tabbed pane
@@ -230,6 +227,12 @@ public class TestMonitor extends JPanel  {
 		runTest(path, getUnitKey());
 	}
 	
+	public void stopUnit(){
+		
+		stopTest(getUnitKey());
+	}
+	
+	
 	public void runAllUnits(String path){
 		
 		int tabCount = tabbedPane.getTabCount();
@@ -244,28 +247,9 @@ public class TestMonitor extends JPanel  {
 		}
 	}
 	
-	
-	
 	/**
 	 * 
-	 * @return int - return unit key, the key is used in tab titles
-	 * 				 and like an id for testing units
-	 */ 
-	public int getUnitKey(){
-		
-		int panelIndex = tabbedPane.getSelectedIndex();
-		String keyString = tabbedPane.getTitleAt(panelIndex);
-		
-		if(panelIndex == LOCAL_UNIT)// local unit selected
-			return LOCAL_UNIT;
-		else{
-			int key = Integer.parseInt(keyString.split(" ")[2]);
-			return key;
-		}
-	}
-	
-	
-	
+	 */
 	public void stopAllUnits(){
 		int tabCount = tabbedPane.getTabCount();
 		for (int i =0; i < tabCount; i++){
@@ -278,8 +262,34 @@ public class TestMonitor extends JPanel  {
 			}
 		}
 	}
+	
+	
+	
+	public int getPanelIndex(){
+		return tabbedPane.getSelectedIndex();
+	}
+	
 	private void stopTest(int key){
 		controller.stopTestUnit(key);
+	}
+	
+	
+	/**
+	 * 
+	 * @return int - return unit key, the key is used in tab titles
+	 * 				 and like an id for testing units
+	 */ 
+	private int getUnitKey(){
+		
+		int panelIndex = tabbedPane.getSelectedIndex();
+		String keyString = tabbedPane.getTitleAt(panelIndex);
+		
+		if(panelIndex == LOCAL_UNIT)// local unit selected
+			return LOCAL_UNIT;
+		else{
+			int key = Integer.parseInt(keyString.split(" ")[2]);
+			return key;
+		}
 	}
 	/**
 	 * 
@@ -308,11 +318,16 @@ public class TestMonitor extends JPanel  {
 		this.add(tabbedPane,BorderLayout.CENTER);
 	}
 	
+	/**
+	 * 
+	 * @param path
+	 * @param key
+	 */
 	private void runTest(String path, int key){
 		
 		saveTestList(path); 
 		getSelectedPanel().clearResults();
-		controller.runTest(path,getUnitKey());
+		controller.runTest(path,key);
 	}
 	
 	

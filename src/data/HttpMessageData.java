@@ -124,7 +124,7 @@ public class HttpMessageData implements Serializable {
 		this.responseBody = responseBody;
 	}
 
-	public float getElapsedRemoteTime() {
+	public Long getElapsedRemoteTime() {
 		
 		return elapsedRemoteTime;
 	}

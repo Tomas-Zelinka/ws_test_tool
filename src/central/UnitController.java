@@ -358,46 +358,11 @@ public class UnitController {
 	 * @param unitId
 	 */
 	public void runTest(String path, int unitId){
-		
 		TestList list = (TestList) ioProvider.readObject(path + TestList.filename);
 		if( list != null){
 		
-			ArrayList<String> testCases = list.getTestCases();
-			
-			
-			for(String casePath: testCases){
-				
-				TestCaseSettingsData settings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
-				if(settings != null)
-				{
-					if(settings.getUseProxy()){
-						
-						FaultInjectionData fault = (FaultInjectionData) ioProvider.readObject(casePath+FaultInjectionData.filename);
-						if(fault != null){
-							
-							ProxyUnitWorker proxyUnit = new ProxyUnitWorker(fault,settings,unitId);
-							proxyUnit.execute();
-						}else{
-							ConsoleLog.Message("Fault Injeciton file not found!");
-						}
-					}
-					
-					
-					if(settings.getRun()){
-						HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.filename);
-						
-						if(request != null){
-							TestUnitWorker testUnit = new TestUnitWorker(request,settings,unitId);
-							testUnit.execute();
-							
-						}else{
-							ConsoleLog.Message("Http request file not found!");
-						}
-					}
-				}else{
-					ConsoleLog.Message("Test case settings file not found!");
-				}
-			}
+			TestUnitWorker worker = new TestUnitWorker(list,unitId);
+			worker.execute();
 		}else{
 			ConsoleLog.Message("Testlist not found!");
 		}
@@ -426,6 +391,8 @@ public class UnitController {
 				}else{
 					ConsoleLog.Message("Fault Injeciton file not found!");
 				}
+			}else{
+				ConsoleLog.Message("The Proxy is not selected in settings!");
 			}
 		}else{
 			ConsoleLog.Message("Test case settings file not found!");
@@ -550,34 +517,59 @@ public class UnitController {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	private class TestUnitWorker extends SwingWorker<String,Void>{
+	public class TestUnitWorker extends SwingWorker<Boolean,Void>{
 		
-		private HttpMessageData data;
-		private TestCaseSettingsData settings;
 		private int id;
-		
-		TestUnitWorker(HttpMessageData data,TestCaseSettingsData settings, int unitId){
-			this.data = data;
-			this.settings = settings;
+		private TestList list;
+		TestUnitWorker(TestList list,int unitId){
+			this.list = list;
+			//this.data = data;
+			//this.settings = settings;
 			this.id = unitId;
 		}
 		
-		public String doInBackground(){
+		@Override
+		public Boolean doInBackground(){
 			
+			ArrayList<String> testCases = list.getTestCases();
 			TestUnit unit = getTestUnit(this.id);
 			ProxyUnit proxyUnit = getProxyUnit(this.id);
 			try{
+				for(String casePath: testCases){
+					
+					TestCaseSettingsData settings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
+					if(settings != null)
+					{
+						if(settings.getRun()){
+							HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.filename);
+							
+							if(request != null){
+								
+								//ConsoleLog.Message (unit.testConnection());
+								unit.setTest(request,settings);
+								unit.run();
+						
+							}else{
+								ConsoleLog.Message("Http request file not found!");
+							}
+						}
+					}else{
+						ConsoleLog.Message("Test case settings file not found!");
+					}
+				}
+			
+			
+			
 				
-				ConsoleLog.Message (unit.testConnection());
-				unit.setTest(data,settings);
-				unit.run();
-				proxyUnit.stopProxy();
+				
 			}catch(RemoteException ex){
 				ConsoleLog.Message(ex.getMessage());
 			}
 		
-			return "";
+			return true;
 		}
+		
+		
 	}
 	
 	

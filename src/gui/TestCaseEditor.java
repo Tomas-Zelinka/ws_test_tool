@@ -129,8 +129,9 @@ public class TestCaseEditor extends JPanel {
 		
 		TestCaseSettingsData loadedSettings = null;
 		String settingsFilePath = getTestCasePath() + TestCaseSettingsData.filename;
+		File casePath = new File(getTestCasePath()); 
 		File settingsFile = new File(settingsFilePath);
-		mainTabbedPane.setTitleAt(0, "Test Case Settings - " + getTestCasePath().split(File.separator)[3]);
+		mainTabbedPane.setTitleAt(0, "Test Case Settings - " + casePath.getName());
 		
 		if(!settingsFile.exists()){
 			ConsoleLog.Print("[TestCaseEditor] Settings file not found !!!");
@@ -149,8 +150,9 @@ public class TestCaseEditor extends JPanel {
 		
 		HttpMessageData loadedHttpData = null;
 		String httpFilePath = getTestCasePath() +  HttpMessageData.filename;
+		File casePath = new File(getTestCasePath()); 
 		File httpDataFile = new File(httpFilePath);
-		mainTabbedPane.setTitleAt(1, "Http Request - " + getTestCasePath().split(File.separator)[3]);
+		mainTabbedPane.setTitleAt(1, "Http Request - " + casePath.getName());
 		
 		if(!httpDataFile.exists()){
 			ConsoleLog.Print("[TestCaseEditor] Http Data file not found !!!");
@@ -168,8 +170,9 @@ public class TestCaseEditor extends JPanel {
 	
 		FaultInjectionData loadedFault = null;
 		String faultFilePath = getTestCasePath() + FaultInjectionData.filename;
+		File casePath = new File(getTestCasePath()); 
 		File faultDataFile = new File(faultFilePath);
-		mainTabbedPane.setTitleAt(2, "Fault Injection - " + getTestCasePath().split(File.separator)[3]);
+		mainTabbedPane.setTitleAt(2, "Fault Injection - " + casePath.getName());
 		
 		if(!faultDataFile.exists()){
 			ConsoleLog.Print("[TestCaseEditor] Fault Injection file not found !!!");

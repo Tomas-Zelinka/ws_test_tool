@@ -128,11 +128,11 @@ public class ProxyMonitor extends JPanel {
 
 		int panelIndex = tabbedPane.getSelectedIndex();
 		
-		String[] splittedPath = path.split("\\"+File.separator);
+		File casePath = new File(path);
 		
-		if(splittedPath.length > 2){
+		if(casePath.toPath().getNameCount() > 2){
 			
-			String caseName = splittedPath[3];
+			String caseName = casePath.getName();
 			
 			if(panelIndex == LOCAL_UNIT){
 				tabbedPane.setTitleAt(panelIndex,LOCAL_NAME +" - "+caseName );

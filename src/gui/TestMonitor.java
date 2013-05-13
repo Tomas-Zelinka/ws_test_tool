@@ -154,15 +154,16 @@ public class TestMonitor extends JPanel  {
 		for (int i =0; i < tabCount; i++){
 		
 			int panelIndex = i;
-			String splitedPath = (MainWindow.getSuitePath().split("\\"+File.separator))[2];
+			File suite = new File(MainWindow.getSuitePath());
+			String suiteName = suite.getName();
 			if(panelIndex == LOCAL_UNIT){
 				
-				tabbedPane.setTitleAt(panelIndex,LOCAL_NAME+" - "+splitedPath );
+				tabbedPane.setTitleAt(panelIndex,LOCAL_NAME+" - "+suiteName );
 			}else{
 				
 				String keyString = tabbedPane.getTitleAt(panelIndex);
 				int key = Integer.parseInt(keyString.split(" ")[2]);
-				tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ key +" - "+splitedPath );
+				tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ key +" - "+suiteName );
 			}
 			 
 			TestList list = controller.readTestList(path);

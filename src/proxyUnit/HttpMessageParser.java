@@ -271,4 +271,33 @@ public class HttpMessageParser {
 	}
 		
 		
+	
+	public static String decodeGzip(byte[] encoded){
+		String decoded = encoded.toString();
+		return decoded;
+	}
+	
+	public static byte[] encodeGzip(String decoded){
+		
+		byte[] encoded = decoded.getBytes();
+		
+		return encoded;
+		
+	}
+	
+	
+	public static String decodeDeflate(byte[] encoded){
+		String decoded = encoded.toString();
+		return decoded;
+	}
+	
+	public static byte[] encodeDeflate(String decoded){
+		
+		byte[] encoded = decoded.getBytes();
+		
+		return encoded;
+		
+	}
+	
+	
 }

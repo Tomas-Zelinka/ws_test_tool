@@ -72,10 +72,11 @@ public class ProxyThread extends Thread {
 			int httpMode= -1;
 			int messageCounter = 0;
 			int bytesRead = -1;
-			String changedMessage = "";
 			String header = "";
 			String strChunkSize = "";
 			char[] chunk = null;
+			byte[] byteMessage = null;
+			byte[] messageToSend = null;
 			int offset = 0;
 			while(true) {
 				ConsoleLog.Print("[READ HEADERS] cyklus");
@@ -111,7 +112,7 @@ public class ProxyThread extends Thread {
 							}
 						//hlavicka obsahuje pole Content-Length
 						}else{
-							
+							byteMessage = new byte[httpMessage.getContentLength()];
 							httpMode= HTTP_CONTENT_LENGTH;
 						}
 						
@@ -162,7 +163,7 @@ public class ProxyThread extends Thread {
 						}
 						
 						for (int i= 0; i < bytesRead; i++)
-							rawMessage+= buffer[i];
+							byteMessage[offset+i]+= buffer[i];
 						
 						if (bytesToBeRead == -1) {
 							//spocitame, kolik bytu ma byt jeste ze streamu nacteno ke zhotoveni http zpravy
@@ -170,6 +171,7 @@ public class ProxyThread extends Thread {
 							bytesToBeRead= httpMessage.getContentLength() - bytesRead;
 							
 						}else if (bytesToBeRead > 0){
+								offset +=bytesRead;
 								bytesToBeRead-= bytesRead;
 						}
 						
@@ -177,10 +179,10 @@ public class ProxyThread extends Thread {
 						//pokud jiz byla cela http zprava nactena..
 						if (bytesToBeRead == 0) {
 							//rozparsujeme telo zpravy
-							ConsoleLog.Print("[LENGTH MODE] Vysledek:" +httpMessage.getHttpHeader() + httpMessage.getContent());
+							//ConsoleLog.Print("[LENGTH MODE] Vysledek:" +httpMessage.getHttpHeader() + httpMessage.getContent());
 							
-							changedMessage =  processContent( interactionId + messageCounter, httpMessage, rawMessage);
-							outputStream.write(changedMessage.getBytes());
+							messageToSend =  processContent( interactionId + messageCounter, httpMessage, byteMessage);
+							outputStream.write(messageToSend);
 								
 							bytesToBeRead= -1;
 							rawMessage= "";
@@ -246,30 +248,30 @@ public class ProxyThread extends Thread {
 					default:
 						//pokud na vstupu jiz nejsou v tuto chvili data..pro jistotu chvili pockame
 						
-						ConsoleLog.Print("[NON LENGTH MODE] ctu" );
-						
-						if (inputStream.available() == 0) {
-							try {
-								sleep(10);
-							}
-							catch (Exception ex) {
-								System.err.println(ex.getMessage());
-								System.exit(1);
-							}
-							//pokud stale nejsou na vstupu data..predpokladame, ze bylo vse jiz poslano
-							if (inputStream.available() == 0) {
-								
-								changedMessage =  processContent( interactionId + messageCounter, httpMessage, rawMessage);
-								outputStream.write(changedMessage.getBytes());
-								
-								bytesToBeRead= -1;
-								rawMessage= "";
-								messageCounter++;
-							}
-							
-						}
-						
-					break;
+						ConsoleLog.Print("[NON LENGTH MODE] nepodporuju" );
+						break;
+//						if (inputStream.available() == 0) {
+//							try {
+//								sleep(10);
+//							}
+//							catch (Exception ex) {
+//								System.err.println(ex.getMessage());
+//								System.exit(1);
+//							}
+//							//pokud stale nejsou na vstupu data..predpokladame, ze bylo vse jiz poslano
+//							if (inputStream.available() == 0) {
+//								
+//								//messageToSend =  processContent( interactionId + messageCounter, httpMessage, rawMessage);
+//								outputStream.write(messageToSend);
+//								
+//								bytesToBeRead= -1;
+//								rawMessage= "";
+//								messageCounter++;
+//							}
+//							
+//						}
+//						
+//					break;
 				}
 			}
 					
@@ -289,9 +291,23 @@ public class ProxyThread extends Thread {
 	}
 	
 	
-	private String processContent(int interactionId,HttpMessage message,String rawMessage) throws IOException{
+	private byte[] processContent(int interactionId,HttpMessage message,byte[] byteMessage) throws IOException{
 		
 		String changedMessage = "";
+		
+		if(message.getContentEncoding().contains("gzip") || message.getTransferEncoding().contains("gzip")){
+			
+			changedMessage = HttpMessageParser.decodeGzip(byteMessage);
+		}else if(message.getContentEncoding().contains("deflate") || message.getTransferEncoding().contains("deflate")){
+			
+			changedMessage = HttpMessageParser.decodeDeflate(byteMessage);
+		}else{
+			
+			changedMessage = byteMessage.toString();
+		}
+		
+		
+		
 		HttpMessageParser.parseHttpContent(message, rawMessage, true);
 		
 		proxyUnit.newMessageNotifier(interactionId, message);
@@ -301,9 +317,22 @@ public class ProxyThread extends Thread {
 		else
 			changedMessage=rawMessage;
 		
-		return changedMessage;
+		if(message.getContentEncoding().contains("gzip") || message.getTransferEncoding().contains("gzip")){
+			
+			byteMessage = HttpMessageParser.encodeGzip(changedMessage);
+		}else if(message.getContentEncoding().contains("deflate") || message.getTransferEncoding().contains("deflate")){
+			
+			byteMessage = HttpMessageParser.encodeDeflate(changedMessage);
+		}else{
+			
+			byteMessage = changedMessage.getBytes();
+		}
+		
+		return byteMessage ;
 		
 	}
+	
+
 	
 	private byte[] processChunk( int interactionId ,HttpMessage httpMessage,String chunkSize, char[] chunk){
 		

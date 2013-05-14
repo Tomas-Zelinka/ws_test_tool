@@ -492,7 +492,7 @@ public class MainWindow extends JFrame{
 		addToolBarItem(testUnitToolBox,"Remove Test Case",new RemoveTestCaseListener(),"delete.png");
 		addToolBarItem(testUnitToolBox,"Run Tests",new RunTestUnitListener(),"play.png");
 		addToolBarItem(testUnitToolBox,"Stop Tests",new StopUnitListener(),"stop.png");
-		addToolBarItem(testUnitToolBox,"Stop All Unit",new StopAllUnitsListener(),"multistop.png");
+		//addToolBarItem(testUnitToolBox,"Stop All Unit",new StopAllUnitsListener(),"multistop.png");
 		addToolBarItem(testUnitToolBox,"Run All Units",new RunAllTestUnitsListener(),"multiplay.png");
 		addToolBarItem(testUnitToolBox,"Add Remote Unit",new AddTestUnitListener(),"network_idle.png");
 		addToolBarItem(testUnitToolBox,"Remove Test Unit",new RemoveTestUnitListener(),"network_offline.png");
@@ -502,7 +502,7 @@ public class MainWindow extends JFrame{
 		addToolBarItem(proxyUnitToolBox,"Run Unit",new RunProxyListener(),"play.png");
 		addToolBarItem(proxyUnitToolBox,"Stop Unit",new StopProxyListener(),"stop.png");
 		addToolBarItem(proxyUnitToolBox,"Run All Units",new RunProxyListener(),"multiplay.png");
-		addToolBarItem(proxyUnitToolBox,"Stop All Units",new StopAllProxyListener(),"multistop.png");
+		//addToolBarItem(proxyUnitToolBox,"Stop All Units",new StopAllProxyListener(),"multistop.png");
 		addToolBarItem(proxyUnitToolBox,"Add Remote Unit",new AddProxyUnitListener(),"network_idle.png");
 		addToolBarItem(proxyUnitToolBox,"Remove Remote Unit",new RemoveProxyUnitListener(),"network_offline.png");
 		addToolBarItem(proxyUnitToolBox,"Export Configuration",new ExportProxyUnitListener(),"upload.png");

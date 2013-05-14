@@ -261,6 +261,7 @@ public class UnitController {
 		}
 		
 		testUnitsStorage.put(key, newUnit);
+		ioProvider.createDir(FaultInjectionData.outputFolder+File.separator+name);
 	}
 
 	/**
@@ -445,7 +446,7 @@ public class UnitController {
 	 */
 	public HttpMessageData readRequestData(String casePath){
 		
-		HttpMessageData data = (HttpMessageData) this.ioProvider.readObject(casePath + HttpMessageData.filename);
+		HttpMessageData data = (HttpMessageData) this.ioProvider.readObject(casePath + HttpMessageData.inputFilename);
 		return data;
 	}
 	
@@ -477,7 +478,7 @@ public class UnitController {
 	 */
 	public void writeRequestData(String casePath, HttpMessageData data){
 		
-		this.ioProvider.writeObject(casePath + HttpMessageData.filename,data);
+		this.ioProvider.writeObject(casePath + HttpMessageData.inputFilename,data);
 	}
 	
 	/**
@@ -512,19 +513,21 @@ public class UnitController {
 		return data;
 	}
 	
+	public void createDir(String path){
+		ioProvider.createDir(path);
+	}
+	
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	public class TestUnitWorker extends SwingWorker<Boolean,Void>{
+	private class TestUnitWorker extends SwingWorker<Boolean,Void>{
 		
 		private int id;
 		private TestList list;
 		TestUnitWorker(TestList list,int unitId){
 			this.list = list;
-			//this.data = data;
-			//this.settings = settings;
 			this.id = unitId;
 		}
 		
@@ -533,7 +536,6 @@ public class UnitController {
 			
 			ArrayList<String> testCases = list.getTestCases();
 			TestUnit unit = getTestUnit(this.id);
-			ProxyUnit proxyUnit = getProxyUnit(this.id);
 			try{
 				for(String casePath: testCases){
 					
@@ -541,7 +543,7 @@ public class UnitController {
 					if(settings != null)
 					{
 						if(settings.getRun()){
-							HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.filename);
+							HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.inputFilename);
 							
 							if(request != null){
 								
@@ -608,5 +610,7 @@ public class UnitController {
 			return "";
 		}
 	}
+	
+	
 	
 }

@@ -76,7 +76,7 @@ public class HttpMessageParser {
 			pattern= Pattern.compile("^(.+?\\s\\s\\s\\s)", Pattern.DOTALL);
 			matcher= pattern.matcher(rawMessage);
 			if (matcher.find()) {
-				System.out.println("mam hlavicku");
+				ConsoleLog.Print("mam hlavicku");
 				httpHeader= matcher.group(1);
 			}
 			

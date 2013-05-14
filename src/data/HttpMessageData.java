@@ -10,7 +10,8 @@ public class HttpMessageData implements Serializable {
 	 */
 	private static final long serialVersionUID = -3769765519967458600L;
 	
-	public static final String filename = File.separator+"Http"+File.separator+"input"+File.separator+"httpRequest.xml";
+	public static final String inputFilename = File.separator+"Http"+File.separator+"input"+File.separator+"httpRequest.xml";
+	public static final String outputFolder = File.separator+"Http"+File.separator+"output";
 	/**
 	 * 
 	 */

@@ -149,7 +149,7 @@ public class TestCaseEditor extends JPanel {
 	public void loadRequest(){
 		
 		HttpMessageData loadedHttpData = null;
-		String httpFilePath = getTestCasePath() +  HttpMessageData.filename;
+		String httpFilePath = getTestCasePath() +  HttpMessageData.inputFilename;
 		File casePath = new File(getTestCasePath()); 
 		File httpDataFile = new File(httpFilePath);
 		mainTabbedPane.setTitleAt(1, "Http Request - " + casePath.getName());

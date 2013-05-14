@@ -78,13 +78,13 @@ public class ProxyThread extends Thread {
 			char[] chunk = null;
 			int offset = 0;
 			while(true) {
-				System.out.println("[READ HEADERS] cyklus");
+				ConsoleLog.Print("[READ HEADERS] cyklus");
 				
 				if(readMode == READ_HEADERS){
 					
 					
 					header = reader.readLine();
-					System.out.println("[READ HEADERS] Hlavicka: " + header);
+					ConsoleLog.Print("[READ HEADERS] Hlavicka: " + header);
 					if(header == null){
 						incomingSocket.close();
 						outgoingSocket.close();
@@ -151,9 +151,9 @@ public class ProxyThread extends Thread {
 				switch (httpMode) {
 					//---------------------------------- HTTP CONTENT LENGTH -------------------------------
 					case HTTP_CONTENT_LENGTH:
-						System.out.println("[LENGTH MODE] Musim jeste precist:" + bytesToBeRead);
+						ConsoleLog.Print("[LENGTH MODE] Musim jeste precist:" + bytesToBeRead);
 						bytesRead= reader.read(buffer, 0, BUFFER_SIZE);
-						System.out.println("[LENGTH MODE] Precetl jsem:" + bytesRead);
+						ConsoleLog.Print("[LENGTH MODE] Precetl jsem:" + bytesRead);
 						
 						if (bytesRead == -1) {
 							incomingSocket.close();
@@ -177,7 +177,7 @@ public class ProxyThread extends Thread {
 						//pokud jiz byla cela http zprava nactena..
 						if (bytesToBeRead == 0) {
 							//rozparsujeme telo zpravy
-							System.out.println("[LENGTH MODE] Vysledek:" +httpMessage.getHttpHeader() + httpMessage.getContent());
+							ConsoleLog.Print("[LENGTH MODE] Vysledek:" +httpMessage.getHttpHeader() + httpMessage.getContent());
 							
 							changedMessage =  processContent( interactionId + messageCounter, httpMessage, rawMessage);
 							outputStream.write(changedMessage.getBytes());
@@ -194,7 +194,7 @@ public class ProxyThread extends Thread {
 					case HTTP_CHUNKED_ENCODING:
 						
 						if(readMode == READ_CHUNK_CONTENT){
-							System.out.println("[CHUNKED MODE] Chunked content mode" );
+							ConsoleLog.Print("[CHUNKED MODE] Chunked content mode" );
 							bytesRead= reader.read(buffer, 0, BUFFER_SIZE);
 														
 							if (bytesRead == -1) {
@@ -211,7 +211,7 @@ public class ProxyThread extends Thread {
 								
 							
 							if(bytesToBeRead == 0){
-								System.out.println("[CHUNKED MODE] Chunked size mode" );
+								ConsoleLog.Print("[CHUNKED MODE] Chunked size mode" );
 								byte[] message = processChunk( interactionId , httpMessage, strChunkSize,  chunk);
 								outputStream.write( message);
 								readMode = READ_CHUNK_SIZE;
@@ -219,7 +219,7 @@ public class ProxyThread extends Thread {
 							
 							
 						}else{
-							System.out.println("[CHUNKDE MODE] Chunked content mode" );
+							ConsoleLog.Print("[CHUNKDE MODE] Chunked content mode" );
 							
 							strChunkSize = reader.readLine();
 							chunkSize = Integer.parseInt(strChunkSize,16);
@@ -246,7 +246,7 @@ public class ProxyThread extends Thread {
 					default:
 						//pokud na vstupu jiz nejsou v tuto chvili data..pro jistotu chvili pockame
 						
-						System.out.println("[NON LENGTH MODE] ctu" );
+						ConsoleLog.Print("[NON LENGTH MODE] ctu" );
 						
 						if (inputStream.available() == 0) {
 							try {

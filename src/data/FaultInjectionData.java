@@ -33,6 +33,7 @@ public class FaultInjectionData implements Serializable {
 	private List<Fault> faultList= new ArrayList<Fault>();
 
 	public static final String filename = File.separator+"FaultInjection"+File.separator+"input"+File.separator+"faultInjection.xml";
+	public static final String outputFolder = File.separator+"FaultInjection"+File.separator+"output";
 	
 	public FaultInjectionData( String name) {
 		

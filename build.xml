@@ -18,6 +18,7 @@
 	<path id="dep.runtime">
 		    <fileset dir="./lib">
 		        <include name="**/*.jar" />
+		    	<include name="**/*.properties" />
 		    </fileset>
 	</path>
 	

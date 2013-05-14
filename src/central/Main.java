@@ -64,6 +64,8 @@ public class Main extends Options{
 		Main main = new Main();
 		ConsoleLog.setConsoleLog(false);
 		main.parseOptions(args);
+		
+		
 	}
 	
 	/**
@@ -193,14 +195,14 @@ public class Main extends Options{
 
 		else if(line.hasOption("testlist")){
 			
-			String casePath = line.getOptionValue("testlist");
+			String suitePath = line.getOptionValue("testlist");
 			
 			if(hasConfiguration){
-				this.textMonitor.runTestList(casePath,configFilePath);
-				ConsoleLog.Print("[Main] Run remote testlist: "+ casePath);
+				this.textMonitor.runTestList(suitePath,configFilePath);
+				ConsoleLog.Print("[Main] Run remote testlist: "+ suitePath);
 			}else{
-				this.textMonitor.runTestList(casePath);
-				ConsoleLog.Print("[Main] Run local testlist: "+ casePath);
+				this.textMonitor.runTestList(suitePath);
+				ConsoleLog.Print("[Main] Run local testlist: "+ suitePath);
 			}
 			System.exit(0);
 		}
@@ -223,7 +225,7 @@ public class Main extends Options{
 			System.exit(0);
 		}
 		
-		//
+		
 	}
 
 	

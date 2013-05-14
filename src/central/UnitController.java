@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
@@ -360,13 +361,25 @@ public class UnitController {
 	 */
 	public void runTest(String path, int unitId){
 		TestList list = (TestList) ioProvider.readObject(path + TestList.filename);
-		if( list != null){
 		
+		if( list != null){
+			
 			TestUnitWorker worker = new TestUnitWorker(list,unitId);
 			worker.execute();
+			
+			try {
+				worker.get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
 			ConsoleLog.Message("Testlist not found!");
 		}
+		
 		
 	}
 	
@@ -522,53 +535,56 @@ public class UnitController {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	private class TestUnitWorker extends SwingWorker<Boolean,Void>{
+	private class TestUnitWorker extends SwingWorker<String,Void>{
 		
 		private int id;
 		private TestList list;
 		TestUnitWorker(TestList list,int unitId){
+			
 			this.list = list;
 			this.id = unitId;
 		}
 		
 		@Override
-		public Boolean doInBackground(){
+		public String doInBackground(){
 			
 			ArrayList<String> testCases = list.getTestCases();
+			
 			TestUnit unit = getTestUnit(this.id);
-			try{
-				for(String casePath: testCases){
-					
-					TestCaseSettingsData settings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
-					if(settings != null)
-					{
-						if(settings.getRun()){
-							HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.inputFilename);
-							
-							if(request != null){
-								
-								//ConsoleLog.Message (unit.testConnection());
-								unit.setTest(request,settings);
-								unit.run();
+			
+			if(unit != null){
+				try{
+					for(String casePath: testCases){
 						
-							}else{
-								ConsoleLog.Message("Http request file not found!");
+						TestCaseSettingsData settings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
+						if(settings != null)
+						{
+							if(settings.getRun()){
+								HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.inputFilename);
+								
+								if(request != null){
+									
+									ConsoleLog.Message (unit.testConnection());
+									unit.setTest(request,settings);
+									unit.run();
+							
+								}else{
+									ConsoleLog.Message("Http request file not found!");
+								}
 							}
+						}else{
+							ConsoleLog.Message("Test case settings file not found!");
 						}
-					}else{
-						ConsoleLog.Message("Test case settings file not found!");
 					}
+					
+				}catch(RemoteException ex){
+					ConsoleLog.Message(ex.getMessage());
 				}
-			
-			
-			
-				
-				
-			}catch(RemoteException ex){
-				ConsoleLog.Message(ex.getMessage());
+			}else{
+				ConsoleLog.Message("Test unit not found!");
 			}
-		
-			return true;
+			return "";
+			
 		}
 		
 		

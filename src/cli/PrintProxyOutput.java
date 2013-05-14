@@ -23,7 +23,12 @@ public class PrintProxyOutput {
 	
 	
 	public void setOutputPath (String path){
-		this.outputFolder = path;
+		File dir = new File(path);
+		
+		if(!dir.exists()){
+			dir.mkdir();
+		}
+			
 		interactionCounter = 0;
 	}
 	

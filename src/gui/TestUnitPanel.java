@@ -128,7 +128,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 	}
 
 	@Override
-	public synchronized void onNewResponseEvent(HttpMessageData[] dataArray, int period) {
+	public void onNewResponseEvent(HttpMessageData[] dataArray, int period) {
 		
 		this.periodNumber = period;
 		String name = dataArray[0].getName();

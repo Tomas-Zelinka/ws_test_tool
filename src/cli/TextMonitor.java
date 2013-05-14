@@ -21,19 +21,18 @@ public class TextMonitor {
 	private final String PROXY_LOCAL_NAME = "Local Proxy ";
 	private final int LOCAL_UNIT = 0;
 	private HashMap <Integer,PrintProxyOutput> proxyOutputs;
-	
+	private HashMap <Integer,PrintTestOutput> testOutputs;
 	
 	public TextMonitor(UnitController controller){
 		this.controller = controller;
 		testUnitCounter = 0;
 		proxyUnitCounter = 0;
 		proxyOutputs = new HashMap<Integer,PrintProxyOutput>();
+		testOutputs = new HashMap<Integer,PrintTestOutput>();
 		addTestUnit("none",LOCAL_UNIT,TEST_LOCAL_NAME);
 		addProxyUnit("none",LOCAL_UNIT,PROXY_LOCAL_NAME);
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @param casePath
@@ -41,7 +40,10 @@ public class TextMonitor {
 	public void runTestList(String suitePath){
 		
 		ConsoleLog.Print("[TextMonitor]: Test:" + suitePath);
+		PrintTestOutput output = testOutputs.get(LOCAL_UNIT);
+		output.setOutputPath(suitePath,LOCAL_UNIT);
 		controller.runTest(suitePath, LOCAL_UNIT);
+		
 	}
 	
 	/**
@@ -49,12 +51,16 @@ public class TextMonitor {
 	 * @param casePath
 	 * @param config
 	 */
-	public void runTestList(String casePath,String config){
-		ConsoleLog.Print("[TextMonitor]: Test+config:" + casePath);
+	public void runTestList(String suitePath,String config){
+		ConsoleLog.Print("[TextMonitor]: Test+config:" + suitePath);
 		importTestConfiguration();
 		
-		for(int i = 0; i < testUnitCounter; i++)
-			controller.runTest(casePath, i);
+		for(int i = 0; i < testUnitCounter; i++){
+			PrintTestOutput output = testOutputs.get(i);
+			output.setOutputPath(suitePath,i);
+			controller.runTest(suitePath, i);
+		}
+		
 	}
 	
 	
@@ -66,9 +72,9 @@ public class TextMonitor {
 		
 		ConsoleLog.Print("[TextMonitor]: Proxy:" + casePath);
 		PrintProxyOutput output = proxyOutputs.get(LOCAL_UNIT);
-		controller.createDir(casePath+FaultInjectionData.outputFolder+File.separator+LOCAL_UNIT);
-		ConsoleLog.Print("[TextMonitor]: Proxy created :" + casePath+FaultInjectionData.outputFolder+File.separator+LOCAL_UNIT);
 		output.setOutputPath(casePath+FaultInjectionData.outputFolder+File.separator+LOCAL_UNIT); 
+		ConsoleLog.Print("[TextMonitor]: Proxy created :" + casePath+FaultInjectionData.outputFolder+File.separator+LOCAL_UNIT);
+		
 		controller.runProxy(casePath, LOCAL_UNIT);
 	}
 	
@@ -139,10 +145,9 @@ public class TextMonitor {
 			
 			PrintTestOutput output = new PrintTestOutput(name);
 			NewResponseListener listner = new TestTextListener(output);
-			//proxyOutputs.put(testUnitCounter,output);
+			testOutputs.put(testUnitCounter,output);
 			controller.addTestUnit(testUnitCounter,host,port,name);
 			controller.setResponseListener(listner,testUnitCounter);
-			
 		
 		}catch(RemoteException ex){
 			ConsoleLog.Message(ex.getClass().getName() + ": " + ex.getMessage());

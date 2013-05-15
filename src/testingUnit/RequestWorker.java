@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -56,37 +57,56 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 			
 		}
 		
-		try{
+		
 			
 			for(int i = 0; i < settings.getLoopNumber(); i++){ 
-				long time1= System.nanoTime();
-				HttpResponse response = client.execute(request);
-				long time2 = System.nanoTime();
-				long timeSpent = time2-time1;
-				HttpEntity responseEntity = response.getEntity();
-				String output = EntityUtils.toString(responseEntity);
-				EntityUtils.consume(responseEntity);
+				try{
+					long time1= System.nanoTime();
+					HttpResponse response = client.execute(request);
+					long time2 = System.nanoTime();
+					long timeSpent = time2-time1;
+					HttpEntity responseEntity = response.getEntity();
+					String output = EntityUtils.toString(responseEntity);
+					EntityUtils.consume(responseEntity);
+					
+					clientResponseData[i].setName(data.getName());
+					clientResponseData[i].setResponseBody(output);
+					clientResponseData[i].setRequestBody(data.getRequestBody());
+					clientResponseData[i].setElapsedRemoteTime(timeSpent);
+					clientResponseData[i].setContentType(responseEntity.getContentType().getValue());
+					clientResponseData[i].setResponseCode(response.getStatusLine().getStatusCode());
+					clientResponseData[i].setMethod(method);
+					clientResponseData[i].setLoopNumber(i);
+					clientResponseData[i].setThreadNumber(this.threadId);
+					clientResponseData[i].setHost(data.getHost());
+					clientResponseData[i].setResource(data.getResource());
+					clientResponseData[i].setParams(data.getParams());
+					clientResponseData[i].setExpectedBody(data.getExpectedBody());
 				
-				clientResponseData[i].setName(data.getName());
-				clientResponseData[i].setResponseBody(output);
-				clientResponseData[i].setRequestBody(data.getRequestBody());
-				clientResponseData[i].setElapsedRemoteTime(timeSpent);
-				clientResponseData[i].setContentType(responseEntity.getContentType().getValue());
-				clientResponseData[i].setResponseCode(response.getStatusLine().getStatusCode());
-				clientResponseData[i].setMethod(method);
-				clientResponseData[i].setLoopNumber(i);
-				clientResponseData[i].setThreadNumber(this.threadId);
-				clientResponseData[i].setHost(data.getHost());
-				clientResponseData[i].setResource(data.getResource());
-				clientResponseData[i].setParams(data.getParams());
-				clientResponseData[i].setExpectedBody(data.getExpectedBody());
-				
+				}catch(ConnectTimeoutException ex){
+					ConsoleLog.Message("[Thread" + this.threadId +"]" + ex.getMessage());
+					clientResponseData[i].setName(data.getName());
+					clientResponseData[i].setResponseBody("timeouted");
+					clientResponseData[i].setRequestBody("timeouted");
+					clientResponseData[i].setElapsedRemoteTime(-1);
+					clientResponseData[i].setContentType("");
+					clientResponseData[i].setResponseCode(-1);
+					clientResponseData[i].setMethod(method);
+					clientResponseData[i].setLoopNumber(i);
+					clientResponseData[i].setThreadNumber(this.threadId);
+					clientResponseData[i].setHost(data.getHost());
+					clientResponseData[i].setResource(data.getResource());
+					clientResponseData[i].setParams(data.getParams());
+					clientResponseData[i].setExpectedBody(data.getExpectedBody());
+					
+					
+				}catch(Exception ex){
+					ex.printStackTrace();
+					
+				}
 			}
 		
-		}catch(Exception ex){
-			ex.printStackTrace();
-			
-		}
+	
 			
 		
 		return clientResponseData;

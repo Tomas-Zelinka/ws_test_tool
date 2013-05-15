@@ -367,15 +367,15 @@ public class UnitController {
 			TestUnitWorker worker = new TestUnitWorker(list,unitId);
 			worker.execute();
 			
-			try {
-				worker.get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				worker.get();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (ExecutionException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}else{
 			ConsoleLog.Message("Testlist not found!");
 		}

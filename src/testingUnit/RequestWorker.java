@@ -1,5 +1,6 @@
 package testingUnit;
 
+import java.net.SocketTimeoutException;
 import java.util.concurrent.Callable;
 
 import logging.ConsoleLog;
@@ -45,11 +46,11 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 	public HttpMessageData[] call(){
 		HttpMessageData[] clientResponseData = initResponseData(settings.getLoopNumber());
 		String method = data.getMethod();
-		ConsoleLog.Print("[Worker]pracuju: " + data.getName());
+		ConsoleLog.Print("[Worker " + this.threadId +"]pracuju: " + data.getName());
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpUriRequest request = buildRequest();
 		client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, settings.getTimeout());
-		
+		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, settings.getTimeout());
 		
 		if(settings.getUseProxy()){
 			HttpHost proxy = new HttpHost(settings.getProxyHost(),settings.getProxyPort());
@@ -61,6 +62,7 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 			
 			for(int i = 0; i < settings.getLoopNumber(); i++){ 
 				try{
+					ConsoleLog.Print("[Worker " + this.threadId +"] cyklus");
 					long time1= System.nanoTime();
 					HttpResponse response = client.execute(request);
 					long time2 = System.nanoTime();
@@ -83,7 +85,7 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 					clientResponseData[i].setParams(data.getParams());
 					clientResponseData[i].setExpectedBody(data.getExpectedBody());
 				
-				}catch(ConnectTimeoutException ex){
+				}catch(ConnectTimeoutException | SocketTimeoutException ex){
 					ConsoleLog.Message("[Thread" + this.threadId +"]" + ex.getMessage());
 					clientResponseData[i].setName(data.getName());
 					clientResponseData[i].setResponseBody("timeouted");

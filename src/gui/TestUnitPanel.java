@@ -152,7 +152,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 				float time = dataArray[i].getElapsedRemoteTime()/1000000;
 				
 				test = compareResponses(dataArray[i].getResponseBody(),dataArray[i].getExpectedBody(),dataArray[i].getContentType());
-				Object[] newRow = new Object[] {dataArray[i].getName(),dataArray[i].getResponseCode(),dataArray[i].getMethod(),dataArray[i].getResource(),time/1000,dataArray[i].getLoopNumber(),dataArray[i].getThreadNumber(),period,test};
+				Object[] newRow = new Object[] {dataArray[i].getName(),dataArray[i].getResponseCode(),dataArray[i].getMethod(),dataArray[i].getResource(),time,dataArray[i].getLoopNumber(),dataArray[i].getThreadNumber(),period,test};
 				responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
 			}
 		}
@@ -276,7 +276,7 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 									test = compareResponses(data.getResponseBody(),data.getExpectedBody(), data.getContentType());
 														
 									float time = data.getElapsedRemoteTime()/1000000; 
-									Object[] newRow = new Object[] {data.getName(),data.getResponseCode(),data.getMethod(),data.getResource(), time/1000 ,data.getLoopNumber(),data.getThreadNumber(),a,test};
+									Object[] newRow = new Object[] {data.getName(),data.getResponseCode(),data.getMethod(),data.getResource(), time ,data.getLoopNumber(),data.getThreadNumber(),a,test};
 									responsesTableModel.insertRow(responsesTable.getRowCount(), newRow);
 								}
 							}else{

@@ -18,8 +18,12 @@ import logging.ConsoleLog;
 import com.thoughtworks.xstream.XStream;
 
 /**
- * Trida slouzi jako handler pro ziskavani/ukladani testu a nastsaveni z/do XML souboru pomoci knihovny XStream.
+ * 
+ * The class is for serializing and deserializing objects into/from XML files
+ * 
+ * updated with Tomas Zelinka (xzelin15@stud.fit.vutbr.cz)
  * @author martz Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
+ * 
  */
 public class DataProvider {
 	
@@ -32,7 +36,7 @@ public class DataProvider {
 	}
 	
 	/**
-	 * 
+	 * Returns path for resources
 	 * @return
 	 */
 	public static String getResourcePath(){
@@ -50,7 +54,7 @@ public class DataProvider {
 	}
 	
 	/**
-	 * 
+	 * Serialize and write the given object into file
 	 * @param path
 	 * @param obj
 	 */
@@ -69,7 +73,7 @@ public class DataProvider {
 	}
 	
 	/**
-	 * 
+	 * Deserialize the object from the given file and return it
 	 * @param path
 	 * @return
 	 */

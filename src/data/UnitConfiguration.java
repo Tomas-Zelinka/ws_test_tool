@@ -15,45 +15,67 @@ public class UnitConfiguration {
 		this.name = name;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getId() {
 		return id;
 	}
 
-
+	/**
+	 * 
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public String getHost() {
 		return host;
 	}
 
-
+	/**
+	 * 
+	 * @param host
+	 */
 	public void setHost(String host) {
 		this.host = host;
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public int getRegistryPort() {
 		return registryPort;
 	}
 
-
+	/**
+	 * 
+	 * @param registryPort
+	 */
 	public void setRegistryPort(int registryPort) {
 		this.registryPort = registryPort;
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
-
+	/**
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
-	
 }

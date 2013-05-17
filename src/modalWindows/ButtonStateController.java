@@ -9,7 +9,11 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-
+/**
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public class ButtonStateController	implements DocumentListener {
 	 JButton button;
 	 private JTextField text;
@@ -21,26 +25,42 @@ public class ButtonStateController	implements DocumentListener {
 	     this.label = outputLabel;
 	  }
 
+	 /**
+	  * 
+	  */
 	  public void changedUpdate(DocumentEvent e) {
 	    disableIfEmpty(e);
 	    checkText();
 	  }
-
+	  
+	  /**
+	   * 
+	   */
 	  public void insertUpdate(DocumentEvent e) {
 	    disableIfEmpty(e);
 	    checkText();
 	  }
 
+	  /**
+	   * 
+	   */
 	  public void removeUpdate(DocumentEvent e) {
 	    disableIfEmpty(e);
 	    checkText();
 	  }
 
+	  /**
+	   * 
+	   * @param e
+	   */
 	  public void disableIfEmpty(DocumentEvent e) {
 	    button.setEnabled(e.getDocument().getLength() > 0);
 	  }
 	  
 	  
+	  /**
+	   * 
+	   */
 	  public void checkText(){
 			 String value = text.getText();
 			 Pattern regex = Pattern.compile("[$&+,:;=?@#|]");

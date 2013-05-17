@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
@@ -44,32 +43,32 @@ public class UnitController {
 	public static final String TEST_CONF_FILE = File.separator + "tests.ini";
 	
 	/**
-	 * 
+	 * Variable for test units storage
 	 */
 	private Map<Integer,TestUnit> testUnitsStorage;
 	
 	/**
-	 * 
+	 * Variable for proxy unit storage
 	 */
 	private Map<Integer,ProxyUnit> proxyUnitsStorage;
 	
 	/**
-	 * 
+	 *  Variable for proxy unit configuration storage
 	 */
 	private Map <Integer,UnitConfiguration> testUnitConfigurationsStorage;
 	
 	/**
-	 * 
+	 * Variable for test unit configuration storage
 	 */
 	private Map <Integer,UnitConfiguration> proxyUnitConfigurationsStorage;
 	
 	/**
-	 * 
+	 * Variable for data operations provider
 	 */
 	private DataProvider ioProvider; 
 	
 	/**
-	 * 
+	 * In constructor are initialized all private variables
 	 */
 	public UnitController(){
 		
@@ -82,9 +81,16 @@ public class UnitController {
 		
 	}
 	
+	/**
+	 * This method is exporting test unit configuration.
+	 * At first it opens the default file. Then all information about
+	 * testing units are collected and write into a INI file.
+	 */
 	public void exportTestConfiguration(){
 		
 		Wini confFile = null;
+		
+		// open file with configuration
 		try {
 			File iniFile = new File (Main.DEFAULT_CONFIG_DIR + TEST_CONF_FILE);
 			if(!iniFile.exists()){
@@ -100,7 +106,7 @@ public class UnitController {
 			ConsoleLog.Message(e.getMessage());
 		}
 		
-		
+		// collect informations from connected test units
 		for(int key : testUnitConfigurationsStorage.keySet()){
 			
 			UnitConfiguration unit = testUnitConfigurationsStorage.get(key);
@@ -112,6 +118,7 @@ public class UnitController {
 			confFile.put(name, "registryPort", registryPort); 
 		}
 		
+		// store the collected informations
 		try {
 			confFile.store();
 		} catch (IOException e) {
@@ -120,11 +127,18 @@ public class UnitController {
 		}
 	}
 	
+	/**
+	 * This method reads the file with stored configuration
+	 * and returns informations to restore connection of test units 
+	 * 
+	 * @return Array with units configurations
+	 */
 	public UnitConfiguration[] importTestConfiguration(){
 		UnitConfiguration[] unitArray = null;
 		
 		File iniFile = new File (Main.DEFAULT_CONFIG_DIR + TEST_CONF_FILE);
 		
+		//open the file
 		if(iniFile.exists()){
 			Ini ini = new Ini();
 			
@@ -136,11 +150,14 @@ public class UnitController {
 				ConsoleLog.Message(e.getMessage());
 			}
 			
+			//get names of units
 			Set<String> unitKeys =  ini.keySet();
 			unitArray = new UnitConfiguration[unitKeys.size()];
 			
 			Iterator<String> it = unitKeys.iterator();
 			int i = 0;
+			
+			//read informations when the name is the location key
 			while(it.hasNext()){
 				
 				String unitKey = it.next();
@@ -159,9 +176,16 @@ public class UnitController {
 		return unitArray;
 	}
 	
+	
+	/**
+	 * This method is exporting proxy unit configuration.
+	 * At first it opens the default file. Then all information about
+	 * proxy units are collected and write into a INI file.
+	 */
 	public void exportProxyConfiguration(){
 		
 		Wini confFile = null;
+		//open file
 		try {
 			File iniFile = new File (Main.DEFAULT_CONFIG_DIR + PROXIES_CONF_FILE);
 			if(!iniFile.exists()){
@@ -177,6 +201,7 @@ public class UnitController {
 			ConsoleLog.Message(e.getMessage());
 		}
 			
+		// collect informations from connected proxy units
 		for(int key : proxyUnitConfigurationsStorage.keySet()){
 			
 			UnitConfiguration unit = proxyUnitConfigurationsStorage.get(key);
@@ -189,6 +214,7 @@ public class UnitController {
 			
 		}
 		
+		// store the collected informations
 		try {
 			confFile.store();
 		} catch (IOException e) {
@@ -198,12 +224,19 @@ public class UnitController {
 		
 	}
 	
+	/**
+	 * This method reads the file with stored configuration
+	 * and returns informations to restore connection of test units 
+	 * 
+	 * @return Array with units configurations
+	 */
 	public UnitConfiguration[] importProxyConfiguration(){
 		
 		UnitConfiguration[] unitArray = null;
 		
 		File iniFile = new File (Main.DEFAULT_CONFIG_DIR + PROXIES_CONF_FILE);
 		
+		//open the file
 		if(iniFile.exists()){
 			Ini ini = new Ini();
 			
@@ -214,12 +247,15 @@ public class UnitController {
 			
 				ConsoleLog.Message(e.getMessage());
 			}
-			
+			//get names of units
 			Set<String> unitKeys =  ini.keySet();
 			unitArray = new UnitConfiguration[unitKeys.size()];
 			
+			
 			Iterator<String> it = unitKeys.iterator();
 			int i = 0;
+			
+			//read informations when the name is the location key
 			while(it.hasNext()){
 				
 				String unitKey = it.next();
@@ -239,7 +275,9 @@ public class UnitController {
 	}
 	
 	/**
-	 * 	
+	 * 	This method is responsible for creating testing unit and store them
+	 *  in storage
+	 *  
 	 * @param key
 	 * @param host
 	 * @param port
@@ -250,8 +288,11 @@ public class UnitController {
 		
 		TestUnit newUnit = null;
 		
+		//request to add local unit
 		if(key == 0){
 			newUnit = new TestUnitImpl();
+			
+		//request to add remote unit
 		}else{
 			Registry registry = LocateRegistry.getRegistry(host,port);
 			newUnit = (TestUnit) registry.lookup("TestingUnit");
@@ -262,11 +303,15 @@ public class UnitController {
 		}
 		
 		testUnitsStorage.put(key, newUnit);
-		ioProvider.createDir(FaultInjectionData.outputFolder+File.separator+name);
+		
+		
+		//ioProvider.createDir(FaultInjectionData.outputFolder+File.separator+name);
 	}
 
 	/**
-	 * 
+	 *  Method set listener for test unit.
+	 *  Then the GUI panel is able to receive messages from test units
+	 *  
 	 * @param listener
 	 * @param unitId
 	 * @throws RemoteException
@@ -278,6 +323,7 @@ public class UnitController {
 	}
 	
 	/**
+	 * Remove the test unit from storage
 	 * 
 	 * @param key
 	 */
@@ -297,7 +343,9 @@ public class UnitController {
 	}
 	
 	/**
-	 * 
+	 * 	This method is responsible for creating proxy unit and store them
+	 *  in storage
+	 *  
 	 * @param key
 	 * @param host
 	 * @param port
@@ -306,9 +354,13 @@ public class UnitController {
 	 */
 	public void addProxyUnit(Integer key,String host, Integer port,String name) throws RemoteException, NotBoundException{
 		
-			ProxyUnit newUnit =null; 
+			ProxyUnit newUnit = null; 
+			
+			//request to add local unit
 			if(key == 0){
 				newUnit = new ProxyMonitoringUnit();
+				
+			//request to add remote unit
 			}else{
 				Registry registry = LocateRegistry.getRegistry(host,port);
 				newUnit = (ProxyUnit) registry.lookup("ProxyUnit");
@@ -319,11 +371,12 @@ public class UnitController {
 			
 			
 			proxyUnitsStorage.put(key, newUnit);
-		
 	}
 	
 	/**
-	 * 
+	 *  Method set listener for test unit.
+	 *  Then the GUI panel is able to receive messages from test units
+	 *
 	 * @param listener
 	 * @param unitId
 	 * @throws RemoteException
@@ -335,6 +388,7 @@ public class UnitController {
 	}
 	
 	/**
+	 * Remove the proxy unit from storage
 	 * 
 	 * @param key
 	 */
@@ -345,7 +399,7 @@ public class UnitController {
 	}
 	
 	/**
-	 * 
+	 * Returns the proxy unit from storage
 	 * @param key
 	 * @return
 	 */
@@ -355,7 +409,9 @@ public class UnitController {
 	}
 		
 	/**
-	 * 
+	 *  The method create instance of TestUnitWorker
+	 *  and process the test list on the background of GUI
+	 *  
 	 * @param path
 	 * @param unitId
 	 */
@@ -385,7 +441,9 @@ public class UnitController {
 	
 	
 	/**
-	 * 
+	 *  The method create instance of TestUnitWorker
+	 *  and process the test list on the background of GUI
+	 *  
 	 * @param path
 	 * @param unitId
 	 */
@@ -415,7 +473,7 @@ public class UnitController {
 	
 		
 	/**
-	 * 
+	 * Stop the running proxy unit
 	 * @param unitId
 	 */
 	public void stopProxy(int unitId){
@@ -429,6 +487,10 @@ public class UnitController {
 		}
 	}
 	
+	/**
+	 * Stop the running test unit while it is in loop strategy
+	 * @param unitId
+	 */
 	public void stopTestUnit(int unitId){
 		TestUnit unit = getTestUnit(unitId);
 		
@@ -442,6 +504,7 @@ public class UnitController {
 	
 	
 	/**
+	 * Reads the test case settings data from given file
 	 * 
 	 * @param casePath
 	 * @return
@@ -453,6 +516,7 @@ public class UnitController {
 	}
 	
 	/**
+	 * Reads the test case request data from given file
 	 * 
 	 * @param casePath
 	 * @return
@@ -464,6 +528,7 @@ public class UnitController {
 	}
 	
 	/**
+	 * Reads the test case fault injection data from given file
 	 * 
 	 * @param casePath
 	 * @return
@@ -475,6 +540,7 @@ public class UnitController {
 	}
 	
 	/**
+	 * Writes the test case settings data to given file
 	 * 
 	 * @param casePath
 	 * @param data
@@ -485,6 +551,7 @@ public class UnitController {
 	}
 	
 	/**
+	 * Writes the test case request data to given file
 	 * 
 	 * @param casePath
 	 * @param data
@@ -495,6 +562,7 @@ public class UnitController {
 	}
 	
 	/**
+	 * Writes the test case fault injection data to given file
 	 * 
 	 * @param casePath
 	 * @param data
@@ -506,6 +574,7 @@ public class UnitController {
 	
 	
 	/**
+	 * Writes the test list data to given file
 	 * 
 	 * @param casePath
 	 * @param data
@@ -516,6 +585,7 @@ public class UnitController {
 	}
 	
 	/**
+	 * Reads the test list data from given file
 	 * 
 	 * @param casePath
 	 * @return
@@ -526,11 +596,17 @@ public class UnitController {
 		return data;
 	}
 	
+	/**
+	 * Creates dir in given path
+	 * @param path
+	 */
 	public void createDir(String path){
 		ioProvider.createDir(path);
 	}
 	
 	/**
+	 * Class represents worker thread to process test units jobs
+	 * on background of GUI
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
@@ -557,8 +633,9 @@ public class UnitController {
 					for(String casePath: testCases){
 						
 						TestCaseSettingsData settings = (TestCaseSettingsData) ioProvider.readObject(casePath+TestCaseSettingsData.filename);
-						if(settings != null)
-						{
+						if(settings != null){
+							
+							//in the settings is set flag to run test unit
 							if(settings.getRun()){
 								HttpMessageData request = (HttpMessageData) ioProvider.readObject(casePath+HttpMessageData.inputFilename);
 								
@@ -592,7 +669,9 @@ public class UnitController {
 	
 	
 	/**
-	 * 
+	 * Class represents worker thread to process proxy units jobs
+	 * on background of GUI
+	 *
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */

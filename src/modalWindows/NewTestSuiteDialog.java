@@ -18,6 +18,11 @@ import logging.ConsoleLog;
 import data.DataProvider;
 import data.TestList;
 
+/**
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public class NewTestSuiteDialog extends InputModalWindow {
 	/**
 	 * 
@@ -34,6 +39,9 @@ public class NewTestSuiteDialog extends InputModalWindow {
 		
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	protected void initComponents() {
 		testSuiteName= new JTextField(30);
@@ -94,6 +102,8 @@ public class NewTestSuiteDialog extends InputModalWindow {
 	
 	/**
 	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
 	 */
 	private class OkButtonAction  implements ActionListener{
 		
@@ -128,6 +138,8 @@ public class NewTestSuiteDialog extends InputModalWindow {
 	
 	/**
 	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
 	 */
 	private class CancelButtonAction  implements ActionListener{
 				

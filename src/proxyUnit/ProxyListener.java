@@ -10,15 +10,30 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Soucast navrhoveho vzoru Observer. Vsichni odberatele, kteri se zajimaji o prichod nove zpravy ve tride
- * Controller musi implementovat toto rozhrani. Timto zpusobem je prezentacni vrstva upozornovana na nove
- * zpravy, ktere jsou nasledne zobrazeny v tabulce.
- * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
+ * 
+ * Interface for remote proxy unit
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
  */
 public interface ProxyListener extends Remote {
 	
-	
+	/**
+	 * 
+	 * Send received data to GUI panel
+	 * 
+	 * @param interactionId
+	 * @param interaction
+	 * @throws RemoteException
+	 */
 	public void onNewMessageEvent(int interactionId, HttpInteraction interaction) throws RemoteException;
+	
+	/**
+	 * 
+	 * Send event of unknown host to GUI panel 
+	 * 
+	 * @throws RemoteException
+	 */
 	public void onUnknownHostEvent() throws RemoteException;	
 	
 }

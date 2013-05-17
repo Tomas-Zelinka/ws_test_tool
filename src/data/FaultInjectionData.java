@@ -23,15 +23,33 @@ import proxyUnit.HttpMessage;
 public class FaultInjectionData implements Serializable {
 	
 	/**
-	 * 
+	 * Serialization id
 	 */
 	private static final long serialVersionUID = 1225218084143065994L;
 	
+	/**
+	 * Id of the test
+	 */
 	private int testId;
+	
+	/**
+	 * Name of test
+	 */
 	private String testName;
+	
+	/**
+	 * Condition storage
+	 */
 	private Set<Condition> conditionSet= new HashSet<Condition>();
+	
+	/**
+	 * Fault storage
+	 */
 	private List<Fault> faultList= new ArrayList<Fault>();
 
+	/**
+	 * 
+	 */
 	public static final String filename = File.separator+"FaultInjection"+File.separator+"input"+File.separator+"faultInjection.xml";
 	public static final String outputFolder = File.separator+"FaultInjection"+File.separator+"output";
 	
@@ -42,8 +60,8 @@ public class FaultInjectionData implements Serializable {
 
 	
 	/**
-	 * Metoda pro ziskani nazvu pravidla.
-	 * @return nazev pravidla
+	 * Get test Id
+	 * @return test Id
 	 */
 	public int getTestId() {
 		
@@ -52,7 +70,7 @@ public class FaultInjectionData implements Serializable {
 
 	
 	/**
-	 * Metoda pro nastaveni nazvu pravidla.
+	 * Get the name of fault injection test
 	 * @param statementName nazev pravidla
 	 */
 	public String getTestName() {
@@ -62,8 +80,8 @@ public class FaultInjectionData implements Serializable {
 	
 	
 	/**
-	 * Metoda pro nastaveni nazvu pravidla.
-	 * @param statementName nazev pravidla
+	 * Set the name of fault injection test
+	 * @param statementName name of the test
 	 */
 	public void setTestName(String testName) {
 		
@@ -71,7 +89,7 @@ public class FaultInjectionData implements Serializable {
 	}
 		
 	/**
-	 * Metoda pro ziskani mnoziny podminek.
+	 * Get the condition storage
 	 * @return mnozina podminek
 	 */
 	public Set<Condition> getConditionSet() {
@@ -80,8 +98,8 @@ public class FaultInjectionData implements Serializable {
 	}
 	
 	/**
-	 * Metoda pro pridani nove podminky do kolekce.
-	 * @param newCondition nova podminka
+	 * Add condition to storage
+	 * @param newCondition new condition
 	 */
 	public void addToConditionSet(Condition newCondition) {
 		
@@ -89,7 +107,7 @@ public class FaultInjectionData implements Serializable {
 	}
 	
 	/**
-	 * Metoda pro odstraneni podminky z kolekce.
+	 * Remove the condition from storage
 	 * @param removedCondition podminka k odstraneni
 	 */
 	public void removeFromConditionSet(Condition removedCondition) {
@@ -98,8 +116,8 @@ public class FaultInjectionData implements Serializable {
 	}
 	
 	/**
-	 * Metoda pro pridani nove poruchy do seznamu.
-	 * @param newFault nova porucha
+	 * Add fault to storage
+	 * @param newFault new fault
 	 */
 	public void addToFaultList(Fault newFault) {
 		
@@ -107,7 +125,7 @@ public class FaultInjectionData implements Serializable {
 	}
 	
 	/**
-	 * Metoda pro odstraneni poruchy z kolekce.
+	 * Remove the fault from storage
 	 * @param removedFault porucha k odstraneni
 	 */
 	public void removeFromFaultList(Fault removedFault) {
@@ -116,8 +134,8 @@ public class FaultInjectionData implements Serializable {
 	}
 
 	/**
-	 * Metoda pro ziskani seznamu poruch.
-	 * @return seznam poruch
+	 * Get the fault storage
+	 * @return fault storage
 	 */
 	public List<Fault> getFaultList() {
 		
@@ -125,8 +143,8 @@ public class FaultInjectionData implements Serializable {
 	}
 
 	/**
-	 * Prepsani metody toString() kvuli zobrazovani nazvu pravidla v komponente JTree.
-	 * @return nazev pravidla
+	 *  Get the name of the test
+	 * @return test name
 	 */
 	@Override
 	public String toString() {
@@ -135,8 +153,8 @@ public class FaultInjectionData implements Serializable {
 	}
 	
 	/**
-	 * Metoda pro aplikovani pravidla nad http zpravou.
-	 * @param message http zprava
+	 *  Check conditions and inject a fault
+	 * @param message http
 	 */
 	public void applyTest(HttpMessage message) {
 		

@@ -47,6 +47,10 @@ public class TestList {
 		return this.testList;
 	}
 	
+	/**
+	 * 
+	 * @param data
+	 */
 	public void setTestCases(ArrayList<String> data){
 		
 		this.testList = data;

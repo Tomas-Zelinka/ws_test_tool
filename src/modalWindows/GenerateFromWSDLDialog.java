@@ -11,8 +11,6 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 
-import logging.ConsoleLog;
-
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;
@@ -154,7 +152,9 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 		return operationList;
 	}
 
-	
+	/**
+	 * 
+	 */
 	public void putContent() {
 		uriLabel.setText("WSDL URI:");
 		

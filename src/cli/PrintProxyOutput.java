@@ -10,18 +10,41 @@ import proxyUnit.HttpInteraction;
 import proxyUnit.HttpRequest;
 import proxyUnit.HttpResponse;
 
+/**
+ * Class is responsible for receiving data from proxy unit 
+ * and prints it into a file. 
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public class PrintProxyOutput {
-
+	
+	/**
+	 * 	Variable for output folder
+	 */
 	private String outputFolder;
+	
+	/**
+	 * Variable for interaction storage
+	 */
 	private Map<Integer, HttpInteraction> interactionMap;
+	
+	/**
+	 * Variable for number of received interactions
+	 */
 	private int interactionCounter;
+	
 	
 	public PrintProxyOutput(String name){
 		this.interactionMap = new HashMap<Integer, HttpInteraction>();
 		
 	}
 	
-	
+	/**
+	 * Resets directory and counter when new test is runned
+	 * 
+	 * @param path
+	 */
 	public void setOutputPath (String path){
 		File dir = new File(path);
 		
@@ -31,11 +54,19 @@ public class PrintProxyOutput {
 			
 		interactionCounter = 0;
 	}
-	
+	/**
+	 * 
+	 */
 	public void onUnknownHostEvent()  {
 		
 	}
 	
+	/**
+	 * Receives data from proxy unit and writes it into a file
+	 * 
+	 * @param interactionId
+	 * @param interaction
+	 */
 	public void onNewMessageEvent(int interactionId, HttpInteraction interaction) {
 		
 		
@@ -54,7 +85,11 @@ public class PrintProxyOutput {
 		
 	}
 	
-	
+	/**
+	 * Prints given interaction into a file
+	 * 
+	 * @param interaction
+	 */
 	private void printOutput(HttpInteraction interaction) {
 		
 		HttpRequest httpRequest= interaction.getHttpRequest();
@@ -69,14 +104,10 @@ public class PrintProxyOutput {
 			FileOutputStream out4 = new FileOutputStream(this.outputFolder+File.separator+"changedResponseBody_"+interactionCounter+".txt");
 			
 			
-			//vlozeni cisla interakce
-			//interactionTableModel.setValueAt(interactionId, row, 0);
 			
-			//HTTP RESPONSE
-					//vlozeni http kodu
 			if (httpResponse != null){
-				output+= interactionCounter + " ";
-				output+= interaction.getName() + " ";
+				output += interactionCounter + " ";
+				output += interaction.getName() + " ";
 				output += httpResponse.getHttpCode() + " " + httpResponse.getHttpCodeDesc() + " ";
 			}
 			
@@ -85,18 +116,20 @@ public class PrintProxyOutput {
 			if (httpRequest != null) {
 				
 				
-				//vlozeni http metody
+				//insert http method
 				output += httpRequest.getHttpMethod() + " ";
 				
-				//vlozeni iniciatora komunikace
+				//insert initiator of request
 				output +=httpRequest.getInitiator() + " ";
 				
-				//vlozeni URI
+				//initiator port 
 				output +=httpRequest.getInitiatorPort() + " ";
 				
+				//insert uri of request
 				output +=httpRequest.getUri() + "\n";
 			}
 		
+			//write the interaction into file
 			out.write(output.getBytes());
 			out1.write(interaction.getHttpRequest().getContent().getBytes());
 			out2.write(interaction.getHttpRequest().getChangedContent().getBytes());
@@ -108,6 +141,7 @@ public class PrintProxyOutput {
 			out3.close();
 			out4.close();
 			interactionCounter++;
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}catch (Exception e) {

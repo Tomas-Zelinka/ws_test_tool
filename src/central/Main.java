@@ -32,7 +32,16 @@ public class Main extends Options{
 	 * Variable for serializing
 	 */
 	private static final long serialVersionUID = -6417256415716065905L;
+	
+	private CommandLineParser parser;
+	private Server server;
+	private TextMonitor textMonitor;
 	private UnitController unitController;
+	
+	
+	/**
+	 * Variables for options
+	 */
 	private Options options;
 	private Option help;
 	private Option gui;
@@ -40,12 +49,11 @@ public class Main extends Options{
 	private Option runTestList;
 	private Option runProxy;
 	private Option configuration;
-	private CommandLineParser parser;
-	private Server server;
-	private TextMonitor textMonitor;
+	
 	
 	public static final String DEFAULT_ROOT_DIR = "data";
 	public static final String DEFAULT_CONFIG_DIR =  "config";
+	
 	/**
 	 * The main of the application
 	 */
@@ -69,16 +77,134 @@ public class Main extends Options{
 	}
 	
 	/**
-	 * This method is used when the change project navigator root is needed
-	 * The method disposes Main window and makes new one with changed root  
+	 * Function for parsing command line arguments
+	 * 
+	 * @param args
 	 */
-	public static void restartGui(){
+	public void parseOptions(String[] args){
 		
-//		main.dispose();
-//		main = new MainWindow();
-//		main.setVisible(true);
+		CommandLine line = null;
+		
+		boolean hasConfiguration = false;
+		String configFilePath = "";
+		
+		try{ 
+			
+			line = parser.parse(this.options,args);
+		}catch(ParseException e){
+			
+			ConsoleLog.Message( "Parsing failed. \nReason: " + e.getMessage());
+			System.exit(-1);
+		}catch(Exception e){
+			
+			ConsoleLog.Message(e.getMessage());
+			System.exit(-1);
+		}
+		
+		//parameter for configuration file
+		if(line.hasOption("config")){
+			
+			hasConfiguration = true;
+			configFilePath = line.getOptionValue("config");
+			ConsoleLog.Print("[Main] configFile: "+ configFilePath);
+		}
+		
+		//parameter for help
+		if(line.hasOption( "h" ) ){
+			
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp( "run.sh [rgh]", this.options );
+			System.exit(0);
+			
+		}
+		
+		//parameter for GUI
+		else if(line.hasOption("g")){
+			
+			ConsoleLog.Print("[Main] GUI option ");
+			try{
+				
+				//Rendering GUI will wait until all parts will be loaded
+				SwingUtilities.invokeAndWait(new Runnable() {
+					public void run() {
+						
+						MainWindow  gui = new MainWindow(getTestUnitController());
+						gui.setVisible(true);
+					}
+				});
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		//parameter for RMI server
+		else if(line.hasOption( "r" ) ){
+			
+			ConsoleLog.Print("[Main] Server");
+			this.server = new Server();
+			server.run();
+		}	
+
+		//parameter for testlist run
+		else if(line.hasOption("testlist")){
+			
+			String suitePath = line.getOptionValue("testlist");
+			
+			if(hasConfiguration){ //distributed run
+				
+				this.textMonitor.runTestList(suitePath,configFilePath);
+				ConsoleLog.Print("[Main] Run remote testlist: "+ suitePath);
+			}else{				//local run
+				
+				this.textMonitor.runTestList(suitePath);
+				ConsoleLog.Print("[Main] Run local testlist: "+ suitePath);
+			}
+			System.exit(0);// 
+		}
+		
+		//parameter to run proxy
+		else if(line.hasOption("proxy")){
+			
+			String casePath = line.getOptionValue("proxy");
+			
+			if(hasConfiguration){  // distributed run
+				
+				this.textMonitor.runProxy(casePath,configFilePath);
+				ConsoleLog.Print("[Main] Run remote proxies: "+ casePath);
+			}else{				   // local run	
+				
+				this.textMonitor.runProxy(casePath);
+				ConsoleLog.Print("[Main] Run local proxy: "+ casePath);
+			}
+		}else{// if no arguments are given, the hel is print
+		
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp( "run.sh [rgh]", this.options );
+			System.exit(0);
+		}
+		
 		
 	}
+
+	
+	/**
+	 * 
+	 * @return TestUnitController
+	 */
+	public UnitController getTestUnitController() {
+		
+		return unitController;
+	}
+	
+	/**
+	 * 
+	 * @param testUnitController
+	 */
+	public void setTestUnitController(UnitController testUnitController) {
+		
+		this.unitController = testUnitController;
+	}
+	
 	
 	/**
 	 * Option initialization
@@ -108,7 +234,6 @@ public class Main extends Options{
 		this.options.addOption(this.help);
 		this.options.addOption(this.gui);
 		this.options.addOption(this.rmiServer);
-		//this.options.addOption(this.runTest);
 		this.options.addOption(this.runTestList);
 		this.options.addOption(this.runProxy);
 		this.options.addOption(this.configuration);
@@ -127,123 +252,4 @@ public class Main extends Options{
 	}
 	
 	
-	/**
-	 * Function for parsing command line arguments
-	 * 
-	 * @param args
-	 */
-	public void parseOptions(String[] args){
-		
-		CommandLine line = null;
-		
-		boolean hasConfiguration = false;
-		String configFilePath = "";
-		
-		try{ 
-			
-			line = parser.parse(this.options,args);
-		}catch(ParseException e){
-			
-			ConsoleLog.Message( "Parsing failed. \nReason: " + e.getMessage());
-			System.exit(-1);
-		}catch(Exception e){
-			
-			ConsoleLog.Message(e.getMessage());
-			System.exit(-1);
-		}
-		
-		
-		if(line.hasOption("config")){
-			
-			hasConfiguration = true;
-			configFilePath = line.getOptionValue("config");
-			ConsoleLog.Print("[Main] configFile: "+ configFilePath);
-		}
-		
-		
-		if(line.hasOption( "h" ) ){
-			
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp( "run.sh [rgh]", this.options );
-			System.exit(0);
-			
-		}
-		
-		else if(line.hasOption("g")){
-			
-			ConsoleLog.Print("[Main] GUI option ");
-			try{
-				SwingUtilities.invokeAndWait(new Runnable() {
-					public void run() {
-						MainWindow  gui = new MainWindow(getTestUnitController());
-						
-						gui.setVisible(true);
-						
-					}
-				});
-			}catch (Exception e){
-				e.printStackTrace();
-			}
-		}
-		
-		else if(line.hasOption( "r" ) ){
-			
-			ConsoleLog.Print("[Main] Server");
-			this.server = new Server();
-			server.run();
-		}	
-
-		else if(line.hasOption("testlist")){
-			
-			String suitePath = line.getOptionValue("testlist");
-			
-			if(hasConfiguration){
-				this.textMonitor.runTestList(suitePath,configFilePath);
-				ConsoleLog.Print("[Main] Run remote testlist: "+ suitePath);
-			}else{
-				this.textMonitor.runTestList(suitePath);
-				ConsoleLog.Print("[Main] Run local testlist: "+ suitePath);
-			}
-			System.exit(0);
-		}
-		
-		else if(line.hasOption("proxy")){
-			
-			String casePath = line.getOptionValue("proxy");
-			
-			if(hasConfiguration){
-				this.textMonitor.runProxy(casePath,configFilePath);
-				ConsoleLog.Print("[Main] Run remote proxies: "+ casePath);
-			}else{
-				this.textMonitor.runProxy(casePath);
-				ConsoleLog.Print("[Main] Run local proxy: "+ casePath);
-			}
-		}else{
-		
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp( "run.sh [rgh]", this.options );
-			System.exit(0);
-		}
-		
-		
-	}
-
-	
-	/**
-	 * 
-	 * @return TestUnitController
-	 */
-	public UnitController getTestUnitController() {
-		
-		return unitController;
-	}
-	
-	/**
-	 * 
-	 * @param testUnitController
-	 */
-	public void setTestUnitController(UnitController testUnitController) {
-		
-		this.unitController = testUnitController;
-	}
 }

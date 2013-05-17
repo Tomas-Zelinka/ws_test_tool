@@ -11,6 +11,8 @@ public interface ProxyUnit extends Remote  {
 	
 	/**
 	 * 
+	 * Send data to proxy unit 
+	 * 
 	 * @param activeTest
 	 * @throws RemoteException
 	 */
@@ -18,24 +20,32 @@ public interface ProxyUnit extends Remote  {
 	
 	/**
 	 * 
-	 * @return
+	 *  Test connection of test unit
+	 * 
+	 * @return String
 	 * @throws RemoteException
 	 */
 	public abstract  String testConnection() throws RemoteException;
 	
 	/**
 	 * 
+	 * Run method 
+	 * 
 	 * @throws RemoteException
 	 */
 	public abstract void run() throws RemoteException;
 	
 	/**
+	 *
+	 *  Stop the running proxy unit
 	 * 
 	 * @throws RemoteException
 	 */
 	public abstract void stopProxy() throws RemoteException;
 	
 	/**
+	 * 
+	 * Set proxy Host
 	 * 
 	 * @param host
 	 * @throws RemoteException
@@ -44,6 +54,8 @@ public interface ProxyUnit extends Remote  {
 	
 	/**
 	 * 
+	 * Set proxy port
+	 * 
 	 * @param port
 	 * @throws RemoteException
 	 */
@@ -51,12 +63,16 @@ public interface ProxyUnit extends Remote  {
 	
 	/**
 	 * 
+	 * Set port of tested web service
+	 * 
 	 * @param port
 	 * @throws RemoteException
 	 */
 	public abstract void setTestedWsPort(int port) throws RemoteException;
 	
 	/**
+	 * 
+	 * Set GUI panel listener
 	 * 
 	 * @param listener
 	 * @throws RemoteException

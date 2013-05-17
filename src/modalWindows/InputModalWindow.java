@@ -14,11 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
+/**
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public abstract class InputModalWindow extends JDialog {
-
-	/**
-	 * 
-	 */
 	
 	protected JPanel firstPanel;
 	protected JPanel secondPanel;
@@ -50,6 +51,9 @@ public abstract class InputModalWindow extends JDialog {
 	
 	/**
 	 * 
+	 * @param name
+	 * @param width
+	 * @param height
 	 */
 	private void initWindow(String name,int width, int height){
 		
@@ -98,8 +102,16 @@ public abstract class InputModalWindow extends JDialog {
 		
 	}
 	
+	/**
+	 * 
+	 */
 	abstract protected void putContent();
+	
+	/**
+	 * 
+	 */
 	abstract protected void initComponents();
+	
 	/**
 	 * 
 	 */
@@ -116,12 +128,11 @@ public abstract class InputModalWindow extends JDialog {
 		thirdPanel.setLayout(new BorderLayout());
 		thirdPanel.add(separator,BorderLayout.NORTH);
 		thirdPanel.add(thirdInsidePanel);
-		
-		
-		
 	}
 	
-	
+	/**
+	 * 
+	 */
 	private void  initThirdInsidePanel(){
 		thirdInsidePanel = new JPanel();
 		thirdInsidePanel.setPreferredSize(new Dimension(getWidth(),this.BOTTOM_PANEL_HEIGHT));
@@ -129,35 +140,66 @@ public abstract class InputModalWindow extends JDialog {
 		thirdInsidePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
 	abstract protected String testEmptyInput();
+	
+	/**
+	 * 
+	 */
 	abstract protected void initButtons();
 	
+	/**
+	 * 
+	 * @return
+	 */
 	protected JPanel getFirstPanel(){
 		return this.firstPanel;
 	}
 	
+	/**
+	 * @return
+	 */
 	protected JPanel getSecondPanel(){
 		return this.secondPanel;
 	}
 	
+	/**
+	 * @return
+	 */
 	protected JPanel getThirdPanel(){
 		return this.thirdPanel;
 	}
 	
+	/**
+	 * @return
+	 */
 	protected JPanel getSecondInsidePanel(){
 		return this.secondInsidePanel;
 	}
 	
+	/**
+	 * @return
+	 */
 	protected JPanel getThirdInsidePanel(){
 		return this.thirdInsidePanel;
 	}
 	
+	/**
+	 * 
+	 * @param button
+	 */
 	protected void addButton(JButton button){
 		
 		getThirdInsidePanel().add(button);
 	}
 	
+	/**
+	 * 
+	 * @param comp
+	 */
 	protected void addToSecondPanel(Component comp){
 		getSecondInsidePanel().add(comp);
 	}

@@ -12,16 +12,55 @@ import central.UnitController;
 import data.FaultInjectionData;
 import data.UnitConfiguration;
 
+/**
+ * Class is responsible for receiving data from test unit 
+ * and prints it into a file. 
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public class TextMonitor {
 
-	private UnitController controller;
-	private int testUnitCounter;
-	private int proxyUnitCounter;
+	/**
+	 *  Local test unit name
+	 */
 	private final String TEST_LOCAL_NAME = "Local Test";
+	
+	/**
+	 *  Remote test unit name
+	 */
 	private final String PROXY_LOCAL_NAME = "Local Proxy ";
+	
+	/**
+	 * Local unit key
+	 */
 	private final int LOCAL_UNIT = 0;
+	
+	/**
+	 * Unit controller
+	 */
+	private UnitController controller;
+	
+	/**
+	 * Number of stored test units
+	 */
+	private int testUnitCounter;
+	
+	/**
+	 * Number of stored proxy units
+	 */
+	private int proxyUnitCounter;
+	
+	/**
+	 *  Proxy output printer storage
+	 */
 	private HashMap <Integer,PrintProxyOutput> proxyOutputs;
+	
+	/**
+	 * Test output printer storage
+	 */
 	private HashMap <Integer,PrintTestOutput> testOutputs;
+	
 	
 	public TextMonitor(UnitController controller){
 		this.controller = controller;
@@ -34,6 +73,8 @@ public class TextMonitor {
 	}
 
 	/**
+	 * Get the local unit and order run the test list
+	 * on local unit
 	 * 
 	 * @param casePath
 	 */
@@ -47,7 +88,8 @@ public class TextMonitor {
 	}
 	
 	/**
-	 * 
+	 *  Get the remote unit and order run the test list
+	 * on that unit
 	 * @param casePath
 	 * @param config
 	 */
@@ -65,7 +107,9 @@ public class TextMonitor {
 	
 	
 	/**
-	 * 
+	 *  Get the local proxy unit and order run the test list
+	 *  on local proxy unit
+	 *  
 	 * @param casePath
 	 */
 	public void runProxy(String casePath){
@@ -79,7 +123,9 @@ public class TextMonitor {
 	}
 	
 	/**
-	 * 
+	 *  Get the remote proxy unit and order run the test list
+	 *  on that proxy unit
+	 *  
 	 * @param casePath
 	 * @param config
 	 */
@@ -102,6 +148,8 @@ public class TextMonitor {
 	
 	
 	/**
+	 * Get configuration of test units and order the creation
+	 * and store them to future use
 	 * 
 	 */
 	private void importTestConfiguration(){
@@ -118,7 +166,12 @@ public class TextMonitor {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * Get configuration of proxy units and order the creation
+	 * and store them to future use
+	 * 
+	 */
 	public void importProxyConfiguration(){
 		
 		UnitConfiguration[] configArray = controller.importProxyConfiguration();
@@ -134,6 +187,8 @@ public class TextMonitor {
 	}
 	
 	/**
+	 * Create the output instance and its listener. Then connect
+	 * through the listener the test unit and the output instance. 
 	 * 
 	 * @param host
 	 * @param port
@@ -165,7 +220,9 @@ public class TextMonitor {
 	}
 	
 	/**
-	 * 
+	 * Create the output instance and its listener. Then connect
+	 * through the listener the proxy unit and the output instance. 
+	 *  
 	 * @param host
 	 * @param port
 	 * @param name

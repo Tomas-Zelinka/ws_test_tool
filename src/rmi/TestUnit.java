@@ -9,15 +9,25 @@ import testingUnit.NewResponseListener;
 import data.HttpMessageData;
 import data.TestCaseSettingsData;
 
+/**
+ * Interface for remote testing unit
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public interface TestUnit extends Remote {
 	
 	/**
+	 * 
+	 * Run method
 	 * 
 	 * @throws RemoteException
 	 */
 	public abstract void run() throws RemoteException;
 	
 	/**
+	 * 
+	 * Send data to testi unit
 	 * 
 	 * @param request
 	 * @param settings
@@ -27,19 +37,29 @@ public interface TestUnit extends Remote {
 	
 	/**
 	 * 
-	 * @return
+	 * Test connection of test unit
+	 * 
+	 * @return string
 	 * @throws RemoteException
 	 */
 	public abstract String testConnection() throws RemoteException;
 	
 	/**
 	 * 
+	 * Registration of listener
+	 * The listener is sending data to GUI panel 
+	 * 
 	 * @param listener
 	 * @throws RemoteException
 	 */
 	public abstract void addResponseListener(NewResponseListener listener) throws RemoteException;
 	
-	
+	/**
+	 * 
+	 * Order to stop test unit while periodic testing
+	 * 
+	 * @throws RemoteException
+	 */
 	public abstract void stopUnit() throws RemoteException;
 }
 

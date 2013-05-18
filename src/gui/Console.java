@@ -34,12 +34,12 @@ public class Console extends JPanel {
 	private JTextArea console;
 	
 	/**
-	 *  Constant for minimal height of the console
+	 *  Minimal height of the console
 	 */
 	private final int MIN_HEIGHT = 40;
 	
 	/**
-	 * Constant for preferred height of the console
+	 * Preferred height of the console
 	 */
 	private final int PREFERRED_HEIGHT = 80;
 		

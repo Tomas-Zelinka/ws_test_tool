@@ -61,25 +61,24 @@ public class MainWindow extends JFrame{
 	
 	
 	/**
-	 * 
+	 * Data root path
 	 */
 	private static String dataRoot = "." + File.separator + "data";
 	
 	/**
-	 * 
+	 * Test suit path
 	 */
 	private static String suitePath = "";  
 	
 	/**
-	 * 
+	 * Test case path
 	 */
 	private static String casePath = "";  
-		
-	/**
-	 * 
-	 */
-	private static String endpointPath = "";  
 	
+	/**
+	 * Path for deleting nodes in navigation panel
+	 */
+	private static String endpointPath = "";
 	
 	/**
 	 * Splitpane containing main components of the GUI
@@ -87,7 +86,7 @@ public class MainWindow extends JFrame{
 	private JSplitPane centerPane;
 	
 	/**
-	 * 
+	 * Center component for the central panels
 	 */
 	private Component centerComponent;
 	
@@ -97,6 +96,8 @@ public class MainWindow extends JFrame{
 	private JSplitPane bottomPane;
 	
 	
+	
+	
 	/**
 	 * Extended JPanel holding ScrollPane with TextArea for tool responses
 	 */
@@ -104,7 +105,6 @@ public class MainWindow extends JFrame{
 	
 	private int panelType;
 	protected TestCaseEditor editor;
-	private Statistics statsPanel;
 	private ProxyMonitor proxyUnitPanel;
 	private  TestMonitor testUnitPanel;
 	private Navigator navigator;
@@ -146,6 +146,8 @@ public class MainWindow extends JFrame{
 	
 	/**
 	 * 
+	 * Set the toolbox to the right panel
+	 * 
 	 * @param box
 	 */
 	public void setToolBox(int box){
@@ -165,26 +167,9 @@ public class MainWindow extends JFrame{
 		getContentPane().add(this.toolBox,BorderLayout.NORTH);
 	}
 	
-	/**
-	 * 
-	 */
-	public static String getEndpointPath(){
-		
-		return MainWindow.endpointPath;
-	}
 	
 	/**
-	 * 
-	 * @param path
-	 */
-	public static void setEndpointPath(String path){
-		
-		MainWindow.endpointPath = path;
-	}
-	
-	
-	/**
-	 * 
+	 * Get the test case path
 	 */
 	public static String getCasePath(){
 		
@@ -192,7 +177,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * 
+	 * Set the test case path
 	 * @param path
 	 */
 	public static void setCasePath(String path){
@@ -206,7 +191,7 @@ public class MainWindow extends JFrame{
 	}
 		
 	/**
-	 * 
+	 * Get the suite path
 	 */
 	public static String getSuitePath(){
 		
@@ -214,7 +199,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * 
+	 * Set the suite path
 	 * @param path
 	 */
 	public static void setSuitePath(String path){
@@ -224,7 +209,7 @@ public class MainWindow extends JFrame{
 	}
 		
 	/**
-	 * 
+	 * Get the data root path
 	 */
 	public static String getDataRoot(){
 		
@@ -232,7 +217,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * 
+	 * Set the data root path
 	 * @param path
 	 */
 	public static void setDataRoot(String root){
@@ -240,29 +225,65 @@ public class MainWindow extends JFrame{
 		MainWindow.dataRoot = root;
 	}
 	
+	public static String getEndpointPath() {
+		return MainWindow.endpointPath;
+	}
+
+	public static void setEndpointPath(String endpointPath) {
+		MainWindow.endpointPath = endpointPath;
+	}
+	
+	/**
+	 * 
+	 * Get type of central panel to be shown
+	 * 
+	 * @return
+	 */
 	public int getPanelType(){
 		
 		return this.panelType;
 	}
+	
+	/**
+	 * 
+	 * Set type of central panel to be shown
+	 * 
+	 * @param type
+	 */
 	public void setPanelType(int type){
 		
 		this.panelType = type;
 	}
 	
 	
-	
+	/**
+	 * Method for menus to refresh navigation panel
+	 */
 	public void refreshTree(){
 		
 		Navigator.refreshTree();
 	}
 	
+	/**
+	 * Method for insertion of testcase inside the test list from navigation popup menu
+	 */
 	public void insertTestCase(){
-		
+		testUnitPanel.openTestList(MainWindow.getSuitePath());
 		testUnitPanel.insertTestCase(MainWindow.getCasePath());
 		setContent(TESTING_UNIT);
 	}
 	
 	/**
+	 * Method for running test case in proxy from navigation popup menu
+	 */
+	public void runInProxy(){
+		proxyUnitPanel.runUnit(MainWindow.getCasePath());
+		setContent(PROXY_MONITOR);
+	}
+	
+	/**
+	 * 
+	 * Switching between central panels
 	 * 
 	 * @param component
 	 */
@@ -278,9 +299,6 @@ public class MainWindow extends JFrame{
 			case PROXY_MONITOR: 
 				setToolBox(MainWindow.PROXYMON_TOOLBOX);
 				this.centerComponent = this.proxyUnitPanel;
-				break;
-			case STATISTICS: 
-				this.centerComponent = this.statsPanel;
 				break;
 			case TESTING_UNIT: 
 				setToolBox(MainWindow.TESTUNIT_TOOLBOX);
@@ -299,6 +317,8 @@ public class MainWindow extends JFrame{
 
 	/**
 	 * 
+	 * Open the test suite and insert the data of a test list
+	 * 
 	 */
 	public void openTestList(){
 		
@@ -306,15 +326,23 @@ public class MainWindow extends JFrame{
 		setContent(MainWindow.TESTING_UNIT);
 	}
 	
-	
+	/**
+	 * Close edited test case
+	 */
 	public void closeTestCase(){
 		
 		this.editor.closeTestCase(); 
 	}
 	
+	/**
+	 * Close edited test suite
+	 */
+	public void closeTestList(){
+		this.testUnitPanel.closeTestList(); 
+	}
 	
 	/**
-	 * 
+	 * Open test case editor and load the test case data
 	 */
 	public void openTestCaseEditor(){
 		
@@ -359,7 +387,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * 
+	 * Initialization of main window
 	 */
 	private void initMainWindow(UnitController testUnitController){
 		
@@ -387,6 +415,7 @@ public class MainWindow extends JFrame{
 		
 	/**
 	 * 
+	 * Menu bar initialization
 	 * 
 	 */
 	private void initMenuBar(){
@@ -395,13 +424,12 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * 
+	 * Initialization of central panels
 	 */
 	private void initContentPane(UnitController testUnitController){
 		
 		this.editor = new TestCaseEditor(testUnitController);
 		this.proxyUnitPanel = new ProxyMonitor(testUnitController);
-		this.statsPanel = new Statistics();
 		this.testUnitPanel = new TestMonitor(testUnitController);
 		this.centerComponent = this.editor;
 		this.panelType = 0;
@@ -412,10 +440,12 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * 
+	 * Initialization of central pane
 	 */
 	private void initCenterPane(){
 		
+		//detection whether the root directory exists
+		//if not, it is created
 		File root = new File(MainWindow.getDataRoot());
 		
 		if(!root.exists()){
@@ -430,7 +460,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * 
+	 * Get central splitpane object
 	 */
 	private JSplitPane getCenterPane(){
 		
@@ -439,7 +469,7 @@ public class MainWindow extends JFrame{
 	
 	
 	/**
-	 * 
+	 * Initialization of bottom splitpane - console part
 	 */
 	private void initBottomPane(){
 		
@@ -451,6 +481,8 @@ public class MainWindow extends JFrame{
 	
 	
 	/**
+	 * 
+	 * Menu item generating method
 	 * 
 	 * @param menu
 	 * @param label
@@ -472,6 +504,8 @@ public class MainWindow extends JFrame{
 	
 	/**
 	 * 
+	 * ToolBoxes initialization
+	 * 
 	 */
 	private void initToolBox(){
 		
@@ -492,7 +526,7 @@ public class MainWindow extends JFrame{
 		addToolBarItem(testUnitToolBox,"Remove Test Case",new RemoveTestCaseListener(),"delete.png");
 		addToolBarItem(testUnitToolBox,"Run Tests",new RunTestUnitListener(),"play.png");
 		addToolBarItem(testUnitToolBox,"Stop Tests",new StopUnitListener(),"stop.png");
-		//addToolBarItem(testUnitToolBox,"Stop All Unit",new StopAllUnitsListener(),"multistop.png");
+		addToolBarItem(testUnitToolBox,"Stop All Unit",new StopAllUnitsListener(),"multistop.png");
 		addToolBarItem(testUnitToolBox,"Run All Units",new RunAllTestUnitsListener(),"multiplay.png");
 		addToolBarItem(testUnitToolBox,"Add Remote Unit",new AddTestUnitListener(),"network_idle.png");
 		addToolBarItem(testUnitToolBox,"Remove Test Unit",new RemoveTestUnitListener(),"network_offline.png");
@@ -502,7 +536,7 @@ public class MainWindow extends JFrame{
 		addToolBarItem(proxyUnitToolBox,"Run Unit",new RunProxyListener(),"play.png");
 		addToolBarItem(proxyUnitToolBox,"Stop Unit",new StopProxyListener(),"stop.png");
 		addToolBarItem(proxyUnitToolBox,"Run All Units",new RunProxyListener(),"multiplay.png");
-		//addToolBarItem(proxyUnitToolBox,"Stop All Units",new StopAllProxyListener(),"multistop.png");
+		addToolBarItem(proxyUnitToolBox,"Stop All Units",new StopAllProxyListener(),"multistop.png");
 		addToolBarItem(proxyUnitToolBox,"Add Remote Unit",new AddProxyUnitListener(),"network_idle.png");
 		addToolBarItem(proxyUnitToolBox,"Remove Remote Unit",new RemoveProxyUnitListener(),"network_offline.png");
 		addToolBarItem(proxyUnitToolBox,"Export Configuration",new ExportProxyUnitListener(),"upload.png");

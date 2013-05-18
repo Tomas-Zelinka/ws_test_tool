@@ -127,6 +127,9 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void onNewResponseEvent(HttpMessageData[] dataArray, int period) {
 		
@@ -158,19 +161,34 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		}
 	}
 	
+	/**
+	 * Clear test results
+	 */
 	public void clearResults(){
-		ConsoleLog.Print("[UnitPanel] clearing");
-		responses.clear();
-		clearTable(responsesTableModel);
-		responseEditorPane.setText("");
-		requestEditorPane.setText("");
-		firstTest =(String) testCasesTableModel.getValueAt(0,1);
-		this.periodNumber = 0;
+		if(this.testListData != null){
+			ConsoleLog.Print("[UnitPanel] clearing");
+			responses.clear();
+			clearTable(responsesTableModel);
+			responseEditorPane.setText("");
+			requestEditorPane.setText("");
+			if(testCasesTableModel.getRowCount() != 0)
+				firstTest =(String) testCasesTableModel.getValueAt(0,1);
+			this.periodNumber = 0;
+		}else{
+			ConsoleLog.Message("Any opened test suite");
+		}
+	}
+	
+	public void clearTestList(){
+		testCasesTableModel.setNumRows(0);
+		testCasesTableModel.fireTableDataChanged();
+		this.testListData = null;
 	}
 	
 	/**
+	 * Return list of test cases data
 	 * 
-	 * @param path
+	 * @return list of test case data
 	 */
 	public ArrayList<TestCaseSettingsData> getTestListData(){
 		
@@ -229,6 +247,10 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		table.setRowCount(0);
 	}
 	
+	/**
+	 * 
+	 * @param data
+	 */
 	private void insertToTable(TestCaseSettingsData data){
 		int rowCount = testCasesTable.getRowCount();
 		Object[] newRow = new Object[] {rowCount,data.getName(),data.getThreadsNumber(),data.getLoopNumber(),new Boolean(data.getRun()),new Boolean(data.getUseProxy()),false};
@@ -254,7 +276,11 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 	
 	
 	
-	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
 	private class RequestSelectionAdapter extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			clearTable(responsesTableModel);
@@ -288,6 +314,11 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		}
 	}
 	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
 	private class ResponseSelectionAdapter extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			int row = responsesTable.getSelectedRow();
@@ -305,7 +336,12 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * @param editor
+	 * @param contentType
+	 * @param content
+	 */
 	private void setEditorContent(JEditorPane editor,String contentType,String content){
 		if(content.isEmpty()){
 			
@@ -319,10 +355,14 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * @param output
+	 * @param expected
+	 * @param contentType
+	 * @return
+	 */
 	private boolean compareResponses(String output, String expected, String contentType){
-		
-		
 		
 		if(contentType.contains("text/xml") && !output.isEmpty() && !expected.isEmpty()){
 			String one = XMLFormat.format(output);

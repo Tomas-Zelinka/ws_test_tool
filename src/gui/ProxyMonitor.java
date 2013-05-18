@@ -186,11 +186,6 @@ public class ProxyMonitor extends JPanel {
 	 * 
 	 * @return JPanel - returns the selected unit panel
 	 */
-//	private ProxyUnitPanel getSelectedPanel(){
-//		ProxyUnitPanel selectedPanel = (ProxyUnitPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
-//		ConsoleLog.Print("[ProxyMonitor] returned Unit: " + getUnitKey());
-//		return selectedPanel;
-//	}
 	
 	/**
 	 * 
@@ -215,21 +210,18 @@ public class ProxyMonitor extends JPanel {
 		
 		File casePath = new File(path);
 		
-		if(casePath.toPath().getNameCount() > 2){
 			
-			String caseName = casePath.getName();
-			
-			if(panelIndex == LOCAL_UNIT){
-				tabbedPane.setTitleAt(panelIndex,LOCAL_NAME +" - "+caseName );
-			}else{
-				tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey(panelIndex) +" - "+caseName );
-			}
-			//getSelectedPanel().clearResults();
-			controller.runProxy(path,getUnitKey(panelIndex));
-			
+		String caseName = casePath.getName();
+		
+		if(panelIndex == LOCAL_UNIT){
+			tabbedPane.setTitleAt(panelIndex,LOCAL_NAME +" - "+caseName );
 		}else{
-			ConsoleLog.Message("Any Test case selected.");
+			tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey(panelIndex) +" - "+caseName );
 		}
+		//getSelectedPanel().clearResults();
+		controller.runProxy(path,getUnitKey(panelIndex));
+			
+		
 	}
 	
 	

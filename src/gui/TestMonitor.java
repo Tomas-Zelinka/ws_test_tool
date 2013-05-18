@@ -52,12 +52,15 @@ public class TestMonitor extends JPanel  {
 	}
 	
 	/**
-	 * 
+	 * Order to controller to export configuration of remote units
 	 */
 	public void exportConfiguration(){
 		controller.exportTestConfiguration();
 	}
 	
+	/**
+	 * Order to controller to get data of remote unit and then connect them
+	 */
 	public void importConfiguration(){
 		
 		UnitConfiguration[] configArray = controller.importTestConfiguration();
@@ -65,12 +68,14 @@ public class TestMonitor extends JPanel  {
 		if(configArray != null){
 			int panelCount = tabbedPane.getTabCount();
 			
+			//remove all units before we import new ones
 			testUnitCounter = 1;
 			for(int i = 1; i < panelCount; i++){
-				removeUnit(i);
 				
+				removeUnit(i);
 			}
 			
+			//import the new configuration of remote units
 			for(UnitConfiguration config : configArray){
 				addUnit(config.getHost(),config.getRegistryPort());
 			}
@@ -91,7 +96,7 @@ public class TestMonitor extends JPanel  {
 		String panelName = "";
 		
 		try{
-			
+			//port = 0, because it is localunit 
 			if(port == LOCAL_UNIT){
 				
 				panelName = LOCAL_NAME;
@@ -126,7 +131,7 @@ public class TestMonitor extends JPanel  {
 	}
 	
 	/**
-	 * 
+	 * Remove the remote unit, the local unit cannot be removed
 	 */
 	public void removeUnit(int panelIndex){
 		
@@ -221,18 +226,27 @@ public class TestMonitor extends JPanel  {
 		
 	}
 
-	
+	/**
+	 * 
+	 * @param path
+	 */
 	public void runUnit(String path){
 		
 		runTest(path, getUnitKey());
 	}
 	
+	/**
+	 * 
+	 */
 	public void stopUnit(){
 		
 		stopTest(getUnitKey());
 	}
 	
-	
+	/**
+	 * 
+	 * @param path
+	 */
 	public void runAllUnits(String path){
 		
 		int tabCount = tabbedPane.getTabCount();
@@ -263,12 +277,35 @@ public class TestMonitor extends JPanel  {
 		}
 	}
 	
+	/**
+	 * 
+	 */
+	public void closeTestList(){
+		
+		int panelIndex = tabbedPane.getSelectedIndex();
+		
+			if(panelIndex == LOCAL_UNIT ){
+				tabbedPane.setTitleAt(panelIndex, LOCAL_NAME);
+			}else{
+				tabbedPane.setTitleAt(panelIndex,REMOTE_NAME+ getUnitKey());
+			}
+			getSelectedPanel().clearResults();
+			getSelectedPanel().clearTestList();
+		
+	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getPanelIndex(){
 		return tabbedPane.getSelectedIndex();
 	}
 	
+	/**
+	 * 
+	 * @param key
+	 */
 	private void stopTest(int key){
 		controller.stopTestUnit(key);
 	}
@@ -291,6 +328,7 @@ public class TestMonitor extends JPanel  {
 			return key;
 		}
 	}
+	
 	/**
 	 * 
 	 * @return JPanel - returns the selected unit panel

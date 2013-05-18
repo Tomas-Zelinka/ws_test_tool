@@ -52,6 +52,12 @@ public interface HttpMessage {
 	public void setChangedHttpHeader(String changedHttpHeader);
 	
 	/**
+	 * Nastaveni pozmenene http hlavicky
+	 * @param changedHttpHeader pozmenena http hlavicka
+	 */
+	public void setHttpHeader(String httpHeader);
+	
+	/**
 	 * Ziskani velikosti tela http zpravy v bytech.
 	 * @return pocet bytu tvorici telo http zpravy
 	 */
@@ -63,6 +69,13 @@ public interface HttpMessage {
 	 * @return typ kodovani
 	 */
 	public String getTransferEncoding();
+	
+	
+	/**
+	 * Zjisteni presnosoveho typu kodovani http zpravy (napriklad chunked)
+	 * @return typ kodovani
+	 */
+	public void setTransferEncoding(String encoding);
 	
 	
 	/**

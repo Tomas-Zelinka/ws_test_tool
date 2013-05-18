@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jdom2.JDOMException;
@@ -29,6 +32,7 @@ import data.DelayFault;
 import data.EmptyingFault;
 import data.Fault;
 import data.HeaderCorruptionFault;
+import data.JSONFault;
 import data.MultiplicationFault;
 import data.StringCorruptionFault;
 import data.WsdlOperationFault;
@@ -80,9 +84,10 @@ public class AddFaultDialog extends javax.swing.JDialog {
 	private static final String DELAY_PANEL= "DelayFault";
 	private static final String HEADER_CORRUPTION_PANEL= "HeaderCorruptionFault";
 	private static final String WSDL_OPERATION_PANEL= "WsdlOperationFault";
+	private static final String JSON_CORRUPTION_PANEL = "JSONFault";
 	
 	private static final String[] TYPE_COMBO_BOX_ITEMS= {STRING_CORRUPTION_PANEL, XPATH_CORRUPTION_PANEL,
-			MULTIPLICATION_PANEL, EMPTYING_PANEL, DELAY_PANEL, HEADER_CORRUPTION_PANEL, WSDL_OPERATION_PANEL};
+			MULTIPLICATION_PANEL, EMPTYING_PANEL, DELAY_PANEL, HEADER_CORRUPTION_PANEL, WSDL_OPERATION_PANEL,JSON_CORRUPTION_PANEL};
 	
 	
 	private Thread downloadThread;
@@ -221,8 +226,11 @@ public class AddFaultDialog extends javax.swing.JDialog {
         downloadLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
-
-       
+        jsonPanel = new JPanel();
+        jsonVariableLabel = new JLabel();
+        jsonValueLabel = new JLabel();
+        jsonVariableField = new JTextField();
+        jsonValueField = new JTextField();
         
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add fault");
@@ -543,6 +551,42 @@ public class AddFaultDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        
+        
+        settingsPanel.add(jsonPanel, "JSONFault");
+
+        jsonVariableLabel.setText("Variable Name:");
+
+        jsonValueLabel.setText("Variable value:");
+
+        javax.swing.GroupLayout JSONCorruptionPanelLayout = new javax.swing.GroupLayout(jsonPanel);
+        jsonPanel.setLayout(JSONCorruptionPanelLayout);
+        JSONCorruptionPanelLayout.setHorizontalGroup(
+        		JSONCorruptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JSONCorruptionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JSONCorruptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jsonVariableLabel)
+                    .addComponent(jsonValueLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(JSONCorruptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jsonVariableField, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                    .addComponent(jsonValueField, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        JSONCorruptionPanelLayout.setVerticalGroup(
+        		JSONCorruptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JSONCorruptionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JSONCorruptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jsonVariableLabel)
+                    .addComponent(jsonVariableField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(JSONCorruptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jsonValueLabel)
+                    .addComponent(jsonValueField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(241, Short.MAX_VALUE))
+        );
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -577,7 +621,7 @@ public class AddFaultDialog extends javax.swing.JDialog {
 				this.setVisible(false);
 			}
 			catch (JDOMException ex) {
-				JOptionPane.showMessageDialog(this, "The specified path does not match the XPath expression.",
+				JOptionPane.showMessageDialog(this, "THEADER_CONDITION_PANELhe specified path does not match the XPath expression.",
 						"Cannot complete operation", JOptionPane.WARNING_MESSAGE);
 				addButtonClicked= false;
 //			
@@ -619,6 +663,13 @@ public class AddFaultDialog extends javax.swing.JDialog {
 			this.setVisible(false);
 			
 		}
+		
+		if (selectedItem.equals(JSON_CORRUPTION_PANEL)) {
+			newFault= new JSONFault(jsonVariableField.getText(),jsonValueField.getText());
+			this.setVisible(false);
+			
+		}
+		
 		
 		//WSDL OPERATION FAULT
 		if (selectedItem.equals(WSDL_OPERATION_PANEL)) {
@@ -681,5 +732,10 @@ public class AddFaultDialog extends javax.swing.JDialog {
     private javax.swing.JPanel xPathCorruptionPanel;
     private javax.swing.JLabel xPathLabel;
     private javax.swing.JTextField xPathTextField;
+    private JPanel jsonPanel;
+    private JLabel jsonVariableLabel;
+    private JLabel jsonValueLabel;
+    private JTextField jsonVariableField;
+    private JTextField jsonValueField;
     // End of variables declaration//GEN-END:variables
 }

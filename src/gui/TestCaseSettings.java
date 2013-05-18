@@ -32,6 +32,7 @@ public class TestCaseSettings extends JPanel {
 	private JTextField proxyPortField;
 	private JTextField proxyTestedPortField;
 	private JTextField schedulePeriodField;
+	private JTextField connectionTimeoutField;
 	private JTextField requestTimeoutField;
 	private JCheckBox runButton;
 	private JCheckBox useProxyBox;
@@ -47,6 +48,7 @@ public class TestCaseSettings extends JPanel {
 	private JLabel proxySettingsLabel;
 	private JLabel useProxyLabel;
 	private JLabel schedulePeriodLabel;
+	private JLabel connectionTimeoutLabel;
 	private JLabel requestTimeoutLabel;
 	private JLabel scheduledRunLabel;
 	
@@ -143,6 +145,9 @@ public class TestCaseSettings extends JPanel {
 		schedulePeriodField = new JTextField(20);
 		schedulePeriodLabel = new JLabel("Schedule Period");
 		
+		connectionTimeoutField = new JTextField(20);
+		connectionTimeoutLabel = new JLabel("Connection Timeout");
+		
 		requestTimeoutField = new JTextField(20);
 		requestTimeoutLabel = new JLabel("Request Timeout");
 		
@@ -168,6 +173,7 @@ public class TestCaseSettings extends JPanel {
 		runButton.addActionListener(new UseHttpListener());
 		
 		httpLabels.add(runLabel);
+		httpLabels.add(connectionTimeoutLabel);
 		httpLabels.add(requestTimeoutLabel);
 		httpLabels.add(threadsNumberLabel);
 		httpLabels.add(loopNumberLabel);
@@ -176,6 +182,7 @@ public class TestCaseSettings extends JPanel {
 		
 		
 		httpFields.add(runButton);
+		httpFields.add(connectionTimeoutField);
 		httpFields.add(requestTimeoutField);
 		httpFields.add(threadsNumberField);
 		httpFields.add(loopNumberField);
@@ -310,14 +317,24 @@ public class TestCaseSettings extends JPanel {
 	
 	private void setEditorTimeout(Integer time){
 		
-		this.requestTimeoutField.setText(time.toString());
+		this.connectionTimeoutField.setText(time.toString());
 	}
 
 	private Integer getEditorTimeout(){
 		
-		return Integer.parseInt(requestTimeoutField.getText());
+		return Integer.parseInt(connectionTimeoutField.getText());
 	}
 	
+	
+	private void setEditorRequestTimeout(Integer time){
+		
+		this.requestTimeoutField.setText(time.toString());
+	}
+
+	private Integer getEditorRequestTimeout(){
+		
+		return Integer.parseInt(requestTimeoutField.getText());
+	}
 	
 	private void setEditorPeriod(Integer period){
 		
@@ -359,6 +376,7 @@ public class TestCaseSettings extends JPanel {
 			this.settingsData.setThreadsNumber(getEditorThreadsNumber());
 			this.settingsData.setLoopNumber(getEditorLoopCount());
 			this.settingsData.setTimeout(getEditorTimeout());
+			this.settingsData.setRequestTimeout(getEditorRequestTimeout());
 		}
 		if(getEditorUseProxy()){
 			
@@ -388,6 +406,7 @@ public class TestCaseSettings extends JPanel {
 		setEditorUseProxy(this.settingsData.getUseProxy());
 		setEditorPeriod(this.settingsData.getPeriod());
 		setEditorTimeout(this.settingsData.getTimeout());
+		setEditorRequestTimeout(this.settingsData.getRequestTimeout());
 	}
 	
 	

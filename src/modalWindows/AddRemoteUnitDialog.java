@@ -85,7 +85,7 @@ public class AddRemoteUnitDialog extends InputModalWindow {
 		
 		Document hostFieldDocument = hostField.getDocument();
 		hostFieldDocument.addDocumentListener(new ButtonStateController(okButton,hostField,messageLabel));
-		
+		this.getRootPane().setDefaultButton(okButton);
 		
 		cancelButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {

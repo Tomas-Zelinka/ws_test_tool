@@ -51,7 +51,7 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 		//this.newFaultId= newFaultId;
 		initComponents();
 		//vychozi oznaceni tlacitka Pridat
-		this.getRootPane().setDefaultButton(addButton);
+		
 		
 		//ovladaci prvky v karte WSDL poruchy jsou znepristupneny, dokud neni popis stahnut
 		operationComboBox.setEnabled(false);
@@ -244,7 +244,7 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 	}
 
 	private class GenerateListner implements ActionListener{
-		@SuppressWarnings("unchecked")
+		
 		public void actionPerformed(ActionEvent e){
 			JComboBox box =(JComboBox) e.getSource();
 			String method = (String)box.getSelectedItem();
@@ -269,8 +269,10 @@ public class GenerateFromWSDLDialog extends InputModalWindow {
 
 	@Override
 	protected void initButtons() {
+		this.getRootPane().setDefaultButton(addButton);
 		addButton(addButton);
-	       addButton(cancelButton);
+	     addButton(cancelButton);
+	     
 	}
 	
 }

@@ -13,6 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.apache.commons.io.FilenameUtils;
+
 import logging.ConsoleLog;
 
 import com.thoughtworks.xstream.XStream;
@@ -28,7 +30,7 @@ import com.thoughtworks.xstream.XStream;
 public class DataProvider {
 	
 	private XStream stream;
-	private static final String resourcePath = ".."+File.separator+ "resources" + File.separator;
+	private static final String resourcePath = File.separator+ "resources" + File.separator;
 	
 	
 	public DataProvider(){
@@ -40,7 +42,7 @@ public class DataProvider {
 	 * @return
 	 */
 	public static String getResourcePath(){
-		return DataProvider.resourcePath;
+		return FilenameUtils.separatorsToSystem(DataProvider.resourcePath);
 	}
 	
 	public void createDir(String path){
@@ -60,8 +62,9 @@ public class DataProvider {
 	 */
 	public void writeObject(String path, Object obj){
 		PrintWriter writer = null;
+		String portedPath = FilenameUtils.separatorsToSystem(path);
 		try{
-			writer = new PrintWriter(new FileWriter(path));
+			writer = new PrintWriter(new FileWriter(portedPath));
 			writer.print(stream.toXML(obj));
 			
 		}catch(IOException e){
@@ -81,13 +84,14 @@ public class DataProvider {
 		
 		Object obj = null;
 		FileInputStream inStream = null;
+		String portedPath = FilenameUtils.separatorsToSystem(path);
 		try {
-			inStream = new FileInputStream(new File(path));
+			inStream = new FileInputStream(new File(portedPath));
 			obj= stream.fromXML(inStream);
 			inStream.close();
 		}
 		catch (FileNotFoundException ex) {
-			ConsoleLog.Print("File " +path+ " not found");
+			ConsoleLog.Print("File " +portedPath+ " not found");
 			//ConsoleLog.Print(ex.getMessage());
 			//System.exit(-1);
 		}catch(IOException ex){

@@ -108,6 +108,16 @@ public class HttpRequest implements HttpMessage {
 	}
 
 	/**
+	 * Metoda pro ziskani pole Transfer-Encoding
+	 * @return Transfer-Encoding pole
+	 */
+	
+	public void setTransferEncoding(String encoding) {
+		
+		this.transferEncoding = encoding;
+	}
+	
+	/**
 	 * Metoda pro ziskani pole Content-Encoding
 	 * @return pole Content-Encoding
 	 */
@@ -145,6 +155,16 @@ public class HttpRequest implements HttpMessage {
 	public String getHttpHeader() {
 		
 		return httpHeader;
+	}
+	
+	/**
+	 * Metoda pro ziskani http hlavicky
+	 * @return http hlavicka
+	 */
+	@Override
+	public void setHttpHeader(String header) {
+		
+		 httpHeader = header;
 	}
 	
 	/**

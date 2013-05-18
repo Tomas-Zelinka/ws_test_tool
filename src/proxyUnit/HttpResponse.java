@@ -149,6 +149,16 @@ public class HttpResponse implements HttpMessage {
 		
 		return transferEncoding;
 	}
+	
+	/**
+	 * Metoda pro ziskani pole Transfer-Encoding
+	 * @return Transfer-Encoding pole
+	 */
+	
+	public void setTransferEncoding(String encoding) {
+		
+		this.transferEncoding = encoding;
+	}
 
 	/**
 	 * Metoda pro ziskani pole Content-Encoding
@@ -191,6 +201,15 @@ public class HttpResponse implements HttpMessage {
 		return httpHeader;
 	}
 	
+	/**
+	 * Metoda pro nastaveni http hlavicky
+	 * @return http hlavicka
+	 */
+	@Override
+	public void setHttpHeader(String header) {
+		
+		 httpHeader = header;
+	}
 	
 	/**
 	 * Metoda pro ziskani chybove zpravy.

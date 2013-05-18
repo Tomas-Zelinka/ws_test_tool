@@ -11,12 +11,15 @@ package modalWindows;
 import java.awt.CardLayout;
 
 import javax.swing.JFrame;
-
-import data.Condition;
-import data.DestinationCondition;
-import data.UriCondition;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import proxyUnit.ContainsCondition;
+import data.Condition;
+import data.DestinationCondition;
+import data.HttpHeaderCondition;
+import data.UriCondition;
 
 /**
  * Dialog pro pridani nove podminky do prislusneho pravidla. 
@@ -28,9 +31,10 @@ public class AddConditionDialog extends javax.swing.JDialog {
 	private static final String CONTAINS_CONDITION_PANEL = "ContainsCondition";
 	private static final String URI_CONDITION_PANEL = "UriCondition";
 	private static final String DESTINATION_CONDITION_PANEL = "DestinationCondition";
+	private static final String HEADER_CONDITION_PANEL = "HeaderCondition";
 	
 	private static final String[] TYPE_COMBO_BOX_ITEMS= {CONTAINS_CONDITION_PANEL, URI_CONDITION_PANEL,
-			DESTINATION_CONDITION_PANEL};
+			DESTINATION_CONDITION_PANEL,HEADER_CONDITION_PANEL};
 	
 	
 	private boolean addButtonClicked;
@@ -99,6 +103,11 @@ public class AddConditionDialog extends javax.swing.JDialog {
         applyLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
+        headerParameterLabel = new JLabel();
+        headerValueLabel = new JLabel();
+        headerParameterField = new JTextField();
+        headerValueField = new JTextField();
+        headerPanel = new JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add condition");
@@ -249,6 +258,42 @@ public class AddConditionDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        settingsPanel.add(headerPanel, "HeaderCondition");
+
+        headerParameterLabel.setText("Header Name:");
+
+        headerValueLabel.setText("Header value:");
+
+        javax.swing.GroupLayout headerPanelLayout = new javax.swing.GroupLayout(headerPanel);
+        headerPanel.setLayout(headerPanelLayout);
+        headerPanelLayout.setHorizontalGroup(
+        		headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(headerParameterLabel)
+                    .addComponent(headerValueLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(headerParameterField, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                    .addComponent(headerValueField, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        headerPanelLayout.setVerticalGroup(
+        		headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(headerParameterLabel)
+                    .addComponent(headerParameterField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(headerValueLabel)
+                    .addComponent(headerValueField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(241, Short.MAX_VALUE))
+        );
+        
+        
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -277,6 +322,10 @@ public class AddConditionDialog extends javax.swing.JDialog {
 			newCondition= new UriCondition(uriTextField.getText());
 		}
 		
+		if (selectedItem.equals(HEADER_CONDITION_PANEL)) {
+			newCondition= new HttpHeaderCondition(headerParameterField.getText(),headerValueField.getText());
+		}
+		
 		if (selectedItem.equals(DESTINATION_CONDITION_PANEL)) {
 			if (requestRadioButton.isSelected())
 				newCondition= new DestinationCondition( true);
@@ -290,24 +339,7 @@ public class AddConditionDialog extends javax.swing.JDialog {
 	/**
 	 * @param args the command line arguments
 	 */
-	public static void main(String args[]) {
-		
-		/* Create and display the dialog */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-
-			public void run() {
-				AddConditionDialog dialog = new AddConditionDialog(new javax.swing.JFrame(), true);
-				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-					@Override
-					public void windowClosing(java.awt.event.WindowEvent e) {
-						System.exit(0);
-					}
-				});
-				dialog.setVisible(true);
-			}
-		});
-	}
+	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.ButtonGroup applyButtonGroup;
@@ -325,5 +357,10 @@ public class AddConditionDialog extends javax.swing.JDialog {
     private javax.swing.JPanel uriConditionPanel;
     private javax.swing.JLabel uriLabel;
     private javax.swing.JTextField uriTextField;
+    private JLabel headerParameterLabel;
+    private JLabel headerValueLabel;
+    private JTextField headerParameterField;
+    private JTextField headerValueField;
+    private JPanel headerPanel;
     // End of variables declaration//GEN-END:variables
 }

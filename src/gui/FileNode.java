@@ -27,6 +27,12 @@ public class FileNode extends java.io.File {
         super(parent, child);
     }
     
+    /**
+     * 
+     * Test if the node is test suite
+     * 
+     * @return
+     */
     public boolean isSuite(){
     
     	String node = this.getParent();
@@ -37,6 +43,8 @@ public class FileNode extends java.io.File {
     	return false;
     }
     /**
+     * 
+     * Test if the node is test case
      * 
      * @return
      */
@@ -50,6 +58,12 @@ public class FileNode extends java.io.File {
     	return false;
     }
 
+    /**
+     * 
+     * Test if the node is test list
+     * 
+     * @return
+     */
     public boolean isTestList(){
 	    	
     	if (this.isFile() && (this.getName().compareTo("testlist.xml") == 0)){
@@ -60,6 +74,11 @@ public class FileNode extends java.io.File {
     	return false;
     }
     
+    
+    /**
+     * Test if the node is test settings
+     * @return
+     */
     public boolean isSettings(){
     	
     	if (this.isFile() && (this.getName().compareTo("settings.xml") == 0)){
@@ -72,6 +91,9 @@ public class FileNode extends java.io.File {
     
     
     /**
+     * 
+     * 
+     * Test if the node is fault injection
      * 
      * @return
      */
@@ -87,13 +109,16 @@ public class FileNode extends java.io.File {
     
       
     /**
-     * 
+     * Prints name of the node
      */
     @Override
     public String toString() {
         return getName();
     }
     
+    /**
+     * Return absolute paht of the node
+     */
     public String getAbsolutePath() {
         return this.getPath();
     }

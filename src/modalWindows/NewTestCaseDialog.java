@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -125,7 +126,9 @@ public class NewTestCaseDialog extends InputModalWindow {
 		okButton.addActionListener(new OkButtonAction());
 		cancelButton.addActionListener(new CancelButtonAction()); 
 		
-		Document projectField = testCaseName.getDocument();
+		getRootPane().setDefaultButton(okButton);
+		
+		Document projectField = testCaseName.getDocument(); 
 		projectField.addDocumentListener(new ButtonStateController(okButton,testCaseName,messageLabel));
 		
 		if(testEmptyInput().isEmpty())
@@ -142,32 +145,36 @@ public class NewTestCaseDialog extends InputModalWindow {
 	private class OkButtonAction  implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e) {
-             
-			File newTestCase = new File(MainWindow.getSuitePath()+File.separator+getCaseName());
-			File settings = new File(newTestCase.getPath() + File.separator + "settings.xml");
-            DataProvider writer = new DataProvider();
-            TestCaseSettingsData testCase = new TestCaseSettingsData();
-            testCase.setName(getCaseName());
-            testCase.setPath(newTestCase.getPath());
-			
-			if (newTestCase.exists()){
-            	 messageLabel.setText("Test case with this name already exists");
-             }else{
-            	 
-            	 newTestCase.mkdir();
-            	 try{
-            		 settings.createNewFile();
-            		 writer.writeObject(settings.getPath(), testCase);
-            		 
-            	 }catch(Exception b){
-            		 b.printStackTrace();
-            	 }
-            	 Navigator.refreshTree();
-            	 MainWindow.setCasePath(newTestCase.getName());
-            	 ConsoleLog.Print("[ModalWindow] New case suite created,name: "+ getCaseName());
-            	 setVisible(false);
-            	 dispose();
-             }
+            
+			if(!MainWindow.getSuitePath().isEmpty()){
+				File newTestCase = new File(MainWindow.getSuitePath()+File.separator+getCaseName());
+				File settings = new File(newTestCase.getPath() + File.separator + "settings.xml");
+	            DataProvider writer = new DataProvider();
+	            TestCaseSettingsData testCase = new TestCaseSettingsData();
+	            testCase.setName(getCaseName());
+	            testCase.setPath(newTestCase.getPath());
+				
+				if (newTestCase.exists()){
+	            	 messageLabel.setText("Test case with this name already exists");
+	             }else{
+	            	 
+	            	 newTestCase.mkdir();
+	            	 try{
+	            		 settings.createNewFile();
+	            		 writer.writeObject(settings.getPath(), testCase);
+	            		 
+	            	 }catch(Exception b){
+	            		 b.printStackTrace();
+	            	 }
+	            	 Navigator.refreshTree();
+	            	 MainWindow.setCasePath(newTestCase.getName());
+	            	 ConsoleLog.Print("[ModalWindow] New case suite created,name: "+ getCaseName());
+	            	 setVisible(false);
+	            	 dispose();
+	             }
+			}else{
+				ConsoleLog.Message("Any selected test suite!");
+			}
 		}
 	}
 	/**

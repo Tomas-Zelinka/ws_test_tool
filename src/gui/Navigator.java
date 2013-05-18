@@ -186,7 +186,12 @@ public class Navigator extends JPanel {
 		addMenuItem(newMenu,"Fault Injection", new FaultInjectionListener());
 		treeMenu.add(newMenu);
 		treeMenu.addSeparator();
+		addMenuItem(treeMenu,"Editor", new EditorViewListener());
+		addMenuItem(treeMenu,"Test Unit",new TestUnitViewListener());
+		addMenuItem(treeMenu,"Proxy Unit",new ProxyViewListener());
+		treeMenu.addSeparator();
 		addMenuItem(treeMenu,"Insert to Unit", new InsertTestCaseListener());
+		addMenuItem(treeMenu,"Run in Proxy",new RunInProxyListener());
 		treeMenu.addSeparator();
 		addMenuItem(treeMenu,"Open", new OpenListener());
 		addMenuItem(treeMenu,"Close", new CloseListener());
@@ -194,7 +199,185 @@ public class Navigator extends JPanel {
 		treeMenu.addSeparator();
 		addMenuItem(treeMenu,"Refresh", new RefreshTree());
 	}	
+
+	/**
+	 * 
+	 * This is helper class. The class is responsible for rendering nodes in navigation panel
+	 *  
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	private class MyTreeCellRenderer extends DefaultTreeCellRenderer {
 		
+		private static final long serialVersionUID = 6647184007329048034L;
+		
+		public MyTreeCellRenderer() {
+			this.setBorderSelectionColor(null); 
+			this.setBackgroundSelectionColor( null); 
+			this.setBackgroundNonSelectionColor(null);
+		}
+
+		public Color getBackground() {
+			return null;
+		}
+		
+		@Override
+		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, 
+				boolean leaf, int row, boolean hasFocus) {
+			
+			super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+			FileNode node= (FileNode) value;
+			
+			
+			// set icons
+			if (node.isHttpTestCase()) {
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"request.png")));
+			}
+			else if (node.isFaultInjectionTestCase()){
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"fault.png")));
+			}
+			else if (node.isSettings()){
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"settings.png")));
+			}
+			else if (node.isTestList()){
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"list.png")));
+			}
+			else if (node.isSuite()){
+				
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"suite.png")));
+			}
+			else
+				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"case.png")));
+			
+			return this;
+		}
+
+	}
+	
+	
+	/**
+	 * 
+	 * This adapter is responsible for mouse event
+	 * handling on the navigation tree
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	private class MyMouseAdapter extends MouseAdapter{
+		
+		/**
+		 * 
+		 *  @param e - triggered mouse event 
+		 */
+		public void mousePressed(MouseEvent e) {
+    		JTree myTree = (JTree)e.getSource();
+    		FileNode node = null;
+    		int selRow = myTree.getClosestRowForLocation( e.getX(), e.getY());
+			TreePath path = myTree.getPathForLocation( e.getX(),e.getY());
+			
+			// row was selected
+			if( selRow != -1) {
+				Rectangle bounds = myTree.getRowBounds( selRow);
+				boolean outside = e.getX() < bounds.x || e.getX() > bounds.x + bounds.width || e.getY() < bounds.y || e.getY() >= bounds.y + bounds.height;
+				
+				//the clic is inside row
+				if( !outside) {
+									
+					ConsoleLog.Print( "[Navigator] TestSuite Selected: " + path.getPathCount());
+					
+					MainWindow.setSuitePath(path.getPathComponent(1).toString());
+					MainWindow frameInstance = getMainWindowInstance();
+					
+					//set test case according to path length
+					if (path.getPathCount() <= SUITE_PATH_LENGTH){
+						frameInstance.setPanelType(MainWindow.TESTING_UNIT);
+						MainWindow.setCasePath("");
+					}
+					
+					//set test case according to path length
+					if(path.getPathCount() == CASE_PATH_LENGTH){
+						node = (FileNode) path.getPathComponent(CASE_PATH_LENGTH-1); 
+						if(node.isTestList() || node.isSuite()){
+							
+							//set the panel type, because then can be opened the right panel
+							frameInstance.setPanelType(MainWindow.TESTING_UNIT);
+							MainWindow.setCasePath("");
+						}else{
+							
+							//set the panel type, because then can be opened the right panel
+							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
+							MainWindow.setCasePath(path.getPathComponent(2).toString());
+						}
+					}
+					
+					if (path.getPathCount() == CASE_DETAIL_PATH_LENGTH){
+						node = (FileNode) path.getPathComponent(CASE_DETAIL_PATH_LENGTH-1); 
+						
+						if(node.isFaultInjectionTestCase()){
+							
+							//set the panel type, because then can be opened the right panel
+							frameInstance.setPanelType(MainWindow.CASE_EDITOR_FAULT);
+						
+						}else if(node.isHttpTestCase()){
+							
+							//set the panel type, because then can be opened the right panel
+							frameInstance.setPanelType(MainWindow.CASE_EDITOR_HTTP);
+						
+						}else{
+							
+							//set the panel type, because then can be opened the right panel
+							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
+						}
+						MainWindow.setCasePath(path.getPathComponent(2).toString());
+						
+					}
+					MainWindow.setEndpointPath(((FileNode)path.getLastPathComponent()).getAbsolutePath());
+					
+					
+					//detect the right click of the mouse
+					if (SwingUtilities.isRightMouseButton(e))  
+				    	myTree.setSelectionRow(selRow); 
+				}
+			
+			}
+			ShowPopup(e);
+		}
+    	
+		/**
+		 * 
+		 *  @param e - triggered mouse event 
+		 */
+    	public void mouseReleased(MouseEvent e) {
+    		 ShowPopup(e);
+	    }
+    	
+    	/**
+    	 * 
+    	 * Shows up the popup menu
+    	 * 
+    	 * @param e - triggered mouse event 
+    	 */
+    	private void ShowPopup(MouseEvent e) {
+	        if (e.isPopupTrigger()) {
+	            treeMenu.show(e.getComponent(),
+	                       e.getX(), e.getY());
+	        }
+	    }
+    	
+    	
+    }
+	
+	
+	
+	
+	
+	/*****************************************************BUTTON ACTION LISTENERS*********************************************/
+	
+	
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
@@ -204,9 +387,11 @@ public class Navigator extends JPanel {
 		public void actionPerformed(ActionEvent ae) {
 			newTestCaseWindow = new NewTestCaseDialog();
 			newTestCaseWindow.setVisible(true);
-			getMainWindowInstance().setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
-			getMainWindowInstance().openTestCaseEditor();
-			ConsoleLog.Print("[Navigator] New Test Case clicked");
+			if(!MainWindow.getSuitePath().isEmpty()){
+				getMainWindowInstance().setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
+				getMainWindowInstance().openTestCaseEditor();
+				ConsoleLog.Print("[Navigator] New Test Case clicked");
+			}
 		}
 	}
 
@@ -338,7 +523,17 @@ public class Navigator extends JPanel {
 	 */
 	public class CloseListener implements ActionListener{
 		public void actionPerformed(ActionEvent ae) {
-				getMainWindowInstance().closeTestCase();
+			int panelType = getMainWindowInstance().getPanelType();
+			if(panelType == MainWindow.CASE_EDITOR_FAULT || panelType == MainWindow.CASE_EDITOR_SETTINGS
+					||	panelType == MainWindow.CASE_EDITOR_HTTP	){
+					
+					getMainWindowInstance().closeTestCase();;
+					ConsoleLog.Print("[Navigator] File edit clicked");
+				
+				}else if(panelType == MainWindow.TESTING_UNIT){
+					getMainWindowInstance().closeTestList();
+				}
+				
 				ConsoleLog.Print("[Navigator] Close case clicked");
 			
 		}
@@ -382,171 +577,47 @@ public class Navigator extends JPanel {
 		}
 	} 
 	
-	
-
 	/**
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	private class MyTreeCellRenderer extends DefaultTreeCellRenderer {
-		
-		private static final long serialVersionUID = 6647184007329048034L;
-		
-		public MyTreeCellRenderer() {
-			this.setBorderSelectionColor(null); 
-			this.setBackgroundSelectionColor( null); 
-			this.setBackgroundNonSelectionColor(null);
+	public class RunInProxyListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().runInProxy();
 		}
-
-		public Color getBackground() {
-			return null;
-		}
-		
-		@Override
-		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, 
-				boolean leaf, int row, boolean hasFocus) {
-			
-			super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-			FileNode node= (FileNode) value;
-			
-					
-			if (node.isHttpTestCase()) {
-				
-				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"request.png")));
-			}
-			else if (node.isFaultInjectionTestCase()){
-				
-				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"fault.png")));
-			}
-			else if (node.isSettings()){
-				
-				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"settings.png")));
-			}
-			else if (node.isTestList()){
-				
-				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"list.png")));
-			}
-			else if (node.isSuite()){
-				
-				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"suite.png")));
-			}
-			else
-				setIcon(new ImageIcon(getClass().getResource(DataProvider.getResourcePath()+"case.png")));
-			
-			return this;
-		}
-
-	}
-	
-	
-	
-	
+	} 
 	
 	/**
-	 * 
-	 * This adapter is responsible for mouse event
-	 * handling on the navigation tree
 	 * 
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	private class MyMouseAdapter extends MouseAdapter{
-		
-		/**
-		 * 
-		 *  @param e - triggered mouse event 
-		 */
-		public void mousePressed(MouseEvent e) {
-    		JTree myTree = (JTree)e.getSource();
-    		FileNode node = null;
-    		MyTreeModel model = (MyTreeModel) myTree.getModel();
-			int selRow = myTree.getClosestRowForLocation( e.getX(), e.getY());
-			TreePath path = myTree.getPathForLocation( e.getX(),e.getY());
-			if( selRow != -1) {
-				Rectangle bounds = myTree.getRowBounds( selRow);
-				boolean outside = e.getX() < bounds.x || e.getX() > bounds.x + bounds.width || e.getY() < bounds.y || e.getY() >= bounds.y + bounds.height;
-				if( !outside) {
-					ConsoleLog.Print( "[Navigator] TestSuite Selected: " + path.getPathCount());
-					
-					MainWindow.setSuitePath(path.getPathComponent(1).toString());
-					
-					MainWindow frameInstance = getMainWindowInstance();
-									
-					if (path.getPathCount() <= SUITE_PATH_LENGTH){
-						frameInstance.setPanelType(MainWindow.TESTING_UNIT);
-						MainWindow.setCasePath("");
-					}
-					
-//					if(path.getPathCount() == SUITE_PATH_LENGTH){
-//						node = (FileNode) path.getPathComponent(SUITE_PATH_LENGTH-1); 
-//						if(node.isHttpTestCase()){
-//							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
-//						}
-//					}
-					
-					if(path.getPathCount() == CASE_PATH_LENGTH){
-						node = (FileNode) path.getPathComponent(CASE_PATH_LENGTH-1); 
-						if(node.isTestList() || node.isSuite()){
-							frameInstance.setPanelType(MainWindow.TESTING_UNIT);
-							MainWindow.setCasePath("");
-						}else{
-							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
-							MainWindow.setCasePath(path.getPathComponent(2).toString());
-						}
-					}
-					
-					if (path.getPathCount() == CASE_DETAIL_PATH_LENGTH){
-						node = (FileNode) path.getPathComponent(CASE_DETAIL_PATH_LENGTH-1); 
-						
-						if(node.isFaultInjectionTestCase())
-							frameInstance.setPanelType(MainWindow.CASE_EDITOR_FAULT);
-						else if(node.isHttpTestCase())
-							frameInstance.setPanelType(MainWindow.CASE_EDITOR_HTTP);
-						else
-							frameInstance.setPanelType(MainWindow.CASE_EDITOR_SETTINGS);
-						
-						MainWindow.setCasePath(path.getPathComponent(2).toString());
-						
-					}
-					MainWindow.setEndpointPath(((FileNode)path.getLastPathComponent()).getAbsolutePath());
-					
-					if (SwingUtilities.isRightMouseButton(e))  
-				    	myTree.setSelectionRow(selRow); 
-				    
-				    if (e.getClickCount() == 2 && !e.isConsumed()) {
-				        e.consume();
-				        
-				     
-				       if(model.isLeaf(path.getLastPathComponent())){
-				    	  ConsoleLog.Print( "[Navigator] TestSuite Selected");
-				       }
-				        	
-				   }
-				}
-			
-			}
-			ShowPopup(e);
+	public class EditorViewListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().setContent(MainWindow.TESTCASE_EDITOR);
 		}
-    	
-		/**
-		 * 
-		 *  @param e - triggered mouse event 
-		 */
-    	public void mouseReleased(MouseEvent e) {
-    		 ShowPopup(e);
-	    }
-    	
-    	/**
-    	 * 
-    	 * @param e - triggered mouse event 
-    	 */
-    	private void ShowPopup(MouseEvent e) {
-	        if (e.isPopupTrigger()) {
-	            treeMenu.show(e.getComponent(),
-	                       e.getX(), e.getY());
-	        }
-	    }
-    	
-    }
+	} 
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	public class TestUnitViewListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().setContent(MainWindow.TESTING_UNIT);
+		}
+	} 
+	
+	/**
+	 * 
+	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+	 *
+	 */
+	public class ProxyViewListener implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			getMainWindowInstance().setContent(MainWindow.PROXY_MONITOR);
+		}
+	} 
 }

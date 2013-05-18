@@ -79,7 +79,13 @@ public class TestCaseSettingsData implements Serializable{
 	private String proxyHost;
 	
 	/**
-	 * 
+	 * Timeout for request data
+	 */
+	private int requestTimeout;
+	
+	
+	/**
+	 * Serialization id
 	 */
 	public static final String filename = File.separator+"settings.xml";
 	
@@ -388,5 +394,25 @@ public class TestCaseSettingsData implements Serializable{
 		this.useSequentialRun = useSequentialRun;
 	}
 
+	/**
+	 * 
+	 * Get the request timeout in milliseconds
+	 * 
+	 * @return Request timeout
+	 */
+	public int getRequestTimeout() {
+		return requestTimeout;
+	}
+
+
+	/**
+	 * 
+	 * Set the request timeout in milliseconds
+	 * 
+	 * @param requestTimeout
+	 */
+	public void setRequestTimeout(int requestTimeout) {
+		this.requestTimeout = requestTimeout;
+	}
 	
 }

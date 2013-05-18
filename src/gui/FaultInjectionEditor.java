@@ -64,7 +64,12 @@ public class FaultInjectionEditor extends JSplitPane {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * Set data in the panel
+	 * 
+	 * @param data
+	 */
 	public void setData(FaultInjectionData data){
 		
 		this.editedTest = data;
@@ -73,6 +78,12 @@ public class FaultInjectionEditor extends JSplitPane {
 		setDataLoaded(true);
 	}
 	
+	/**
+	 * 
+	 * Enable button in the panel
+	 * 
+	 * @param enable
+	 */
 	public void setEnablePanel(boolean enable){
 		
 		addFaultButton.setEnabled(enable);
@@ -81,17 +92,35 @@ public class FaultInjectionEditor extends JSplitPane {
 		removeConditionButton.setEnabled(enable);
 	}
 	
+	/**
+	 * 
+	 * 
+	 * Get the flag if the data was loaded
+	 * 
+	 * @return
+	 */
 	 public boolean isDataLoaded() {
 		
 		 return dataLoaded;
 	 }
 
-
+	/**
+	 * 
+	 * Set the dataLoaded flag 
+	 * 
+	 * @param dataLoaded
+	 */
 	public void setDataLoaded(boolean dataLoaded) {
 		
 		this.dataLoaded = dataLoaded;
 	}
 	
+	
+	/**
+	 * 
+	 * Clear components in the panel
+	 * 
+	 */
 	public void clearData(){
 		
 		clearTable(conditionTableModel);
@@ -99,7 +128,7 @@ public class FaultInjectionEditor extends JSplitPane {
 	}
 	
 	/**
-	 * 
+	 * Clear table in the panel
 	 */
 	private void clearTable(DefaultTableModel table){
 		

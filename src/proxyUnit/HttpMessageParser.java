@@ -7,10 +7,17 @@
 package proxyUnit;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.Deflater;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.Inflater;
+import java.util.zip.ZipException;
 
 import logging.ConsoleLog;
 
@@ -77,7 +84,7 @@ public class HttpMessageParser {
 			matcher= pattern.matcher(rawMessage);
 			if (matcher.find()) {
 				ConsoleLog.Print("mam hlavicku");
-				httpHeader= matcher.group(1);
+				httpHeader= matcher.group(1).substring(0, matcher.group(1).length()-2);
 			}
 			
 			//parsujeme velikost tela http zpravy
@@ -220,25 +227,27 @@ public class HttpMessageParser {
 	 * @param rawMessage hruba zprava ze vstupniho soketu
 	 * @param httpMessage zprava s parsovanou hlavickou
 	 */
-	public static void parseHttpContent(HttpMessage httpMessage, String rawMessage, boolean chunkedEncoding) {
+	public static void parseHttpContent(HttpMessage httpMessage, String rawMessage) {
 		
 		//parsujeme obsah zpravy
 		String strContentType = httpMessage.getContentType();
-		String content= null;
-		Pattern pattern = Pattern.compile("^(.+?\\s\\s\\s\\s)(.*)", Pattern.DOTALL);
-		Matcher matcher = pattern.matcher(rawMessage);
+		String content= rawMessage;
+		//Pattern pattern = Pattern.compile("^(.+?\\s\\s\\s\\s)(.*)", Pattern.DOTALL);
+		//Matcher matcher = pattern.matcher(rawMessage);
 		
-		if (matcher.find()) {
-			content= matcher.group(2);
-		}else{
-			content= "";
-		}
+		//if (matcher.find()) {
+		//	content= matcher.group(2);
+		//}else{
+		//	content= "";
+		///}
 		
-		ConsoleLog.Print(strContentType);
+		//ConsoleLog.Print(strContentType);
 		//pattern= Pattern.compile("<\\?xml.*", Pattern.DOTALL);
 		//matcher= pattern.matcher(rawMessage);
 			
 		//nastaveni nove ziskanych atributu
+		
+		//ConsoleLog.Print(content);
 		httpMessage.setContent(content);
 		
 		
@@ -260,44 +269,195 @@ public class HttpMessageParser {
 		Pattern pattern= Pattern.compile("^Content-Length: [0-9]+$", Pattern.MULTILINE);
 		Matcher matcher= pattern.matcher(changedHeader);
 		String content = null;
-		if(httpMessage.isChanged())
+		if(httpMessage.isChanged()){
 			content = httpMessage.getChangedContent();
-		else
-			content = httpMessage.getContent();
-		//changedHeader= matcher.replaceFirst("Content-Length: 204");
 			changedHeader= matcher.replaceFirst("Content-Length: " + (content.getBytes().length));
+			httpMessage.setChangedHttpHeader(changedHeader);
+		}
+			
+		else{
+			content = httpMessage.getContent();
+			changedHeader= matcher.replaceFirst("Content-Length: " + (content.getBytes().length));
+			httpMessage.setHttpHeader(changedHeader);
+		}
+			
+		//changedHeader= matcher.replaceFirst("Content-Length: 204");
+			
 		//nastaveni pozmenene hlavicky
-		httpMessage.setChangedHttpHeader(changedHeader);
+		
 	}
 		
 		
 	
 	public static String decodeGzip(byte[] encoded){
 		String decoded = encoded.toString();
-		return decoded;
+		
+		String s1 = null;
+
+	    try
+	    {
+	        byte b[] = decoded.getBytes();
+	        InputStream bais = new ByteArrayInputStream(b);
+	        GZIPInputStream gs = new GZIPInputStream(bais);
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        int numBytesRead = 0;
+	        byte [] tempBytes = new byte[6000];
+	        try
+	        {
+	            while ((numBytesRead = gs.read(tempBytes, 0, tempBytes.length)) != -1)
+	            {
+	                baos.write(tempBytes, 0, numBytesRead);
+	            }
+
+	            s1 = new String(baos.toByteArray());
+	            s1= baos.toString();
+	        }
+	        catch(ZipException e)
+	        {
+	            e.printStackTrace();
+	        }
+	    }
+	    catch(Exception e) {
+	        e.printStackTrace();
+	    }
+	    return s1;
 	}
+	
+	
 	
 	public static byte[] encodeGzip(String decoded){
 		
 		byte[] encoded = decoded.getBytes();
+		byte[] compressedData= null;
+		ByteArrayOutputStream byteStream = null;
+		GZIPOutputStream zipStream = null;
+		try{
+			
+				byteStream =new ByteArrayOutputStream(encoded.length);
+	      
+				zipStream = new GZIPOutputStream(byteStream);
+	     
+				zipStream.write(encoded);
+				compressedData = byteStream.toByteArray();
 		
-		return encoded;
 		
+				byteStream.close();
+		    	zipStream.close();
+			
+			
+	    }catch(Exception e){
+	    	
+	      e.printStackTrace();
+	    }finally{
+	    	
+	    	
+	    }
+			
+		return  compressedData;
 	}
 	
-	
 	public static String decodeDeflate(byte[] encoded){
-		String decoded = encoded.toString();
-		return decoded;
+		
+		
+		Inflater ifl = new Inflater();   //mainly generate the extraction
+        //df.setLevel(Deflater.BEST_COMPRESSION);
+        ifl.setInput(encoded);
+ 
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(encoded.length);
+        byte[] output = null;
+        try{
+        	byte[] buff = new byte[1024];
+	        while(!ifl.finished())
+	        {
+	            int count = ifl.inflate(buff);
+	            baos.write(buff, 0, count);
+	        }
+	        baos.close();
+	        output = baos.toByteArray();
+		
+        }catch(Exception ex){
+        	
+        }
+		return new String(output);
 	}
 	
 	public static byte[] encodeDeflate(String decoded){
 		
 		byte[] encoded = decoded.getBytes();
+		 
+		byte[] output = new byte[1024];
+	    Deflater compresser = new Deflater();
+	    compresser.setInput(encoded);
+	    compresser.finish();
+	    compresser.deflate(output);
 		
-		return encoded;
+		
+        return encoded;
 		
 	}
+	
+	public static void addHeaderValue(String name, String value, HttpMessage message){
+		
+		
+		if(message.isChanged()){
+			String headers = message.getChangedHttpHeader();
+			headers+=name+": "+value+"\r\n";
+			message.setChangedHttpHeader(headers);
+		}else{
+			String headers = message.getHttpHeader();
+			headers+= name+": "+value+"\r\n";
+			message.setHttpHeader(headers);
+		}
+		
+		
+		
+		
+	}
+	
+	public static void changeHeaderValue(String name, String value, String newValue,HttpMessage message){
+	//HeaderCorruptionFault uz mohl vytvorit changedHttpHeader..
+			String changedHeader;
+			if (message.getChangedHttpHeader() == null)
+				changedHeader= new String(message.getHttpHeader());
+			else
+				changedHeader= new String(message.getChangedHttpHeader());
+			
+			Pattern pattern= Pattern.compile("^"+name+": "+value+"$", Pattern.MULTILINE);
+			Matcher matcher= pattern.matcher(changedHeader);
+			if(message.isChanged()){
+				
+				changedHeader= matcher.replaceFirst(name+": " + newValue);
+				message.setChangedHttpHeader(changedHeader);
+			}
+				
+			else{
+				changedHeader= matcher.replaceFirst(name+": " + newValue);
+				message.setHttpHeader(changedHeader);
+			}
+	}
+	
+	public static void removeHeaderValue(String name,HttpMessage message){
+		//HeaderCorruptionFault uz mohl vytvorit changedHttpHeader..
+				String changedHeader;
+				
+				if (message.getChangedHttpHeader() == null)
+					changedHeader= new String(message.getHttpHeader());
+				else
+					changedHeader= new String(message.getChangedHttpHeader());
+				
+				Pattern pattern= Pattern.compile("(^"+name+": (.*)\\s\\s)", Pattern.MULTILINE);
+				Matcher matcher= pattern.matcher(changedHeader);
+				if(message.isChanged()){
+					
+					changedHeader= matcher.replaceFirst("");
+					message.setChangedHttpHeader(changedHeader);
+				}
+					
+				else{
+					changedHeader= matcher.replaceFirst("");
+					message.setHttpHeader(changedHeader);
+				}
+		}
 	
 	
 }

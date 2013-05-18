@@ -22,56 +22,9 @@ public class FaultInjector {
 		
 	public FaultInjector() {
 		
-		initNewIds();
-	}
-	
-	
-	
-	
-	/**
-	 * Metoda pro inicializaci id atributu pro nove objekty modelu podminek a poruch. Ve vsech kolekcich
-	 * je nalezeno nejvyssi id.
-	 */
-	private void initNewIds() {
 		
-//		int highestTestId= -1;
-//		int highestStatementId= -1;
-//		int highestConditionId= -1;
-//		int highestFaultId= -1;
-//		
-//		for (Test currentTest : testList) {
-//			int currentTestId= currentTest.getTestId();
-//			if (currentTestId > highestTestId)
-//				highestTestId= currentTestId;
-//			
-//			for (TestStatement currentStatement : currentTest.getStatementList()) {
-//				int currentStatementId= currentStatement.getStatementId();
-//				if (currentStatementId > highestStatementId)
-//					highestStatementId= currentStatementId;
-//				
-//				for (Condition currentCondition : currentStatement.getConditionSet()) {
-//					int currentConditionId= currentCondition.getConditionId();
-//					if (currentConditionId > highestConditionId)
-//						highestConditionId= currentConditionId;
-//				}
-//				
-//				for (Fault currentFault : currentStatement.getFaultList()) {
-//					int currentFaultId= currentFault.getFaultId();
-//					if (currentFaultId > highestFaultId) 
-//						highestFaultId= currentFaultId;
-//				}
-//			}
-//		}
-//		//inicializace novych id
-//		newTestId= highestTestId + 1;
-//		newTestStatementId= highestStatementId + 1;
-//		newConditionId= highestConditionId + 1;
-//		newFaultId= highestFaultId;
-					
 	}
-	
-	
-	
+
 	
 	/**
 	 * Metoda pro ziskani id pro novou podminku.

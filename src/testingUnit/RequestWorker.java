@@ -26,6 +26,11 @@ import org.apache.http.util.EntityUtils;
 import data.HttpMessageData;
 import data.TestCaseSettingsData;
 
+/**
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public class RequestWorker implements Callable<HttpMessageData[]>{
 	
 	private HttpMessageData data;
@@ -33,7 +38,12 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 	private int threadId;
 	
 	
-	
+	/**
+	 * 
+	 * @param settings
+	 * @param data
+	 * @param id
+	 */
 	public RequestWorker(TestCaseSettingsData settings, HttpMessageData data, int id){
 		this.threadId = id;
 		this.data = data;
@@ -42,7 +52,9 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 	}
 	
 	
-	
+	/**
+	 * 
+	 */
 	public HttpMessageData[] call(){
 		HttpMessageData[] clientResponseData = initResponseData(settings.getLoopNumber());
 		String method = data.getMethod();
@@ -50,7 +62,7 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpUriRequest request = buildRequest();
 		client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, settings.getTimeout());
-		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, settings.getTimeout());
+		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, settings.getRequestTimeout());
 		
 		if(settings.getUseProxy()){
 			HttpHost proxy = new HttpHost(settings.getProxyHost(),settings.getProxyPort());
@@ -85,7 +97,7 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 					clientResponseData[i].setParams(data.getParams());
 					clientResponseData[i].setExpectedBody(data.getExpectedBody());
 				
-				}catch(ConnectTimeoutException | SocketTimeoutException ex){
+				}catch(ConnectTimeoutException ex){
 					ConsoleLog.Message("[Thread" + this.threadId +"]" + ex.getMessage());
 					clientResponseData[i].setName(data.getName());
 					clientResponseData[i].setResponseBody("timeouted");
@@ -102,21 +114,36 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 					clientResponseData[i].setExpectedBody(data.getExpectedBody());
 					
 					
-				}catch(Exception ex){
+				}catch(SocketTimeoutException ex){
+					ConsoleLog.Message("[Thread" + this.threadId +"]" + ex.getMessage());
+					clientResponseData[i].setName(data.getName());
+					clientResponseData[i].setResponseBody("timeouted");
+					clientResponseData[i].setRequestBody("timeouted");
+					clientResponseData[i].setElapsedRemoteTime(-1);
+					clientResponseData[i].setContentType("");
+					clientResponseData[i].setResponseCode(-1);
+					clientResponseData[i].setMethod(method);
+					clientResponseData[i].setLoopNumber(i);
+					clientResponseData[i].setThreadNumber(this.threadId);
+					clientResponseData[i].setHost(data.getHost());
+					clientResponseData[i].setResource(data.getResource());
+					clientResponseData[i].setParams(data.getParams());
+					clientResponseData[i].setExpectedBody(data.getExpectedBody());
+				}
+				
+				catch(Exception ex){
 					ex.printStackTrace();
 					
 				}
 			}
 		
-	
-			
-		
-		return clientResponseData;
-		
-		
-
+			return clientResponseData;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private HttpUriRequest buildRequest(){
 		
 		HttpUriRequest request = null;
@@ -139,6 +166,7 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 					
 					StringEntity entity = new StringEntity(data.getRequestBody(), "UTF-8");
 					entity.setContentType(data.getContentType());
+					entity.setChunked(true);
 					((HttpPost)request).setEntity(entity);
 				}catch(Exception e){
 					ConsoleLog.Message(e.getMessage());
@@ -172,6 +200,12 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 		return request;
 	}
 	
+	
+	/**
+	 * 
+	 * @param count
+	 * @return
+	 */
 	private HttpMessageData[] initResponseData(int count){
 		
 		HttpMessageData[] responseData = new HttpMessageData[settings.getLoopNumber()];

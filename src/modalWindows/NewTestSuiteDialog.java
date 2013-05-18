@@ -6,15 +6,18 @@ import gui.Navigator;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.text.Document;
 
 import logging.ConsoleLog;
-
 import data.DataProvider;
 import data.TestList;
 
@@ -86,9 +89,11 @@ public class NewTestSuiteDialog extends InputModalWindow {
 	@Override
 	protected void initButtons(){
 		
+		
 		okButton.addActionListener(new OkButtonAction());
 		cancelButton.addActionListener(new CancelButtonAction()); 
-		
+			
+		getRootPane().setDefaultButton(okButton);
 		Document projectField = testSuiteName.getDocument();
 		projectField.addDocumentListener(new ButtonStateController(okButton,testSuiteName,messageLabel));
 		
@@ -105,7 +110,7 @@ public class NewTestSuiteDialog extends InputModalWindow {
 	 * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
 	 *
 	 */
-	private class OkButtonAction  implements ActionListener{
+	private class OkButtonAction extends AbstractAction  implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e) {
 			 

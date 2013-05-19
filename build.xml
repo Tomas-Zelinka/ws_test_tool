@@ -7,6 +7,8 @@
 	<property name="class.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jar" />
 	<property name="resources.dir" value="resources" />
+	<property name="doc.dir" value="doc" />
+	<property name="packages" value="central,cli,data,gui,logging,modalWindows,proxyUnit,rmi,testingUnit" />
 	
 	<property name="jar_resources.dir" value="${class.dir}/resources" />
 	<property name="jar_lib.dir" value="${jar.dir}/lib" />
@@ -16,10 +18,10 @@
 	<property name="dep_cp" value="${toString:dep.runtime}" />
 
 	<path id="dep.runtime">
-		    <fileset dir="./lib">
-		        <include name="**/*.jar" />
-		    	<include name="**/*.properties" />
-		    </fileset>
+	    <fileset dir="./lib">
+	        <include name="**/*.jar" />
+	    	<include name="**/*.properties" />
+	    </fileset>
 	</path>
 	
 	<target name="clean">
@@ -30,6 +32,7 @@
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${class.dir}" />
 		<mkdir dir="${jar.dir}" />
+		<mkdir dir="${doc.dir}" />
 		<mkdir dir="${jar_lib.dir}" />
 		<mkdir dir="${build_data.dir}" />	
 		<copy todir="${jar_lib.dir}">
@@ -38,14 +41,19 @@
 		<copy todir="${jar_resources.dir}">
 			<fileset dir="${resources.dir}"/>
 		</copy>
+		<copy todir="${jar_resources2.dir}">
+					<fileset dir="${resources.dir}"/>
+			</copy>
 	</target>
 	
-	<target name="build" depends="">
+	<target name="build" depends="init">
 		<echo>Compile from ${src.dir} to ${build.dir}</echo>
 		<javac destdir="${class.dir}" srcdir="${src.dir}" includeantruntime="false">
 	    	<classpath refid="dep.runtime"/>
 	    </javac>
 	</target>
+	
+	
 	
 	<target name="jar" depends="build">
 		<manifestclasspath property="manifest_cp" jarfile="${jar.file}">
@@ -53,15 +61,54 @@
 		</manifestclasspath>
 		<jar destfile="${jar.file}" basedir="${class.dir}">
 			<manifest>
-		    	<attribute name="Main-Class" value="central.Main"/>
+		    	<attribute name="Main-Class" value="cz.vutbr.fit.dp.xzelin15.central.Main"/>
 				<attribute name="Class-Path" value="${manifest_cp}" />
 			</manifest>
 		</jar>
 	</target>
+	
 	<target name="run" depends="jar">
-		<echo> Running ${jar.file} </echo>
-		 <java jar="${jar.file}" fork="true" />
+		<echo>Running ${jar.file} </echo>
+		<java jar="${jar.file}" fork="true" >
+			<arg value="-g"/>
+		</java>
 	</target>
 	
+	<target name="dev-run" depends="dev-jar">
+			<echo>Running ${jar.file} </echo>
+			<java jar="${jar.file}" fork="true" >
+				<arg value="-g"/>
+			</java>
+		</target>
+	<target name="doc" depends="init">
+		<javadoc destdir="${doc.dir}" author="Tomáš Zelinka" version="2.0"  sourcepath="src">
+			
+		</javadoc>
+	</target>
+	
+	<target name="dev-doc" depends="">
+		<javadoc destdir="${doc.dir}" packagenames="${packages}" sourcepath="${src.dir}" use="true" classpathref="dep.runtime">
+					      
+		</javadoc>
+	</target>
+	
+	<target name="dev-build" depends="">
+		<echo>Compile from ${src.dir} to ${build.dir}</echo>
+		<javac destdir="${class.dir}" srcdir="${src.dir}" includeantruntime="false">
+	    	<classpath refid="dep.runtime"/>
+	    </javac>
+	</target>
+	
+	<target name="dev-jar" depends="dev-build">
+		<manifestclasspath property="manifest_cp" jarfile="${jar.file}">
+			<classpath refid="dep.runtime" />
+		</manifestclasspath>
+		<jar destfile="${jar.file}" basedir="${class.dir}">
+			<manifest>
+		    	<attribute name="Main-Class" value="cz.vutbr.fit.dp.xzelin15.central.Main"/>
+				<attribute name="Class-Path" value="${manifest_cp}" />
+			</manifest>
+		</jar>
+	</target>
 	
 </project>

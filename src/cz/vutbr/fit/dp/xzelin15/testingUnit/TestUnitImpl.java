@@ -15,7 +15,11 @@ import cz.vutbr.fit.dp.xzelin15.data.TestCaseSettingsData;
 import cz.vutbr.fit.dp.xzelin15.logging.ConsoleLog;
 import cz.vutbr.fit.dp.xzelin15.rmi.TestUnit;
 
-
+/**
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 
 	
@@ -23,12 +27,35 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	 * 
 	 */
 	private static final long serialVersionUID = 6458013158279501115L;
+	
+	/**
+	 * 
+	 */
 	private NewResponseListener responseListener;
 	
+	/**
+	 * 
+	 */
 	private ExecutorService executor;
+	
+	/**
+	 * 
+	 */
 	private HttpMessageData httpRequest;
+	
+	/**
+	 * 
+	 */
 	private TestCaseSettingsData settingsData;
+	
+	/**
+	 * 
+	 */
 	private HttpMessageData[][] messages;
+	
+	/**
+	 * 
+	 */
 	private boolean periodic;
 	
 	public TestUnitImpl() throws RemoteException{
@@ -95,30 +122,51 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	}
 	
 	
-	
+	/**
+	 * 
+	 */
 	public void setTest(HttpMessageData request, TestCaseSettingsData settings) throws RemoteException{
 		this.settingsData = settings;
 		this.httpRequest = request;
 		ConsoleLog.Print("[RemoteTestUnit] data recieved " + httpRequest.getName());
 	}
 	
+	/**
+	 * 
+	 */
 	public void addResponseListener(NewResponseListener listener)throws RemoteException{
 		ConsoleLog.Print("[RemoteTestUnit] pridavam listenera");
 		responseListener = listener;
 	}
 	
+	/**
+	 * 
+	 */
 	public String testConnection() throws RemoteException{
 		return "Connected";
 	} 
 	
+	/**
+	 * 
+	 */
 	public void stopUnit() throws RemoteException{
 		this.periodic = false;
 	}
 	
+	/**
+	 * 
+	 * @param settings
+	 */
 	private void initTestCase(TestCaseSettingsData settings){
 		executor = Executors.newFixedThreadPool(settings.getThreadsNumber());
 	}
 	
+	/**
+	 * 
+	 * @param data
+	 * @param period
+	 * @throws RemoteException
+	 */
 	private void publishNewMessageEvent(HttpMessageData[] data, int period) throws RemoteException {
 		ConsoleLog.Print("[RemoteTestUnit]posilam data");
 		responseListener.onNewResponseEvent(data, period);

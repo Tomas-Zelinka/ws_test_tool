@@ -124,7 +124,7 @@ public class TestCaseEditor extends JPanel {
 	
 	/**
 	 * Get edited case path
-	 * @return
+	 * @return String - edited test case path
 	 */
 	public String getTestCasePath(){
 		
@@ -132,6 +132,8 @@ public class TestCaseEditor extends JPanel {
 	}
 	
 	/**
+	 * Set content of request body - it is used when the generated content from wsdl
+	 * is received 
 	 * 
 	 * @param body
 	 */
@@ -141,7 +143,7 @@ public class TestCaseEditor extends JPanel {
 	}
 	
 	/**
-	 * 	
+	 * 	Save settings data to file
 	 */
 	public void saveSettings(){
 		
@@ -155,7 +157,7 @@ public class TestCaseEditor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Save request data to file
 	 */
 	public void saveRequest(){
 		
@@ -169,7 +171,7 @@ public class TestCaseEditor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Save injection data to file
 	 */
 	public void saveFaultInjection(){
 
@@ -184,7 +186,7 @@ public class TestCaseEditor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Load settings data from file into editor
 	 */
 	public void loadSettings(){
 		
@@ -208,7 +210,7 @@ public class TestCaseEditor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 *  Load request data from file to editor
 	 */
 	public void loadRequest(){
 		
@@ -231,7 +233,7 @@ public class TestCaseEditor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Load injection data from file to editor
 	 */
 	public void loadFaultInjection(){
 	
@@ -254,7 +256,7 @@ public class TestCaseEditor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Close test case editing - clear all data and disable buttons
 	 */
 	public void closeTestCase(){
 		settingsEditor.setEnablePanel(false);
@@ -272,7 +274,7 @@ public class TestCaseEditor extends JPanel {
 	
 	
 	/**
-	 * 
+	 * Initialization of all panels 
 	 */
 	private void initComponents(){
 		settingsEditor = new TestCaseSettings();

@@ -20,7 +20,7 @@ public interface ProxyListener extends Remote {
 	
 	/**
 	 * 
-	 * Send received data to GUI panel
+	 * Sends received data to GUI panel
 	 * 
 	 * @param interactionId
 	 * @param interaction

@@ -15,7 +15,13 @@ import cz.vutbr.fit.dp.xzelin15.data.UnitConfiguration;
 import cz.vutbr.fit.dp.xzelin15.logging.ConsoleLog;
 import cz.vutbr.fit.dp.xzelin15.proxyUnit.ProxyPanelListener;
 
-
+/**
+ * 
+ * Holds the panels of proxy units
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
+ *
+ */
 public class ProxyMonitor extends JPanel {
 	
 	
@@ -23,11 +29,35 @@ public class ProxyMonitor extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 5479720929723166064L;
+	
+	/**
+	 * Prefix for local unit
+	 */
 	private final String LOCAL_NAME = "Local Proxy ";
+	
+	/**
+	 * Prefix for remote unit
+	 */
 	private final String REMOTE_NAME = "Remote Proxy ";
+	
+	/**
+	 * Local unit number
+	 */
 	private final int LOCAL_UNIT = 0;
+	
+	/**
+	 * Number of connected units
+	 */
 	private int proxyUnitCounter;
+	
+	/**
+	 * Unit controller
+	 */
 	private UnitController controller;
+	
+	/**
+	 * Pane for unit tabs
+	 */
 	private JTabbedPane tabbedPane;
 	
 	public ProxyMonitor(UnitController controller){
@@ -38,12 +68,19 @@ public class ProxyMonitor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Order to unit controller to export registered proxy units
 	 */
 	public void exportConfiguration(){
 		controller.exportProxyConfiguration();
 	}
 	
+	
+	/**
+	 * Get data from controller about units to be connected and
+	 * send order back to controller to connect the units
+	 * 
+	 * It has to be from this object because we need show the panels
+	 */
 	public void importConfiguration(){
 		
 		UnitConfiguration[] configArray = controller.importProxyConfiguration();
@@ -51,12 +88,14 @@ public class ProxyMonitor extends JPanel {
 		if(configArray != null){
 			int panelCount = tabbedPane.getTabCount();
 			
+			//remove all registered panels
 			proxyUnitCounter = 1;
 			for(int i = 1; i < panelCount; i++){
 				removeTest(i);
 				
 			}
 			
+			//create new panels from configuration
 			for(UnitConfiguration config : configArray){
 				addUnit(config.getHost(),config.getRegistryPort());
 			}
@@ -109,7 +148,7 @@ public class ProxyMonitor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Remove selected unit panel with its unit
 	 * @param panelIndex
 	 */
 	public void removeUnit(){
@@ -118,8 +157,8 @@ public class ProxyMonitor extends JPanel {
 	}
 	
 	/**
-	 * 
-	 * @param path
+	 * Run proxy unit
+	 * @param path - path of the test case
 	 */
 	public void runUnit(String path){
 		
@@ -128,7 +167,7 @@ public class ProxyMonitor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Stop the selected unit
 	 */
 	public void stopUnit(){
 		
@@ -137,7 +176,7 @@ public class ProxyMonitor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Run all connected units
 	 * @param path
 	 */
 	public void runAllUnits(String path){
@@ -148,7 +187,7 @@ public class ProxyMonitor extends JPanel {
 	}
 	
 	/**
-	 * 
+	 * Stop all connected units
 	 */
 	public void stopAllUnits(){
 		
@@ -185,11 +224,6 @@ public class ProxyMonitor extends JPanel {
 	
 	/**
 	 * 
-	 * @return JPanel - returns the selected unit panel
-	 */
-	
-	/**
-	 * 
 	 * @param panelIndex
 	 */
 	private void stopTest(int panelIndex){
@@ -204,14 +238,14 @@ public class ProxyMonitor extends JPanel {
 	
 	/**
 	 * 
+	 * Run one test - it is used by more public methods
+	 * 
 	 * @param path
 	 * @param panelIndex
 	 */
 	private void runTest(String path, int panelIndex){
 		
 		File casePath = new File(path);
-		
-			
 		String caseName = casePath.getName();
 		
 		if(panelIndex == LOCAL_UNIT){
@@ -221,14 +255,14 @@ public class ProxyMonitor extends JPanel {
 		}
 		//getSelectedPanel().clearResults();
 		controller.runProxy(path,getUnitKey(panelIndex));
-			
-		
 	}
 	
 	
-	
+	/**
+	 * Remove selected panel with its proxy unit - used by more public methods
+	 * @param panelIndex
+	 */
 	private void removeTest(int panelIndex){
-		
 		
 		if (panelIndex != LOCAL_UNIT){
 			controller.removeTestUnit(getUnitKey(panelIndex));
@@ -239,8 +273,9 @@ public class ProxyMonitor extends JPanel {
 			ConsoleLog.Print("[ProxyMonitor] You cannot close local testing unit");
 		}
 	}
+	
 	/**
-	 * 
+	 * Intializaton of all panels
 	 */
 	private void initComponents(){
 		tabbedPane = new JTabbedPane();

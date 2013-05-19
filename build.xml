@@ -1,6 +1,6 @@
 <project name="FIWS_2.0" default="run" basedir=".">
  	<description>Builds, tests, and runs the FIWS_2.0.</description>
-	<property name="src.dir" value="src" />
+	<property name="src.dir" value="src/cz/vutbr/fit/dp/xzelin15/" />
    	<property name="build.dir" value="build" />
 	<property name="lib.dir" value="lib" />
 	<property name="data.dir" value="data" />

@@ -6,13 +6,14 @@
  */
 package cz.vutbr.fit.dp.xzelin15.proxyUnit;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  * Trida predstavuje vlakno proxy serveru starajici se bud o prichozi nebo odchozi pozadavky.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
  */
-public class HttpInteraction {
+public class HttpInteraction implements Serializable {
 	
 	private Calendar requestTime;
 	private Calendar responseTime;

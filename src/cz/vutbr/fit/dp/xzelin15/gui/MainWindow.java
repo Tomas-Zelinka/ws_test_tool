@@ -283,6 +283,7 @@ public class MainWindow extends JFrame{
 	 * Method for insertion of testcase inside the test list from navigation popup menu
 	 */
 	public void insertTestCase(){
+		testUnitPanel.saveTestList(MainWindow.getSuitePath());
 		testUnitPanel.openTestList(MainWindow.getSuitePath());
 		testUnitPanel.insertTestCase(MainWindow.getCasePath());
 		setContent(TESTING_UNIT);
@@ -550,7 +551,7 @@ public class MainWindow extends JFrame{
 		
 		addToolBarItem(proxyUnitToolBox,"Run Unit",new RunProxyListener(),"play.png");
 		addToolBarItem(proxyUnitToolBox,"Stop Unit",new StopProxyListener(),"stop.png");
-		addToolBarItem(proxyUnitToolBox,"Run All Units",new RunProxyListener(),"multiplay.png");
+		addToolBarItem(proxyUnitToolBox,"Run All Units",new RunAllProxyListener(),"multiplay.png");
 		addToolBarItem(proxyUnitToolBox,"Stop All Units",new StopAllProxyListener(),"multistop.png");
 		addToolBarItem(proxyUnitToolBox,"Add Remote Unit",new AddProxyUnitListener(),"network_idle.png");
 		addToolBarItem(proxyUnitToolBox,"Remove Remote Unit",new RemoveProxyUnitListener(),"network_offline.png");
@@ -725,6 +726,14 @@ public class MainWindow extends JFrame{
 		
 		public void actionPerformed (ActionEvent e){
 			proxyUnitPanel.runUnit(MainWindow.getCasePath());
+			ConsoleLog.Print("[MainWindow] Run Proxy Unit clicked");
+		}
+	}
+	
+	private class RunAllProxyListener implements ActionListener{
+		
+		public void actionPerformed (ActionEvent e){
+			proxyUnitPanel.runAllUnits(MainWindow.getCasePath());
 			ConsoleLog.Print("[MainWindow] Run Proxy Unit clicked");
 		}
 	}

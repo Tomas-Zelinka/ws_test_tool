@@ -85,7 +85,7 @@ public class HttpMessageParser {
 			matcher= pattern.matcher(rawMessage);
 			if (matcher.find()) {
 				ConsoleLog.Print("mam hlavicku");
-				httpHeader= matcher.group(1).substring(0, matcher.group(1).length()-2);
+				httpHeader= matcher.group(1).substring(0, matcher.group(1).length());
 			}
 			
 			//parsujeme velikost tela http zpravy
@@ -215,6 +215,8 @@ public class HttpMessageParser {
 			System.err.println(ex.getMessage());
 			ex.printStackTrace();
 			System.exit(-1);
+		}catch(Exception ex){
+			ConsoleLog.Message(ex.getMessage());
 		}
 		
 		return null;
@@ -268,7 +270,7 @@ public class HttpMessageParser {
 		
 		
 	/**
-	 * 
+	 * Decompress content from GZip 
 	 * @param encoded - encoded data
 	 * @return String - decoded string
 	 */
@@ -308,7 +310,7 @@ public class HttpMessageParser {
 	
 	
 	/**
-	 * 
+	 * Compress content to the GZip
 	 * @param decoded
 	 * @return
 	 */
@@ -344,7 +346,7 @@ public class HttpMessageParser {
 	}
 	
 	/**
-	 * 
+	 * Decompress the content to the Deflate 
 	 * @param encoded
 	 * @return
 	 */
@@ -374,7 +376,7 @@ public class HttpMessageParser {
 	}
 	
 	/**
-	 * 
+	 * Compress content to the deflate
 	 * @param decoded
 	 * @return
 	 */
@@ -394,31 +396,31 @@ public class HttpMessageParser {
 	}
 	
 	/**
-	 * 
-	 * @param name
-	 * @param value
-	 * @param message
+	 * Add header to headers
+	 * @param name - name of header
+	 * @param value - value of header
+	 * @param message - http message structure
 	 */
 	public static void addHeaderValue(String name, String value, HttpMessage message){
 		
 		
 		if(message.isChanged()){
-			String headers = message.getChangedHttpHeader();
+			String headers = message.getChangedHttpHeader().substring(0, message.getChangedHttpHeader().length()-2);
 			headers+=name+": "+value+"\r\n";
-			message.setChangedHttpHeader(headers);
+			message.setChangedHttpHeader(headers+"\r\n");
 		}else{
-			String headers = message.getHttpHeader();
+			String headers = message.getHttpHeader().substring(0, message.getHttpHeader().length()-2);
 			headers+= name+": "+value+"\r\n";
-			message.setHttpHeader(headers);
+			message.setHttpHeader(headers+"\r\n");
 		}
 	}
 	
 	/**
-	 * 
-	 * @param name
-	 * @param value
-	 * @param newValue
-	 * @param message
+	 * Change value header
+	 * @param name - name of header
+	 * @param value - old value of header
+	 * @param newValue - new value of header
+	 * @param message - http message structure
 	 */
 	public static void changeHeaderValue(String name, String value, String newValue,HttpMessage message){
 	//HeaderCorruptionFault uz mohl vytvorit changedHttpHeader..
@@ -443,9 +445,9 @@ public class HttpMessageParser {
 	}
 	
 	/**
-	 * 
-	 * @param name
-	 * @param message
+	 * Remove header line from headers
+	 * @param name - name of header
+	 * @param message - http message structure
 	 */
 	public static void removeHeaderValue(String name,HttpMessage message){
 		//HeaderCorruptionFault uz mohl vytvorit changedHttpHeader..

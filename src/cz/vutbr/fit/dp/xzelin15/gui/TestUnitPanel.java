@@ -414,26 +414,31 @@ public class TestUnitPanel extends JPanel implements NewResponseListener {
 	private void setEditorContent(JEditorPane editor,String contentType,String content){
 		ConsoleLog.Print(contentType);
 		
-		if(content.isEmpty()){
-			
-			editor.setText("Body is empty");
-		}else if(contentType.contains("xml")){
-			
-			editor.setText(XMLFormat.format(content));
-		}else if(contentType.contains("json") || contentType.contains("javascript")){
-			JSONObject json;
-			
-			try {
-				json = new JSONObject(content);
-				if(json != null)
-					editor.setText(json.toString(2));
-			} catch (JSONException e) {
-					
+		
+		if(content != null){
+			if( content.isEmpty()){
+				
+				editor.setText("Body is empty");
+			}else if(contentType.contains("xml")){
+				
+				editor.setText(XMLFormat.format(content));
+			}else if(contentType.contains("json") || contentType.contains("javascript")){
+				JSONObject json;
+				
+				try {
+					json = new JSONObject(content);
+					if(json != null)
+						editor.setText(json.toString(2));
+				} catch (JSONException e) {
+						
+				}
+				
+			}else{
+				
+				editor.setText(content);
 			}
-			
 		}else{
-			
-			editor.setText(content);
+			editor.setText("Body is empty");
 		}
 	}
 	

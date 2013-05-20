@@ -1,0 +1,15 @@
+<cz.vutbr.fit.dp.xzelin15.data.TestCaseSettingsData>
+  <threadsNumber>0</threadsNumber>
+  <loopNumber>0</loopNumber>
+  <proxyPort>0</proxyPort>
+  <proxyTestedPort>0</proxyTestedPort>
+  <timeout>3000</timeout>
+  <period>0</period>
+  <run>false</run>
+  <useProxy>false</useProxy>
+  <useSequentialRun>false</useSequentialRun>
+  <name>getUserInjection</name>
+  <path>.\data\Users\getUserInjection</path>
+  <proxyHost></proxyHost>
+  <requestTimeout>0</requestTimeout>
+</cz.vutbr.fit.dp.xzelin15.data.TestCaseSettingsData>

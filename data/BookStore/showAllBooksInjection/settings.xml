@@ -1,0 +1,15 @@
+<cz.vutbr.fit.dp.xzelin15.data.TestCaseSettingsData>
+  <threadsNumber>1</threadsNumber>
+  <loopNumber>1</loopNumber>
+  <proxyPort>55555</proxyPort>
+  <proxyTestedPort>44444</proxyTestedPort>
+  <timeout>3000</timeout>
+  <period>0</period>
+  <run>true</run>
+  <useProxy>true</useProxy>
+  <useSequentialRun>false</useSequentialRun>
+  <name>showAllBooksInjection</name>
+  <path>.\data\BookStore\showAllBooksInjection</path>
+  <proxyHost>localhost</proxyHost>
+  <requestTimeout>1000</requestTimeout>
+</cz.vutbr.fit.dp.xzelin15.data.TestCaseSettingsData>

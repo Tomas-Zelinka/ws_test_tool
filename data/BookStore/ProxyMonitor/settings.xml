@@ -1,0 +1,15 @@
+<cz.vutbr.fit.dp.xzelin15.data.TestCaseSettingsData>
+  <threadsNumber>0</threadsNumber>
+  <loopNumber>0</loopNumber>
+  <proxyPort>44444</proxyPort>
+  <proxyTestedPort>8080</proxyTestedPort>
+  <timeout>3000</timeout>
+  <period>0</period>
+  <run>false</run>
+  <useProxy>true</useProxy>
+  <useSequentialRun>false</useSequentialRun>
+  <name>ProxyMonitor</name>
+  <path>.\data\BookStore\ProxyMonitor</path>
+  <proxyHost>localhost</proxyHost>
+  <requestTimeout>0</requestTimeout>
+</cz.vutbr.fit.dp.xzelin15.data.TestCaseSettingsData>

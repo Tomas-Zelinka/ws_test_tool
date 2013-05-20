@@ -6,11 +6,13 @@
  */
 package cz.vutbr.fit.dp.xzelin15.proxyUnit;
 
+import java.io.Serializable;
+
 /**
  * Trida reprezentujici http pozadavek jako soucast komunikace webovych sluzeb.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
  */
-public class HttpRequest implements HttpMessage {
+public class HttpRequest implements HttpMessage,Serializable {
 	
 	private String httpMethod;
 	private String initiatorIp;

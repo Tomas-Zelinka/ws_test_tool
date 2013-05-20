@@ -1,9 +1,3 @@
-/**
- * Injekce poruch pro webove sluzby
- * Diplomovy projekt
- * Fakulta informacnich technologii VUT Brno
- * 3.2.2012
- */
 package cz.vutbr.fit.dp.xzelin15.proxyUnit;
 
 import java.io.BufferedReader;
@@ -19,8 +13,9 @@ import cz.vutbr.fit.dp.xzelin15.logging.ConsoleLog;
 
 
 /**
- * Trida predstavuje vlakno proxy serveru starajici se bud o prichozi nebo odchozi pozadavky.
- * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
+ * Thread is responsible for handling streams of proxy server
+ * 
+ * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
  */
 public class ProxyThread extends Thread {
 	
@@ -187,9 +182,9 @@ public class ProxyThread extends Thread {
 							
 							//send headers first
 							if(httpMessage.isChanged())
-								outputStream.write((httpMessage.getChangedHttpHeader()+"\r\n").getBytes());
+								outputStream.write((httpMessage.getChangedHttpHeader()).getBytes());
 							else
-								outputStream.write((httpMessage.getHttpHeader()+"\r\n").getBytes());
+								outputStream.write((httpMessage.getHttpHeader()).getBytes());
 							
 							//then send the message
 							outputStream.write(messageToSend);
@@ -269,14 +264,16 @@ public class ProxyThread extends Thread {
 								//process the message with decoding - injection - encoding
 								messageToSend =  processContent( interactionId + messageCounter, httpMessage, byteMessage);
 								
-								ConsoleLog.Print(httpMessage.getHttpHeader()+"\r\n"+ new String(messageToSend));
+								ConsoleLog.Print(httpMessage.getHttpHeader() + new String(messageToSend));
 								
 								
 								//headers first
-								if(httpMessage.isChanged())
-									outputStream.write((httpMessage.getChangedHttpHeader()+"\r\n").getBytes());
-								else
-									outputStream.write((httpMessage.getHttpHeader()+"\r\n").getBytes());
+								if(httpMessage.isChanged()){
+									
+									outputStream.write((httpMessage.getChangedHttpHeader()).getBytes());
+								}else{
+									outputStream.write((httpMessage.getHttpHeader()).getBytes());
+								}
 								
 								//then message
 								outputStream.write(messageToSend);

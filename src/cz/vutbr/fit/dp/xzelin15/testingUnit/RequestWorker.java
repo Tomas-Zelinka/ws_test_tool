@@ -28,7 +28,7 @@ import cz.vutbr.fit.dp.xzelin15.logging.ConsoleLog;
 
 
 /**
- * 
+ * Class represents worker thread of the test unit
  * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
  *
  */
@@ -54,7 +54,7 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 	
 	
 	/**
-	 * 
+	 * Run the worker thread, it initialize http client and send the sequence of request
 	 */
 	public HttpMessageData[] call(){
 		HttpMessageData[] clientResponseData = initResponseData(settings.getLoopNumber());
@@ -73,76 +73,84 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 		
 		
 			
-			for(int i = 0; i < settings.getLoopNumber(); i++){ 
-				try{
-					ConsoleLog.Print("[Worker " + this.threadId +"] cyklus");
-					long time1= System.nanoTime();
-					HttpResponse response = client.execute(request);
-					long time2 = System.nanoTime();
-					long timeSpent = time2-time1;
-					HttpEntity responseEntity = response.getEntity();
-					String output = EntityUtils.toString(responseEntity);
-					EntityUtils.consume(responseEntity);
-					
-					clientResponseData[i].setName(data.getName());
-					clientResponseData[i].setResponseBody(output);
-					clientResponseData[i].setRequestBody(data.getRequestBody());
-					clientResponseData[i].setElapsedRemoteTime(timeSpent);
-					clientResponseData[i].setContentType(responseEntity.getContentType().getValue());
-					clientResponseData[i].setResponseCode(response.getStatusLine().getStatusCode());
-					clientResponseData[i].setMethod(method);
-					clientResponseData[i].setLoopNumber(i);
-					clientResponseData[i].setThreadNumber(this.threadId);
-					clientResponseData[i].setHost(data.getHost());
-					clientResponseData[i].setResource(data.getResource());
-					clientResponseData[i].setParams(data.getParams());
-					clientResponseData[i].setExpectedBody(data.getExpectedBody());
+		for(int i = 0; i < settings.getLoopNumber(); i++){ 
+			try{
+				ConsoleLog.Print("[Worker " + this.threadId +"] cyklus");
 				
-				}catch(ConnectTimeoutException ex){
-					ConsoleLog.Message("[Thread" + this.threadId +"]" + ex.getMessage());
-					clientResponseData[i].setName(data.getName());
-					clientResponseData[i].setResponseBody("timeouted");
-					clientResponseData[i].setRequestBody("timeouted");
-					clientResponseData[i].setElapsedRemoteTime(-1);
-					clientResponseData[i].setContentType("");
-					clientResponseData[i].setResponseCode(-1);
-					clientResponseData[i].setMethod(method);
-					clientResponseData[i].setLoopNumber(i);
-					clientResponseData[i].setThreadNumber(this.threadId);
-					clientResponseData[i].setHost(data.getHost());
-					clientResponseData[i].setResource(data.getResource());
-					clientResponseData[i].setParams(data.getParams());
-					clientResponseData[i].setExpectedBody(data.getExpectedBody());
-					
-					
-				}catch(SocketTimeoutException ex){
-					ConsoleLog.Message("[Thread" + this.threadId +"]" + ex.getMessage());
-					clientResponseData[i].setName(data.getName());
-					clientResponseData[i].setResponseBody("timeouted");
-					clientResponseData[i].setRequestBody("timeouted");
-					clientResponseData[i].setElapsedRemoteTime(-1);
-					clientResponseData[i].setContentType("");
-					clientResponseData[i].setResponseCode(-1);
-					clientResponseData[i].setMethod(method);
-					clientResponseData[i].setLoopNumber(i);
-					clientResponseData[i].setThreadNumber(this.threadId);
-					clientResponseData[i].setHost(data.getHost());
-					clientResponseData[i].setResource(data.getResource());
-					clientResponseData[i].setParams(data.getParams());
-					clientResponseData[i].setExpectedBody(data.getExpectedBody());
-				}
+				//measure time spent on request
+				long time1= System.nanoTime();
+				HttpResponse response = client.execute(request);
+				long time2 = System.nanoTime();
+				long timeSpent = time2-time1;
 				
-				catch(Exception ex){
-					ex.printStackTrace();
-					
-				}
+				//read message content
+				HttpEntity responseEntity = response.getEntity();
+				String output = EntityUtils.toString(responseEntity);
+				EntityUtils.consume(responseEntity);
+				
+				//fill the response array
+				clientResponseData[i].setName(data.getName());
+				clientResponseData[i].setResponseBody(output);
+				clientResponseData[i].setRequestBody(data.getRequestBody());
+				clientResponseData[i].setElapsedRemoteTime(timeSpent);
+				clientResponseData[i].setContentType(responseEntity.getContentType().getValue());
+				
+				clientResponseData[i].setResponseCode(response.getStatusLine().getStatusCode());
+				clientResponseData[i].setMethod(method);
+				clientResponseData[i].setLoopNumber(i);
+				clientResponseData[i].setThreadNumber(this.threadId);
+				clientResponseData[i].setHost(data.getHost());
+				clientResponseData[i].setResource(data.getResource());
+				clientResponseData[i].setParams(data.getParams());
+				clientResponseData[i].setExpectedBody(data.getExpectedBody());
+			
+				//connection timeouted
+			}catch(ConnectTimeoutException ex){
+				ConsoleLog.Message("[Thread" + this.threadId +"]" + ex.getMessage());
+				clientResponseData[i].setName(data.getName());
+				clientResponseData[i].setResponseBody("timeouted");
+				clientResponseData[i].setRequestBody("timeouted");
+				clientResponseData[i].setElapsedRemoteTime(-1);
+				clientResponseData[i].setContentType("");
+				clientResponseData[i].setResponseCode(-1);
+				clientResponseData[i].setMethod(method);
+				clientResponseData[i].setLoopNumber(i);
+				clientResponseData[i].setThreadNumber(this.threadId);
+				clientResponseData[i].setHost(data.getHost());
+				clientResponseData[i].setResource(data.getResource());
+				clientResponseData[i].setParams(data.getParams());
+				clientResponseData[i].setExpectedBody(data.getExpectedBody());
+				
+			// request timeouted	
+			}catch(SocketTimeoutException ex){
+				ConsoleLog.Message("[Thread" + this.threadId +"]" + ex.getMessage());
+				clientResponseData[i].setName(data.getName());
+				clientResponseData[i].setResponseBody("timeouted");
+				clientResponseData[i].setRequestBody("timeouted");
+				clientResponseData[i].setElapsedRemoteTime(-1);
+				clientResponseData[i].setContentType("");
+				clientResponseData[i].setResponseCode(-1);
+				clientResponseData[i].setMethod(method);
+				clientResponseData[i].setLoopNumber(i);
+				clientResponseData[i].setThreadNumber(this.threadId);
+				clientResponseData[i].setHost(data.getHost());
+				clientResponseData[i].setResource(data.getResource());
+				clientResponseData[i].setParams(data.getParams());
+				clientResponseData[i].setExpectedBody(data.getExpectedBody());
 			}
+			
+			catch(Exception ex){
+				ConsoleLog.Message(ex.getMessage());
+				
+			}
+		}
 		
 			return clientResponseData;
 	}
 
 	/**
-	 * 
+	 * Build request - set the method of the request
+	 * in case of PUT and POST methods the content is added to message
 	 * @return
 	 */
 	private HttpUriRequest buildRequest(){
@@ -203,6 +211,8 @@ public class RequestWorker implements Callable<HttpMessageData[]>{
 	
 	
 	/**
+	 * 
+	 * Initialization of responses array
 	 * 
 	 * @param count
 	 * @return

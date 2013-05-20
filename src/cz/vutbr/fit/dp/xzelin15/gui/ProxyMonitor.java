@@ -65,6 +65,7 @@ public class ProxyMonitor extends JPanel {
 		this.controller = controller;
 		initComponents();
 		addUnit("none",LOCAL_UNIT);
+		exportConfiguration();
 	}
 	
 	/**
@@ -265,10 +266,11 @@ public class ProxyMonitor extends JPanel {
 	private void removeTest(int panelIndex){
 		
 		if (panelIndex != LOCAL_UNIT){
+			ConsoleLog.Print("[ProxyMonitor] Removed Unit: " + getUnitKey(panelIndex));
 			controller.removeTestUnit(getUnitKey(panelIndex));
 			tabbedPane.remove(panelIndex);
 			tabbedPane.revalidate();
-			ConsoleLog.Print("[ProxyMonitor] Removed Unit: " + getUnitKey(panelIndex));
+			
 		}else{
 			ConsoleLog.Print("[ProxyMonitor] You cannot close local testing unit");
 		}

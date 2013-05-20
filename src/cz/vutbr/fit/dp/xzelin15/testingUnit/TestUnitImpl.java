@@ -16,7 +16,7 @@ import cz.vutbr.fit.dp.xzelin15.logging.ConsoleLog;
 import cz.vutbr.fit.dp.xzelin15.rmi.TestUnit;
 
 /**
- * 
+ * Class represents implementation of test unit
  * @author Tomas Zelinka, xzelin15@stud.fit.vutbr.cz
  *
  */
@@ -29,32 +29,32 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	private static final long serialVersionUID = 6458013158279501115L;
 	
 	/**
-	 * 
+	 *  Remote instance of panel listener
 	 */
 	private NewResponseListener responseListener;
 	
 	/**
-	 * 
+	 * Thread pool
 	 */
 	private ExecutorService executor;
 	
 	/**
-	 * 
+	 * HTTP request data
 	 */
 	private HttpMessageData httpRequest;
 	
 	/**
-	 * 
+	 * Request settings data
 	 */
 	private TestCaseSettingsData settingsData;
 	
 	/**
-	 * 
+	 * Array of received messages
 	 */
 	private HttpMessageData[][] messages;
 	
 	/**
-	 * 
+	 * Periodic mode flag
 	 */
 	private boolean periodic;
 	
@@ -62,25 +62,25 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 		this.periodic = false;
 	}
 	
-	
+	/**
+	 * Executes new thread in background of GUI. Create pool of threads and send them
+	 * request data and will run all those threads. Then will wait for 
+	 */
 	public void run() throws RemoteException{
-		/**
-		 * toto bude predmet testovani, jestli pro jeden testcase vice vlaken nebo sekvencne
-		 * zatim sekvencne
-		 */ 
+		
 		ConsoleLog.Print("[RemoteTestUnit] Runned: " + settingsData.getName());
-		
-		
-	
-		
 		this.periodic = settingsData.isUseSequentialRun();
-		//ConsoleLog.Print("[RemoteTestUnit] periodic" + this.periodic);
 		int period = 0;
+		
+		// periodic cycle, if is not turn on, it is processed once 
 		do{
+			//initialization of threads
 			Set<Future<HttpMessageData[]>> outputs = new HashSet<Future<HttpMessageData[]>>();
 			int threadsNumber = settingsData.getThreadsNumber();
 			messages = new HttpMessageData [threadsNumber][settingsData.getLoopNumber()];
 			ConsoleLog.Print("[RemoteTestUnit] bude se provadet: "+threadsNumber+" vlaken");
+			
+			//run treads
 			for (int j =0; j  <  threadsNumber; j++){
 				
 				initTestCase(settingsData);
@@ -90,6 +90,8 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 			}
 			executor.shutdown();
 			
+			
+			//wait for the threads and send responses to the unit panel
 			int i = 0;
 			for (Future<HttpMessageData[]> output : outputs){
 				try {
@@ -123,7 +125,7 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	
 	
 	/**
-	 * 
+	 * Set test case data for this unit
 	 */
 	public void setTest(HttpMessageData request, TestCaseSettingsData settings) throws RemoteException{
 		this.settingsData = settings;
@@ -132,7 +134,7 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	}
 	
 	/**
-	 * 
+	 * Register listener with this unit
 	 */
 	public void addResponseListener(NewResponseListener listener)throws RemoteException{
 		ConsoleLog.Print("[RemoteTestUnit] pridavam listenera");
@@ -147,14 +149,14 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	} 
 	
 	/**
-	 * 
+	 * Stop test unit if it is in periodic mode
 	 */
 	public void stopUnit() throws RemoteException{
 		this.periodic = false;
 	}
 	
 	/**
-	 * 
+	 * Initialization of thread pool
 	 * @param settings
 	 */
 	private void initTestCase(TestCaseSettingsData settings){
@@ -162,9 +164,9 @@ public class TestUnitImpl extends UnicastRemoteObject implements TestUnit {
 	}
 	
 	/**
-	 * 
-	 * @param data
-	 * @param period
+	 * Send data to GUI panel
+	 * @param data - HTTP responses data
+	 * @param period - last period number
 	 * @throws RemoteException
 	 */
 	private void publishNewMessageEvent(HttpMessageData[] data, int period) throws RemoteException {

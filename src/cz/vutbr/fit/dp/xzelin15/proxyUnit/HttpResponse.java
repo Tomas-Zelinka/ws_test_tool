@@ -6,11 +6,13 @@
  */
 package cz.vutbr.fit.dp.xzelin15.proxyUnit;
 
+import java.io.Serializable;
+
 /**
  * Trida reprezentujici http odpoved v komunikace webovych sluzeb.
  * @author Martin Zouzelka (xzouze00@stud.fit.vutbr.cz)
  */
-public class HttpResponse implements HttpMessage {
+public class HttpResponse implements HttpMessage,Serializable {
 	
 	private String httpCode;
 	private String httpCodeDesc;

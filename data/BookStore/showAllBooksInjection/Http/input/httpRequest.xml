@@ -1,0 +1,20 @@
+<cz.vutbr.fit.dp.xzelin15.data.HttpMessageData>
+  <elapsedRemoteTime>0</elapsedRemoteTime>
+  <responseCode>0</responseCode>
+  <threadNumber>0</threadNumber>
+  <loopNumber>0</loopNumber>
+  <requestBody>&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:book=&quot;http://bookStore/&quot;&gt;&#xd;
+   &lt;soapenv:Header/&gt;&#xd;
+   &lt;soapenv:Body&gt;&#xd;
+      &lt;book:showAllBooks/&gt;&#xd;
+   &lt;/soapenv:Body&gt;&#xd;
+&lt;/soapenv:Envelope&gt;</requestBody>
+  <responseBody></responseBody>
+  <expectedBody></expectedBody>
+  <method>POST</method>
+  <host>http://localhost:8080</host>
+  <resource>/bookStore/BookStore</resource>
+  <params></params>
+  <contentType>text/xml</contentType>
+  <name>showAllBooksInjection</name>
+</cz.vutbr.fit.dp.xzelin15.data.HttpMessageData>

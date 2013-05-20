@@ -1,0 +1,6 @@
+<cz.vutbr.fit.dp.xzelin15.data.TestList>
+  <testList>
+    <string>.\data\BookStore\showAllBooks</string>
+    <string>.\data\BookStore\showAllBooksInjection</string>
+  </testList>
+</cz.vutbr.fit.dp.xzelin15.data.TestList>

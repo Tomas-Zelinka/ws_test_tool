@@ -1,0 +1,19 @@
+<cz.vutbr.fit.dp.xzelin15.data.FaultInjectionData>
+  <testId>0</testId>
+  <testName>showAllBooksInjection</testName>
+  <conditionSet>
+    <cz.vutbr.fit.dp.xzelin15.proxyUnit.ContainsCondition>
+      <containString>show</containString>
+      <typeName>ContainsCondition</typeName>
+      <description>The occurrance of &quot;show&quot;</description>
+    </cz.vutbr.fit.dp.xzelin15.proxyUnit.ContainsCondition>
+  </conditionSet>
+  <faultList>
+    <cz.vutbr.fit.dp.xzelin15.data.StringCorruptionFault>
+      <originalSubstring>0</originalSubstring>
+      <changedSubstring>20</changedSubstring>
+      <typeName>StringCorruptionFault</typeName>
+      <description>All occurrances of substring &quot;0&quot; replace by &quot;20&quot;.</description>
+    </cz.vutbr.fit.dp.xzelin15.data.StringCorruptionFault>
+  </faultList>
+</cz.vutbr.fit.dp.xzelin15.data.FaultInjectionData>

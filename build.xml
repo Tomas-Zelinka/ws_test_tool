@@ -41,9 +41,7 @@
 		<copy todir="${jar_resources.dir}">
 			<fileset dir="${resources.dir}"/>
 		</copy>
-		<copy todir="${jar_resources2.dir}">
-					<fileset dir="${resources.dir}"/>
-			</copy>
+		
 	</target>
 	
 	<target name="build" depends="init">

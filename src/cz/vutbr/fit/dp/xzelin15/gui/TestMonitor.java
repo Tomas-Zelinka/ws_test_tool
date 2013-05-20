@@ -50,6 +50,7 @@ public class TestMonitor extends JPanel  {
 		testUnitCounter = 0;
 		initComponents();
 		addUnit("none",LOCAL_UNIT);
+		exportConfiguration();
 	}
 	
 	/**

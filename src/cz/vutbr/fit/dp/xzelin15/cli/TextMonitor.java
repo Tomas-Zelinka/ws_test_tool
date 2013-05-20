@@ -84,7 +84,7 @@ public class TextMonitor {
 		ConsoleLog.Print("[TextMonitor]: Test:" + suitePath);
 		PrintTestOutput output = testOutputs.get(LOCAL_UNIT);
 		output.setOutputPath(suitePath,LOCAL_UNIT);
-		controller.runTest(suitePath, LOCAL_UNIT);
+		controller.runTextTest(suitePath, LOCAL_UNIT);
 		
 	}
 	
@@ -101,7 +101,7 @@ public class TextMonitor {
 		for(int i = 0; i < testUnitCounter; i++){
 			PrintTestOutput output = testOutputs.get(i);
 			output.setOutputPath(suitePath,i);
-			controller.runTest(suitePath, i);
+			controller.runTextTest(suitePath, i);
 		}
 		
 	}

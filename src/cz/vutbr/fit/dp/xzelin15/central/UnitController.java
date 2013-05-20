@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
-
 
 import org.ini4j.Ini;
 import org.ini4j.InvalidFileFormatException;
@@ -363,6 +363,7 @@ public class UnitController {
 				
 			//request to add remote unit
 			}else{
+				ConsoleLog.Print(host+port);
 				Registry registry = LocateRegistry.getRegistry(host,port);
 				newUnit = (ProxyUnit) registry.lookup("ProxyUnit");
 				ConsoleLog.Message(newUnit.testConnection());
@@ -439,6 +440,39 @@ public class UnitController {
 		
 		
 	}
+	
+	
+	/**
+	 *  The method create instance of TestUnitWorker
+	 *  and process the test list in CLI
+	 *  
+	 * @param path
+	 * @param unitId
+	 */
+	public void runTextTest(String path, int unitId){
+		TestList list = (TestList) ioProvider.readObject(path + TestList.filename);
+		
+		if( list != null){
+			
+			TestUnitWorker worker = new TestUnitWorker(list,unitId);
+			worker.execute();
+			
+			try {
+				worker.get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			ConsoleLog.Message("Testlist not found!");
+		}
+		
+		
+	}
+	
 	
 	
 	/**
